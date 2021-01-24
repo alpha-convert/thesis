@@ -1,0 +1,70 @@
+\newcommand{\tytrans}[1]{\llbracket #1 \rrbracket}
+\newcommand{\tertrans}[1]{\left\lVert#1\right\rVert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\angles}[1]{\left\llangle #1 \right\rrangle}
+\newcommand{\eval}{\downarrow}
+\newcommand{\val}{\isml{val}}
+\newcommand{\bdby}{\sqsubseteq}
+\newcommand{\wknto}{\sqsubseteq}
+\newcommand{\valbd}{\sqsubseteq_{\isml{val}}}
+\newcommand{\subbd}{\sqsubseteq_{\isml{sub}}}
+\newcommand{\subst}[2]{\left[#1 \middle/ #2 \right]}
+
+
+\newcommand{\save}[3]{\ensuremath{\isml{save}^{#1}_{#2} \; #3}}
+\newcommand{\disc}[2]{\ensuremath{\isml{disc}_{#1} \; #2}}
+\newcommand{\wait}[2]{\ensuremath{\isml{wait}_{#1} \; #2}}
+\newcommand{\tsfer}[6]{\ensuremath{\isml{transfer}_{#1} \, !^{#2}_{#3} \, #4 = #5 \; \isml{to} \; #6}}
+\newcommand{\case}[5]{\ensuremath{\isml{case} \, (#1,\, #2. #3 \, , \, #4 . #5})}
+\newcommand{\inl}[1]{\ensuremath{\isml{inl} \, #1}}
+\newcommand{\inr}[1]{\ensuremath{\isml{inr} \, #1}}
+\newcommand{\elist}{\ensuremath{\isml{[]}}}
+\newcommand{\cons}[2]{\ensuremath{#1 \, :: \, #2}}
+\newcommand{\listty}[1]{\ensuremath{\isml{[}#1\isml{]}}}
+\newcommand{\delay}[1]{\ensuremath{\isml{delay} \, #1}}
+\newcommand{\susp}[1]{\ensuremath{\isml{susp} \, #1}}
+\newcommand{\force}[1]{\ensuremath{\isml{force} \, #1}}
+\newcommand{\psplit}[4]{\ensuremath{\isml{split}(#1, \, #2.#3.#4)}}
+\newcommand{\unit}{\ensuremath{\isml{()}}}
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\nrec}[3]{\ensuremath{\isml{nrec}\left(#1,#2,#3\right)}}
+\newcommand{\lrec}[3]{\ensuremath{\isml{lrec}\left(#1,#2,#3\right)}}
+\newcommand{\inj}{\overline}
+\newcommand{\tick}[1]{\ensuremath{\isml{tick} \; \, ; \; #1}}
+\newcommand{\amp}{\ensuremath{\&}}
+\newcommand{\amppair}[2]{\ensuremath{\langle #1,#2 \rangle}}
+\newcommand{\scott}[1]{\ensuremath{\llbracket #1 \rrbracket}}
+\newcommand{\snrec}{\ensuremath{\texttt{snrec}}}
+\newcommand{\slrec}{\ensuremath{\texttt{slrec}}}
+\newcommand{\scase}{\ensuremath{\texttt{scase}}}
+\newcommand{\ret}[1]{\ensuremath{\texttt{ret} \, #1}}
+\newcommand{\attach}[1]{\ensuremath{\texttt{attach} \, #1}}
+
+
+\DeclareMathOperator{\wb}{WB}
+\DeclareMathOperator{\wbc}{WBc}
+\DeclareMathOperator{\Hom}{Hom}
+
+\newcommand{\loli}{\multimap}
+\newcommand{\tensor}{\otimes}
+\newcommand{\proves}{\vdash}
+\newcommand{\ang}{^{\circ}}
+
+\newcommand{\curry}[1]{\ensuremath{\text{curry}\left(#1\right)}}
+\newcommand{\const}[1]{\ensuremath{\text{const} \left(#1\right)}}
+
+\newcommand{\ds}{\ensuremath{\$}}
+
+\newcommand{\gens}{\Rightarrow}
+\newcommand{\infers}{\uparrow}
+\newcommand{\checks}{\downarrow}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\subty}{<:}
+\newcommand{\subtynf}{<:_{\texttt{nf}}}
+
+\newcommand{\fv}{\texttt{fv}}
+\newcommand{\bv}{\texttt{bv}}
+
+\newcommand{\citehere}{\color{red}[cite]\color{black}}
+
+\newcommand{\lambdaamor}{$\lambda$-Amor}

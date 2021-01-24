@@ -1,0 +1,48 @@
+
+\def\fileversion{1.0}
+\def\filedate{March 2011}
+
+
+\documentclass[draft]{westhesis}
+\input{packages}
+
+\title{ }
+\author{ }
+\department{ }
+\submitdate{ }
+
+\input{macros}
+
+\begin{document}
+
+%\begin{abstract}
+%\end{abstract}
+%\frontmatter
+%\maketitle
+%\tableofcontents
+\mainmatter
+
+\chapter{Introduction}
+As the importance of ubiquity of modern software increases, so too does its complexity. The burden of this complexity blowup lands squarely on the shoulders of software developers, who are asked to create increasingly intricate systems, with little extra help. In response to this, many developers have turned to tooling and languages to help ease the burden: this is exemplified by the rise of Rust and safe systems languages \citehere which provide safety guarantees, along with the integration of static analysis tools into the standard development practices of many large software companies. While these practices go a long way to improve developer experience, they are limited in the domains of understanding that they improve. Notably, there are very few existing tools which help developers reason about the algorithmic complexity and performance of their software. The days when the performance and resource usage could be easily discerned from source code by eye are long gone, and yet very few techniques have stepped in to fill the void.
+
+The long-term goal of the field of language-based resource analysis is to create languages and tools which fill this gap by providing methods for statically determining a program's resource usage, and presenting this information to developers. Works (\textbf{??}) in this field usually come in one of two forms: techniques which which give resource guarantees to large classes of programs at once, and those which allow one to analyze a single program a time. The first category is typified by the creation of languages with resource-aware type systems which allow programmers to reason about their programs' resource usage as they write them. Some examples of projects of this type include Resource Aware ML \citehere, Granule \citehere, and Linear Haskell \citehere.
+The second category is exemplified by verification techniques such as program logics and static analyses-- given a program, these tools can be used to semi-automatically derive or prove resource usage properties. Some well known examples of this class include Infer \citehere, (\textbf{??})
+
+In this thesis, we will explore and extend one development in each of these two categories. More specifically, we will specialize our notion of resource to only consider algorithmic complexity or time cost, and examine two techniques which analyze it using amortized analysis.
+
+%We investigate and implement \lambdaamor \citehere, a programming language with a rich refinement type system which allows programmers to encode their functions' desired cost complexity using types. To make implementing a typechecker for this language possible, we design a bidirectional algorithmic type system for \lambdaamor, and prove it sound and complete with respect to the original type system.
+
+
+
+%we use type systems, static analyeses, or syntactic means to cut out subsets of languages which give us resource guarantees.
+
+ 
+%While the most general formulation of this problem is clearly undecidable (thanks to Rice's Theorem), \textbf{how many} decades of work in the field have yielded numerous techniques that do a very good job in limited settings.
+
+
+%Like all branches of the theory of programming languages, a strong foundational understanding of the topic must be developed in order to create principled tools. The goal of this thesis is to explore and expand on two different foundational approaches to language-based resource analysis. More specifically, we consider two techniques for formally analyzing the algorithmic time complexity of programs using amortized analysis.
+
+%One domain where this is especially apparent is in complexity and performance analysis-- gone are the days when the performance of a program could be easily discerned from source code by eye. 
+
+
+\end{document}
