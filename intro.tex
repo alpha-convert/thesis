@@ -1,0 +1,125 @@
+As the importance of ubiquity of modern software increases, so too does its complexity. The burden of this complexity blowup lands squarely on the shoulders of software developers, who are asked to create increasingly intricate systems, with little extra help. In response to this, many developers have turned to tooling and languages to help ease the burden: this is exemplified by the rise of Rust and safe systems languages \citehere which provide safety guarantees, along with the integration of static analysis tools into the standard development practices of many large software companies. While these practices go a long way to improve developer experience, they are limited in the domains of understanding that they improve. Notably, there are very few existing tools which help developers reason about the algorithmic complexity and performance of their software. The days when the performance and resource usage could be easily discerned from source code by eye are long gone, and yet very few techniques have stepped in to fill the void.
+
+The long-term goal of the field of language-based resource analysis is to create languages and tools which fill this gap by providing methods for statically determining a program's resource usage, and presenting this information to developers. Works (\textbf{??}) in this field usually come in one of two forms: techniques which which give resource guarantees to large classes of programs at once, and those which allow one to analyze a single program a time. The first category is typified by the creation of languages with resource-aware type systems which allow programmers to reason about their programs' resource usage as they write them. Some examples of projects of this type include Resource Aware ML \citehere, Granule \citehere, and Linear Haskell \citehere.
+
+The second category is exemplified by verification techniques such as program logics and static analyses-- given a program, these tools can be used to semi-automatically derive or prove resource usage properties. Some well known examples of this class include Infer \citehere, (\textbf{??})
+
+In this thesis, we will explore and extend one development in each of these two categories. More specifically, we will specialize our notion of resource to only consider algorithmic complexity or time cost, and examine two techniques which analyze it using amortized analysis.
+
+\subsection{Contributions}
+
+
+\section{Amortized Analysis Primer}
+The intuition behind both developments in this thesis is rooted in amortized analysis, the classical algorithm analysis technique first presented by \citet{tarjan:amortized-complexity}. As such, we will provide a brief introduction to the technique here, in addition to presenting a few examples of its utility, one of which we will use as a running example.
+
+Amortized analysis was initially conceived of as a technique for analyzing the worst-case cost of a sequence of operations on a data structure. Without amortization, such cost analyses can be very imprecise Naively, the worst-case cost of a sequence of operations is bounded by the sum of the worst-case cost for each operation. However, this usually fails to take into account internal data structure invariants which make it impossible (or not always true) that each operation in the sequence executes with its worst-case complexity. For a concrete example of this phenomenon, consider the (contrived, yet useful) example of a binary counter shown in Figure~\ref{fig:bin-counter}.
+
+\begin{figure}
+  %bit, counter, inc,set
+  \caption{Binary Counter Data Structure}
+  \label{fig:bin-counter}
+\end{figure}
+
+The type \texttt{counter} is a list of bits, with the least significant bit at the head. The \texttt{inc} operation increments the binary counter by one. To illustrate where a standard analysis goes wrong, we will analyze the cost of a sequence of $n$ increment operations, starting from the empty list-- this behavior is encapsulated by the \texttt{set}, which iterates \texttt{set} $n$ times. For simplicity, the only costly operations are cons (\texttt{::}) operations, which cost one unit of time each.
+
+Given a counter of length $k$, \texttt{inc} performs at most $k + 1$ cons operations-- at worst, the counter is all ones, and \texttt{inc} must walk down the entire list flipping ones to zeroes, finishing by cons-ing a one onto the end. It's easy to see that after $i$ calls to \texttt{inc}, the counter has length bounded by $\left \lceil{\log_2 i}\right \rceil$, the number of needed for the binary representation of $i$. Thus, the total cost of \texttt{set n} is
+\begin{align*}
+  \sum_{i=1}^n \left\lceil{\log_2 i}\right \rceil + 1
+  &\leq \sum_{i=1}^n \log_2 i + 2\\
+  &\leq 2n + \sum_{i=1}^n \log_2 i\\
+  &\leq 2n + \log_2(n!)\\
+  &\leq 2n + n\log_2 n
+\end{align*}
+
+While it may be useful for some applications, this bound is not tight. To see why, consider the case where the counter is set to the value of $15_{10}$, or $1111_2$. A  call to increment on this counter costs the full $5$ cons operations, leaving the counter at $10000_2$. However, a subsequent call to \texttt{inc} only costs $1$ to flip the first bit. Indeed, very few calls to \texttt{inc} traverse the whole list-- the vast majority only flip one or two bits (\red{do the math here for fun}). This example illustrates the tension of doing these naive analysis, and provides the primary insight for amortized analysis: while one data structure operation may be expensive, it may also restructure the data structure in such a way which makes \textit{subsequent} operations cheaper than the worst case\footnote{
+This is the genesis of the name \textit{amortized} analysis: expensive function operations effectively pay for subsequent ones to be cheaper, evoking \textit{amortization} from accounting.
+}.
+
+\subsection{Physicist's Method}
+The most common method for operationalizing this insight is by the physicist's method of amortized analysis. This method proceeds by associating a data structure with a real-valued ``potential function" $\Phi : S \to \mathbb{R}$ on its states. The only restriction on potential functions is that they be nonnegative everywhere.
+Then, for any sequence of data structure operations $f_i$ with costs $c_i$ and intermediate states $s_i$ (pictured in Figure~\ref{fig:amortized-situation}, with $s_0$ initial and $s_i = f_i(s_{i-1})$), we may define the \textit{amortized cost} of each operation as:
+$$
+a_i = c_i + \Phi(s_i) - \Phi(s_{i-1})
+$$
+
+\begin{figure}
+  \caption{The Generic Amortized Analysis Setup}
+  \label{fig:amortized-situation}
+\end{figure}
+
+The amortized cost of an operation is the actual cost, plus the change in potential across it. When we sum the amortized cost of all the operations across the sequence, the sum telescopes:
+\begin{align*}
+  \sum_{i=1}^n a_i &= \sum_{i=1}^n c_i + \Phi(s_i) - \Phi(s_{i-1})\\
+                   &= \Phi(s_n) - \Phi(s_0) + \sum_{i=1}^n c_i
+\end{align*}
+Then, if $\Phi(s_0) = 0$, we get that the total amortized cost is an upper bound on the total actual cost.
+$$
+\sum_{i=1}^n a_i \geq \sum_{i=1}^n c_i
+$$
+A good intuition for potential functions $\Phi$ is that $\Phi(s)$ represents the amount of work subsequent operations have to do in order to modify the data structure.
+In practice, one usually picks potential functions such that when an expensive operation $f_i$ runs, $\Phi(s_{i-1})$ is very large, and $\Phi(s_i)$ is very small such that subsequent operations are cheap.
+
+Returning to the binary counter example, the traditional choice of potential function is to take $\Phi(\texttt{xs})$ to be the number of 1-bits in \texttt{xs}.
+For simplicity, we will denote the actual cost of a call to $\texttt{inc xs}$ by $C(\texttt{xs})$, and its amortized cost by $A(\texttt{xs}) = C(\texttt{xs}) + \Phi(\texttt{inc xs}) - \Phi(\texttt{xs})$.
+
+\begin{theorem}
+For all \texttt{xs:counter}, $A(\texttt{xs}) = 2$
+\end{theorem}
+\label{thm:bc-phys}
+\begin{proof}
+By a straightforward structural induction on \texttt{xs}.
+\begin{itemize}
+  \item ($\texttt{xs} = \texttt{[]}$): \texttt{inc []} does $1$ cons operation, $\Phi(\texttt{[]}) = 0$ and $\Phi(\texttt{[1]}) = 1$, so the amortized cost is $2$.
+  \item ($\texttt{xs} = \texttt{y::ys}$): If $\texttt{y} = \texttt{0}$, then the \texttt{inc xs} does $1$ cons operation. Since $\Phi(\texttt{1::ys}) - \Phi(\texttt{y::ys}) = (1 + \Phi(\texttt{ys})) - \Phi(\texttt{ys}) = 1$, we again have that the amortized cost of \texttt{inc xs} is $2$. Now, suppose $\texttt{y} = \texttt{1}$. Then \texttt{inc xs} incurs $1$ cost from the cons operation, plus the cost of \texttt{inc ys}. So, we may compute:
+  \begin{align*}
+    A(\texttt{y::ys}) &= C(\texttt{y::ys}) + \Phi(\texttt{inc (y::ys)}) - \Phi(\texttt{y::ys})\\
+    &= (1 + C(\texttt{ys}) + \Phi(\texttt{inc ys}) - (1 + \Phi(\texttt{ys}))\\
+    &= C(\texttt{ys}) + \Phi(\texttt{inc ys}) - \Phi(\texttt{ys})\\
+    &= A(\texttt{ys)}
+  \end{align*}
+  But by the inductive hypothesis, $A(\texttt{ys}) = 2$, which completes the proof.
+\end{itemize}
+\end{proof}
+
+An immediate corollary of this fact is that the amortized cost of \texttt{set n} is bounded by $2n$, by the same telescoping argument as before. Most importantly, since the binary counter \texttt{[0]} has potential $0$, the amortized cost of \texttt{set n} is an upper bound on the \textit{actual} cost of \texttt{set n}. This last step is crucial. A priori, amortized costs give no information about the actual costs of program execution, and are only a bound on the actual cost if the final potential is greater than the initial.
+
+\subsubsection{Single Function and Gas Tank Analyses}
+Often, amortized analysis is applied to individual functions, rather than a sequence. This may be thought of as the length-one case of amortized analysis.
+Given a function \texttt{f:a->b} and potential functions $\Phi_\texttt{a} : \texttt{a} \to \R$ and $\Phi_\texttt{b} : \texttt{b} \to \R$, we may define
+the amortized cost of \textbf{f} as $A_\texttt{f}(\texttt{x}) = C_\texttt{f}(\texttt{x}) + \Phi_\texttt{b}(\texttt{f x}) - \Phi_\texttt{a}(\texttt{x})$,
+where $C_\texttt{f}(\texttt{x})$ is the cost of \texttt{f}. As long as $\Phi_\texttt{b}(\texttt{f x}) \geq \Phi_\texttt{a}(\texttt{x})$, the amortized cost is an upper bound on the actual cost.
+
+A common variation on this concept is to pick the potential functions such that the amortized cost is \textit{zero}. Then, the actual cost $C_\texttt{f}(\texttt{x})$ is exactly $\Phi_\texttt{a}(\texttt{x}) - \Phi_\texttt{b}(\texttt{f x})$. The usual intuition here is to think of the available potential as a sort of ``gas tank" which the function must siphon from to do work. Then, the total gas used, $\Phi_\texttt{a}(\texttt{x}) - \Phi_\texttt{b}(\texttt{f x})$, is an upper bound on the amount of work done by the function.
+
+
+\subsection{Banker's Method}
+While the physicist's method is powerful, some situations call for a more fine-grained analysis. In this case, we employ the so-called banker's method of amortized analysis. The banker's method works by introducing imaginary ``credits" to a data structure, which may be ``attached" to the values in a program. These credits are thought of to interact with the cost model of the language in a special way: credits can always be created from thin air at a cost of one unit of time, and then they can subsequently be discarded or ``spent" to decrease execution cost by one unit. In the setting of the banker's method, this is what we mean when we refer to ``amortized cost"-- the real cost of an operation, plus the cost of creating and spending credits along the way. Crucially, if an operation begins with no credits available, then the amortized cost must be an upper bound on the actual cost since credits must be created (incurring a cost of $1$) before they can be spent (decreasing the cost by $1$). All of this is best illustrated by returning to the binary counter example.
+
+We begin by enforcing a credit invariant on values of type \texttt{counter}: every \texttt{1} bit must have a credit attached. It's worth confirming that the increment function is able to maintain this invariant: if the counter is empty, we spawn a credit, attach it to a \texttt{1} bit, and cons it to the front of the list.
+If the least significant bit is \texttt{0}, we again spawn a credit, flip the bit to \texttt{1}, and attach the credit. Finally, if the least significant bit is \texttt{1}, then we detatch its credit, spend it, recurse down the tail, and finish by cons-ing a \texttt{0} onto the front. Of course, none of this is manifest in the code
+\footnote{
+Readers familiar with concurrent separation logic might find this idea familiar: credits are a form of ghost state.
+}.
+Just like with potential in the physicist's method, these proofs must happen off to the side on paper.
+
+Finally, we may perform the analysis itself.
+
+\begin{theorem}
+For all \texttt{xs:counter} satisfying the credit invariant, the amortized cost of \texttt{inc xs} is $2$.
+\end{theorem}
+\label{thm:bc-bank}
+\begin{proof}
+We proceed by structural induction on \texttt{xs}.
+\begin{itemize}
+  \item ($\texttt{xs} = \texttt{[]}$): \texttt{inc []} does $1$ cons operation and spawns one credit, for an amortized cost of $2$.
+  \item ($\texttt{xs} = \texttt{y::ys}$): If $\texttt{y} = \texttt{0}$, then \texttt{inc xs} does one cons operation and spawns a single credit, for an amortized cost of $2$. Finally, if $\texttt{y} = \texttt{1}$, then \texttt{inc xs} makes a single recursive call \texttt{inc ys}, which has amortized cost $2$, by inductive hypothesis. But then, the function spends the credit attached to \texttt{y}, which cancels out the cost $1$ incurred by cons-ing a \texttt{0} onto the result of the recursive call. In total, this case has $2$ amortized cost, as required.
+\end{itemize}
+\end{proof}
+
+\subsection{Comparisons}
+
+The reader may note that the proof of Theorem~\ref{thm:bc-bank} was remarkably similar to the proof of Theorem~\ref{thm:bc-phys}. This is, unsurprisingly, not by coincidence. The reason for this similarity is that the banker's method can be thought of as a concretization of the physicist's method. Rather than ``globally" assigning potential to the states of a data structure, the banker's method ``localizes" the potential, thought of as discrete credits, on  specific values in the state. Because of this, analyses with the banker's method have an ``operational" feel to them, while analyses using the physicist's method have a more ``calculational" flavor.
+
+On the whole, the two methods of amortized analysis are essentially equivalent in power. Given a banker's method analysis, we may turn it into a physicist's method analysis by taking the potential function to be the total number of credits. Conversely, physicist's method analyses can be converted to use the banker's method by maintaining the invariant that $ \left\lceil{\Phi(\texttt{s})}\right \rceil$ credits be kept on the value \texttt{s}.
+
+Proofs using the banker's method are often more tedious and traditionally less formal. In Chapter~\ref{chap:rec-extr}, we present a formalization of the banker's method by way of recurrence extraction. Chapter~\ref{chap:lambda-amor} presents \lambdaamor, which is based primarily on the physicist's method.

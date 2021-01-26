@@ -1,0 +1,28 @@
+Type systems are invaluable tools for developing robust and extensible modern software \citehere. Programming languages theorists have long understood the utility that type systems bring outside of the standard assurance that well-typed programs do not go wrong \citehere. Indeed, type systems can be designed to help programmers reason about myriad facets of their programs, including but certainly not limited to security and privacy \citehere, nondeterminism \citehere, computational effects \citehere, low-level representation details \red{[Kinds calling conventions]}, asynchronous communication \red{[Session types]}, staging \citehere, and program modularity \red{[Module systems]}. 
+\\
+
+\textbf{This paragaph is bad, fix it}.
+
+Most relevant to this thesis, however, is the ability to create type systems which allow programmers to reason about their programs' resource usage. There are three main philosophical approaches to this. Some type systems are designed to outlaw programs which have resource-usage behavior outside of a desired class. In the context of execution cost, this usually takes the form of type systems which enforce termination \citehere, or enforce that programs live in a specific complexity class \citehere. On the other hand, some type systems are designed to allow programmers enforce resource-usage invariants of their choosing-- a good example of this is the Granule \citehere language, which is a full dependent type theory with broad resource-reasoning features. Finally, some type systems simply to provide resource-usage information to the programmer: the best-known instance of this for the resource of cost is Resource Aware ML \citehere, which extends OCaml with a resource-usage type system which can automatically infer usage bounds in some cases.
+
+In this \red{chapter}, we will investigate and implement \lambdaamor, a language with a type system for amortized cost analysis \citep{rajani-et-al:popl21}. \lambdaamor itself is a call-by-name variant of Plotkin's PCF, a functional language with general recursion \citehere. Semantically, \lambdaamor is fairly standard.
+ \lambdaamor's type system (which we will sometimes simply refer to as \lambdaamor) is fairly complex, and warrants quite a bit of discussion. Programs written in \lambdaamor have types annotated with cost information...
+% Cut out "good" programs
+% Provide fine-grained type-based reasoning
+
+\subsection{An Overview of \lambdaamor's Type System}
+The basic insight that \lambdaamor takes advantage of is that costly computation can be thought of an effect. When a program does work, it has an effect on the world, namely the effect of taking time. In this sense, nearly all ``pure" programming languages are impure, as they allow pervasive use of the effect of cost. Unlike most languages, \lambdaamor encapsulates this effect by forcing all costly computation to happen in a \textit{cost monad}. However, a simple monad is not enough. We do not care only that our programs have some cost, 
+
+%Lambda-amor
+%   first, LIE! give M k t and [k] t.
+% how do we model cost with a type system? Cost is an effect, hence cost monad (explain axomatic reader-ness)
+% Potential modality (axiomatic writer-ness)
+%  touch on list refinements, index vars
+%  affine-ness
+% peel back the curtain, M (n,p), [n|p]
+%  explain RAML phi functions, shift, explain phi funcitons
+% do the whole shebang.
+
+\section{Declarative \lambdaamor}
+\section{Algorithmic \lambdaamor}
+\section{Implementation of \lambdaamor}
