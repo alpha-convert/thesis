@@ -10,6 +10,7 @@ In this thesis, we will explore and extend one development in each of these two 
 
 
 \section{Amortized Analysis Primer}
+\label{sec:amortized-primer}
 The intuition behind both developments in this thesis is rooted in amortized analysis, the classical algorithm analysis technique first presented by \citet{tarjan:amortized-complexity}. As such, we will provide a brief introduction to the technique here, in addition to presenting a few examples of its utility, one of which we will use as a running example.
 
 Amortized analysis was initially conceived of as a technique for analyzing the worst-case cost of a sequence of operations on a data structure. Without amortization, such cost analyses can be very imprecise Naively, the worst-case cost of a sequence of operations is bounded by the sum of the worst-case cost for each operation. However, this usually fails to take into account internal data structure invariants which make it impossible (or not always true) that each operation in the sequence executes with its worst-case complexity. For a concrete example of this phenomenon, consider the (contrived, yet useful) example of a binary counter shown in Figure~\ref{fig:bin-counter}.
