@@ -1,16 +1,25 @@
+\section{Introduction}
 Type systems are invaluable tools for developing robust and extensible modern software \citehere. Programming languages theorists have long understood the utility that type systems bring outside of the standard assurance that well-typed programs do not go wrong \citehere. Indeed, type systems can be designed to help programmers reason about myriad facets of their programs, including but certainly not limited to security and privacy \citehere, nondeterminism \citehere, computational effects \citehere, low-level representation details \red{[Kinds calling conventions]}, asynchronous communication \red{[Session types]}, staging \citehere, and program modularity \red{[Module systems]}. 
 \\
 
-\textbf{This paragaph is bad, fix it}.
-
 Most relevant to this thesis, however, is the ability to create type systems which allow programmers to reason about their programs' resource usage.
-
 % There are three main philosophical approaches to this. Some type systems are designed to outlaw programs which have resource-usage behavior outside of a desired class. In the context of execution cost, this usually takes the form of type systems which enforce termination \citehere, or enforce that programs live in a specific complexity class \citehere. On the other hand, some type systems are designed to allow programmers enforce resource-usage invariants of their choosing-- a good example of this is the Granule \citehere language, which is a full dependent type theory with broad resource-reasoning features. Finally, some type systems simply to provide resource-usage information to the programmer: the best-known instance of this for the resource of cost is Resource Aware ML \citehere, which extends OCaml with a resource-usage type system which can automatically infer usage bounds in some cases.
+In this \red{chapter}, we will investigate and implement a variant of \lambdaamor, a language with a type system for amortized cost analysis. Programs written in \lambdaamor have types which are annotated with costs and potential, such that every type-correct program in \lambdaamor is a valid amortized analysis. Moreover, the costs expressed in the types give a sound upper bound on the actual execution cost of the program. \lambdaamor is expressive enough to statically verify amortized cost bounds for a wide class of functional programs, from the traditional examples of amortized analysis, to fully general cost-polymorphic higher-order functions like \texttt{map} and \texttt{fold}, which aren't well handled by existing resource-analysis languages like Resource Aware ML \citehere. \red{Should I talk more about Lambda-Amor here?}
 
-In this \red{chapter}, we will investigate and implement \lambdaamor, a language with a type system for amortized cost analysis \citep{rajani-et-al:popl21}. \lambdaamor itself is a call-by-name variant of Plotkin's PCF, a functional language with general recursion \citehere. Semantically, \lambdaamor is fairly standard.
- \lambdaamor's type system (which we will sometimes simply refer to as \lambdaamor) is fairly complex, and warrants quite a bit of discussion... \red{Discuss it here! This is the part where you do the specs dump-- has two modalities, RAML-style ideas, affine types, refinement types, polymorphism,}
+By and large, the original creators of \lambdaamor were interested in it as a unifying framework for amortized analysis type systems. There are many axes along which one may design a type system, and \lambdaamor does a good job of interpreting many different styles. In this work, however, we will primarily interest ourselves in \lambdaamor's usefulness as a programming language which provides strong type-based cost reasoning principles to the user. To this end, the primary goal of this work is to design a version of \lambdaamor which is amenable to implementation, and subsequently implement it.
 
-\subsection{An Overview of \lambdaamor's Type System}
+We will begin in Section~\ref{sec:lambdaamor-overview} by giving an overview of the concepts \lambdaamor's type system draws on. \lambdaamor includes two modalities-- unary operators on types
+\footnote{
+This is perhaps a poor definition of modality. Modalities are usually classified by the Justice Potter standard- I know them when I see them.
+}--
+for tracking cost and potential, respectively. To soundly manage this potential, \lambdaamor is based on an affine logic in which every variable may be used at most once so that values with potential cannot be duplicated. In order to make complex potential functions, \lambdaamor uses refinement types in the style of DML \citehere, which we review. Next, we discuss the main obstacle the original type system presents to implementation: constraint solving. Our solution to this problem is based on univariate polynomial potential functions in the style of Automated Amortized Resource Analysis (AARA) \citehere, which we briefly review.
+
+Next, in Section~\ref{sec:lambdaamor-decl} we present \dlambdaamor, the variant of \lambdaamor which we will implement. \dlambdaamor differs from \lambdaamor only in its pervasive use of AARA-style polynomial potential functions. 
+
+%\red{Discuss it here! This is the part where you do the specs dump-- has two modalities, RAML-style ideas, affine types, refinement types, polymorphism. Then talk about game plan for algorithmic: bidirectional, I/O, constraint output/solving.}
+
+\section{An Overview of \lambdaamor's Type System}
+\label{sec:lambdaamor-overview}
 A basic insight that \lambdaamor takes advantage of is that costly computation can be thought of an effect\footnote{
 In fact, cost can also be thought of as a \textit{coeffect} \cite{girard-et-al:tcs92:bll}, and one of the major breakthroughs of \lambdaamor is the unification
 of both styles of resource tracking in a single calculus.
@@ -29,10 +38,11 @@ The most important operation associated with the potential modality is the abili
 
 Potential may also be created, and attached to values. In \lambdaamor, these two functions are handled by the same construct. For terms $e : \tau$, we may form $\texttt{store}[I](e) : \M \; I \; ([I] \; \tau)$, which is a computation which runs for at most $I$ units of time, and returns a $\tau$ with $I$ potential attached. The fact that \texttt{store} incurs this cost is what justifies the term \texttt{release}-- the program has paid an ``extra" cost of $I$ to create $[I] \; \tau$, and thus can exercise this option to reduce the cost of a subsequent computation with \texttt{release}.
 
-This dynamic between \texttt{store} and \texttt{release} forces a restriction on the type system-- variables can only be used at most once. Our argument for the soundness of \texttt{release} relies on an the assumption that the potential we are releasing has not already been released elsewhere, and so duplication of variables must be disallowed. Of course, this kind of restriction is very common-- we simply require that \lambdaamor be affine, where weaking of the context is allowed, but contraction is disallowed. 
+This dynamic between \texttt{store} and \texttt{release} forces a restriction on the type system-- variables can only be used at most once. Our argument for the soundness of \texttt{release} relies on an the assumption that the potential we are releasing has not already been released elsewhere, and so duplication of variables must be disallowed. Of course, this kind of restriction is very common-- we simply require that \lambdaamor be \textit{affine}: weaking of the context is allowed, but contraction is disallowed. 
 
 \subsubsection{Refinement Types}
-So far, the situation we've described would only allow types with \textit{constant} amounts of potential. For nontrivial analyses, this is wholly insufficient: the potential of a data structure must be able to depend on the size or other numerical parameters of that data structure. For this purpose, \lambdaamor includes \textit{refinement types} \citehere...
+\label{sec:lambdaamor-overview-refty}
+So far, the situation we've described would only allow types with \textit{constant} amounts of potential. For nontrivial analyses, this is wholly insufficient: the potential of a data structure must be able to depend on the size or other numerical parameters of that data structure. For this purpose, \lambdaamor includes \textit{refinement types} in the style of Dependent ML \citehere. Concretely, \lambdaamor includes length-refined lists: a value of type $L^n \tau$ is a list of length $n$, where $n$ is an \textit{index term}-- an term in a small language of arithmetic expressions over a set of variables. Further, these index terms which appear in refinements may also appear in potentials! For instance, $\left[n^2\right] \; (L^n \tau)$ is the type of lists of length $n$ with potential $n^2$.
 
 %Lambda-amor
 %   first, LIE! give M k t and [k] t.
@@ -42,10 +52,71 @@ So far, the situation we've described would only allow types with \textit{consta
 %  affine-ness
 % peel back the curtain, M (n,p), [n|p]
 %  explain RAML phi functions, shift, explain phi funcitons
+% say that this is just Univariate RAML, but we see no fundemental difficulty in extending to multivariate. 
 % do the whole shebang.
 
 \subsection{Potential Vectors and AARA}
+The story we've just told about \lambdaamor's type system is loyal to the original presentation in \citep{rajani-et-al:popl21}, but somewhat inadequate for implementation purposes. As we will discuss in Section~\ref{sec:lambdaamor-impl}, efficient subtyping is necessary for implementation of \lambdaamor. However,
+the inclusion of the potential and cost modalities presents a challenge. In order for $[I] \; \tau_1$ to be a subtype of $[J] \; \tau_2$, it must be that $\tau_1 \subty \tau_2$, and that $J \leq I$. But as discussed above, $I$ and $J$ are index terms, and may be polynomials in a set of index variables. Ideally, we would like to discharge these inequalities generated by subtyping by constraint solver, but even modern SMT solvers struggle to handle polynomial inequalities.
+
+To solve this problem, we borrow a key idea from Automatic Amortized Resource Analysis (AARA) \citehere which will allow us to generate only linear constraints over index variables, while still allowing univariate polynomial potentials and cost. The main idea is to fix a clever ``basis" for the space of polynomials, and then represent polynomials as a vector of their coefficients with respect to that basis. The basis in question is chosen to satisfy one key property: if $f(n)$ is written in terms of the basis, then the coefficients of $f(n-1)$ may be efficiently determined from $f(n)$. This property gives rise to the ability to easily analyze list algorithms in \lambdaamor: when writing a function $([f(n)] \, (L^n \, \tau)) \loli \sigma$, it is simple to pattern match on the argument and determine the type of the tail $[f(n-1)] \, (L^{n-1} \, \tau)$ to pass to a recursive call.
+
+In \dlambdaamor, we will mostly syntactically restrict potential functions to be of this form, with some exception. We show in Section \textbf{??} that this language may be trivially elaborated into the original \lambdaamor, and further in Section \textbf{??} we show that the restricted set of allowable potential functions are still expressive enough for practical purposes.
+\red{transition...}
+
+\textbf{How do I cite that literally all of this is from JanH}
+
+\begin{definition}[Potential Vector]
+For a fixed $k$, we call a vector of nonnegative reals $(a_0,\dots,a_k)$ a potential vector.
+\end{definition}
+
+\begin{definition}[$\phi$ Function]
+For fixed $k$, we define $\phi : \N \times \R_{\geq 0}^k \loli \R$ to be
+$$
+\phi\left(n,(p_0,\dots,p_k)\right) = \sum_{i=0}^k p_i\binom{n}{i}
+$$
+where $\binom{n}{r}$ is the binomial coefficient. We refer to the first argument of $\phi$ as the ``base", and the second argument as the ``potential".
+\end{definition}
+
+With $\phi$ in hand, we redefine the cost and potential modalities. In \dlambdaamor, the cost modality written as $M \, (I,\vec{p}) \, \tau$ and the potential modality is $[I|\vec{p}] \,  \tau$. These two types classify values of type $\tau$ which cost up to $\phi(I,\vec{p})$ units of time and hold $\phi(I,\vec{p})$ potential, respectively.
+
+\begin{theorem}[Monotonicity and Additivity of $\Phi$]
+Let $\vec{p}$ and $\vec{q}$ be potential vectors.
+\begin{enumerate}
+  \item If $\vec{p} \leq \vec{q}$ componentwise, then $\phi(n,\vec{p}) \leq \phi(n,\vec{q})$.
+  \item $\phi(n,\vec{p} + \vec{q}) = \phi(n,\vec{p}) + \phi(n,\vec{q})$
+\end{enumerate}
+\end{theorem}
+
+The fact that $\phi$ is monotone in its second argument allows us to reduce the problematic subtyping rule for potentials (and costs) to generating linear inequalities and equalities \red{this isn't really true in presence of the sum...}: $[I|\vec{p}] \, \tau_1$ is a subtype of $[J|\vec{q}]$ when $I = J$ and $\vec{q} \leq \vec{p}$ componentwise.
+
+The additivity of $\phi$ also allows us to simplify the bind and release- given a computation $e_1 : \M \, (I,\vec{p}) \, \tau_1$ and a continuation $x : \tau_1 \vdash e_2 : \M \, (I,\vec{q}) \, \tau_2$,  we may perform the computations in sequence with $\texttt{bind}\, x = e_1 \, \texttt{in}\, e_2 : \M \, (I,\vec{p} + \vec{q}) \, \tau_2$.
+
+The final ingredient of this new version of the cost and potential modalities is the ability to change base. To illustrate, consider the process of writing a function $L^n \tau \loli \M \, (n,\vec{p}) \, \sigma$. The recursive call on the tail of the input list will have type $\M \, (n-1,\vec{p}) \, \sigma$, but the function expects a return value of type $\M \, (n,\vec{p}) \, \sigma$. Since the \texttt{bind} requires that the argument and the continuation have the same base, the recursive call cannot be used in this context, rendering it useless. To fix this, we include a term \texttt{shift} in \dlambdaamor which ``promotes" a computation of type $\M \, (n-1,\vec{p}) \, \sigma$ to one of type $\M \, (n,\vec{q}) \, \sigma$, for a specific $\vec{q}$ determined by $\vec{p}$. This concept is likely familar to the reader familiar with AARA: in Resource Aware ML (an implementation of OCaml based on AARA) this construct is baked into the pattern match rule, while we make it explicit.
+
+\begin{definition}[Additive Shift]
+For $\vec{p} = (a_0,\dots,a_{k-1},a_k)$ a potential vector, we define $\lhd \vec{p} = (a_0 + a_1,\dots,a_{k-1} + a_k,a_k)$
+\end{definition}
+
+\begin{theorem}
+For $n \geq 1$ and $\vec{p}$ a potential vector, $\phi(n,\vec{p}) = \phi(n-1,\lhd \vec{p})$
+\end{theorem}
+\begin{proof}
+It is straightforward to prove (either by combinatorial argument or direct computation) that $\binom{n-1}{i} + \binom{n-1}{i+1} = \binom{n}{i+1}$. Using this fact,
+we may compute as follows:
+\begin{align*}
+  \phi(n-1,\lhd \vec{p}) &= \sum_{i=0}^k p_i\binom{n-1}{i} + \sum_{i=0}^{k-1} p_{i+1}\binom{n-1}{i}\\
+                         &= p_0 + \sum_{i=1}^k p_i\binom{n-1}{i} + \sum_{i=0}^{k-1} p_{i+1}\binom{n-1}{i}\\
+                         &= p_0 + \sum_{i=0}^{k-1} p_{i+1}\left(\binom{n-1}{i+1} + \binom{n-1}{i}\right)\\
+                         &= p_0 + \sum_{i=0}^{k-1} p_{i+1}\binom{n}{i+1}\\
+                         &= \sum_{i=0}^k p_i \binom{n}{i}\\
+                         &= \phi(n,\vec{p})
+\end{align*}
+\end{proof}
 
 \section{Declarative \lambdaamor}
+\label{sec:lambdaamor-decl}
 \section{Algorithmic \lambdaamor}
+\label{sec:lambdaamor-algo}
 \section{Implementation of \lambdaamor}
+\label{sec:lambdaamor-impl}
