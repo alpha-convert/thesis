@@ -5,17 +5,26 @@ Type systems are invaluable tools for developing robust and extensible modern so
 Most relevant to this thesis, however, is the ability to create type systems which allow programmers to reason about their programs' resource usage. \red{more general background here about type systems for resource analysis}.
 
 
-In this \red{chapter}, we will investigate and implement a variant of \lambdaamor, a language with a type system for amortized cost analysis. Programs written in \lambdaamor have types which are annotated with costs and potential, such that every type-correct program in \lambdaamor is a valid amortized analysis. Moreover, the costs expressed in the types give a sound upper bound on the actual execution cost of the program. \lambdaamor is expressive enough to statically verify amortized cost bounds for a wide class of functional programs, from the traditional examples of amortized analysis, to fully general cost-polymorphic higher-order functions like \texttt{map} and \texttt{fold}, which aren't well handled by existing resource-analysis languages like Resource Aware ML \citehere. \red{Should I talk more about Lambda-Amor here?}
+In this \red{chapter}, we will investigate and implement a variant of \lambdaamorminus (pronounced ``lambda amor minus"), a language with a type system for amortized cost analysis. Programs written in \lambdaamorminus have types which are annotated with costs and potential, such that every type-correct program in \lambdaamorminus is a valid amortized analysis. Moreover, the costs expressed in the types give a sound upper bound on the actual execution cost of the program. \lambdaamorminus is expressive enough to statically verify amortized cost bounds for a wide class of functional programs, from the traditional examples of amortized analysis, to fully general cost-polymorphic higher-order functions like \texttt{map} and \texttt{fold}, which aren't well handled by existing resource-analysis languages like Resource Aware ML \citehere. \red{Should I talk more about Lambda-Amor here?}
 
-By and large, the original creators of \lambdaamor were interested in it as a unifying framework for amortized analysis type systems. There are many axes along which one may design a type system, and \lambdaamor does a good job of interpreting many different styles. In this work, however, we will primarily interest ourselves in \lambdaamor's usefulness as a programming language which provides strong type-based cost reasoning principles to the user. To this end, the primary goal of this work is to design a version of \lambdaamor called \dlambdaamor which is amenable to implementation, and subsequently implement it.
+By and large, the original creators of \lambdaamorminus were interested in it as a unifying framework for amortized analysis type systems. There are many axes along which one may design a type system, and \lambdaamorminus does a good job of interpreting many different styles. In this work, however, we will primarily interest ourselves in \lambdaamorminus's usefulness as a programming language which provides strong type-based cost reasoning principles to the user. To this end, the primary goal of this work is to design a version of \lambdaamorminus called \dlambdaamor which is amenable to implementation, and subsequently implement it.
 
-We will begin in Section~\ref{sec:lambdaamor-overview} by giving an overview of the concepts \lambdaamor's type system draws on. \lambdaamor includes two modalities-- unary operators on types for tracking cost and potential, respectively. To soundly manage this potential, \lambdaamor is based on an affine logic in which every variable may be used at most once so that values with potential cannot be duplicated. In order to make complex potential functions, \lambdaamor uses refinement types in the style of DML \citehere, which we review. Next, we discuss the main obstacle the original type system presents to implementation: constraint solving. Our solution to this problem is based on univariate polynomial potential functions in the style of Automated Amortized Resource Analysis (AARA) \citehere, which we briefly review.
-\red{Explain the contributions of other sections.}
+We will begin in Section~\ref{sec:lambdaamor-overview} by giving an overview of the concepts \lambdaamorminus's type system draws on. \lambdaamorminus includes two modalities-- unary operators on types for tracking cost and potential, respectively. To soundly manage this potential, \lambdaamorminus is based on an affine logic in which every variable may be used at most once so that values with potential cannot be duplicated. In order to make complex potential functions, \lambdaamor uses refinement types in the style of DML \citehere, which we review. Next, we discuss the main obstacle the original type system presents to implementation: constraint solving. Our solution to this problem is based on univariate polynomial potential functions in the style of Automated Amortized Resource Analysis (AARA) \citehere, which we briefly review.
+
+Then, in Section~\ref{sec:dlambdaamor-syntax-and-types}, we will discuss the syntax and type system of \dlambdaamor in depth, providing intuition for the each of the judgments, and discussing selected rules from the type system. \dlambdaamor's type system is many-layered, with rules for type formation, term formation, and a smaller type system for the sub-language which governs the refinement types. We pay special attention to the rules which govern the cost analysis-specific language features, and describe them in detail.
+
+In Section~\ref{sec:dlambdaamor-sound}, we sketch the soundness proof for \dlambdaamor, by showing that it may be embedded in \lambdaamorminus, and appealing to its soundness theorem featured in \citet{rajani-et-al:popl21}.
+
+
+
 %\red{Discuss it here! This is the part where you do the specs dump-- has two modalities, RAML-style ideas, affine types, refinement types, polymorphism. Then talk about game plan for algorithmic: bidirectional, I/O, constraint output/solving.}
 
-\section{\dlambdaamor} 
-\label{sec:lambdaamor-decl}
+\section{Overview of \dlambdaamor} 
+\label{sec:lambdaamor-overview}
 In this section, we will present the type system and semantics of \dlambdaamor, the variant of \lambdaamor which we plan to implement.
+\red{Last sentence is false, lol. fix that.}
+
+\subsection{Cost and Potential Modalities}
 One of the most basic insights that \lambdaamor takes advantage of in its design is that costly computation can be thought of an effect\footnote{
 In fact, cost can also be thought of as a \textit{coeffect} \cite{girard-et-al:tcs92:bll}, and one of the major breakthroughs of \lambdaamor is the unification
 of both styles of resource tracking in a single calculus.
@@ -26,7 +35,7 @@ of both styles of resource tracking in a single calculus.
  
 But of course, this cost monad can only be half the story. In a language which seeks to provide types for amortized analysis, a mechanism for handling potential is required.
  
-\subsubsection{Potential Monad and Affine Types}
+\subsubsection{Potential Modality and Affine Types}
 In addition to the cost monad, \lambdaamor includes another graded modality for tracking potential. A term of type $[I] \; \tau$ can be thought of a term of type $\tau$ which stores $I$ potential\footnote{
 In some senses, potential in \lambdaamor behaves more like the credits of the banker's method discussed in Section~\ref{sec:amortized-primer}-- it can be created and attached to specific values. To avoid confusion, we follow \citet{rajani-et-al:popl21} with the terminology of ``potential"
 }, where $I$ is again drawn from a sort of positive real numbers.
@@ -99,6 +108,9 @@ we may compute as follows:
 \end{align*}
 \end{proof}
 
+\section{Syntax and Type System \dlambdaamor}
+\label{sec:dlambdaamor-syntax-and-types}
+
 \subsection{Syntax of \dlambdaamor}
 In preparation to discuss \dlambdaamor's type system, we present its syntax in Figure~\ref{fig:dlambdaamor-syntax}.
 \begin{figure}
@@ -133,12 +145,122 @@ While the original presentation of \lambdaamor takes great care to include only 
 
 The term syntax for all of the standard connectives should be familiar. The two products are distinguished by double angled brackets for positive pairs, and parentheses for negative pairs. All binders are un-annotated to reduce the burden on the programmer: \bilambdaamor's bidirectional type inference means that type annotations will need to be written only when needed. Lists are constructed with nil and cons constructors, and the elimination form is a pattern match. The last standard inclusion is a fixpoint operator \texttt{fix}, which allows us to write recursive functions. 
 
-The rest of the syntax is likely less familiar. The monadic type $M \, (I,\vec{p}) \, \tau$ has three operations associated with it: $\textbf{ret}(e)$ and $\texttt{bind} \, x = e_1 \, \texttt{in}\, e_2$, the unit and bind of the monad, respectively, as well as $\texttt{tick}[I|\vec{p}]$, which incurs a cost of $\phi(I,\vec{p})$.
-%Type by type, give the constructors.
-%Make sur to give constructors
+The syntax associated to the amortized analysis constructs is likely less familiar. The monadic cost type $M \, (I,\vec{p}) \, \tau$ has three operations associated with it: $\textbf{ret}(e)$ and $\texttt{bind} \, x = e_1 \, \texttt{in}\, e_2$, the unit and bind of the monad, respectively, as well as $\texttt{tick}[I|\vec{p}]$, an atomic operation which incurs a cost of $\phi(I,\vec{p})$. The potential type has introduction form $\texttt{store}[I|\vec{p}](e)$ and elimination form $\texttt{release} \, x = e_1, \texttt{in} \, e_2$. Similarly, the \textit{constant} potential type has introduction form $\texttt{store}[I](e)$, and the same elimination syntax as the AARA-style potential type.
 
-\section{Algorithmic \lambdaamor}
+\subsection{Type System of \dlambdaamor}
+\begin{figure}
+\label{fig:dlambdaamor-typing-judgments}
+\caption{Judgment Forms of the \dlambdaamor Type System}
+\end{figure}
+
+In Figure~\ref{fig:dlambdaamor-typing-judgments}, we provide a listing of the judgments which make up \dlambdaamor's type system. Selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-typing-rules}, and a listing of all rules can be found in Appendix \textbf{??}.
+
+\subsubsection{Contexts}
+Judgments in \dlambdaamor have as many as five contexts.
+ Contexts $\Psi$ map type variables to their kinds. $\Theta$ is an index variable context, which maps index variables to their sorts. $\Delta$ is a list of constraints, which are assumptions of the judgment-- constraints in $\Delta$ may mention variables in $\Theta$, and so there is a weak form of dependence between the two contexts. The final two contexts $\Omega$ and $\Gamma$ are term variable contexts, which map variables to their types. The context $\Omega$ is referred to as the exponential context, and it contains variables which may be used more than once: i.e. are not subject to the affine restriction.
+\footnote{
+One may think of all types in $\Omega$ implicitly beginning with $!$, and imagine the variable rule for exponential variables to be silently inserting the counit $!\tau \loli \tau$. This dual-context construction is standard in the study of modal types. \cite{kavvos:lmcs}
+}. Finally, the context $\Gamma$ lists the rest of the variables, which may be used at most once.
+
+
+
+\subsubsection{Index Terms and their Sorts}
+The rules that make up the sort system for index terms (prefixed I-) are mostly self-explanatory: we ensure that arguments to arithmetic operators have the same sorts.
+Since all three base sorts ($\N$, $\R^+$, $\vec{\R^+}$) are nonnegative, the rule for subtraction $I - J$ must ensure that $I \geq J$. As discussed in Section~\textbf{??}, the rule I-ConstVec shows how \texttt{const} promotes index terms of sort $\R^+$ to sort $\vec{\R^+}$. Finally, the I-Lam and I-App rules give the introduction and elimination rules for the index-level functions.
+
+\subsubsection{Types and their Kinds}
+The type formation rules (prefixed K-) for \dlambdaamor are very straightforward. All types have kind $\star$, with the exception of the index type abstraction and elimination forms. The rule K-FamLam ensures that an indexed type $\lambda i : S. \tau$ has kind $S \to K$ when $\tau$ has kind $K$, and the indexed-type application $\tau \, I$ has kind $K$ when $\tau$ has kind $S \to K$ and $I$ is of sort $S$, as seen in K-FamApp.
+
+\subsubsection{Subtyping}
+The majority of the rules for subtyping in \dlambdaamor (prefixed by S-) are the standard congruences for logical connectives. The rules for the types involved in cost analysis for refinements, however, warrant some discussion.
+
+The rule S-Monad gives the subtyping relation for the cost monad: $\M \, (I,\vec{q}) \, \tau_1 \subty \M (J,\vec{p}) \,\tau_2$ when $\tau_1 \subty \tau_2$, $I = J$, and $\vec{q} \leq \vec{p}$ componentwise. The soundness of this rule relies on the fact that $\phi(n,\vec{q}) \leq \phi(n,\vec{p})$ when $\vec{q} \leq \vec{p}$, and the fact that the cost annotations represent \textit{upper bounds}-- it is safe to use a computation which incurs less cost in a context which expects one that incurs more. Dually, it is always safe to throw away potential in the subtyping rules for the two potential modalities, S-Pot and S-ConstPot.
+
+In addition to the subtyping rules at base kind, the rules S-FamLam and S-FamApp govern the subtyping of indexed types. The rule S-FamLam states that subtyping at kind $S \to K$ is simply generated by pointwise subtyping in the codomain $K$, while S-FamApp is a standard congruence rule. Note that S-FamApp requires that the two arguments be equal: since we do not require that indexed types be monotone, this is the strongest possible form of the rule.
+
+Finally, the rules S-FamBeta-$1$ and S-FamBeta-$2$ serve to include $\beta$-equality of type families in the subtyping relation. The combination of these rules with S-FamApp and S-FamLam makes the subtyping relation not syntax directed at higher kind, which provides another barrier to simple implementation, as discussed in Section\textbf{??}.
+
+\subsubsection{Well-Formedness Judgments and Context Subsumption}
+The judgment $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$ ensures that $\Phi$ is a well-formed context: all index terms mentioned in it are sort-correct, and relations are only judged between index terms of the same sort.
+
+\dlambdaamor also requires two auxiliary context-wellformedness judgments: $\Theta \vdash \Delta \; \texttt{wf}$ and $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$. The former ensures that the constraints in the context $\Delta$ are well-typed with respect to the context $\Theta$, and the latter ensures that all of the types in $\Gamma$ have kind $\star$.
+
+Finally, The judgment $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$ determines when we may relax a context $\Gamma'$ to a weaker one $\Gamma$ with the T-Weaken rule. Intuitively, this judgment encodes the permission to weaken a context as a kind of record subtyping. This intuition is made concrete in Theorem~\textbf{??}.
+
+\subsubsection{Terms and their Types}
+The typing rules for all of the logical connectives have the standard caveats for an affine type system: affine arrow introduction T-ArrI binds variable $x : A$ in the affine context $\Gamma$. Multi-premise rules like tensor introduction (T-TensorI) and sum elimination (T-Case) require splitting the affine context to type the premises. As usual, ``parallel" premises such as the two arms of a case may share affine resources, as only one branch will be taken at runtime. The exponential modality $!\tau$ also has the standard rules: T-ExpI ensures that one may only introduce a value of type $!\tau$ when the affine context is empty, and T-ExpE destructs a value of type $!\tau$ by binding an exponential variable of type $\tau$ for use in the continuation.
+
+Of greater interest are the rules for the cost analysis and refinement type-related constructs. The return of the cost monad lifts a pure value $e : \tau$ to a monadic computation $\texttt{ret}(e)$ which incurs no cost. So, the rule T-Ret types $\texttt{ret}(e)$ at $\M(I,\vec{0}) \, \tau$ for any index term $I$ of sort $\N$, where $\vec{0}$ is the length $k$ vector of $0$s. Since $\phi(I,\vec{0}) = 0$ independent of the base $I$, this rule has the desired effect. Meanwhile, the bind of the cost monad sums the costs of the computation and the continuation. T-Bind operationalizes this by typing $\texttt{bind}\, x = e \, \texttt{in} \, e' \; : \M(I,\vec{p} + \vec{q}) \, \tau_2$ when $e : \M(I,\vec{p}) \, \tau_1$ and $x : \tau_1 \vdash e' : \M(I,\vec{q}) \, \tau_2$/ The soundness of this rule is justified by the linearity of the $\phi$ function, as outlined in Section~\textbf{??}.
+
+The two operations for the potential modality are carefully constructed to work harmoniously with the cost monad. Firstly, given a term $e : \tau$, the rule T-Store allows us to store $\phi(I,\vec{p})$ potential on the term by incurring that amount of cost: this takes the form of assigning the type $\M(I,\vec{p}) \, \left([I|\vec{p}] \, \tau\right)$ to the term $\texttt{store}[I|\vec{p}](e)$. Note that in order to access the underlying potential, one must first $\texttt{bind}$ the computation, in effect incurring the requisite $\phi(I,\vec{p})$ cost to have access to the potential. Dually, the rule T-Release gives the typing for using potential. The potential on a term $e : [I|\vec{p}] \, \tau_1$ can be to pay for a monadic continuation $x : \tau_1 \vdash e' : \M(I,\vec{q} + \vec{p}) \, \tau_2$ to get
+$\texttt{store}\, x = e \, \texttt{in} \, e' : \M(I,\vec{q}) \, \tau_2$. Of course, the rules for constant potentials follow a similar pattern: the constant store expression $\texttt{store}[J](e)$ has type $\M(I,\texttt{const}(J)) \, \left([J] \, \tau\right)$ by T-StoreConst.
+We note that the type system enforces a discipline that all potential-related activities happen inside the cost monad, which greatly simplifies the type soundness proof found in \citet{rajani-et-al:popl21}.
+
+The list type ($L^I \, \tau$) is length-indexed, and so its typing rules are somewhat more involved than the standard ones. To enforce the length refinement, the rules T-Nil and T-Cons specify that the empty list $\texttt{[]}$ has type $L^0 \tau$, while a cons list $e :: e'$ has type $L^{I+1} \tau$ for $e : \tau$ and $e' :: L^I \tau$. The list elimination rule T-Match is more or less standard, but the two branches are typed under extra constraints in the constraint context $\Delta$. If the scrutinee has type $L^I \tau$, then the nil case of the match is typed under the assumption that $I = 0$. Meanwhile the cons case is given the assumption $I \geq 1$, and the tail of the list is bound as having type $L^{I-1} \tau$.
+
+In addition to the length-refined lists, the refinement type portion of \dlambdaamor's type system also includes index term quantifiers in types ($\forall,\exists$), as well as the two constraint types ($\Phi \amp \cdot$, $\Phi \implies \cdot$/).  The treatment of the quantifiers is standard: the rules T-ILam and T-ExistE bind index variables in the index context $\Theta$, while the rules T-IApp and T-ExistI substitute in index terms provided by the syntax. The rules for the constraint types operate in a similarly dual fashion.
+
+Finally, \dlambdaamor includes two special ``structural" rules. The first is a subtyping rule T-Sub, which may be used to downcast the type of a term to a less precise one. This rule has no syntactic form, and thus may be inserted anywhere in a derivation. The second is T-Weaken, which allows for the weakening of the two term variable contexts, $\Omega$ and $\Gamma$. As previously mentioned, the weakening relation on which this rule depends includes subtyping, and so a weaker context may include less precise types, and not just fewer available variables.
+
+\begin{figure}
+\label{fig:dlambdaamor-selected-typing-rules}
+\caption{Selected \dlambdaamor rules}
+\end{figure}
+
+\subsubsection{Other Well-Formedness Judgments and Presuppositions}
+All of the judgments presented so far are ``raw" judgments-- one may mechanically derive a proof of one using the inference rules, without regard for whether or not the judgment makes any sense. Traditionally, the requisite assumptions for stating a judgment in a sensical manner are known as \textit{presuppositions}. For example, the sort-checking judgment $\Theta ; \Delta \vdash I : S$ requires that the constraint context $\Delta$ be well-formed with respect to $\Theta$. There are many ways of handling these, but in this work we choose to make them explicit. Each raw judgment form has an associated judgment form which packages together the requisite well-formedness presuppositions for that judgment. We denote this by a subscript $p$ on the turnstile, as shown in Figure~\ref{fig:dlambdaamor-presupps}
+
+\begin{figure}
+\label{fig:dlambdaamor-presupps}
+\caption{Judgments of \dlambdaamor with Presuppositions}
+\end{figure}
+
+\section{Semantics and Soundness of \dlambdaamor}
+In order to prove the soundness of \dlambdaamor's type system, we will appeal to the soundness proof of \lambdaamorminus. As discussed in Section~\textbf{??}, \lambdaamorminus differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamorminus, which we can use to easily prove the soundness of \dlambdaamor's type system.
+
+\subsection{Embedding of \dlambdaamor in \lambdaamorminus}
+The translation of \dlambdaamor into \lambdaamorminus requires little insight:
+
+\subsection{Operational Semantics of \lambdaamorminus}
+
+Operationally, \lambdaamorminus (and by proxy, \dlambdaamor) behaves like a call-by-name monadic version of PCF. The big step semantics, for which selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$. The soundness theorem for \dlambdaamor (discussed in Sectoin~\ref{sec:dlambdaamor-sound}) relates the statically-predicted cost $I$ to the actual cost $\kappa$ by showing that the former is an upper bound on the latter.
+
+The rules for the pure evaluation relation are straightforward- as all monadic terms are values, the pure relation simply behaves like a big-step evaluation relation for by-name PCF. The rules for the refinement syntax at term level behave as if the syntax for refinements has been erased at runtime- they contribute nothing meaningful to the operational semantics.
+
+The rules for the forcing relation warrant some discussion. Since all monadic computations are values, the forcing relation depends on the pure relation to evaluate sub-expressions. For instance, the forcing relation evaluates $\texttt{ret}(e)$ to $v$ in $0$ steps when $e \Downarrow v$. Of course, the pure relation will take some steps of computation by performing $\beta$-redexes, but we will not consider these to be \textit{costly}, and thus do not need to be accounted for in the forcing relation.
+
+%Most importantly, the $\texttt{tick}[I|\vec{p}]$ term evaluates with cost $\phi(I,\vec{p})$ to the trivial value $()$. This rule encodes the heretofore intutitive cost behavior of the type $\M (I,\vec{p}) \, \tau$, by explicitly assigning the atomic costly operation the cost $\phi(I,\vec{p})$ in our cost semantics. 
+
+%The final cost-monadic term, the \texttt{bind}, is assigned cost in a purely compositional way. The evaluation of \texttt{bind} proceeds like the evaluation of a let-binding, where the costs of forcing the argument and then the subsequent continuation are added, and given as the total cost.
+
+%Talk about how potential ops work, and they're gost at the level of values.
+%"We note that a value of type $[I|\vec{p}]$ \, \tau is simply a value of type $\tau$. The potentials are not present at evaluation time, and are purely a "
+%\fi
+
+\subsection{Soundness of \dlambdaamor}
+\label{sec:dlambdaamor-sound}
+\begin{theorem}[Soundness of \dlambdaamor]
+If $\pvdash e : \M (I,\vec{p}) \, \tau$ and $e^\circ \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$
+\end{theorem}
+\begin{proof}
+By Theorem~\ref{thm:embdding-thm}, $\vdash e^\circ : \M \left(\phi(I,\vec{p})\right) \, \tau^\circ$, By Theorem 1 in \citet{rajani-et-al:popl21},
+$\kappa \leq \phi(I,\vec{p})$ as required.
+\end{proof}
+
+
+
+
+
+
+
+
+\subsection{Examples of Programs in \dlambdaamor}
+
+\section{\bilambdaamor}
 \label{sec:lambdaamor-algo}
 \red{Make sure you say that the syntax is inherited, plus annotations}
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
+
+
+
