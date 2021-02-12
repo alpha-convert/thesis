@@ -316,22 +316,23 @@ Conversely, completeness is also desirable, but not strictly necessary for bidir
 If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' \checks \tau$, and $|e'| = e$, where $|e'|$ is the annotation-erasure of $e'$.
 \end{theorem}
 \label{thm:bidir-compl-example}
-When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When Theorem~\ref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??}
+When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When Theorem~\ref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??} by proving an equivalent statement whose constructive proof inserts fewer annotations than the standard theorem.
 
-%For one, the inference judgment should in principle imply the checking judgment in the following sense: in order to check that $e \checks \tau$, it should be sufficient to derive $e \infers \tau$.
+\subsection{Algorithmic Subtyping and Normalization}
+In order to implement the subsumption rule mentioned above, a decision procedure for the subtyping relation $\tau \subty \tau'$ is required. However, \dlambdaamor's subtyping is not immediately implementable for two important reasons.
 
+Firstly, like \dlambdaamor's typing relation, it is not syntax directed: the transitivity rule S-Trans can be used at any step of a derivation. Similarly, the reflexivity rule T-Refl conflicts with all of the congruence rules. In order to avoid a backtracking implementation, it will be necessary to design an algorithmic subtyping relation for \bilambdaamor which includes neither of these rules. Of course, the algorithmic subtyping will need to be sound and complete for the declarative one. This requirement means that the algorithmic subtyping relation will need to have reflexivity and transitivity as admissible rules: in effect, we will need to prove identity and cut elimination.
+
+The second (and more pernicious) problem is the inclusion of indexed types. While many refinement type systems (including DML \citehere, on which \lambdaamor's refinement types are based) include indexed types \citehere, they are usually implemented only as types of the form $\forall i : S. \tau$ of kind $\star$. While useful, these indexed types are not fully general, as their abstraction and application is controlled by term-level introduction and elimination rules. Instead, \dlambdaamor includes indexed types of the form $\lambda i : S. \tau$, which allow the programmer to use a richer set of types. But, the inclusion of type-level abstractions and applications requires the subtyping relation to include $\beta$ equalities for these indexed type families (S-Fam-Beta{1,2}): without them, the subtyping relation would not be able to judge relations like $(\lambda i : \N. L^i\, \tau) \, 3 \subty L^3 \, \tau$, where the subtying relation holds up to $\beta$ equality.
+
+The inclusion of the two $\beta$-inequalities makes a simple algorithmic subtyping relation unlikely, since any way of deciding the subtyping relation must also decide $\beta$ equality of this small lambda calculus at the type level. However, the situation is sufficiently simple that we can get away with a fairly low-powered solution. To this end, \bilambdaamor's subtying relation is split into two phases. First, both types are evaluated (or \textit{normalized}) to normal forms, and then judged for subtyping by a relation which only contains the congruence rules. Since the abstractions $\lambda i : S.\tau$ range over \textit{index terms} and not types, a $\beta$ reduct has strictly fewer type connectives than its redex. For this reason, the normalization can be implemented in a single pass: substituting an index term for a free variable in a type in normal form yields another type in normal form. This two-phase algorithmic subtyping relation, as well as the normalization proof, are discussed in detail in Section~\textbf{??}
 
 \subsection{Constraint Generation}
 
 \subsection{I/O Method}
-  
-\subsection{Algorithmic Subtyping and Normalization}
 
 \subsection{Algorithmic Type System and Metatheory}
 
 
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
-
-
-
