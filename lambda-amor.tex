@@ -216,49 +216,120 @@ All of the judgments presented so far are ``raw" judgments-- one may mechanicall
 \end{figure}
 
 \section{Semantics and Soundness of \dlambdaamor}
-In order to prove the soundness of \dlambdaamor's type system, we will appeal to the soundness proof of \lambdaamorminus. As discussed in Section~\textbf{??}, \lambdaamorminus differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamorminus, which we can use to easily prove the soundness of \dlambdaamor's type system.
+For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. In order to prove that \dlambdaamor's type system is sound in this way, we will appeal to the soundness proof of \lambdaamorminus. As discussed in Section~\textbf{??}, \lambdaamorminus differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamorminus. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamorminus.
 
-\subsection{Embedding of \dlambdaamor in \lambdaamorminus}
-The translation of \dlambdaamor into \lambdaamorminus requires little insight:
 
-\subsection{Operational Semantics of \lambdaamorminus}
+\subsection{Operational Semantics of \dlambdaamor}
+In order to pin down the exact cost of programs written in \dlambdaamor, we provide a \textit{cost semantics} for the language: a big-step operational semantics which is indexed by the cost of evaluation.
 
-Operationally, \lambdaamorminus (and by proxy, \dlambdaamor) behaves like a call-by-name monadic version of PCF. The big step semantics, for which selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$. The soundness theorem for \dlambdaamor (discussed in Sectoin~\ref{sec:dlambdaamor-sound}) relates the statically-predicted cost $I$ to the actual cost $\kappa$ by showing that the former is an upper bound on the latter.
+Operationally, \dlambdaamor behaves like a call-by-name monadic version of PCF. The cost semantics, for which selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$.
+
+% The soundness theorem for \dlambdaamor (discussed in Sectoin~\ref{sec:dlambdaamor-sound}) relates the statically-predicted cost $I$ to the actual cost $\kappa$ by showing that the former is an upper bound on the latter.
 
 The rules for the pure evaluation relation are straightforward- as all monadic terms are values, the pure relation simply behaves like a big-step evaluation relation for by-name PCF. The rules for the refinement syntax at term level behave as if the syntax for refinements has been erased at runtime- they contribute nothing meaningful to the operational semantics.
 
 The rules for the forcing relation warrant some discussion. Since all monadic computations are values, the forcing relation depends on the pure relation to evaluate sub-expressions. For instance, the forcing relation evaluates $\texttt{ret}(e)$ to $v$ in $0$ steps when $e \Downarrow v$. Of course, the pure relation will take some steps of computation by performing $\beta$-redexes, but we will not consider these to be \textit{costly}, and thus do not need to be accounted for in the forcing relation.
 
-%Most importantly, the $\texttt{tick}[I|\vec{p}]$ term evaluates with cost $\phi(I,\vec{p})$ to the trivial value $()$. This rule encodes the heretofore intutitive cost behavior of the type $\M (I,\vec{p}) \, \tau$, by explicitly assigning the atomic costly operation the cost $\phi(I,\vec{p})$ in our cost semantics. 
-
-%The final cost-monadic term, the \texttt{bind}, is assigned cost in a purely compositional way. The evaluation of \texttt{bind} proceeds like the evaluation of a let-binding, where the costs of forcing the argument and then the subsequent continuation are added, and given as the total cost.
+Most importantly, the $\texttt{tick}[I|\vec{p}]$ term evaluates with cost $\phi(I,\vec{p})$ to the trivial value $()$. This rule encodes the heretofore intutitive cost behavior of the type $\M (I,\vec{p}) \, \tau$, by explicitly assigning the atomic costly operation the cost $\phi(I,\vec{p})$ in our cost semantics.  The final cost-monadic term, the \texttt{bind}, is assigned cost in a purely compositional way. The evaluation of \texttt{bind} proceeds like the evaluation of a let-binding, where the costs of forcing the argument and then the subsequent continuation are added, and given as the total cost.
 
 %Talk about how potential ops work, and they're gost at the level of values.
 %"We note that a value of type $[I|\vec{p}]$ \, \tau is simply a value of type $\tau$. The potentials are not present at evaluation time, and are purely a "
 %\fi
 
+\subsection{Embedding of \dlambdaamor in \lambdaamorminus}
+The translation of \dlambdaamor into \lambdaamorminus requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamorminus $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$.
+
+\begin{theorem}[Embedding Soundness]
+If $\pvdash e : \tau$ then $\vdash e^\circ : \tau^\circ$
+\end{theorem}
+\label{thm:embedding-sound}
+
 \subsection{Soundness of \dlambdaamor}
 \label{sec:dlambdaamor-sound}
+
+\begin{theorem}[Semantic Equivalence of the Embedding]
+If $e \Downarrow^\kappa v$ then $e^\circ \Downarrow_{-}^{\kappa'} v$ with $\kappa \leq \kappa'$.
+\end{theorem}
+\label{thm:dlambdaamor-sem-equiv}
+
 \begin{theorem}[Soundness of \dlambdaamor]
-If $\pvdash e : \M (I,\vec{p}) \, \tau$ and $e^\circ \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$
+If $\pvdash e : \M (n,\vec{p}) \, \tau$ and $e \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$
 \end{theorem}
 \begin{proof}
-By Theorem~\ref{thm:embdding-thm}, $\vdash e^\circ : \M \left(\phi(I,\vec{p})\right) \, \tau^\circ$, By Theorem 1 in \citet{rajani-et-al:popl21},
-$\kappa \leq \phi(I,\vec{p})$ as required.
+By Theorem~\ref{thm:embdding-sound}, $\vdash e^\circ : \M \left(\phi(I^\circ,\vec{p}^\circ)\right) \, \tau^\circ$.
+By Theorem~\ref{thm:dlambdaamor-sem-equiv}, $e^\circ \Downarrow_{-}^{\kappa'} v$ and $\kappa \leq \kappa'$.
+By Theorem 1 in \citet{rajani-et-al:popl21}, $\kappa' \leq \phi(I,\vec{p})$ as required.
 \end{proof}
-
-
-
-
-
-
 
 
 \subsection{Examples of Programs in \dlambdaamor}
 
 \section{\bilambdaamor}
-\label{sec:lambdaamor-algo}
-\red{Make sure you say that the syntax is inherited, plus annotations}
+\label{sec:bilambdaamor}
+In order for \dlambdaamor to be useful as a programming language, it must be implementable! While a declarative type system on paper is useful for modeling and proving purposes, it has limited utility from a language design standpoint. While \dlambdaamor calculus described in Section~\ref{sec:dlambdaamor} is far more implementation-ready than its predecessor \lambdaamorminus, the rules of the type system do not provide us with an obvious implementation method. Traditionally, one hopes to implement a type system in a manner similar to implementing a definitional interpreter \red{cite reynolds here}. For each judgment of the type system, the programmer writes a function which essentially runs a proof search for that judgment.
+
+For some of the judgments of \dlambdaamor, such as the sort-assignment judgment for index terms, a proof search procedure seems straightforward to define. For others, such as subtyping or the type-assignment judgment for terms, a few features of the type system present five immediate challenges.
+
+\begin{enumerate}
+  \item The main typing judgment is ambiguous. It is not at all clear which rule to apply at any given step of building a derivation, since the subtyping and weakening rules can always be tried at each stage. Indeed, one could always implement proof search for \dlambdaamor using backtracking, but it is preferable to avoid this if possible. Instead, we would like our implementation-ready calculus \bilambdaamor \red{mention the name earlier} to be \textit{syntax-directed} in the sense that the outermost syntax of the current term informs us which typing rule must be applied next in order to build a successful derivation. 
+  
+  \item \dlambdaamor includes full System F impredicative polymorphism, but a well-known result of \red{(figure out who)} states that type inference for System F is undecidable. Hence, we will not be able to design a type inference algorithm for \dlambdaamor. A natural second option is to shoot for implementing a type checker. Unfortunately, this too has its limitations. In order to implement proper type checking, the syntax of \dlambdaamor would have to be changed such that every variable binder includes a type annotation. This is a heavy burden on the programmer: annotating binders with types is tedious, error prone, and generally uninteresting. Instead, \bilambdaamor adopts \textit{bidirectional type checking}, a technique pioneered by \citehere which trades off some of the generality of full type inference for added ergonomics over standard type checking. The mechanics of this technique are discussed in Section~\textbf{??}
+  
+  \item \dlambdaamor's subtyping relation provides a challenge which should be familiar to the reader who is versed in the implementation of dependent type theories. The inclusion of the two subtyping rules S-Fam-Beta1 and S-FamBeta2 (found in Figure~\ref{fig:dlambdaamor-selected-typing-rules} or Figure~\textbf{??}) mean that the deciding the subtyping relation includes deciding $\beta$ equality at the type level. Luckily, the equational theory of types is simpler than that of a simply-typed lambda calculus, since the type-level lambda in \dlambdaamor $\lambda i : S. \tau$ ranges over index terms, not types. This allows for a very simple single-pass normalization procedure which decides the subtyping relation: this is discussed in Section~\textbf{??}.
+  
+  \item Many of the crucial rules of the \dlambdaamor subtyping relation include constraint satisfiability premises of the form $\Theta ; \Delta \vDash \Phi$. These premises will need to be discharged by an SMT solver. However, repeatedly pausing the subtyping algorithm to send constraints to a solver is inefficient. Instead, we would prefer to do one pass of typechecking, followed by a single call to the solver. To achieve this, the judgments of \bilambdaamor ``output" constraints. The intended meaning of this is that when the constraints are valid, the declarative version of the same judgment is derivable.
+  
+  \item The final barrier to implementation comes not from the refinement type or cost analysis features of \dlambdaamor, but simply from the fact that it is an affine type system. As an illustration, consider the typing rule T-TensorI: the ``input" context to the typechecker must be split into two disjoint parts which can be used in the two premises. This choice is nondeterministic: there is no way to know a priori what allocation of resources to give to each premise until later. To solve this, we employ a classical technique for implementing substructural type systems, known as \red{(is it though?)} the IO method.
+
+\end{enumerate}
+
+\subsection{Bidirectional Type Systems}
+Bidirectional type checking, also known as ``local type checking" is a type system algorithmization technique pioneered by \red{Pierce and Turner}. The technique works by separating the type checking judgment $\Gamma \vdash e : \tau$ of a declarative type system into two algorithmic judgments: $\Gamma \vdash e \checks \tau$ and $\Gamma \vdash e \infers  \tau$, which are read ``$e$ checks against $\tau$" and ``$e$ infers $\tau$" (sometimes ``synthesizes"), respectively. These two judgments are mutually-recursively defined in a specific manner. The process of turning a declarative type system into a bidirectional algorithmic one is straightforward to the point of mechanical: Dunfield and Pfenning \citehere provide a simple-to-follow recipe for this conversion, which extends from the simple type system they consider all the way to \dlambdaamor. 
+
+Syntax-directed algorithmic type systems presented in a bidirectional style are trivially implementable: the implementation strategy is built into the structure of the rules. To implement a bidirectional type system, one writes two mutually-recursive functions \texttt{check:ctx->tm->typ->bool} and \texttt{infer:ctx->tm->typ} by recursion on the term input: the recursive calls are guided by the premises of each rule. Note that the types of these functions indicate the intended \textit{modes} of the three positions of the judgment, in the sense of logic programming. In the checking judgment, all positions are imagined to be \textit{inputs}, while the inference judgment indicates that the type position is an \textit{output} of the judgment.
+
+As alluded to earlier, the ``inference" of the judgment $\Gamma \vdash e \infers \tau$ is not full inference, but merely ``local" inference: this judgment is derivable when enough information is present the form of $e$ to determine its type. This is in contrast to full type inference, where the type of a term may not be fully known until its type constraints are put in the context of those from the larger term in which it sits. For this reason, every syntactic form in the language has either an inference or checking rule: if requiring one of the premises to be inference gathers enough information to determine the type of the conclusion, then that conclusion will be an inference judgment. Otherwise, the judgment will be checking.
+
+\subsubsection{Subsumption and Annotation}
+
+In order to mediate between the two judgments, bidirectional type systems include two special rules. First, is the rule which is traditionally referred to as ``subsumption": in order to show that $e \checks \tau$, it suffices to show that $e \infers \tau$. In other words, if $e$ can infer a type, then it checks against that type. This rule is usually strengthened by subtyping:
+$$
+\infer{\Gamma \vdash e \checks \tau}{\Gamma \vdash e \infers \tau' & \tau' \subty \tau}
+$$ For $e$ to check against $\tau$, it suffices for $e$ to synthesize a more precise type $\tau'$.
+
+Going in the other direction from a checking premise to an infering conclusion is somewhat more involved. In general, the desired converse rule is not true: there will always be terms such that $e \checks \tau$ but it is not the case that $e \infers \tau$. In order to remedy this, bidirectional type systems introduce a new piece of syntax to the declarative language on which they're based: annotations. When $e$ checks against $\tau$, the annotated term $(e : \tau)$ infers the type $\tau$:
+$$
+\infer{\Gamma \vdash (e : \tau) \infers \tau}{\Gamma \vdash e \checks \tau}
+$$
+
+These annotations must be manually added to terms by the programmer as they write the program. However, the only place where annotations are truly required are at the sites of \textit{bare $\beta$-redexs}. For example, to check the term $(\lambda x. e)\, e'$,, it must be annotated as $(\lambda x.e : \tau \to \sigma) \, e'$. Since most programs only contain bare $\beta$-redexes in the form of let-bindings, this requirement is both predictable and fairly ergonomic.
+
+\subsubsection{Soundness and Completeness}
+As of yet, the relationship between a declarative calculus and its bidirectional algorithmic counterpart has been left unstated. However, the point of the bidirectional calculus is to be able to algorithmically generate declarative derivations! To this end, one always requires that the bidirectional type system be \textit{sound} for the declarative one.
+\begin{theorem}[Bidirectional Soundness]
+If $\Gamma \vdash e \checks \tau$, then $\Gamma \vdash e : \tau$
+\end{theorem}
+In other words, running $\texttt{check}(\Gamma,e,\tau)$ and getting \texttt{true} is sufficient to show that $e$ in fact has type $\tau$.
+
+Conversely, completeness is also desirable, but not strictly necessary for bidirectional type systems. However, the most obvious statement of completeness ($\Gamma \vdash e : \tau$ implies $\Gamma \vdash e \checks \tau$) does not hold! This is because of the annotation requirement: the term $e$ may contain un-annotated bare $\beta$-redexes. For this reason, the following slightly weaker theorem is used as the completeness result for bidirectional type systems.
+\begin{theorem}[Bidirectional Completeness]
+If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' \checks \tau$, and $|e'| = e$, where $|e'|$ is the annotation-erasure of $e'$.
+\end{theorem}
+\label{thm:bidir-compl-example}
+When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When Theorem~\ref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??}
+
+%For one, the inference judgment should in principle imply the checking judgment in the following sense: in order to check that $e \checks \tau$, it should be sufficient to derive $e \infers \tau$.
+
+
+\subsection{Constraint Generation}
+
+\subsection{I/O Method}
+  
+\subsection{Algorithmic Subtyping and Normalization}
+
+\subsection{Algorithmic Type System and Metatheory}
+
+
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
 

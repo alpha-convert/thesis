@@ -70,8 +70,173 @@
 \newcommand{\red}[1]{\color{red}#1\color{black}}
 
 \newcommand{\lambdaamor}{$\lambda$-Amor\xspace}
+\newcommand{\lambdaamorminus}{$\lambda-\text{Amor}^{-}$\xspace}
 \newcommand{\dlambdaamor}{d$\lambda$-Amor\xspace}
 \newcommand{\bilambdaamor}{bi$\lambda$-Amor\xspace}
 \newcommand{\lambdaA}{$\lambda^A$\xspace}
 
 \newcommand{\R}{\mathbb{R}}
+
+\newcommand{\potvec}{\vec{\mathbb{R}^+}}
+
+\newcommand{\pvdash}{\vdash_p}
+
+%theorems
+
+\newcommand{\jtheorem}[2]{
+  \vspace{0.5em}
+
+  % \noindent\fcolorbox{CadetBlue}{white}{#1}
+  %{\color{CadetBlue}\hrule height 0.5pt}
+
+  \vspace{0.25em}
+
+  \noindent \textbf{#1}
+
+  \vspace{0.25em}
+
+  %{\color{CadetBlue}\hrule height 0.5pt}
+
+  \vspace{0.5em}
+
+  \noindent \textit{Proof.} #2 \qed
+
+  \vspace{1em}
+}
+
+\newcommand{\jtref}[1]
+  {\textsc{#1}}
+
+\newmdenv[
+  usetwoside=false,
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  leftmargin=0.2in,
+  linewidth=0.75pt,
+  skipabove=\topsep,
+  skipbelow=\topsep,
+  nobreak=false
+]{leftrule}
+
+\newcommand{\allrule}[1]{
+  \vspace{\topsep}
+
+  \noindent\hspace{10pt}\fbox{#1}
+
+  \vspace{\topsep}
+}
+
+\newcommand{\jgivengoal}[2]{
+  \vspace{0.5em}
+
+  {
+    \setlength{\parskip}{0em}
+    \noindent $\blacktriangleright$ \textbf{Given:}
+    {
+      %\setlength{\parskip}{0.7em}
+      \begin{adjustwidth}{0.1in}{0in}
+        #1
+      \end{adjustwidth}
+      %\vspace{0.7em}
+    }
+
+    \noindent $\blacktriangleright$ \textbf{Goal:}
+
+    %\vspace{0.35em}
+
+    \begin{adjustwidth}{0.1in}{0in}
+      \allrule{#2}
+    \end{adjustwidth}
+
+    %\vspace{0.35em}
+  }
+  \noindent \ignorespaces
+}
+
+\newcommand{\jgivengoalTwo}[3]{
+  \vspace{0.5em}
+
+  {
+    \setlength{\parskip}{0em}
+    \noindent $\blacktriangleright$ \textbf{Given:}
+    {
+      %\setlength{\parskip}{0.7em}
+      \begin{adjustwidth}{0.1in}{0in}
+        #1
+      \end{adjustwidth}
+      %\vspace{0.7em}
+    }
+
+    \noindent $\blacktriangleright$ \textbf{Goal A:}
+
+    %\vspace{0.35em}
+
+    \begin{adjustwidth}{0.1in}{0in}
+      \allrule{#2}
+    \end{adjustwidth}
+
+    %\vspace{0.35em}
+
+    \noindent $\blacktriangleright$ \textbf{Goal B:}
+
+    %\vspace{0.35em}
+
+    \begin{adjustwidth}{0.1in}{0in}
+      \allrule{#3}
+    \end{adjustwidth}
+
+    %\vspace{0.35em}
+  }
+  \noindent \ignorespaces
+}
+
+\newcommand{\jcase}[3]{
+  %\vspace{0.7em}
+
+  \noindent $\blacktriangleright$ \textbf{Case #1:} \textit{#2.}
+
+  {
+    %\setlength{\parskip}{0.7em}
+    \begin{leftrule}
+      \vspace{0.35em}
+      #3
+    \end{leftrule}
+  }
+  
+  \vspace{0.7em}
+
+  \noindent \ignorespaces
+}
+
+\newcommand{\jnocase}[1]{
+  {
+    \setlength{\parskip}{0.7em}
+    #1
+  }
+}
+
+\newcommand{\jsubcase}[3]{
+  \noindent $\blacktriangleright$ \textbf{Subcase #1:} \textit{#2.}
+
+  {
+    \setlength{\parskip}{0.7em}
+    \begin{adjustwidth}{0.2in}{0in}
+      #3
+    \end{adjustwidth}
+  }
+
+  \noindent \ignorespaces
+}
+
+
+\newcommand{\caseText}[1]
+  {\noindent #1}
+
+\newcommand{\caseFact}[1]
+  % {\\[2pt]\makebox[0.40in][r]{(#1)\ \ }}
+  {\noindent \hspace{10pt}(#1)\hspace{5pt}}
+
+\newcommand{\caseFactPl}[1]
+  % {\\[2pt]\makebox[0.60in][r]{(#1)\ \ }}
+  {\caseFact{#1}}
