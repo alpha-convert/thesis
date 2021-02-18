@@ -162,7 +162,7 @@ Judgments in \dlambdaamor have as many as five contexts.
 One may think of all types in $\Omega$ implicitly beginning with $!$, and imagine the variable rule for exponential variables to be silently inserting the counit $!\tau \loli \tau$. This dual-context construction is standard in the study of modal types. \cite{kavvos:lmcs}
 }. Finally, the context $\Gamma$ lists the rest of the variables, which may be used at most once.
 
-
+In order to avoid questions of exchange, we consider all of the contexts except for $\Delta$ up to permutations. Indeed, we will frequently treat contexts like sets, testing membership. Further, it will be useful later on to take intersections, unions, and differences of contexts: these operations will only be defined when both operations involved are subsets of a common superset.
 
 \subsubsection{Index Terms and their Sorts}
 The rules that make up the sort system for index terms (prefixed I-) are mostly self-explanatory: we ensure that arguments to arithmetic operators have the same sorts.
@@ -273,7 +273,10 @@ For some of the judgments of \dlambdaamor, such as the sort-assignment judgment 
 \begin{enumerate}
   \item The main typing judgment is ambiguous. It is not at all clear which rule to apply at any given step of building a derivation, since the subtyping and weakening rules can always be tried at each stage. Indeed, one could always implement proof search for \dlambdaamor using backtracking, but it is preferable to avoid this if possible. Instead, we would like our implementation-ready calculus \bilambdaamor \red{mention the name earlier} to be \textit{syntax-directed} in the sense that the outermost syntax of the current term informs us which typing rule must be applied next in order to build a successful derivation. 
   
-  \item \dlambdaamor includes full System F impredicative polymorphism, but a well-known result of \red{(figure out who)} states that type inference for System F is undecidable. Hence, we will not be able to design a type inference algorithm for \dlambdaamor. A natural second option is to shoot for implementing a type checker. Unfortunately, this too has its limitations. In order to implement proper type checking, the syntax of \dlambdaamor would have to be changed such that every variable binder includes a type annotation. This is a heavy burden on the programmer: annotating binders with types is tedious, error prone, and generally uninteresting. Instead, \bilambdaamor adopts \textit{bidirectional type checking}, a technique pioneered by \citehere which trades off some of the generality of full type inference for added ergonomics over standard type checking. The mechanics of this technique are discussed in Section~\textbf{??}
+  \item \dlambdaamor includes full System F impredicative polymorphism, but a well-known result of \red{(figure out who)} states that type inference for System F is undecidable. Hence, we will not be able to design a type inference algorithm for \dlambdaamor. A natural second option is to shoot for implementing a type checker. Unfortunately, this too has its limitations. In order to implement proper type checking, the syntax of \dlambdaamor would have to be changed such that every variable binder includes a type annotation. This is a heavy burden on the programmer: annotating binders with types is tedious, error prone, and generally uninteresting\footnote{
+As \citet{pierce:lics03} notes: ``The more interesting your types get, the less fun it is to write them down!"
+%https://www.cis.upenn.edu/~bcpierce/papers/tng-lics2003-slides.pdf
+  }. Instead, \bilambdaamor adopts \textit{bidirectional type checking}, a technique pioneered by \citehere which trades off some of the generality of full type inference for added ergonomics over standard type checking. The mechanics of this technique are discussed in Section~\textbf{??}
   
   \item \dlambdaamor's subtyping relation provides a challenge which should be familiar to the reader who is versed in the implementation of dependent type theories. The inclusion of the two subtyping rules S-Fam-Beta1 and S-FamBeta2 (found in Figure~\ref{fig:dlambdaamor-selected-typing-rules} or Figure~\textbf{??}) mean that the deciding the subtyping relation includes deciding $\beta$ equality at the type level. Luckily, the equational theory of types is simpler than that of a simply-typed lambda calculus, since the type-level lambda in \dlambdaamor $\lambda i : S. \tau$ ranges over index terms, not types. This allows for a very simple single-pass normalization procedure which decides the subtyping relation: this is discussed in Section~\textbf{??}.
   
@@ -283,14 +286,21 @@ For some of the judgments of \dlambdaamor, such as the sort-assignment judgment 
 
 \end{enumerate}
 
-\subsection{Bidirectional Type Systems}
+
+%\red{When presenting the next stuff, do I want to introduce the features in parallel (like I currently do), or build up the type system by layering things on one by one? Make sure you mentionthe explicit choice you've made here.}
+
+\subsection{Overview of Solutions (change this name)}
+
+Below, we present the solutions to these five problems that we choose to adopt. All five solutions are well-known techniques, but to our knowledge \red{try a bit harder to make sure this is true before you say it...} \bilambdaamor is the first type system to show that they may all be simultaneously integrated into a single system. Moreover, since the five techniques are orthogonal, we present each feature of \bilambdaamor in isolation for a significantly more simple language. In Section~\textbf{??}, we show how all of the techniques are applied to \dlambdaamor to form the algorithmic type system \bilambdaamor.
+
+\subsubsection{Bidirectional Type Systems}
 Bidirectional type checking, also known as ``local type checking" is a type system algorithmization technique pioneered by \red{Pierce and Turner}. The technique works by separating the type checking judgment $\Gamma \vdash e : \tau$ of a declarative type system into two algorithmic judgments: $\Gamma \vdash e \checks \tau$ and $\Gamma \vdash e \infers  \tau$, which are read ``$e$ checks against $\tau$" and ``$e$ infers $\tau$" (sometimes ``synthesizes"), respectively. These two judgments are mutually-recursively defined in a specific manner. The process of turning a declarative type system into a bidirectional algorithmic one is straightforward to the point of mechanical: Dunfield and Pfenning \citehere provide a simple-to-follow recipe for this conversion, which extends from the simple type system they consider all the way to \dlambdaamor. 
 
 Syntax-directed algorithmic type systems presented in a bidirectional style are trivially implementable: the implementation strategy is built into the structure of the rules. To implement a bidirectional type system, one writes two mutually-recursive functions \texttt{check:ctx->tm->typ->bool} and \texttt{infer:ctx->tm->typ} by recursion on the term input: the recursive calls are guided by the premises of each rule. Note that the types of these functions indicate the intended \textit{modes} of the three positions of the judgment, in the sense of logic programming. In the checking judgment, all positions are imagined to be \textit{inputs}, while the inference judgment indicates that the type position is an \textit{output} of the judgment.
 
 As alluded to earlier, the ``inference" of the judgment $\Gamma \vdash e \infers \tau$ is not full inference, but merely ``local" inference: this judgment is derivable when enough information is present the form of $e$ to determine its type. This is in contrast to full type inference, where the type of a term may not be fully known until its type constraints are put in the context of those from the larger term in which it sits. For this reason, every syntactic form in the language has either an inference or checking rule: if requiring one of the premises to be inference gathers enough information to determine the type of the conclusion, then that conclusion will be an inference judgment. Otherwise, the judgment will be checking.
 
-\subsubsection{Subsumption and Annotation}
+%\subsubsection{Subsumption and Annotation}
 
 In order to mediate between the two judgments, bidirectional type systems include two special rules. First, is the rule which is traditionally referred to as ``subsumption": in order to show that $e \checks \tau$, it suffices to show that $e \infers \tau$. In other words, if $e$ can infer a type, then it checks against that type. This rule is usually strengthened by subtyping:
 $$
@@ -304,7 +314,7 @@ $$
 
 These annotations must be manually added to terms by the programmer as they write the program. However, the only place where annotations are truly required are at the sites of \textit{bare $\beta$-redexs}. For example, to check the term $(\lambda x. e)\, e'$,, it must be annotated as $(\lambda x.e : \tau \to \sigma) \, e'$. Since most programs only contain bare $\beta$-redexes in the form of let-bindings, this requirement is both predictable and fairly ergonomic.
 
-\subsubsection{Soundness and Completeness}
+% \subsubsection{Soundness and Completeness}
 As of yet, the relationship between a declarative calculus and its bidirectional algorithmic counterpart has been left unstated. However, the point of the bidirectional calculus is to be able to algorithmically generate declarative derivations! To this end, one always requires that the bidirectional type system be \textit{sound} for the declarative one.
 \begin{theorem}[Bidirectional Soundness]
 If $\Gamma \vdash e \checks \tau$, then $\Gamma \vdash e : \tau$
@@ -318,7 +328,7 @@ If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' 
 \label{thm:bidir-compl-example}
 When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When Theorem~\ref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??} by proving an equivalent statement whose constructive proof inserts fewer annotations than the standard theorem.
 
-\subsection{Algorithmic Subtyping and Normalization}
+\subsubsection{Algorithmic Subtyping and Normalization}
 In order to implement the subsumption rule mentioned above, a decision procedure for the subtyping relation $\tau \subty \tau'$ is required. However, \dlambdaamor's subtyping is not immediately implementable for two important reasons.
 
 Firstly, like \dlambdaamor's typing relation, it is not syntax directed: the transitivity rule S-Trans can be used at any step of a derivation. Similarly, the reflexivity rule T-Refl conflicts with all of the congruence rules. In order to avoid a backtracking implementation, it will be necessary to design an algorithmic subtyping relation for \bilambdaamor which includes neither of these rules. Of course, the algorithmic subtyping will need to be sound and complete for the declarative one. This requirement means that the algorithmic subtyping relation will need to have reflexivity and transitivity as admissible rules: in effect, we will need to prove identity and cut elimination.
@@ -327,12 +337,157 @@ The second (and more pernicious) problem is the inclusion of indexed types. Whil
 
 The inclusion of the two $\beta$-inequalities makes a simple algorithmic subtyping relation unlikely, since any way of deciding the subtyping relation must also decide $\beta$ equality of this small lambda calculus at the type level. However, the situation is sufficiently simple that we can get away with a fairly low-powered solution. To this end, \bilambdaamor's subtying relation is split into two phases. First, both types are evaluated (or \textit{normalized}) to normal forms, and then judged for subtyping by a relation which only contains the congruence rules. Since the abstractions $\lambda i : S.\tau$ range over \textit{index terms} and not types, a $\beta$ reduct has strictly fewer type connectives than its redex. For this reason, the normalization can be implemented in a single pass: substituting an index term for a free variable in a type in normal form yields another type in normal form. This two-phase algorithmic subtyping relation, as well as the normalization proof, are discussed in detail in Section~\textbf{??}
 
-\subsection{Constraint Generation}
+\subsubsection{Constraint Generation}
+As motivated in Section~\textbf{?? intro}, most of the changes to \lambdaamorminus that result in \dlambdaamor are there for the purpose of simplifying the constraint-solving process that arises as a part of subtyping. Efficiently handling these constraints is crucial to an efficient implementation. For this reason, it is useful to defer the discharging of these constraint satisfiability premises of rules until \textit{after} the typechecking pass has finished.
 
-\subsection{I/O Method}
+We operationalize this in \bilambdaamor by designing each judgment to ``output" a constraint: we replace declarative judgments $\mathcal{J}$ with algorithmic ones $\mathcal{J} \gens \Phi$. For instance, the declarative sort-checking judgment $\Theta ; \Delta \vdash I : S$ of \dlambdaamor corresponds to the algorithmic judgment $\Theta ; \Delta \vdash I : S \gens \Phi$ from \bilambdaamor. The intended meaning of this (and the shape of the soundness theorem for an algorithmic judgment with a constraint output) is that if we can derive $\mathcal{J} \gens \Phi$ and $\Phi$ holds, then $\mathcal{J}$ is derivable.
 
-\subsection{Algorithmic Type System and Metatheory}
+This scheme is pervasive. Since every judgment in \dlambdaamor either has a rule with a constraint satisfaction premise or depends on one that does, every judgment in \bilambdaamor must emit constraints. The pattern in transforming a declarative judgment to an algorithmic one which emits constraints is fairly uniform: the output constraint of a rule is essentially the conjunction of the constraints output by its premises. One must also ensure that implications and quantifiers are inserted for constraints and index variables bound in premises: the logical structure of the output constraint mirrors the structure of the premises.
 
+\red{Talk a bit here about where these arise in other places}
+
+\subsubsection{I/O Method}
+In order to maintain the soundness of potentials, \dlambdaamor has an affine type system. On top of the implementation challenges created by the fancier aspects of \dlambdaamor's type system, its affine-ness presents a well-understood barrier to implementation. To illustrate, consider writing the following case of the \texttt{check:ctx->tm->typ->bool} function from earlier.\footnote{
+In order to simplify some of the presentation of this section, we will specialize to the non-bidirectional setting, and work in a simply-typed language where binders are fully annotated. \red{Should I say this in the main copy?}
+}
+
+$$
+\texttt{check gamma Pair(e1,e2) Tensor(t1,t2) = } ??
+$$
+
+This case corresponds to the introduction rule for tensor,
+
+%As outlined in Section~\textbf{??}, the implementation of bidirectional type systems usually takes the form of two mutually recursive functions \texttt{check:ctx->tm->typ->bool} and \texttt{infer:ctx->tm->typ}. These functions are implemented recursively on the second argument, and the recursive calls for a specific case are dictated by the premises of the corresponding typing rule. However, in the presence of an affine type system, this clean story is somewhat complicated. To illustrate, consider this simplified version of a first cut at the algorithmic tensor introduction rule.
+$$
+\infer{\Gamma_1,\Gamma_2 \vdash (e_1,e_2) : \tau_1 \otimes \tau_2}{\Gamma_1 \vdash e_1 : \tau_1 & \Gamma_2 \vdash e_2 : \tau_2}
+$$
+
+
+It is not at all clear how to proceed in this case. The tensor introduction rule prescribes that we make two recursive calls \texttt{check gamma1 e1 t1} and \texttt{check gamma2 e2 t2}, but provides no direction how to obtain \texttt{gamma1} and \texttt{gamma2} from \texttt{gamma}: the rule is presented in the standard way so that the two halves of the context are given at the outset.
+
+This problem has two naive solutions. Firstly, one could analyze the structure of \texttt{e1} and \texttt{e2} in order to determine the variables they each use, and partition the context accordingly. Of course, this is very inefficient: even if done with a pre-processing step, this adds at least one pass through the term. Secondly, one could split the context \textit{symbolically}, and generate yet more constraints to unify at the end of the typechecking process.
+
+Instead of either of these, we adopt a more principled approach based on the work of \citet{cervesato:tcs00}. In short, we extend the main typing judgment with yet another output-- this time a second context, which contains the variables which were unused in typing the term. A simplified version of the typing judgment takes the form $\Gamma \vdash e : \tau \gens \Gamma'$, where $\Gamma$ is the \textit{input context}, and $\Gamma'$ is the \textit{output context}. The key idea of this setup (known sometimes as the I/O method) is that we may thread the contexts through the premises of a rule as follows:
+
+$$
+\infer{\Gamma \vdash (e_1,e_2) : \tau_1 \otimes \tau_2 \gens \Gamma_2}{\Gamma \vdash e_1 : \tau_1 \gens \Gamma_1 & \Gamma_1 \vdash e_2 : \tau_2 \gens \Gamma_2}
+$$
+
+The first premise (the first component of the pair) has access to the entire input context, and it outputs $\Gamma_1$, the variables in $\Gamma$ which were unused in typing $e_1$. This context is then used as the \textit{input} context for checking $e_2$: since affine variables may be used at most once, the only variables which $e_2$ may access are those unused by $\Gamma_2$. This property is enforced ``in parallel" by splitting the context up front in the declarative rules, but it may similarly be enforced ``sequentially" by lazily deciding which premises may use which variables in this algorithmic styles.
+
+The key rule in designing an algorithmic type system which uses the I/O method is of course the affine variable rule. When a variable is used, it must be removed from the output context:
+
+$$
+\infer{\Gamma \vdash x : \tau \gens \Gamma \setminus \{x\}}{x : \tau \in \Gamma}
+$$
+
+Moreover, this I/O method will be trivial to implement. We simply change the type of \texttt{check} and \texttt{infer} to output a context as well. Since these functions both receive and output a context, one can think of typechecking with the I/O method as happening inside a state monad of contexts, as opposed to the usual reader monad.
+
+While this solution is clearly preferable to the naive ones efficiency-wise, it is not at all clear that this way of algorithmizing an affine type system is sound, much less complete, for the standard presentation of the rules. The proof of soundness is fairly straightforward, and relies on a simple intuition about the output context: if we can derive that $\Gamma \vdash e : \tau \gens \Gamma'$, then the variables used by $e$ are precisely $\Gamma \setminus \Gamma'$. Writing $\Gamma \vdash e : \tau$ (with no output context) as the declarative typing relation, we can prove
+
+\begin{theorem}[Soundness of the I/O Method]
+If $\Gamma \vdash e : \tau \gens \Gamma'$, then $\Gamma \setminus \Gamma' \vdash e : \tau$
+\end{theorem}
+
+Note that $\Gamma \setminus \Gamma'$ is well-defined because $\Gamma' \subseteq \Gamma$, a fact which must be proven by induction over the algorithmic rules.
+
+The completeness theorem is simpler to state, but harder to prove.
+
+\begin{theorem}[Completeness of the I/O Method]
+If $\Gamma \vdash e : \tau$, then there is some $\Gamma'$ such that $\Gamma \vdash e : \tau \gens \Gamma'$
+\end{theorem}
+
+The proof of this theorem relies on the fact while weakening is not admissible for the (affine) declarative type system, it \textit{is} admissible for an algorithmic type system using the I/O method: if new variables are added to the input context, then they simply ``flow through" the judgment to the output context, and are left unused.
+
+\begin{theorem}[Admissibility of Weakening for the I/O Method]
+If $\Gamma \vdash e : \tau \gens \Gamma'$, then for all $\Gamma''$, we have that $\Gamma,\Gamma'' \vdash e : \tau \gens \Gamma',\Gamma''$
+\end{theorem}
+
+\subsection{Normalization of Types}
+In order to circumvent the issue of deciding $\beta$-equality of types as a part of \bilambdaamor's subtyping routine, we employ a normalization (or evaluation) procedure to eliminate all $\beta$-redexes from a type. Once these $\beta$-redexes have been eliminated, subtyping only requires congruence rules. The normalization proof that we describe in this section is a normalization relative to the equational theory induced by \dlambdaamor's subtyping relation, that is to say: we will eventually prove that a type and its normal form are mutual subtypes of each other \textit{with the subtyping relation of \dlambdaamor}. This may seem strange-- after all, the normalization is required for \bilambdaamor's subtyping relation. However, we will see in Section~\textbf{??} that to prove the completeness of \bilambdaamor's algorithmic subtyping (Theorem~\textbf{??}), a normalization proof for \dlambdaamor's subtyping is exactly what's required. Moreover, the eventual soundness and completeness theorems for algorithmic subtyping will allow us to transport this normalization result to \bilambdaamor's type system when required.
+
+This normalization procedure computes \textit{normal forms} for types, which should be thought of as canonical representatives of the $\beta$-equivalence classes of types. These normal forms can characterized syntactically: we present a pair of relations $\tau \, \texttt{ne}$ and $\tau \, \texttt{nf}$, which judge a type to be neutral or normal, respectively. Neutral types are those which can be of arrow kind, but will not induce any $\beta$-redexes when applied to, while normal types are types which include no $\beta$-redexes. The former are required to define the latter: the type $\tau \, I$ is only in normal form when $\tau$ is not of the form $\lambda i : S.\tau'$. The rules generating these two relations can be found in Appendix~\textbf{??}.
+
+Before we present the normalization function, let us briefly take a moment to discuss why the solution we are about to present is incredibly simple. Proofs of normalization for most calculi require fairly high-powered proof techniques such as logical relations or categorical arguments. The inherent complexity of normalization proofs stems from the fact that straightforward induction on terms rarely works, since one would need to induct on substitution instances of lambda terms which are not subterms of the original term. However, \dlambdaamor's type-level lambdas do not range over types, they range over terms. Because of this, a substitution instance $\tau[I/i] : K$ of an open type $i : S \vdash \tau : K$ has the exact same number of type connectives as the open term. Further, substituting an index term into a type cannot introduce any new redexes, and so any substitution instance of an open type in normal form is also normal. These observations are codified in the following theorems.
+
+\begin{theorem}
+$\#\texttt{eval}(\tau) \leq \#\tau$, where $\#(\cdot)$ denotes the number of connectives in a type.
+\end{theorem}
+\begin{proof}
+By induction on $\#\tau$
+\end{proof}
+
+\red{Very strange spacing here... fix this}
+
+\begin{theorem}
+~\begin{enumerate}
+  \item If $\tau \; \texttt{ne}$ then $\tau[I/i] \; \texttt{ne}$
+  \item If $\tau \; \texttt{nf}$ then $\tau[I/i] \; \texttt{nf}$
+\end{enumerate}
+\end{theorem}
+\label{thm:idx-subst-nf}
+\begin{proof}
+We prove the two claims simultaneously by induction on the derivations of $\tau \; \texttt{ne}$ and $\tau \; \texttt{nf}$.
+\end{proof}
+
+Because of these simplifying factors, we can define an evaluation function \texttt{eval} defined inductively on the structure of types which computes normal forms.
+The most important clauses of the definition can be found in Figure~\ref{fig:selected-eval-rules}. For all of the logical connectives, the definition proceeds compositionally-- the remaining rules can be found in Figure~\textbf{??}
+
+\red{Factor out figures into sep. files}
+\begin{figure}
+\begin{mathpar}
+  \texttt{eval}(\alpha) = \alpha
+  
+  \texttt{eval}(\lambda i : S. \tau) = \lambda i : S. \texttt{eval}(\tau)
+  
+  \\  
+  
+  \texttt{eval}(\tau \; I) = \begin{cases}
+   \tau'[I/i] & \texttt{eval}(\tau) = \lambda i : S. \tau' \\
+   \texttt{eval}(\tau) \; I & \text{otherwise}
+                              \end{cases}
+\end{mathpar}
+\label{fig:selected-eval-rules}
+\caption{Selected Clauses of the \texttt{eval} Function}
+\end{figure}
+
+The most important (and only nontrivial) clause of the definition is the application case. To evaluate $\tau \; I$, we begin by evaluating $\tau$. If its normal form
+is a lambda, we simply perform the $\beta$-reduction. Note that we do not need to evaluate this substitution instance, as it must already be in normal form by Theorem~\ref{thm:idx-subst-nf}, assuming the correctness of the \texttt{eval} function. Otherwise, we simply re-apply the index term $I$.
+
+Of course, it is not immediately clear that this function in fact computes what we want! In order for \texttt{eval} function to be a normalization procedure, its image must consist only of types in normal form, and every type must be equivalent to its evaluation. Note that we do not prove the stronger property that equivalence is completely characterized by syntactic equality of normal forms (up to satisfied equality of index terms). While almost certainly true, this property requires a bit more work to prove and is not required for the discussion in Section~\textbf{??}, and so we omit it. Finally, we must also prove that the \texttt{eval} function preserves kinds-- this proof follows the same inductive structure as the proof of normalization, and so we bundle them together. We present the case for evaluation below, and the remainder of the cases can be found in Appendix~\textbf{??}. The Normalization Theorem does depend on a small canonical forms lemma: types of arrow kind in normal form must either be lambdas or neutral.
+
+\begin{theorem}[Canonical Forms for $S \to K$]
+If $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ and $\tau \; \texttt{nf}$, then either:
+\begin{enumerate}
+  \item $\tau = \lambda i : S.\tau'$ with $\tau' \; \texttt{nf}$
+  \item $\tau \; \texttt{ne}$
+\end{enumerate}
+\end{theorem}
+
+
+\begin{theorem}[Normalization Theorem]
+If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, then:
+\begin{enumerate}
+  \item $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau) : K$
+  \item $\Psi ; \Theta ; \Delta \pvdash \tau \equiv \texttt{eval}(\tau) : K$
+  \item $\texttt{eval}(\tau) \; \texttt{nf}$
+\end{enumerate}
+\end{theorem}
+
+\red{Include the cut case here.}
+
+\subsection{Algorithmic Type System of \bilambdaamor}
+The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is of course by design, as \bilambdaamor is intended to be an implementable version of \dlambdaamor. The only difference is the addition of the type annotation syntax $(e : \tau)$ described in Section~\textbf{??}. The main change between the two type systems is in the forms of the judgments. Some judgments change in only minor ways: the sort-checking, kind-checking, and constraint well-formedness judgments are all the same as in \dlambdaamor, with the exception of the added constraint outputs as described in Section~\textbf{??}. The subtyping judgment also sports a constraint output, but is also is split into two, with first a ``normal form subtyping" relation which judges one type to be a subtype of another when both are in normal form, and then the general algorithmic subtyping relation which relates two types by normalizing them and then relating them via the normal form subtyping relation. Finally, the typing judgment changes the most: it splits into a checking ($\downarrow$) and inferring/synthesis ($\uparrow$) judgment to support bidirectional type inference, with added constraint outputs for solving and unused variable context output for the I/O method. These judgment forms are all shown in Figure~\ref{fig:bilambdaamor-typing-judgments}.
+
+\begin{figure}
+\label{fig:bilambdaamor-typing-judgments}
+\caption{Judgment Forms of the \bilambdaamor Type System}
+\end{figure}
+
+\subsubsection{Sorts, Kinds, and Well-Formed Constraints}
+
+\subsubsection{Algorithmic Subtyping}
+%Talk about why this works! Why can we normalize first and then just do congrueånces?
 
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
