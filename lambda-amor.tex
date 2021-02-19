@@ -95,6 +95,7 @@ For $\vec{p} = (a_0,\dots,a_{k-1},a_k)$ a potential vector, we define $\lhd \vec
 \begin{theorem}
 For $n \geq 1$ and $\vec{p}$ a potential vector, $\phi(n,\vec{p}) = \phi(n-1,\lhd \vec{p})$
 \end{theorem}
+\label{thm:raml-shift}
 \begin{proof}
 It is straightforward to prove (either by combinatorial argument or direct computation) that $\binom{n-1}{i} + \binom{n-1}{i+1} = \binom{n}{i+1}$. Using this fact,
 we may compute as follows:
@@ -216,15 +217,17 @@ All of the judgments presented so far are ``raw" judgments-- one may mechanicall
 \end{figure}
 
 \section{Semantics and Soundness of \dlambdaamor}
-For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. In order to prove that \dlambdaamor's type system is sound in this way, we will appeal to the soundness proof of \lambdaamorminus. As discussed in Section~\textbf{??}, \lambdaamorminus differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamorminus. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamorminus.
+For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. In order to prove that \dlambdaamor's type system is sound in this way, we will appeal to a version of the soundness proof of \lambdaamorminus. As discussed in Section~\textbf{??}, \lambdaamorminus differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamorminus. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamorminus. Formally, we do not present a true embedding into \lambdaamorminus, as it does not have a sort of potential vectors! However, potential vectors can be trivially added to \lambdaamorminus: the kripke logical relation which forms the basis for its soundness proof never inspects index terms, and conflates index terms with the semantic objects they denote. For this reason, we freely consider \lambdaamorminus as having a sort of potential vectors in the style of \dlambdaamor.
+
+In Section~\textbf{??}, we present the operational semantics for \dlambdaamor upon which the soundness theorem is based. This semantics is a big-step cost-indexed operational semantics: the cost indices are the concrete notion of cost that will be bounded by the statically-predicted costs in the soundness theorem.
+
+Then, in Section~\textbf{??}, we sketch the embedding of \dlambdaamor into \lambdaamorminus, and further sketch proofs that the cost semantics of \dlambdaamor coincides with that of \lambdaamorminus under the embedding, as well as the overall soundness theorem of \dlambdaamor.
 
 
 \subsection{Operational Semantics of \dlambdaamor}
 In order to pin down the exact cost of programs written in \dlambdaamor, we provide a \textit{cost semantics} for the language: a big-step operational semantics which is indexed by the cost of evaluation.
 
-Operationally, \dlambdaamor behaves like a call-by-name monadic version of PCF. The cost semantics, for which selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$.
-
-% The soundness theorem for \dlambdaamor (discussed in Sectoin~\ref{sec:dlambdaamor-sound}) relates the statically-predicted cost $I$ to the actual cost $\kappa$ by showing that the former is an upper bound on the latter.
+Operationally, \dlambdaamor behaves like a call-by-name monadic version of PCF. The cost semantics, for which selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$. Selected rules from these two judgments can be found in Figure~\ref{fig:selected-sem-rules}.
 
 The rules for the pure evaluation relation are straightforward- as all monadic terms are values, the pure relation simply behaves like a big-step evaluation relation for by-name PCF. The rules for the refinement syntax at term level behave as if the syntax for refinements has been erased at runtime- they contribute nothing meaningful to the operational semantics.
 
@@ -232,37 +235,84 @@ The rules for the forcing relation warrant some discussion. Since all monadic co
 
 Most importantly, the $\texttt{tick}[I|\vec{p}]$ term evaluates with cost $\phi(I,\vec{p})$ to the trivial value $()$. This rule encodes the heretofore intutitive cost behavior of the type $\M (I,\vec{p}) \, \tau$, by explicitly assigning the atomic costly operation the cost $\phi(I,\vec{p})$ in our cost semantics.  The final cost-monadic term, the \texttt{bind}, is assigned cost in a purely compositional way. The evaluation of \texttt{bind} proceeds like the evaluation of a let-binding, where the costs of forcing the argument and then the subsequent continuation are added, and given as the total cost.
 
-%Talk about how potential ops work, and they're gost at the level of values.
-%"We note that a value of type $[I|\vec{p}]$ \, \tau is simply a value of type $\tau$. The potentials are not present at evaluation time, and are purely a "
-%\fi
+Finally, the two potential-related operations incur no semantic cost. This may come as a surprise-- the statically predicted cost for the \texttt{store} operation (for example) is the amount of potential to be allocated. However, this cost is entirely for bookeeping purposes to ensure that potentially is used soundly: it is not truly incurred when the program runs. Similarly, the \texttt{release} operation runs identically to \texttt{bind}: it is simply a monadic sequencing. This ``ghost" nature of potential at runtime is congruent with the way we think about amortized analysis. Recalling the notation of Section~\textbf{??}, the operational semantics give the costs $C(f)$, while the static types encode the amortized cost $A(f) + \Delta\Phi$.
+
+\begin{figure}
+\label{fig:selected-sem-rules}
+\caption{Selected Rules of \dlambdaamor's Cost Semantics}
+\end{figure}
 
 \subsection{Embedding of \dlambdaamor in \lambdaamorminus}
-The translation of \dlambdaamor into \lambdaamorminus requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamorminus $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$.
+The translation of \dlambdaamor into \lambdaamorminus requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation on types consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamorminus $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$. These translations respect rules of the two type systems: the monotonicity and additivity of the $\phi$ function from Theorem~\textbf{??} justify the translations of the \texttt{bind} and \texttt{release} operations, as well as the subtyping rule for costs and potentials. The rest of the translation is primarily an erasure. \lambdaamorminus's syntax includes no explicit index terms or types at the term level, and so these are all erased. In particular, the shift operation is erased, a move which is justified by Theorem~\textbf{thm:raml-shift}.
 
-\begin{theorem}[Embedding Soundness]
-If $\pvdash e : \tau$ then $\vdash e^\circ : \tau^\circ$
-\end{theorem}
-\label{thm:embedding-sound}
 
-\subsection{Soundness of \dlambdaamor}
-\label{sec:dlambdaamor-sound}
+\subsubsection{Statement of Soundness of \dlambdaamor}
 
-\begin{theorem}[Semantic Equivalence of the Embedding]
-If $e \Downarrow^\kappa v$ then $e^\circ \Downarrow_{-}^{\kappa'} v$ with $\kappa \leq \kappa'$.
-\end{theorem}
-\label{thm:dlambdaamor-sem-equiv}
-
-\begin{theorem}[Soundness of \dlambdaamor]
-If $\pvdash e : \M (n,\vec{p}) \, \tau$ and $e \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$
-\end{theorem}
-\begin{proof}
-By Theorem~\ref{thm:embdding-sound}, $\vdash e^\circ : \M \left(\phi(I^\circ,\vec{p}^\circ)\right) \, \tau^\circ$.
-By Theorem~\ref{thm:dlambdaamor-sem-equiv}, $e^\circ \Downarrow_{-}^{\kappa'} v$ and $\kappa \leq \kappa'$.
-By Theorem 1 in \citet{rajani-et-al:popl21}, $\kappa' \leq \phi(I,\vec{p})$ as required.
-\end{proof}
+\red{Write this section}
 
 
 \subsection{Examples of Programs in \dlambdaamor}
+Having just spent a great many pages discussing the technical details of \dlambdaamor's syntax, type system, and semantics, we now arrive at the fun part: analyzing the cost of programs! In this section, we will present a number of examples of programs written in \dlambdaamor, each of which exemplifies a different component of its cost analysis capabilities. These examples will loosely follow the presentation of Section 3 of \citet{rajani-et-al:popl21}, where more in-depth discussion can be found.
+
+\subsubsection{Add One}
+
+We begin with a (very) simple example to demonstrate the utility of \dlambdaamor's AARA-style costs. Consider writing a function $\texttt{addOne}$, which adds one to each integer in a list. If we assume the cost model that natural number addition costs one unit of time, the function would have type $\forall n : \N. \, L^n(\texttt{nat}) \loli \M \, (n,\langle 0,1 \rangle) \, \left(L^n(\texttt{nat})\right)$. Recalling the intended meaning of the AARA-style cost functions, this means that \texttt{addOne} costs $\phi(n,\langle 0,1 \rangle) = n$ in total, where $n$ is the length of the input list (and also the output). Of course, this makes sense, as each entry in the list incurs a single cost, to add one to it. The term for this type can be found in Figure~\ref{fig:example-dlambdaamor-addone}. The operational aspects of the program are exactly what one expects from an instance of map. More interesting are the cost-related aspects of the code. In the cons branch, we immediately \texttt{shift}. This allows us to provide a term of type  $\M \, (n-1,\langle 1,1 \rangle) \, \left(L^n(\texttt{nat})\right)$ in place of the expected type $\M \, (n,\langle 0,1 \rangle) \, \left(L^n(\texttt{nat})\right)$. This shift is required to perform the recursive call on the tail: \textbf{??} has type $\M \, (n-1,\langle 0,1 \rangle) \, \left(L^{n-1} (\texttt{nat})\right)$, which can only be bound into a continuation which results in something of type $\M \, (n-1, \_) \, \_$. Further, the shift ``exposes" the one constant cost, which is incurred by the tick (which we attribute to the addition). This raises a crucial point: a ``hole" in a program expecting $\M \, (n,\langle 0,1 \rangle) \, \tau$ cannot accept a term of type $\M \, (n, \langle 1,0 \rangle) \, \tau$, despite this being semantically sound.
+
+\begin{figure}
+\label{fig:example-dlambdaamor-addone}
+\caption{\texttt{addOne} function in \dlambdaamor}
+\end{figure}
+
+
+This example can also be performed using potentials, rather than costs. Instead of a function which incurs $n$ cost, we can instead think of \texttt{addOne} as a free-to-execute function which expects $n$ potential. One possible choice for this function's type is:
+$$\forall n : \N .\, [n|\langle 0,1 \rangle] \, 1 \loli L^n(\texttt{nat}) \loli \M \, (n,\langle 0,0 \rangle) \, \left(L^n(\texttt{nat})\right)$$
+This style is indicative of ``gas-cost" analyses, as we expect $n$ gas up front to run, and spend it all towards performing the additions. For technical reasons relating to expressivity\footnote{
+In short, coeffect-style analyses require the use of potentials.
+}, we often use this style (preferring the type $[I] \, \tau \loli \M \, 0 \, \sigma$ over the type $\tau \loli \M \, I \, \sigma$) even in cost analyses which are not amortized. \red{Should this be said elsewhere?}
+
+Another option is a type which attaches a single potential to each element of the input list, in a style indicative of the Banker's method:
+$$
+\forall n : \N .\, L^n\left([1] \, \texttt{nat}\right) \loli \M \, (n,\langle 0,0 \rangle) \, \left(L^n(\texttt{nat})\right)
+$$
+The terms corresponding to both of these types can be found in Appendix~\textbf{??}. Of course, this cost analysis is tight and fairly uninteresting: it requires no ``real" amortized analysis.
+
+To illustrate the utility of \dlambdaamor as a platform for actual amortized analysis, we show how a few classic examples of amortized analysis can be performed by writing the programs in \dlambdaamor.
+
+\subsubsection{Functional Queue}
+The first example of amortized analysis is the traditional functional queue \citehere. Here, a queue is represented as a pair of lists, $l_f$ and $l_r$, which we refer to as the front and rear lists, respectively. To enqueue an element, we cons it to the head of the front list, and to dequeue, an element is removed from the head of the rear list. If the rear list is empty when a dequeue operation is issued, the front list is reversed into the rear.
+
+If we assume that cons operations are the only costly operation, and that they each incur one cost, this dequeue operation has worst-case complexity $O(n)$ where $n$ is the size of the queue (the sum of the sizes of $l_f$ and $l_r$), since it sometimes needs to reverse the entire front list. However, by employing the banker's method, we may enforce the invariant that each element of the front list carries two credits to be used to pay for its eventual reversal. Under this scheme, both enqueue and dequeue are constant time.
+
+This entire informal analysis is captured formally by the types\footnote{
+We will sometimes write $\M \, \vec{p} \, \tau$ to mean $\forall j : \N. \M \, (j,\vec{p}) \, \tau$.
+} of the enqueue and dequeue operations in \dlambdaamor. In order to encode this analysis, we define a queue to be of type $ L^n([2] \, \tau) \otimes L^m \, \tau$: a pair of $\tau$-lists, where the front has $2$ potential on each of its $n$ elements.
+
+The enqueue function has the following fairly obvious type.
+
+$$
+\texttt{enq} \; : \; \forall n,m : \N. \, [3] \, 1 \loli \tau \loli L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \, \langle 0 \rangle \, \left(L^{n+1}([2] \, \tau) \otimes L^m \, \tau\right)
+$$
+
+From a queue and three extra potential, we may enqueue a single element, resulting in queue with one more element on its front list, for no cost. The term implementing \texttt{enc} can be found in Figure~\ref{fig:example-dlambdaamor-enc}. The type of dequeue is somewhat more involved, since the sizes of the output lists are not a simple function of this inputs. In addition, the function has a precondition: the queue cannot be empty. These two numerical restrictions provide a nice illustration of \dlambdaamor's refinement types.
+
+$$
+\texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^n([2] \, \tau) \otimes L^m \, \tau\right)\right)
+$$
+
+\texttt{deq} takes a nonempty queue, and produces another queue which has one element removed. The implementation of \texttt{deq} relies on a function \texttt{move}, which reverses the rear list into the front. The terms for \texttt{move} and \texttt{dec} can be found in Appendix~\textbf{??}.
+\red{Do i want to do the binary counter here?}
+
+
+\begin{figure}
+\label{fig:example-dlambdaamor-enc}
+\caption{\texttt{enc} function in \dlambdaamor}
+\end{figure}
+
+\subsubsection{Cost-Parametric Fold}
+While many existing languages and type systems for (amortized) resource analysis also support higher-order functions, the allowable analyses with higher-order functions are limited. One such limitation is that function arguments to higher-order functions are usually assumed to be constant-cost: for instance, in the cost analysis of a fold, each application of the accumulation function is assumed to incur the same amount of cost.
+
+%\red{UGH, I should have done shifts by subtyping!!}
+
 
 \section{\bilambdaamor}
 \label{sec:bilambdaamor}
@@ -286,8 +336,6 @@ As \citet{pierce:lics03} notes: ``The more interesting your types get, the less 
 
 \end{enumerate}
 
-
-%\red{When presenting the next stuff, do I want to introduce the features in parallel (like I currently do), or build up the type system by layering things on one by one? Make sure you mentionthe explicit choice you've made here.}
 
 \subsection{Overview of Solutions (change this name)}
 
@@ -488,6 +536,8 @@ The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is
 
 \subsubsection{Algorithmic Subtyping}
 %Talk about why this works! Why can we normalize first and then just do congrueånces?
+
+\subsubsection{Bidirectional Typing Rules}
 
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
