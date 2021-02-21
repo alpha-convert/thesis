@@ -278,6 +278,9 @@ The terms corresponding to both of these types can be found in Appendix~\textbf{
 
 To illustrate the utility of \dlambdaamor as a platform for actual amortized analysis, we show how a few classic examples of amortized analysis can be performed by writing the programs in \dlambdaamor.
 
+\subsubsection{Insertion Sort}
+\red{Talk about how you can EZ PZ do quadratic analyses}
+
 \subsubsection{Functional Queue}
 The first example of amortized analysis is the traditional functional queue \citehere. Here, a queue is represented as a pair of lists, $l_f$ and $l_r$, which we refer to as the front and rear lists, respectively. To enqueue an element, we cons it to the head of the front list, and to dequeue, an element is removed from the head of the rear list. If the rear list is empty when a dequeue operation is issued, the front list is reversed into the rear.
 
@@ -308,8 +311,22 @@ $$
 \caption{\texttt{enc} function in \dlambdaamor}
 \end{figure}
 
-\subsubsection{Cost-Parametric Fold}
-While many existing languages and type systems for (amortized) resource analysis also support higher-order functions, the allowable analyses with higher-order functions are limited. One such limitation is that function arguments to higher-order functions are usually assumed to be constant-cost: for instance, in the cost analysis of a fold, each application of the accumulation function is assumed to incur the same amount of cost.
+\subsubsection{Cost-Parametric Map and Fold}
+While many existing languages and type systems for (amortized) resource analysis also support higher-order functions, the allowable analyses with higher-order functions are limited. One such limitation is that function arguments to higher-order functions are usually assumed to be constant-cost: for instance, in the cost analysis of a map, each application of the mapping function is assumed to incur the same amount of cost.
+
+In order to improve on this, we employ a cost family $C : \N \to \R^+$ to encode the costs of each application of the function: the $i$-th call to the function is thought to incur $C(i)$ cost. Then in total, the map function incurs $\sum_{0 \leq i < n} C(i)$ cost. This analysis is reified in the type of map:
+$$
+\texttt{map} \; : \; \forall \alpha,\beta : \star. \forall C : \N \to \R^+. \forall n : \N. \, !\left(\forall i : \N. [C \, i] \, 1 \loli \texttt{Nat}(i) \loli \alpha \loli \M \, \langle 0 \rangle\,  \beta\right)
+\loli !\texttt{Nat}(n)
+\loli L^n \,\alpha \loli \M \, \langle \texttt{const}\left(\sum_{0 \leq i < n} C(i)\right) \rangle\, \left(L^n \, \beta\right)
+$$
+
+Most importantly, the mapping function has type $!\left(\forall i : \N. [C \, i] \, 1 \loli \texttt{Nat}(i) \loli \alpha \loli \M \, \langle 0 \rangle\,  \beta\right)$. Since it must be applied to each element of the list, its type is $!$-ed to ensure it may be duplicated. The function is parameterized by the index $i$ on which it operates. In order to ensure that the mapping function at $i$ is actually only ever used at index $i$, the mapping function takes an additional argument of type $\texttt{Nat}(i)$, which is the singleton type of natural numbers equal to $i$\footnote{
+This is simply an alias for $L^i \, 1$.
+}. Finally, the mapping function requires $C \, i$ potential to run, and incurs no amortized cost, which ensures that its actual cost is bounded by $C \, i$.
+
+Given the mapping function, the function \texttt{map} then transforms an $L^n \, \alpha$ into a monadic computation of an $L^n \, \beta$, incurring $\sum_{0 \leq i < n} C(i)$ amortized (\red{You should go back and make sure you're calling the static costs ``amortized cost" everywhere, that's nice.}) cost.
+
 
 %\red{UGH, I should have done shifts by subtyping!!}
 
