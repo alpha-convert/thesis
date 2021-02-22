@@ -1,0 +1,19 @@
+$$
+\begin{array}{llll}
+\text{Base Sort} & bS & ::= & \mathbb{N} \; | \; \mathbb{R}^+ \; | \; \vec{\mathbb{R}^+}\\
+\text{Sort} & S & ::= & bS \;|\; bS \to S\\
+\text{Kinds} & K & ::= & \star \;|\; S \to K\\
+\text{Constants} & c & ::= & n \in \mathbb{N} \;|\; r \in \mathbb{R}^+ \;|\; (c_0,\dots,c_k) \in \vec{\mathbb{R}^+}\\
+\text{Index Term} & I,J,\vec{p},\vec{q} & ::= & 0,1,\dots | \; i,j \; | \; I + J \; | \; I - J \; | \; k \cdot I \; | \; \lambda i : bS. I \; | \; I \, J \; | \; \texttt{const}(I) \;|\; \sum_{i=I_0}^{I_1} J
+
+\\
+\text{Constraint} & \Phi & ::= & \top \; | \; \bot \; | \; \Phi_1 \wedge \Phi_2 \;|\; \Phi_1 \vee \Phi_2  \;|\; \Phi_1 \to \Phi_2 \;|\; \forall i : S. \Phi \;|\; \exists i : S.\Phi \;|\; I = J \;|\; I \leq J\\
+\text{Type} & \tau & ::= & 1 \;|\; \alpha \;|\; \tau_1 \loli \tau_2 \;|\; \tau_1 \otimes \tau_2 \;|\; \tau_1 \amp \tau_2 \;|\; !\tau \;|\; \tau_1 \oplus \tau_2 \;|\; \forall i : S . \tau \;|\; \exists i : S. \tau \;|\; \forall \alpha : K. \tau \;|\; L^I \tau \;|\; \Phi \implies \tau \;|\; \Phi \amp \tau\\
+&&& |\; \M(I,\vec{p}) \; \tau \;|\; [I|\vec{p}] \; \tau \;|\; [I] \; \tau \;|\; \lambda i : S. \tau \;|\; \tau \; I\\
+\text{Expression} & e & ::= & 0,1,\dots \;|\; x \;|\; \lambda x. e \;|\; e_1 \; e_2 \;|\; (e : \tau) \;|\; \llangle e_1,e_2 \rrangle \;|\; \texttt{let} \; \llangle x,y \rrangle = e\; \texttt{in} \; e' \;|\; (e_1,e_2) \;|\; \texttt{fst}(e) \;|\; \texttt{snd}(e)\\
+&&& |\; !e \;|\; \texttt{let} \; !x = e \; \texttt{in} \; e' \;|\; \texttt{inl}(e) \;|\; \texttt{inr}(e) \;|\; \texttt{case}(e,x.e_1,y.e_2) \;|\; \texttt{case}(e,e_1,x.e_2) \;|\; \texttt{fix}(x.e)\\
+&&& |\; \Lambda i. e \;|\; e \; [I] \;|\; \Lambda \alpha.e \;|\; e \; [\tau] \;|\; \texttt{nil} \;|\; e_1 :: e_2 \;|\; \texttt{match}(e,e_1,x.y.e_2) \;|\; \texttt{pack}[I](e) \;|\; \texttt{unpack} \; (i,x) = e \; \texttt{in} \; e'\\
+&&& |\; \Lambda. e \;|\; e \;\{\} \;|\; <e> \;|\; \texttt{clet} \; x = e \; \texttt{in} \; e' \;|\; \texttt{ret}(e) \;|\; \texttt{bind} \; x = e \; \texttt{in} \; e' \;|\; \texttt{tick}[I|\vec{p}] \;|\; \texttt{store}[I|\vec{p}](e) \\
+&&& |\; \texttt{store}[I](e) \;|\; \texttt{release} \; x = e \; \texttt{in} \; e' \;|\; \texttt{shift}(e)
+\end{array}
+$$

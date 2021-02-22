@@ -1,0 +1,88 @@
+\begin{mathpar}
+\inferrule[AT-Var-1]
+{x : \tau \in \Gamma}{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x \infers \tau \gens \top, \Gamma \setminus \{x : \tau\}}
+
+\inferrule[AT-Lam]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e \checks \tau_2, \gens \Phi, \Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e \checks \tau_1 \loli \tau_2 \gens \Phi, \Gamma' \setminus \{x : \tau_1\}
+}
+
+% Is this right? Do we just thread the vars to the conclusion to be closed over later?
+\inferrule[AT-App]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \infers \tau_1 \loli \tau_2 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks \tau_1 \gens \Phi_2, \Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \, e_2 \infers  \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2
+}
+
+
+\inferrule[AT-TensorI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \checks \tau_1 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks \tau_2 \gens \Phi_2, \Gamma_2\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \angles{e_1,e_2} \checks \tau_1 \otimes \tau_2 \gens \Phi_1 \wedge \Phi_2,\Gamma_2
+}
+
+\inferrule[AT-TensorE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \infers \tau_1 \otimes \tau_2 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,x : \tau_1, y : \tau_2\vdash e' \checks \tau' \gens \Phi_2,\Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{let } \angles{x,y} = e \texttt{ in } e' \checks \tau' \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x,y\}
+}
+
+\inferrule[AT-Ret]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret } e \checks \M \, \phi(I,\vec{p}) \, \tau \gens \Phi, \Gamma'
+}
+
+\inferrule[AT-Bind]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers \M \, (J,\vec{p})\, \tau_1 \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta; \Delta ; \Omega ; \Gamma_1, x:\tau_1 \vdash e_2 \checks \M \, (I,\vec{q} - \vec{p})\, \tau_2 \gens \Phi_2,\Gamma_2\\
+\Phi = (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1 \wedge \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 \checks \M \, (I,\vec{q})\, \tau_2 \gens \Phi, \Gamma_2 \setminus \{x : \tau_1\}
+}
+
+\inferrule[AT-Release]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J | \vec{q}] \tau_1 \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \M \, (I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2, \Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, (I,\vec{p}) \, \tau_2 \gens (I = J \wedge \Phi_1 \wedge \Phi_2), \Gamma_2 \setminus \{x\}
+}
+
+\inferrule[AT-Store]
+{
+\Theta ; \Delta \vdash K : \N \gens \Phi_1\\
+\Theta ; \Delta \vdash \vec{w} : \vec{\mathbb{R}^+} \gens \Phi_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_3,\Gamma'\\
+\Phi =  \Phi_1 \wedge \Phi_2 \wedge\Phi_3 \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K)
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[K|\vec{w}](e) \checks \M \, \phi(I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi, \Gamma'
+}
+
+
+
+\inferrule[AT-Sub]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau' \gens \Phi_1,\Gamma'\\
+\Psi;\Theta;\Delta \vdash \tau' \subty \tau : \star \gens \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma'
+}
+
+\inferrule[AT-Anno]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e : \tau) \infers \tau \gens \Phi,\Gamma'
+}
+\end{mathpar}

@@ -1,0 +1,35 @@
+\begin{mathpar}
+\inferrule[AI-Var]{i : S \in \Theta}{\Theta ; \Delta \vdash i : S \gens \top}
+
+\inferrule[AI-Plus]{\Theta ; \Delta \vdash I : bS \gens \Phi_1 \\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I + J : bS \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AI-Minus]{\Theta ; \Delta \vdash I : bS \gens \Phi_1 \\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I - J : bS \gens \Phi_1 \wedge \Phi_2 \wedge (I \geq J)}
+
+
+\inferrule[AI-Sum]{\Theta;\Delta \vdash I_0 : \mathbb{N} \gens \Phi_1\\ \Theta;\Delta \vdash I_1 : \mathbb{N} \gens \Phi_2\\ 
+                 \Theta,i : \N;\Delta, I_0 \leq i < I_1 \vdash J : bS \gens \Phi_3}
+                 {\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS \gens \Phi_1 \wedge \Phi_2 \wedge \forall i : \N.(I_0 \leq i < I_1 \to \Phi_3)}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\inferrule[AC-Top]{ }{\Theta;\Delta \vdash \top \; \texttt{wf}\gens \top}
+
+\inferrule[AC-Bot]{ }{\Theta;\Delta \vdash \bot \; \texttt{wf}\gens \top}
+
+\inferrule[AC-Conj]{\Theta ; \Delta \vdash \Phi_1\; \texttt{wf} \gens \Phi_1' \\ \Theta ; \Delta \vdash \Phi_2\; \texttt{wf} \gens \Phi_2'}{\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2\; \texttt{wf} \gens \Phi_1' \wedge \Phi_2'}
+
+\inferrule[AC-Forall]{\Theta, i : S ; \Delta \vdash \Phi\; \texttt{wf} \gens \Phi'}{\Theta ; \Delta \vdash \forall i : S. \Phi\; \texttt{wf} \gens \forall i : S. \Phi'}
+
+\inferrule[AC-Eq]{\Theta ; \Delta \vdash I : bS \gens \Phi_1\\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I = J\; \texttt{wf} \gens \Phi_1 \wedge \Phi_2}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\inferrule[AK-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 : \star \gens \top}
+
+\inferrule[AK-Tensor]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-IForall]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star \gens \forall i :S.\Phi}
+
+\inferrule[AK-Monad]{ \Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1\\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_2\\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_3}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3}
+
+\end{mathpar}

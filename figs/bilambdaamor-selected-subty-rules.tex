@@ -1,0 +1,15 @@
+\begin{mathpar}
+\inferrule[AS-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 \subtynf 1 : \star \gens \top}
+
+\inferrule[AS-Tensor]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star  \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 \subtynf \tau_1' \otimes \tau_2' : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AS-Monad]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subtynf \M(J,\vec{p}) \tau_2 : \star \gens (I = J) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi}
+
+\inferrule[AS-Pot]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subtynf [J|\vec{p}] \tau_2 : \star \gens (I = J) \wedge (\vec{p} \leq \vec{q}) \wedge \Phi}
+
+\inferrule[AS-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subtynf \lambda i : S. \tau_2 : S \to K \gens \forall i : S. \Phi}
+
+\inferrule[AS-FamApp]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : S \to K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subtynf \tau_2 \; J : K \gens (I = J) \wedge \Phi}
+
+\inferrule[AS-Normalize]{\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K\gens \Phi}
+\end{mathpar}
