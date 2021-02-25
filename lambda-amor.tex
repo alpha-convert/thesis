@@ -94,8 +94,8 @@ For $\vec{p} = (a_0,\dots,a_{k-1},a_k)$ a potential vector, we define $\lhd \vec
 
 \begin{theorem}
 For $n \geq 1$ and $\vec{p}$ a potential vector, $\phi(n,\vec{p}) = \phi(n-1,\lhd \vec{p})$
-\end{theorem}
 \label{thm:raml-shift}
+\end{theorem}
 \begin{proof}
 It is straightforward to prove (either by combinatorial argument or direct computation) that $\binom{n-1}{i} + \binom{n-1}{i+1} = \binom{n}{i+1}$. Using this fact,
 we may compute as follows:
@@ -144,6 +144,7 @@ As previously mentioned, the type of lists $L^I \, \tau$ is refined by length-- 
 Finally, \dlambdaamor's types include abstraction and application forms for indexed types. The abstraction form $\lambda i :S.\tau$ has kind $S \to K$ when $\tau$ has kind $K$, and so term variables will never have type $\lambda i : S.\tau$, as it is a higher-kinded type.
 
 \subsubsection{Terms}
+\label{}
 While the original presentation of \lambdaamor takes great care to include only a barebones term syntax, \dlambdaamor will have to expand this syntax somewhat to ensure that the textual representation of a program is unambiguous for programming purposes. Practically, this means that every logical connective has explicit syntactic introduction and elimination forms, whereas this is handled silently in \lambdaamor.
 
 The term syntax for all of the standard connectives should be familiar. The two products are distinguished by double angled brackets for positive pairs, and parentheses for negative pairs. All binders are un-annotated to reduce the burden on the programmer: \bilambdaamor's bidirectional type inference means that type annotations will need to be written only when needed. Lists are constructed with nil and cons constructors, and the elimination form is a pattern match. The last standard inclusion is a fixpoint operator \texttt{fix}, which allows us to write recursive functions. 
@@ -348,6 +349,9 @@ $$
 More interesting however, are the church numeral operations! Most basic among them is the successor function, of type $\forall n : \N. [2] \, 1 \loli \texttt{Nat} \, n \loli \M \, \langle 0 \rangle \, \left(\texttt{Nat} \, (n+1)\right)$. The basic idea is simple: given a church numeral $N$, we produce a new one by iterating from $0$
 to $n$ by $N$, and then applying one last transition function. The full term, however, is fairly involved, and it can be found (along with church numeral addition) in Appendix~\textbf{??}
 
+\subsection{Admissibilities and Metatheory of \dlambdaamor}
+\red{(Need the cuts and weakens here... maybe explain the quasi-circularity and knot-untying here?)}
+
 \section{\bilambdaamor}
 \label{sec:bilambdaamor}
 In order for \dlambdaamor to be useful as a programming language, it must be implementable! While a declarative type system on paper is useful for modeling and proving purposes, it has limited utility from a language design standpoint. While \dlambdaamor calculus described in Section~\ref{sec:dlambdaamor} is far more implementation-ready than its predecessor \lambdaamorminus, the rules of the type system do not provide us with an obvious implementation method. Traditionally, one hopes to implement a type system in a manner similar to implementing a definitional interpreter \red{cite reynolds here}. For each judgment of the type system, the programmer writes a function which essentially runs a proof search for that judgment.
@@ -376,6 +380,7 @@ As \citet{pierce:lics03} notes: ``The more interesting your types get, the less 
 Below, we present the solutions to these five problems that we choose to adopt. All five solutions are well-known techniques, but to our knowledge \red{try a bit harder to make sure this is true before you say it...} \bilambdaamor is the first type system to show that they may all be simultaneously integrated into a single system. Moreover, since the five techniques are orthogonal, we present each feature of \bilambdaamor in isolation for a significantly more simple language. In Section~\textbf{??}, we show how all of the techniques are applied to \dlambdaamor to form the algorithmic type system \bilambdaamor.
 
 \subsubsection{Bidirectional Type Systems}
+\label{sec:bilambdaamor-overview-bidir}
 Bidirectional type checking, also known as ``local type checking" is a type system algorithmization technique pioneered by \red{Pierce and Turner}. The technique works by separating the type checking judgment $\Gamma \vdash e : \tau$ of a declarative type system into two algorithmic judgments: $\Gamma \vdash e \checks \tau$ and $\Gamma \vdash e \infers  \tau$, which are read ``$e$ checks against $\tau$" and ``$e$ infers $\tau$" (sometimes ``synthesizes"), respectively. These two judgments are mutually-recursively defined in a specific manner. The process of turning a declarative type system into a bidirectional algorithmic one is straightforward to the point of mechanical: Dunfield and Pfenning \citehere provide a simple-to-follow recipe for this conversion, which extends from the simple type system they consider all the way to \dlambdaamor. 
 
 Syntax-directed algorithmic type systems presented in a bidirectional style are trivially implementable: the implementation strategy is built into the structure of the rules. To implement a bidirectional type system, one writes two mutually-recursive functions \texttt{check:ctx->tm->typ->bool} and \texttt{infer:ctx->tm->typ} by recursion on the term input: the recursive calls are guided by the premises of each rule. Note that the types of these functions indicate the intended \textit{modes} of the three positions of the judgment, in the sense of logic programming. In the checking judgment, all positions are imagined to be \textit{inputs}, while the inference judgment indicates that the type position is an \textit{output} of the judgment.
@@ -396,6 +401,8 @@ $$
 
 These annotations must be manually added to terms by the programmer as they write the program. However, the only place where annotations are truly required are at the sites of \textit{bare $\beta$-redexs}. For example, to check the term $(\lambda x. e)\, e'$,, it must be annotated as $(\lambda x.e : \tau \to \sigma) \, e'$. Since most programs only contain bare $\beta$-redexes in the form of let-bindings, this requirement is both predictable and fairly ergonomic.
 
+It is important to remember that these annotations are \textit{not} present in a declarative syntax. It will eventually be useful (when discussing the relation between \bilambdaamor and \dlambdaamor) to have the ability to talk about the ``underlying" declarative term of an algorithmic term, which is achieved by simply removing all type annotations $(e : \tau)$ from a term. We usually denote this $|e|$, when $e$ is an algorithmic term, and sometimes refer to it as the \textit{erasure} of a term. The erasure can be trivially defined by recursion on raw terms, with the critical case being $|(e : \tau)| = |e|$.
+
 % \subsubsection{Soundness and Completeness}
 As of yet, the relationship between a declarative calculus and its bidirectional algorithmic counterpart has been left unstated. However, the point of the bidirectional calculus is to be able to algorithmically generate declarative derivations! To this end, one always requires that the bidirectional type system be \textit{sound} for the declarative one.
 \begin{theorem}[Bidirectional Soundness]
@@ -406,8 +413,9 @@ In other words, running $\texttt{check}(\Gamma,e,\tau)$ and getting \texttt{true
 Conversely, completeness is also desirable, but not strictly necessary for bidirectional type systems. However, the most obvious statement of completeness ($\Gamma \vdash e : \tau$ implies $\Gamma \vdash e \checks \tau$) does not hold! This is because of the annotation requirement: the term $e$ may contain un-annotated bare $\beta$-redexes. For this reason, the following slightly weaker theorem is used as the completeness result for bidirectional type systems.
 \begin{theorem}[Bidirectional Completeness]
 If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' \checks \tau$, and $|e'| = e$, where $|e'|$ is the annotation-erasure of $e'$.
-\end{theorem}
 \label{thm:bidir-compl-example}
+\end{theorem}
+
 When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When Theorem~\ref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??} by proving an equivalent statement whose constructive proof inserts fewer annotations than the standard theorem.
 
 \subsubsection{Algorithmic Subtyping and Normalization}
@@ -429,6 +437,7 @@ This scheme is pervasive. Since every judgment in \dlambdaamor either has a rule
 \red{Talk a bit here about where these arise in other places}
 
 \subsubsection{I/O Method}
+\label{sec:bilambdaamor-overview-io}
 To maintain the soundness of potentials, \dlambdaamor has an affine type system. On top of the implementation challenges created by the fancier aspects of \dlambdaamor's type system, its affine-ness presents a well-understood barrier to implementation. To illustrate, consider writing the following case of the \texttt{check:ctx->tm->typ->bool} function from earlier.\footnote{
 To simplify some of the presentation of this section, we will specialize to the non-bidirectional setting, and work in a simply-typed language where binders are fully annotated. \red{Should I say this in the main copy?}
 }
@@ -506,8 +515,8 @@ By induction on $\#\tau$
   \item If $\tau \; \texttt{ne}$ then $\tau[I/i] \; \texttt{ne}$
   \item If $\tau \; \texttt{nf}$ then $\tau[I/i] \; \texttt{nf}$
 \end{enumerate}
-\end{theorem}
 \label{thm:idx-subst-nf}
+\end{theorem}
 \begin{proof}
 We prove the two claims simultaneously by induction on the derivations of $\tau \; \texttt{ne}$ and $\tau \; \texttt{nf}$.
 \end{proof}
@@ -554,9 +563,15 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, then:
   \item $\Psi ; \Theta ; \Delta \pvdash \tau \equiv \texttt{eval}(\tau) : K$
   \item $\texttt{eval}(\tau) \; \texttt{nf}$
 \end{enumerate}
+\label{thm:norm-thm}
 \end{theorem}
 
 \red{Include the cut case here.}
+
+\begin{theorem}
+~$\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$
+\label{thm:idx-subst-eval}
+\end{theorem}
 
 \subsection{Algorithmic Type System of \bilambdaamor}
 The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is of course by design, as \bilambdaamor is intended to be an implementable version of \dlambdaamor. The only difference is the addition of the type annotation syntax $(e : \tau)$ described in Section~\textbf{??}. The main change between the two type systems is in the forms of the judgments. Some judgments change in only minor ways: the sort-checking, kind-checking, and constraint well-formedness judgments are all the same as in \dlambdaamor, with the exception of the added constraint outputs as described in Section~\textbf{??}. The subtyping judgment also sports a constraint output, but is also is split into two, with first a ``normal form subtyping" relation which judges one type to be a subtype of another when both are in normal form, and then the general algorithmic subtyping relation which relates two types by normalizing them and then relating them via the normal form subtyping relation. Finally, the typing judgment changes the most: it splits into a checking ($\downarrow$) and inferring/synthesis ($\uparrow$) judgment to support bidirectional type inference, with added constraint outputs for solving and unused variable context output for the I/O method. These judgment forms are all shown in Figure~\ref{fig:bilambdaamor-typing-judgments}.
@@ -687,20 +702,236 @@ The last two interesting rules to be discussed are AT-Sub and AT-Anno. These rul
 \subsection{Soundness and Completeness of \bilambdaamor}
 With the algorithmic system of \bilambdaamor in place, the time has come to prove theorems about it. Ideally, we would like to prove that it behaves exactly the same as \dlambdaamor. That way, when we build the implementation of \bilambdaamor in Section~\textbf{??}, we will know that (a) every program typechecked by our implementation declarative has the proper type in \dlambdaamor, and that (b) every well-typed program in \dlambdaamor \textit{can be} checked by our implementation. In this context, these two properties are known as soundness and completeness\footnote{
 This may seem backwards to the reader already familiar with the terms-- we think of the declarative system as giving a ``ground truth" semantics of which terms have which types, and the algorithmic system as a proof system in which one may manually derive proofs of well-typedness. From this perspective, soundness and completeness are as described above.
-}.
+}, respectively.
 
+As is usually the case with such things, the soundness proofs are very straightforward. This is because \bilambdaamor is far more strict and structured than \dlambdaamor, so it is always fairly easy to lift a \bilambdaamor derivation with its strictures to a proof in \dlambdaamor. This mismatch simultaneously makes completeness quite difficult to prove: compiling a proof of one of the judgments of \dlambdaamor down to a structured one in \bilambdaamor requires some work in general. For this reason, we will begin with proving the soundness theorems, and subsequently move to proving completeness.
 
-\subsubsection{Soundness of Sorts, Constraints, Contexts, and Kinds}
+The general shape of the soundness theorems are all the same: for every algorithmic judgment $\mathcal{J} \gens \Phi$ (and corresponding declarative judgment $\mathcal{J}$) we prove that if there is a derivation of $\mathcal{J} \gens \Phi$ and $\Phi$ is valid, then there is a derivation of $\mathcal{J}$. Individual theorems may vary-- the inclusion of bidirectionality and the I/O method complicates the statement of soundness for typing-- but this is the main flavor. This pattern justifies the intended use of the algorithmic system: we derive algorithmic judgments using the implementation, which outputs constraints. If the constraints are solvable by a solver, the corresponding declarative judgment holds.
+
+Dually, the completeness theorems have the ``opposite" shape: if $\mathcal{J}$ holds, then there is some solvable $\Phi$ such that the corresponding algorithmic judgment $\mathcal{J} \gens \Phi$ is derivable. Of course, the same caveats apply for judgment forms with more bells and whistles. This theorem structure justifies that our intended usage of the implementation covers all possible uses of the declarative system\footnote{Note that this justification requires that the constraint output for all algorithmic judgments are deterministic, and thus the existence is unique. Our system of course validates this assumption, but this implicit requirement is important to understand.}: combined with soundness, it tells us that the implementation always succeeds to derive a proof of a declarative judgment, if one exists.
+
+\subsubsection{Soundness of Index Terms, Constraints, Contexts, and Types}
+The four most basic algorithmic judgments of \bilambdaamor mirror their declarative counterparts rule-for-rule: the only ``real" modification is the addition of constraint output. This uniformity means that the soundness proofs are fairly trivial single-pass inductions on derivations. Each of these proofs comes in two parts. First, we prove that the soundness holds as a a statement about ``raw" judgments by omitting the presuppositions. These theorems are garbage in, garbage out: malformed judgments in \bilambdaamor are sent to malformed judgments in \dlambdaamor. Afterwards, we prove that the presuppositions are preserved, and so well-formed judgments in \bilambdaamor are sent to well-formed judgments in \dlambdaamor. This two-step process is only necessary because the presuppositions have a mutually inductive structure: to untangle the knot, we must first prove the raw statements, and then repackage them with the required presuppositions afterwards.
+
+\red{(For the love of god, don't forget to put the raw proofs in the appendix)}
+
+Below, we will only present the versions of the theorems with presuppositions included: the gory details can be found in Appendix~\textbf{??}. All of the proofs proceed by elementary inductions on derivations, occasionally using easy properties about constraint validity.
+
+\begin{theorem}[Soundness of Index Context Well-Formedness]
+If $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$ and $\Theta ; \cdot \vDash \Phi$, then $\Theta \vdash \Delta \; \texttt{wf}$
+\label{thm:idx-ctx-wf-sound}
+\end{theorem}
+
+\begin{theorem}[Soundness of Sort Checking]
+If $\Theta;\Delta \pvdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then $\Theta;\Delta \pvdash I : S$ 
+\label{thm:sort-sound}
+\end{theorem}
+
+\begin{theorem}[Soundness of Constraint Well-Formedness]
+If $\Theta ; \Delta \pvdash \Phi \texttt{ wf} \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then $\Theta ; \Delta \pvdash \Phi \texttt{ wf}$
+\label{thm:constr-sound}
+\end{theorem}
+
+\begin{theorem}[Soundness of Kind Checking]
+If $\Psi ; \Theta ; \Delta \pvdash \tau : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ then $\Psi ; \Theta ; \Delta \pvdash \tau : K$.
+\label{thm:kind-sound}
+\end{theorem}
 
 \subsubsection{Soundness of Subtyping}
+Subtyping provides a significantly more interesting soundness proof than the prior cases: we must justify that \bilambdaamor's two-step normalize-then-compare strategy is in fact sound for the declarative type system. The proof proceeds in two parts corresponding to the two judgments- we first prove soundness for the normal form subtyping, and then lift it, using the results about normalization from Section~\textbf{??}, to the full algorithmic subtyping relation.
+
+\begin{theorem}[Soundness of Subtyping for Normal Forms]
+If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ then $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$
+\label{thm:subtynf-sound}
+\end{theorem}
+
+\begin{theorem}[Soundness of Subtyping]
+If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty\tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, then $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$
+\label{thm:subty-sound}
+\end{theorem}
+\begin{proof}
+There is only one case: $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By Theorem~\ref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By Theorem~\ref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
+\end{proof}
 
 \subsubsection{Soundness of Typechecking}
 
+As is to be expected, the soundness of the bidirectional type-checking judgment is the most involved. Before we can prove it, a few small lemmata are required.
+First, we prove (as was noted before) that the output contexts of the I/O method in both typing judgments have a strong regularity condition: the output context is always a subset\footnote{
+This containment is almost always strict: in fact, a corollary of Theorem~\ref{thm:tycheck-sound}, is that the containment is strict unless the term is closed.
+}
+of the input context. \red{(Should I even be talking about this? Or should I skip to the main theorem)}
+
+\begin{theorem}
+If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \updownarrow \tau \gens \Phi, \Gamma'$ then $\Gamma' \subseteq \Gamma$.
+\label{thm:lsc}
+\end{theorem}
+
+The next lemma is required for cases of Theorem~\ref{thm:tycheck-sound} where variables are bound in premises and subsequently removed in the conclusion. In essence, it proves compatibility between the set difference operator which removes variables from the output, and context extension.
+
+\begin{theorem}
+If $\Gamma' \subseteq \Gamma$, then
+$(\Gamma, x : \tau) \setminus \Gamma' \subseteq \Gamma \setminus (\Gamma' \setminus \{x : \tau\}), x : \tau$. Moreover, if:
+~\begin{itemize}
+  \item $\Theta \vdash \Delta \; \texttt{wf}$
+  \item $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$
+  \item $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+\end{itemize}
+Then $\Psi ; \Theta ; \Delta \pvdash \Gamma \setminus (\Gamma' \setminus \{x : \tau\}), x : \tau \wknto (\Gamma, x : \tau) \setminus \Gamma'$.
+\label{thm:tycheck-sound-lemma}
+\end{theorem}
+\begin{proof}
+The first part follows by an elementary set-theoretic containment proof, and the second is immediate by applying the presuppositions.
+\end{proof}
+
+Because the two judgments (checking and inference) are mutually inductively defined, we must prove each judgment's corresponding soundness theorem simultaneously. The theorem must also handle two as-of-yet untreated differences of \bilambdaamor and \dlambdaamor. First, the syntax of algorithmic terms is different from the declarative ones. To translate an algorithmic term to a declarative one, we rely on the erasure transformation from Section~\ref{sec:bilambdaamor-overview-bidir} to remove all type annotations from a term. Second, the use of the I/O method means we must incorporate the ``context-strengthening"-style completeness theorem from Section~\ref{sec:bilambdaamor-overview-io}. All together, we arrive at the following theorem.
+
+\begin{theorem}[Soundness of Type Checking/Inference]
+~\begin{enumerate}
+ \item If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e \checks \tau \gens \Phi, \Gamma'$ and $\Theta;\Delta \vDash \Phi$ then $\Psi;\Theta;\Delta;\Omega;\Gamma \setminus \Gamma' \pvdash |e| : \tau$
+ \item If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e \infers \tau \gens \Phi, \Gamma'$ and $\Theta;\Delta \vDash \Phi$ then $\Psi;\Theta;\Delta;\Omega;\Gamma \setminus \Gamma' \pvdash |e| : \tau$
+\end{enumerate}
+\label{thm:tycheck-sound}
+\end{theorem}
+
+The proof of Theorem~\ref{thm:tycheck-sound} is not particularly enlightening: we prove both claims simultaneously by induction on the judgment premises, liberally applying Theorem~\ref{thm:tycheck-sound-lemma} when binders are used.
+
+
 \subsubsection{Completeness of Sorts, Constraints, Contexts, and Kinds}
+Perhaps expectedly, the four basic judgments admit very simple completeness proofs. Similarly to their soundness proofs, these are all proved by single-pass inductions on derivations. Again, these proofs are split into two parts to untie the knot: we first prove completeness of ``raw" judgments, and then repackage the theorems with presuppositions after all of the raw theorems have been proven.
+
+
+\begin{theorem}
+If $\Theta;\Delta \pvdash I : S$, then $\Theta;\Delta \pvdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$.
+\label{thm:sort-compl}
+\end{theorem}
+
+\begin{theorem}
+If $\Theta \vdash \Delta \; \texttt{wf}$ then $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$ with $\Theta ; \cdot \vDash \Phi$
+\label{thm:idx-ctx-wf-compl}
+\end{theorem}
+
+\begin{theorem}
+If $\Theta ; \Delta \pvdash \Phi \; \texttt{wf}$, then $\Theta ; \Delta \pvdash \Phi \; \texttt{wf} \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$
+\label{thm:constr-compl}
+\end{theorem}
+
+\begin{theorem}
+If $\Phi;\Theta;\Delta \pvdash \tau : K$, then $\Phi;\Theta;\Delta \pvdash \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+\label{thm:kind-compl}
+\end{theorem}
 
 \subsubsection{Completeness of Subtyping}
+The proof that \bilambdaamor's subtyping is complete is perhaps the most exciting proof we will see. As has been discussed numerous times, \dlambdaamor's inclusion of index term-indexed types means that proving the algorithmic subtyping complete is tantamount to deciding $\beta$-equivalence of a limited lambda calculus. It may be tempting\footnote{
+I certainly was tempted.
+} to attempt to split the proof of completeness of subtyping into two statements: one could attempt to first prove that the algorithmic normal form subtyping relation is complete for types in normal form: i.e. that if $\tau_1 \subty \tau_2$ in \dlambdaamor with $\tau_1,\tau_2 \, \texttt{nf}$, then there is some solvable $\Phi$ such that $\tau_1 \subtynf \tau_2 \gens \Phi$. Unfortunately, this is not easily provable: if the premise is a use of transitivity, the cut type may not be in normal form, and thus the inductive hypothesis cannot be applied.
+
+The actual proof of completeness of algorithmic subtyping relies on two key admissibility theorems, namely of reflexivity and transitivity. Since \dlambdaamor's subtyping includes the rules S-Refl and S-Trans but \bilambdaamor's doesn't include analogues of these (for the purposes of syntax-directedness), the algorithmic subtyping must be able to emulate these rules whenever they occur in a declarative derivation. In both cases, the proof proceeds by proving the statement for normal forms, and then lifting the result to the full algorithmic relation through normalization.
+
+\begin{theorem}[Reflexivity of Algorithmic Subtyping for Neutral Forms]
+If $\Psi ; \Theta ;  \Delta \pvdash \tau : K$ and $\tau \;\texttt{ne}$, then $\Psi ; \Theta ;  \Delta \pvdash \tau\subtynf \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+\label{thm:subtyne-refl}
+\end{theorem}
+
+\begin{theorem}[Reflexivity of Algorithmic Subtyping for Normal Forms]
+If $\Psi ; \Theta ;  \Delta \pvdash \tau : K$ and $\tau \;\texttt{nf}$, then $\Psi ; \Theta ;  \Delta \pvdash \tau\subtynf \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+\label{thm:subtynf-refl}
+\end{theorem}
+
+\begin{theorem}[Reflexivity of Algorithmic Subtyping]
+If $\Psi ; \Theta ;  \Delta \pvdash \tau : K$ then $\Psi ; \Theta ;  \Delta \pvdash \tau\subty \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+\label{thm:subty-refl}
+\end{theorem}
+\red{(Do I want this in the new style?)}
+\begin{proof}
+By AS-Normalize, it suffices to show that $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$. By Theorem~\ref{thm:norm-thm}, we have that $\texttt{eval}(\tau) \; \texttt{nf}$, and by S-Refl, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) \subty \texttt{eval}(\tau) : K$, By Theorem~\ref{thm:subtynf-refl}, we have $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required. 
+\end{proof}
+
+\begin{theorem}[Transitivity of Algorithmic Subtyping for Normal Forms]
+If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_2 : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_3 : K \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$, then $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : K \gens \Phi$ such that $\Theta ; \Delta \vDash \Phi$.
+\label{thm:subtynf-trans}
+\end{theorem}
+
+\begin{theorem}[Transitivity of Algorithmic Subtyping]
+\label{thm:subty-trans}
+If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_3 : K \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$, then $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_3 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+\end{theorem}
+%\textbf{Rewrite in new style}
+\begin{proof}
+By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_3) : K \gens \Phi_1$ By Theorem~\ref{thm:norm-thm} and Theorem~\ref{thm:subtynf-trans}, 
+$\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_3) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Then, by AS-Normalize,
+$\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K \gens \Phi$, as required.
+\end{proof}
+
+The following theorem is essentially a subtyping version of Theorem~\textbf{??} \red{(cut instances of normal forms)}: not only does index term substitution preserve the property that types are in normal form, it also preserves all subtyping relations. This theorem depends on a series of theorems that index-term substitution is admissible for all of the preceeding judgments. These are all proved (in Appendix~\textbf{??}) by appealing to the corresponding substitution theorem in \dlambdaamor, and taking a round trip through soundness and completeness for the judgment in question.
+
+\begin{theorem}[Admissibility of Normal Form Subtyping Substitution]
+\label{thm:subtynf-idx-subst}
+~Suppose the following:
+ \begin{itemize}
+   \item $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subtynf \tau_2 : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ and $\Theta \vdash \Delta \; \texttt{wf}$.
+   \item $\Theta ; \Delta \pvdash I : S \gens \Phi_1$ with $\Theta ; \Delta \vDash \Phi_1$
+   \item $\Theta ; \Delta \pvdash J : S \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_2$ 
+   \item $\Theta ; \Delta \vDash I = J$
+ \end{itemize}
+ Then, $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : K \gens \Phi'$ for some $\Phi'$ with $\Theta ; \Delta \vDash \Phi'$.
+\end{theorem}
+
+A corollary for the above admissibility theorem is that type evaluation essentially commutes with type family application. This theorem is pivotal for proving the AS-FamApp case of Theorem~\ref{thm:subty-compl} below.
+
+\begin{theorem}[Type Family Application Commutes with Evaluation]
+If $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi \wedge I = J$ with $\Theta ; \Delta \pvdash I : S$ and $\Theta ; \Delta \pvdash J : S$ then 
+$\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1 \; I) \subtynf \texttt{eval}(\tau_2 \; J) : K \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$.
+\label{thm:eval-app-lemma}
+\end{theorem}
+\begin{proof}
+By inversion on $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$.
+\begin{itemize}
+  \item For the first case, suppose the derivation was $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1' \subtynf \tau_2' : S \to K \gens \Phi$
+  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1' \subtynf \tau_2' : K \gens \Phi'$. By Theorem~\ref{thm:subtynf-idx-subst},
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1'[I/i] \subtynf \tau_2'[J/i] : K \gens \Phi'$, for some $\Theta ; \Delta \vDash \Phi'$. But $\texttt{eval}(\tau_1 \; I) = \tau_1'[I/i]$ and $\texttt{eval}(\tau_2 \; J) = \tau_2'[J/i]$.
+  \item Now, suppose the derivation was $\Psi ; \Theta ; \Delta \vdash \tau_1' \; L_1 \subtynf \tau_2' \; L_2 : S \to K \gens \Phi \wedge (L_1 = L_2)$, where $\texttt{eval}(\tau_1) = \tau_1' \; L_1$ and $\texttt{eval}(\tau_2) = \tau_2 \; L_2$. These must both be $\texttt{ne}$, since they are both applications, and therefore
+  $\texttt{eval}(\tau_1) \; I = \texttt{eval}(\tau_1 \; I)$ and $\texttt{eval}(\tau_2) \; J = \texttt{eval}(\tau_2 \; J)$, as required.
+\end{itemize}
+\end{proof}
+
+Finally, we prove the full completeness of algorithmic subtyping. The proof proceeds by a single induction on the hypothesis. The reflexivity and transitivity cases are handled by Theorems \ref{thm:subty-refl} and \ref{thm:subty-trans}. We present the most interesting case (for S-Fam-Beta1) below, and leave the remaining cases for Appendix~\textbf{??}.
+
+\begin{theorem}[Completeness of Algorithmic Subtyping]
+If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$ then  $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
+\label{thm:subty-compl}
+\end{theorem}
+\begin{proof}
+~\begin{itemize}
+   \item[(S-Fam-Beta1)] Suppose $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$. By AS-Normalize, it suffices to show that
+   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
+   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by Theorem~\ref{thm:idx-subst-eval}. By Theorem~\ref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by Theorem~\ref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
+ \end{itemize}
+\end{proof}
 
 \subsubsection{Completeness of Typechecking}
+
+Finally, we arrive at the completeness of \bilambdaamor's typechecking algorithm. To begin, we must prove the admissibility of \dlambdaamor's weakening rule (T-Weaken) in \bilambdaamor. This requires a fairly sizable and involved simultaneous induction on the checking and inference judgments, which must account for all of the bells and whistles of the bidirectional typechecking with constraints and I/O contexts. The theorem is best understood as a \bilambdaamor -specific version of the mock I/O weakening theorem from Section~\ref{sec:bilambdaamor-overview-io}. When we weaken the affine context, the added variables flow through, and remain unused.
+
+\red{(How the hell do I make this readable??)}
+
+\begin{theorem}[Admissibility of Algorithmic Weakening]
+~\begin{enumerate}
+  \item If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \checks \tau \gens \Phi,\Gamma''$ with $\Theta ; \Delta \vDash \Phi$, then whenever $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$ and $\Psi ; \Theta ; \Delta \pvdash \Omega' \wknto \Omega$, there are $\Phi_1$, $e_1$, $\Gamma_1$ so that $|e_1| = |e|$, $\Theta ; \Delta \vDash \Phi_1$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma' \setminus \Gamma$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma''$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \pvdash e_1 \checks \tau \gens \Phi_1,\Gamma_1$.
+  \item If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \infers \tau \gens \Phi,\Gamma''$ with $\Theta ; \Delta \vDash \Phi$, then whenever $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$ and $\Psi ; \Theta ; \Delta \pvdash \Omega' \wknto \Omega$, there are $\Phi_2$, $e_2$, $\Gamma_2$ so that $|e_2| = |e|$, $\Theta ; \Delta \vDash \Phi_2$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma' \setminus \Gamma$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma''$ and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \pvdash e_2 \infers \tau \gens \Phi_2,\Gamma_2$.
+\end{enumerate}
+\label{thm:admits-weaken}
+\end{theorem}
+
+The actual statement of completeness is easily understandable. For any declarative type assignment, we can always annotate the term with types so that it can either check or infer, while outputting a valid constraint. We note that it is not strictly necessary to prove the theorem in this form-- the careful reader may have noticed that (2) is implied by (1) and a single use of AT-Anno. This method is in fact the traditional way of proving bidirectional completeness. However, the algorithm its proof encodes inserts many unnecessary annotations: any term in inference position will be annotated, even if the term is already a syntactic form whose rule has inferring conclusion. The algorithm which the proof of the theorem below encodes inserts far fewer annotations. While we do not prove this, we conjecture that the proof inserts the minimum possible number of annotations.
+
+\begin{theorem}[Completeness of Type Checking/Inference]
+If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e : \tau$, then:
+\begin{enumerate}
+  \item There are $e'$, $\Phi'$, $\Gamma'$ such that $|e'| = e$, $\Theta ; \Delta \vDash \Phi'$, and $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e' \checks \tau \gens \Phi', \Gamma'$.
+  \item There are $e''$, $\Phi''$, $\Gamma''$ such that $|e''| = e$, $\Theta ; \Delta \vDash \Phi''$, and $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e'' \infers \tau \gens \Phi'',\Gamma''$
+\end{enumerate}
+\label{thm:tycheck-compl}
+\end{theorem}
 
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
