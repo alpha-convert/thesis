@@ -922,7 +922,7 @@ Finally, we arrive at the completeness of \bilambdaamor's typechecking algorithm
 \label{thm:admits-weaken}
 \end{theorem}
 
-The actual statement of completeness is easily understandable. For any declarative type assignment, we can always annotate the term with types so that it can either check or infer, while outputting a valid constraint. We note that it is not strictly necessary to prove the theorem in this form-- the careful reader may have noticed that (2) is implied by (1) and a single use of AT-Anno. This method is in fact the traditional way of proving bidirectional completeness. However, the algorithm its proof encodes inserts many unnecessary annotations: any term in inference position will be annotated, even if the term is already a syntactic form whose rule has inferring conclusion. The algorithm which the proof of the theorem below encodes inserts far fewer annotations. While we do not prove this, we conjecture that the proof inserts the minimum possible number of annotations.
+The actual statement of completeness is easily understandable. For any declarative type assignment, we can always annotate the term with types so that it can either check or infer, while outputting a valid constraint. We note that it is not strictly necessary to prove the theorem in this form-- the careful reader may have noticed that (2) is implied by (1) and a single use of AT-Anno. This method is in fact the traditional way of proving bidirectional completeness. However, the algorithm its proof encodes inserts many unnecessary annotations: any term in inference position will be annotated, even if the term is already a syntactic form whose rule has inferring conclusion. However, by providing an inductive hypothesis for an inference judgment at every stage, we give terms which may infer their own types the opportunity to do so. For this reason, the algorithm which the proof of completeness encodes inserts far fewer annotations than the traditional one.
 
 \begin{theorem}[Completeness of Type Checking/Inference]
 If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e : \tau$, then:
@@ -933,5 +933,81 @@ If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e : \tau$, then:
 \label{thm:tycheck-compl}
 \end{theorem}
 
+
 \section{Implementation of \lambdaamor}
 \label{sec:lambdaamor-impl}
+To exhibit the practical use of \dlambdaamor, we present an implementation of \bilambdaamor, which we will simply refer to as \lambdaamorimpl. The implementation consists of approximately \textbf{??} lines of OCaml, and is freely available at the URL below, under a \textbf{??} license.
+$$
+\text{URL}
+$$
+Functionally, the implementation sports a typechecker and interpreter for \dlambdaamor, as well as a command-line interface with a REPL \red{rm this if you haven't done it...} for interactive use.
+
+We begin the section by discussing the format of programs in \lambdaamorimpl. In order to use \lambdaamorimpl as a programming language, we require some language features other than the type-checking and evaluation of single expressions, as modeled by \bilambdaamor. To this end, we introduce four top-level declaration forms which can be composed to form programs in \lambdaamorimpl. Next, we discuss the artifact itself in some depth: giving an overview of the project's structure, elaborating on design decisions, and remarking on a few places where the implementation departs from the theory.
+ Next, we show \lambdaamorimpl in action, by typechecking and evaluating the examples from Section~\textbf{??}, as well as exhibiting some of the different modes of use and interaction we envision for languages like this one. We also exhibit some of the ergonomic features available in \lambdaamorimpl which are not present in the core theory. Finally, we present an experimental evaluation of the tool, and compare it with existing resource-aware languages.
+ 
+
+\subsection{Declarations and Structure of \lambdaamorimpl Programs}
+\red{Talk about the TLDs here!}
+ \begin{figure}
+\input{figs/lambdaamorimmpl-decls}
+\caption{Declarations in \lambdaamorimpl}
+\label{fig:lambdaamorimmpl-decls}
+\end{figure}
+
+\subsection{Overview of Phases}
+%Table of files
+%Borrowed from relcost
+
+A program to be run by \lambdaamorimpl follows a straightforward path. It is first lexed and parsed from its textual form into an abstract syntax representation. This abstract syntax is then passed to the typechecker, which closely follows the algorithmic approach prescribed by \bilambdaamor. This typechecking emits constraints, which are then passed to an SMT solver using the Why3 prover frontend \citehere. If the constraints come back valid, the program can then be passed to the built-in definitional interpreter \citehere, which runs the program according to the cost semantics of \citehere.
+
+For the remainder of this section, we will take a tour through the implementation and design choices of each of the phases of the language's execution. Each of these roughly corresponds to a single module in the \lambdaamorimpl source, so a table of files along with their descriptions can be found in Figure~\ref{fig:lambdaamorimpl-file-structure}. Finally, some of the structure of the implementation is borrowed and inspired from previous developments in resource-aware and bidirectional type systems, and so we are careful to flag our predecessors for each pass.
+
+\begin{figure}
+\input{figs/lambdaamorimpl-file-structure}
+\caption{File Structure of \lambdaamorimpl}
+\label{fig:lambdaamorimpl-file-structure}
+\end{figure}
+
+
+\subsubsection{Lexing and Parsing}
+\lambdaamorimpl uses off-the-shelf OCaml lexer and parser generators, \texttt{ocamllex} and \texttt{ocamlyacc} \citehere. While not the most performant options, these do fine for our purposes. The syntax of \lambdaamorimpl was carefully chosen to resemble the syntax of \bilambdaamor as much as possible while retaining an unambiguous grammar, and while ensuring that users need not type unicode symbols.
+
+While the language syntax is closely modeled on that of \bilambdaamor, it must be extended to support the top-level features introduced for ease of use in \lambdaamorimpl. The only change to the term syntax is the introduction of a syntax (wildcards/underscores) for typed holes in \lambdaamorimpl, in the style of Haskell \citehere, or Hazel \citehere, which allow a programmer to typecheck partial programs, and be informed about what types the checker expects to fill the holes.
+
+The lexer and parser are specified in \texttt{src/lexer.mll}, respectively \texttt{src/parser.mly}. The parser emits an abstract syntax representation of a program-- the type of these syntax trees, as well as all of the abstract syntax of the language, is found in \texttt{src/syntax.ml}.
+
+
+\subsubsection{AST Freshening Pass}
+Since this development includes no mechanized metatheory, all variables in \lambdaamorimpl are represented as strings for simplicity. This, of course, poses complications for the substitution operation. In order to resolve this once and for all, the AST of a program is fed to a ``freshener" immediately after parsing, which $\alpha$-converts all terms so that every bound variable is globally unique. This pass is modeled off of a similar one from the Granule language \citehere, a language with a sophisticated modal type system for quantatative static program analysis.
+
+\subsubsection{Normalization}
+Thanks to the theoretical simplicity of \lambdaamor's type normalization algorithm, \lambdaamorimpl's implementation of it is similarly simple: the code (in \texttt{src/normalize.ml}) is only $\approx 150$ lines. The procedure works in two passes, first by evaluating object-language types into a meta-language type of types \textit{in normal form}, and then quoting back. In practice, most types in \lambdaamor programs are in normal form. To avoid unnecessarily normalizing types, we tag type with a status bit which signals if it's already in normal form.
+
+\subsubsection{Bidirectional Type Checking}
+The core typechecking algorithm of \lambdaamorimpl is very faithful to the core algorithmic calculus presented in Section~\ref{sec:bilambdaamor}. Search functions for each of the four user-facing judgments (sort-checking, kind-checking, subtyping, typechecking) are implemented in the file \texttt{src/tycheck.ml}. The sort-checking and kind-checking judgments both operate on fully annotated terms. For this reason, we implement full inference and checking for both: with sort/kind as output and input, respectively. Subtyping is implemented as expected: both types are normalized, and then passed to a helper function which decides the normal form subtyping relation of \bilambdaamor. Finally, the main pair of type checking and inference judgments are implemented in the usual bidirectional style as a pair of mutually recursive functions. All of these functions, in addition to their usual return types (unit for checking functions, sort/kind/type for inference functions) also return the constraints output by their corresponding judgments, to be passed to the solver.
+
+In order to simplify the lives of programmers, we do deviate slightly from the core calculus in a few places. First, the type checking and inference judgments include a few ``parallel rules": instances where the bidirectional rule has a checking or inference conclusion, but we also include a case for the other mode. While not strictly required for completeness, these extra rules can make programming more ergonomic. Next, we always normalize the output of the type inference function: this is helpful in cases where the type of a term inferred in an elimination position has a $\beta$-redex as its head, and not the expected connective. This is also clearly still sound and complete, as this behavior can be emulated by adding an annotation in the requisite elimination position. Finally, we note the behavior of typed holes in \lambdaamorimpl. This feature is a practical necessity in languages with type systems as complex as ours. Fortunately, the bidirectional framework makes them simple to implement: when the type checking or inference judgments hit the hole, checking is halted, and the expected type of the hole (in the case of a checking judgment) as well as the current context is printed for the user.
+
+In order to simplify some of the boilerplate involved in implementing the functions corresponding to each algorithmic judgment, we introduce a monadic discipline inspired by the implementation of BiRelCost \citehere. We use a combined state/error monad called \texttt{'a checker} to simultaneously handle the four fully structural contexts and the substructural one via the I/O method (hence state, not reader), as well as managing type errors. OCaml's \texttt{let*} syntax allows us to cleanly write the typechecker in a manner similar to \texttt{do}-notation in Haskell, while a preponderance of useful monadic combinators lifted from BiRelCost make for very readable code.
+
+Of course, the typechecker must not only handle the core term calculus, but also the top-level declaration features. Because of the inclusion of type and index term aliases, the state part of the \texttt{checker} monad must also include a type and index term environment which binds aliases to their values, on top of the existing type contexts. The top-level declarations require more choices to be made. 
+
+Top level term declarations $\texttt{let x : t = e}$ are implicitly typed as exponential terms-- we erase the affine context before checking them, and the variable \texttt{x} given type \texttt{t} in the exponential context $\Omega$. This allows functions declared at the top level to be used many times, instead of just once, which is of course the intended pattern of use for a top-level definition.
+
+The only terms which are bound in the affine context at top level are variables resulting from the \texttt{do} declarations, which are checked to have monadic type. Since the result of a monadic computation can store potential, the result of a \texttt{do} declaration must not be duplicated.
+
+\subsubsection{Constraint Elaboration}
+The language of \dlambdaamor's constraints includes equations and inequalities over potential vectors (index terms of sort $\potvec$). We eventually plan to send these constraints to an SMT solver, yet solvers don't have theories this fairly unusual type of variable-length vectors over a monoid. While many solvers allow us to define our own theories, it would be preferable to instead appeal to built-in (and highly optimized) real arithmetic theories of modern SMT solvers. For this purpose, all constraints output from the typechecker are elaborated to transform equalities over potential vectors to componentwise equalities over reals. This transformation is functionally identical to the \dlambdaamor-to-\lambdaamorminus compilation pass described in Section~\textbf{??}, and is implemented in \texttt{src/constr_elab.ml}
+
+\subsubsection{Constraint Solving}
+The actual constraint solving of \lambdaamorimpl is handled by the Why3 platform \citehere. Why3 is a unified frontend for a number of SMT solvers, which allows the user to switch between the proovers of their choosing. After the constraint elaboration phase, the constraints are translated into a format understandable by Why3 using its OCaml API. We then interface with the prover by building a Why3 proof goal for each constraint emitted by the typechecker. This set of proof goals is then checked in sequence by the prover, and the results are reported to the user.
+
+\subsubsection{Interpreter}
+Finally, a type-correct program can be interpreted. The interpreter included with \lambdaamorimpl is a straightforward definitional implementaion of the big-step cost-indexed operational semantics of \dlambdaamor: nothing too fancy. When the interpreter is invoked, all of the \texttt{do} declarations are run. The cost semantics tallies up the total actual cost of running a single declaration, and presents it, along with the statically predictied cost to the user. By the soundness theorem of \dlambdaamor, the predicted cost will always be an upper bound on the actual cost.
+
+\subsection{Examples and Use}
+
+\subsection{Experimental Evaluation and Comparison}
+
+
+\section{Related and Future Work}
