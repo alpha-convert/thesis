@@ -359,7 +359,26 @@ The terms corresponding to both of these types can be found in Appendix~\textbf{
 To illustrate the utility of \dlambdaamor as a platform for actual amortized analysis, we show how a few classic examples of amortized analysis can be performed by writing the programs in \dlambdaamor.
 
 \subsubsection{Insertion Sort}
-\red{Talk about how you can EZ PZ do quadratic analyses}
+Our second example will illustrate how the AARA-style costs of \dlambdaamor will allow us to assign quadratic-and-higher cost bounds statically, while only ever solving linear constraints. Insertion sort is a good example of this class of program, since its cost analysis is very understandable (nested loops, nothing fancy), while still being an interesting function.
+
+For insertion sort, we will assume the traditional cost metric for sorting algorithms: all comparisons cost one unit. The insertion sort we will write will be monomorphic, and assume a comparison operator of type
+$$
+\texttt{leq} \, : \, \tau \otimes \tau \loli \M \, \langle 1 \rangle \, 2
+$$
+where $2$ is defined to be $1 \oplus 1$.
+
+Since elements of the list will have to be compared multiple times, the insertion sort will operate over lists of $!\tau$s. With this in mind, we give the insertion function the following type:
+$$
+\texttt{insert} \, : \, \forall n : \N. \, !\tau \loli L^n\left(!\tau\right) \loli \M \, (n,\langle 0,1\rangle) \, \left(L^{n+1}\left(!\tau\right)\right)
+$$
+The type of this function should be intuitive: at worst, we scan the list once, which incurs $n = \phi(n,\langle 0,1\rangle)$ cost. Of course, folding this function over a list yields the insertion sort algorithm, which has the type shown below.
+$$
+\texttt{ins_sort} \, : \, \forall n : \N. \, L^n\left(!\tau\right) \loli \M \, (n,\langle 0,0,1\rangle) \, \left(L^n\left(!\tau\right)\right)
+$$
+
+We can compute that $\phi(n,\langle 0,0,1\rangle) = \binom{n}{2} = \frac{1}{2}n^2 - \frac{1}{2}n$, which gives \texttt{ins_sort} the requisite quadratic cost bound.
+Of course, this cost analysis is fairly elementary, but the critical aspect of doing this in \dlambdaamor is that checking the proper terms (found in Appendix~\textbf{??}) against these types requires solving only linear constraints over $\R^+$, despite the cost bound being quadratic. Moreover, the terms themselves are reached by inserting the \texttt{ret}s, \texttt{bind}s, and \texttt{shift}s into the proper locations in the term one would already expect to have to write when writing this function.
+
 
 \subsubsection{Functional Queue}
 The first example of amortized analysis is the traditional functional queue \citehere. Here, a queue is represented as a pair of lists, $l_f$ and $l_r$, which we refer to as the front and rear lists, respectively. To enqueue an element, we cons it to the head of the front list, and to dequeue, an element is removed from the head of the rear list. If the rear list is empty when a dequeue operation is issued, the front list is reversed into the rear.
@@ -677,6 +696,9 @@ The assumption context $\Delta$ bears a similar requirement, as illustrated by t
 Finally, it's worth noting a potential confusion about the algorithmic constraint well-formedness judgment, $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$.
 The output constraint $\Phi'$ does not encode the truth of $\Phi$. The soundness proof will make this concrete, but knowing that $\Theta ; \Delta \vDash \Phi'$ only implies that $\Phi$ is well-formed, but it need not be valid.
 
+\subsubsection{Algorithmic Context-Wellformedness}
+\red{Write this subsubsection.}
+
 \subsubsection{Algorithmic Subtyping}
 
 \begin{figure}
@@ -768,36 +790,44 @@ The last two interesting rules to be discussed are AT-Sub and AT-Anno. These rul
 
 
 \subsubsection{Well-formedness and Presuppositions}
-
-The judgments of \bilambdaamor presented thusfar have all been \textit{raw} judgments, in the same sense that we have presented no well-formedness restrictions. Just like in \dlambdaamor, we restrict the positions of each relation by well-formedness presuppositions. Again, these are denoted with a subscript $p$ on the turnstile. Unlike, \dlambdaamor, these presuppositions are algorithmic in the sense that they use the corresponding judgments from \bilambdaamor to impose restrictions. 
+The judgments of \bilambdaamor presented thusfar have all been \textit{raw} judgments, in the same sense that we have presented no well-formedness restrictions. Just like in \dlambdaamor, we restrict the positions of each relation by well-formedness presuppositions. Again, these are denoted with a subscript $p$ on the turnstile.
+Unlike, \dlambdaamor, these presuppositions are algorithmic in the sense that they use the corresponding judgments from \bilambdaamor to impose restrictions. 
 %\red{Do I just want to write out the presupps here?}
 
 \begin{definition}
-We say that $\Theta ; \Delta \pvdash I : S$ when $\Theta \vdash \Delta \; \texttt{wf}$ and $\Theta ; \Delta \vdash I : S$.
-\end{definition}
-
-\begin{definition}
-We write $\Psi ; \Theta ; \Delta \pvdash \tau : K$ to mean that $\Theta \vdash \Delta \; \texttt{wf}$ and $\Psi ; \Theta ; \Delta \vdash \tau : K$
-\end{definition}
-
-\begin{definition}
-We write $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K$ to mean that
+We write $\Theta ; \Delta \pvdash I : S \gens \Phi$ to mean
 \begin{enumerate}
-  \item $\Theta \vdash \Delta \; \texttt{wf}$
-  \item $\Psi ; \Theta ; \Delta \vdash \tau : K$
-  \item $\Psi ; \Theta ; \Delta \vdash \tau' : K$
-  \item $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau' : K$
+  \item $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ and $\Theta ; \cdot \vDash \Phi_1$
+  \item $\Theta ; \Delta \vdash I : S \gens \Phi$
 \end{enumerate}
 \end{definition}
 
 \begin{definition}
-We say that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau$ when
+We write $\Psi ; \Theta ; \Delta \pvdash \tau : K \gens \Phi$ to mean
 \begin{enumerate}
-  \item $\Theta \vdash \Delta \; \texttt{wf}$
-  \item $\Psi ; \Theta ; \Delta \vdash \Omega \; \texttt{wf}$
-  \item $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$
-  \item $\Psi ; \Theta ; \Delta \vdash \tau : \star$
-  \item $\Psi ; \Theta ; \Delta ; \Omega \vdash e : \tau$
+  \item $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ and $\Theta ; \cdot \vDash \Phi_1$
+  \item $\Psi ; \Theta ; \Delta \vdash \tau : K \gens \Phi$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}
+We write $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K \gens \Phi$ to mean that
+\begin{enumerate}
+  \item $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ and $\Theta ; \cdot \vDash \Phi_1$
+  \item $\Psi ; \Theta ; \Delta \vdash \tau : K \gens \Phi_2$ and $\Theta ; \Delta \vDash \Phi_2$
+  \item $\Psi ; \Theta ; \Delta \vdash \tau' : K \gens \Phi_3$ and $\Theta ; \Delta \vDash \Phi_2$
+  \item $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau' : K \gens \Phi$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}
+We say that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau \gens \Phi,\Gamma'$ when
+\begin{enumerate}
+  \item $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ and $\Theta ; \cdot \vDash \Phi_1$
+  \item $\Psi ; \Theta ; \Delta \vdash \Omega \; \texttt{wf} \gens \Phi_2$ and $\Theta ; \Delta \vDash \Phi_2$
+  \item $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi_3$ and $\Theta ; \Delta \vDash \Phi_3$
+  \item $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_4$ and $\Theta ; \Delta \vDash \Phi_4$.
+  \item $\Psi ; \Theta ; \Delta ; \Omega \vdash e : \tau \gens \Phi,\Gamma'$
 \end{enumerate}
 \end{definition}
 
@@ -921,7 +951,7 @@ If $\Theta ; \Delta \pvdash \Phi \; \texttt{wf}$, then $\Theta ; \Delta \pvdash 
 \end{theorem}
 
 \begin{theorem}
-If $\Phi;\Theta;\Delta \pvdash \tau : K$, then $\Phi;\Theta;\Delta \pvdash \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+If $\Psi;\Theta;\Delta \pvdash \tau : K$, then $\Psi;\Theta;\Delta \pvdash \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
 \label{thm:kind-compl}
 \end{theorem}
 
@@ -1115,7 +1145,7 @@ The actual constraint solving of \lambdaamorimpl is handled by the Why3 platform
 Finally, a type-correct program can be interpreted. The interpreter included with \lambdaamorimpl is a straightforward definitional implementaion of the big-step cost-indexed operational semantics of \dlambdaamor: nothing too fancy. When the interpreter is invoked, all of the \texttt{do} declarations are run. The cost semantics tallies up the total actual cost of running a single declaration, and presents it, along with the statically predictied cost to the user. By the soundness theorem of \dlambdaamor, the predicted cost will always be an upper bound on the actual cost.
 
 \subsection{Examples and Use}
-
+Let us return to the
 \subsection{Experimental Evaluation and Comparison}
 
 
