@@ -1,0 +1,9 @@
+\begin{mathpar}
+\inferrule[AWF-CCtxE]{ }{\Theta \vdash \cdot \; \texttt{wf} \gens \top}
+
+\inferrule[AWF-CCtxNe]{\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1\\ \Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_2}{\Theta \vdash \Delta,\Phi \; \texttt{wf} \gens \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)}
+\\
+\inferrule[AWF-TCtxE]{ }{\Psi ; \Theta ; \Delta \vdash \cdot \; \texttt{wf} \gens \top}
+
+\inferrule[AWF-TCtxNE]{\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \Gamma, x : \tau \; \texttt{wf} \gens \Phi_1 \wedge \Phi_2}
+\end{mathpar}

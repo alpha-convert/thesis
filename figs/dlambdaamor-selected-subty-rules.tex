@@ -1,0 +1,18 @@
+\begin{mathpar}
+\inferrule[S-Refl]{ }{\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : K}
+
+\inferrule[S-Trans]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K\\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K}{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K}
+\\
+\inferrule[S-Monad]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J\\ \Theta ; \Delta \vDash \vec{q} \leq \vec{p}}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subty \M(J,\vec{p}) \tau_2 : \star}
+
+\inferrule[S-Pot]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J\\ \Theta ; \Delta \vDash \vec{p} \leq \vec{q}}{\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subty [J|\vec{p}] \tau_2 : \star}
+\\
+\inferrule[S-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : K}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K}
+
+\inferrule[S-FamApp]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K\\ \Theta ; \Delta \vDash I = J}{\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K}
+
+\\
+\inferrule[S-Fam-Beta1]{ }{\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K}
+
+\inferrule[S-Fam-Beta2]{ }{\Psi ; \Theta ; \Delta \vdash\tau[J/i]\subty (\lambda i : S. \tau) \; J : K}
+\end{mathpar}

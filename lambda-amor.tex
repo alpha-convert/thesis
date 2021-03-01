@@ -179,9 +179,8 @@ To avoid questions of exchange, we consider all of the contexts except for $\Del
 \begin{figure}
 \input{figs/dlambdaamor-selected-sort-kind-constr-rules}
 \label{fig:dlambdaamor-selected-sort-kind-constr-rules}
-\caption{Selected Algorithmic Sort, Kind, and Constraint Rules}
+\caption{Selected Sort, Kind, and Constraint Rules}
 \end{figure}
-
 
 The rules that make up the sort system for index terms (prefixed I-) are mostly self-explanatory: we ensure that arguments to arithmetic operators have the same sorts.
 Since all three base sorts ($\N$, $\R^+$, $\vec{\R^+}$) are nonnegative, the rule for subtraction $I - J$ must ensure that $I \geq J$. As discussed in Section~\textbf{??}, the rule I-ConstVec shows how \texttt{const} promotes index terms of sort $\R^+$ to sort $\vec{\R^+}$. Finally, the I-Lam and I-App rules give the introduction and elimination rules for the index-level functions.
@@ -190,6 +189,11 @@ Since all three base sorts ($\N$, $\R^+$, $\vec{\R^+}$) are nonnegative, the rul
 The type formation rules (prefixed K-) for \dlambdaamor are very straightforward. All types have kind $\star$, with the exception of the index type abstraction and elimination forms. The rule K-FamLam ensures that an indexed type $\lambda i : S. \tau$ has kind $S \to K$ when $\tau$ has kind $K$, and the indexed-type application $\tau \, I$ has kind $K$ when $\tau$ has kind $S \to K$ and $I$ is of sort $S$, as seen in K-FamApp.
 
 \subsubsection{Subtyping}
+\begin{figure}
+\input{figs/dlambdaamor-selected-subty-rules}
+\label{fig:dlambdaamor-selected-subty-rules}
+\caption{Selected Subtyping rules}
+\end{figure}
 The majority of the rules for subtyping in \dlambdaamor (prefixed by S-) are the standard congruences for logical connectives. The rules for the types involved in cost analysis for refinements, however, warrant some discussion.
 
 The rule S-Monad gives the subtyping relation for the cost monad: $\M \, (I,\vec{q}) \, \tau_1 \subty \M (J,\vec{p}) \,\tau_2$ when $\tau_1 \subty \tau_2$, $I = J$, and $\vec{q} \leq \vec{p}$ componentwise. The soundness of this rule relies on the fact that $\phi(n,\vec{q}) \leq \phi(n,\vec{p})$ when $\vec{q} \leq \vec{p}$, and the fact that the cost annotations represent \textit{upper bounds}-- it is safe to use a computation which incurs less cost in a context which expects one that incurs more. Dually, it is always safe to throw away potential in the subtyping rules for the two potential modalities, S-Pot and S-ConstPot.
@@ -199,6 +203,11 @@ In addition to the subtyping rules at base kind, the rules S-FamLam and S-FamApp
 Finally, the rules S-FamBeta-$1$ and S-FamBeta-$2$ serve to include $\beta$-equality of type families in the subtyping relation. The combination of these rules with S-FamApp and S-FamLam makes the subtyping relation not syntax directed at higher kind, which provides another barrier to simple implementation, as discussed in Section\textbf{??}.
 
 \subsubsection{Context Well-Formedness Judgments and Context Subsumption}
+\begin{figure}
+\input{figs/dlambdaamor-ctx-wf-rules}
+\label{fig:dlambdaamor-ctx-wf-rules}
+\caption{Context Well-formedness rules and Context Subsumption}
+\end{figure}
 The judgment $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$ ensures that $\Phi$ is a well-formed context: all index terms mentioned in it are sort-correct, and relations are only judged between index terms of the same sort.
 
 \dlambdaamor also requires two auxiliary context-well-formedness judgments: $\Theta \vdash \Delta \; \texttt{wf}$ and $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$. The former ensures that the constraints in the context $\Delta$ are well-typed with respect to the context $\Theta$, and the latter ensures that all of the types in $\Gamma$ have kind $\star$.
@@ -270,9 +279,61 @@ We say that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau$ when
 \end{enumerate}
 \end{definition}
 
-\subsection{Admissibilities and Metatheory of \dlambdaamor}
-\red{(Need the cuts and weakens here... maybe explain the quasi-circularity and knot-untying here?)}
+\subsection{Proof Theory of \dlambdaamor}
+Any type system as complex as \dlambdaamor's has heaps of syntactic structure to exploit. This structure comes, as is traditional for type theories and type systems, in the form of admissible rules. Each of \dlambdaamor's five principal judgments have their own set of admissible rules, corresponding to the structuralities of each context and other judgmental structure. Because of this, the proof theory of \dlambdaamor is incredibly rich. We will make no attempt to cover it all here, and instead pick and choose the theorems which will be useful down the line when it comes time to design and prove things about our algorithmic calculus. Below, we present the admissible rules which are used repeatedly in further metatheoretic developments: the rest can be found in Appendix~\textbf{??}.
 
+First, we prove two statements about the context well-formedness judgments that should be intuitively clear: subsets of well-formed contexts are themselves well-formed.
+
+\begin{theorem}
+If $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$ and $\Gamma' \subseteq \Gamma$ then $\Psi ; \Theta ; \Delta \vdash \Gamma' \; \texttt{wf}$
+\end{theorem}
+
+\begin{theorem}
+If $\Theta \vdash \Delta, \Phi \; \texttt{wf}$ then $\Theta \vdash \Delta \; \texttt{wf}$
+\end{theorem}
+
+Since the type and index variable contexts are fully structural, every judgment that uses them admits weakening and contraction. In practice, we will only ever need to explicitly use the weakening theorem for context subsumption, which in fact depends on the rest of the weakening theorems.
+
+\begin{theorem}
+If $\Psi ; \Theta ; \Delta \pvdash \Gamma \wknto \Gamma'$ and $\Psi' \supseteq \Psi$, $\Theta' \supseteq \Theta$, and $\Delta' \supseteq \Delta$, then
+$\Psi' ; \Theta' ; \Delta' \pvdash \Gamma \wknto \Gamma'$
+\label{thm:ctx-sub-wkn}
+\end{theorem}
+
+Substitution is admissible for all contexts in all judgments-- this is essentially a requirement of a type system! However, we will primarily be concerned with substitution for types, as it will become critical once we discuss normalization for types in Section~\ref{sec:bilambdaamor}.
+
+\begin{theorem}
+If $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$ and $\Theta ; \Delta \pvdash I : S$ then $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$
+\label{thm:type-idx-subst}
+\end{theorem}
+
+The following theorem is perhaps nonstandard in the type systems literature-- indeed, it only becomes relevant when passing back and forth between \dlambdaamor and our eventual algorithmic system. Intuitively, the concept is clear: if a subtyping relation holds between two types which share a common set of free variables, the subtyping can be derived while mentioning only those variables.
+
+\begin{theorem}
+Suppose $\Psi ; \Theta ; \Delta \vdash \tau : K$ and $\Psi ; \Theta ; \Delta \vdash \tau' : K$.
+If $\Psi' ; \Theta' ; \Delta \pvdash \tau \subty \tau' : K$ with $\Theta' \supseteq \Theta$ and $\Psi' \supseteq \Psi$, then $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K$
+\label{thm:subty-streng}
+\end{theorem}
+
+The following theorem is a convenient equivalent characterization of the context subsumption judgment, which formalizes our intuition of this judgment as being essentially record subtyping: the inclusion of $\Gamma'$ into $\Gamma$ acts as record width subtyping, while pointwise subtyping on the intersection of the two contexts allows for record depth subtyping.
+
+\begin{theorem}
+$\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \Gamma'$ if and only if for all $x : \tau' \in \Gamma'$, there is some $\tau$ so that $x : \tau \in \Gamma$ and $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau' : \star$.
+\label{thm:ctx-sub-subset2}
+\end{theorem}
+
+Finally, we prove a compatability lemma about context subsumption that is similar in flavor to Theorem~\ref{thm:subty-streng}, which allows us to strengthen the assumptions of the judgment in a specific (but common) situation.
+
+\begin{theorem}
+Suppose that
+\begin{enumerate}
+  \item $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma_1'$
+  \item $\Psi' ; \Theta' ;  \Delta' \pvdash \Gamma_2 \wknto \Gamma_2'$
+  \item $\Gamma_1 \supseteq \Gamma_2$ and $\Gamma_1' \supseteq \Gamma_2'$
+\end{enumerate}
+Then, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma_2'$.
+\label{thm:ctx-sub-swap}
+\end{theorem}
 
 \section{Semantics and Soundness of \dlambdaamor}
 For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. To prove that \dlambdaamor's type system is sound in this way, we will appeal to a version of the soundness proof of \lambdaamorminus. As discussed in Section~\textbf{??}, \lambdaamorminus differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamorminus. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamorminus. Formally, we do not present a true embedding into \lambdaamorminus, as it does not have a sort of potential vectors! However, potential vectors can be trivially added to \lambdaamorminus: the kripke logical relation which forms the basis for its soundness proof never inspects index terms, and conflates index terms with the semantic objects they denote. For this reason, we freely consider \lambdaamorminus as having a sort of potential vectors in the style of \dlambdaamor.
@@ -332,6 +393,7 @@ By Theorem~\ref{thm:dla-trans-sound} and Theorem~\ref{thm:dla-trans-sem-sound}, 
 
 
 \section{Examples of Programs in \dlambdaamor}
+\label{sec:dlambdaamor-examples}
 Having just spent a great many pages discussing the technical details of \dlambdaamor's syntax, type system, and semantics, we now arrive at the fun part: analyzing the cost of programs! In this section, we will present a number of examples of programs written in \dlambdaamor, each of which exemplifies a different component of its cost analysis capabilities. These examples will loosely follow the presentation of Section 3 of \citet{rajani-et-al:popl21}, where more in-depth discussion can be found.
 
 \subsubsection{Add One}
@@ -667,12 +729,13 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, then:
 \end{theorem}
 
 \section{Algorithmic Type System of \bilambdaamor}
-The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is of course by design, as \bilambdaamor is intended to be an implementable version of \dlambdaamor. The only difference is the addition of the type annotation syntax $(e : \tau)$ described in Section~\textbf{??}. The main change between the two type systems is in the forms of the judgments. Some judgments change in only minor ways: the sort-checking, kind-checking, and constraint well-formedness judgments are all the same as in \dlambdaamor, with the exception of the added constraint outputs as described in Section~\textbf{??}. The subtyping judgment also sports a constraint output, but is also is split into two, with first a ``normal form subtyping" relation which judges one type to be a subtype of another when both are in normal form, and then the general algorithmic subtyping relation which relates two types by normalizing them and then relating them via the normal form subtyping relation. Finally, the typing judgment changes the most: it splits into a checking ($\downarrow$) and inferring/synthesis ($\uparrow$) judgment to support bidirectional type inference, with added constraint outputs for solving and unused variable context output for the I/O method. These judgment forms are all shown in Figure~\ref{fig:bilambdaamor-typing-judgments}.
-
 \begin{figure}
 \label{fig:bilambdaamor-typing-judgments}
 \caption{Judgment Forms of the \bilambdaamor Type System}
 \end{figure}
+
+The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is of course by design, as \bilambdaamor is intended to be an implementable version of \dlambdaamor. The only difference is the addition of the type annotation syntax $(e : \tau)$ described in Section~\textbf{??}. The main change between the two type systems is in the forms of the judgments. Some judgments change in only minor ways: the sort-checking, kind-checking, and constraint well-formedness judgments are all the same as in \dlambdaamor, with the exception of the added constraint outputs as described in Section~\textbf{??}. The subtyping judgment also sports a constraint output, but is also is split into two, with first a ``normal form subtyping" relation which judges one type to be a subtype of another when both are in normal form, and then the general algorithmic subtyping relation which relates two types by normalizing them and then relating them via the normal form subtyping relation. Finally, the typing judgment changes the most: it splits into a checking ($\downarrow$) and inferring/synthesis ($\uparrow$) judgment to support bidirectional type inference, with added constraint outputs for solving and unused variable context output for the I/O method. These judgment forms are all shown in Figure~\ref{fig:bilambdaamor-typing-judgments}.
+
 
 \subsubsection{Sorts, Kinds, and Well-Formed Constraints}
 \begin{figure}
@@ -697,7 +760,15 @@ Finally, it's worth noting a potential confusion about the algorithmic constrain
 The output constraint $\Phi'$ does not encode the truth of $\Phi$. The soundness proof will make this concrete, but knowing that $\Theta ; \Delta \vDash \Phi'$ only implies that $\Phi$ is well-formed, but it need not be valid.
 
 \subsubsection{Algorithmic Context-Wellformedness}
-\red{Write this subsubsection.}
+\begin{figure}
+\input{figs/bilambdaamor-ctx-wf-rules}
+\label{fig:bilambdaamor-ctx-wf-rules}
+\caption{Algorithmic Context Wellformedness Rules}
+\end{figure}
+
+While these judgments are not a part of the typechecking algorithm we will eventually implement, \bilambdaamor includes algorithmic versions of the two context-wellformedness judgments from \dlambdaamor to be used in the presuppositions for the rest of the algorithmic judgments. The two judgments, constraint context well-formedness ($\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$) and term variable context well-formedness ($\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi$) have the expected intended meaning: when the output constraint is valid, the declarative version is thought to hold.
+
+These judgments will not need to be implemented since typechecking will begin from empty contexts, where both judgments hold vacuously. Finally, we note that \bilambdaamor does not have an algorithmic version of the declarative context subsumption judgment, since it only exists in the declarative theory to be used in the weakening rule, which \bilambdaamor does not have. Indeed- weakening of the term context in \bilambdaamor is admissible, a fact which will be proven in Section~\ref{sec:metatheory}.
 
 \subsubsection{Algorithmic Subtyping}
 
@@ -978,7 +1049,7 @@ If $\Psi ; \Theta ;  \Delta \pvdash \tau : K$ then $\Psi ; \Theta ;  \Delta \pvd
 \end{theorem}
 \red{(Do I want this in the new style?)}
 \begin{proof}
-By AS-Normalize, it suffices to show that $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$. By Theorem~\ref{thm:norm-thm}, we have that $\texttt{eval}(\tau) \; \texttt{nf}$, and by S-Refl, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) \subty \texttt{eval}(\tau) : K$, By Theorem~\ref{thm:subtynf-refl}, we have $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required. 
+By AS-Normalize, it suffices to show that $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$. By Theorem~\ref{thm:norm-thm}, we have that $\texttt{eval}(\tau) \; \texttt{nf}$, and $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau) : K$, By Theorem~\ref{thm:subtynf-refl}, we have $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required. 
 \end{proof}
 
 \begin{theorem}[Transitivity of Algorithmic Subtyping for Normal Forms]
@@ -1145,7 +1216,8 @@ The actual constraint solving of \lambdaamorimpl is handled by the Why3 platform
 Finally, a type-correct program can be interpreted. The interpreter included with \lambdaamorimpl is a straightforward definitional implementaion of the big-step cost-indexed operational semantics of \dlambdaamor: nothing too fancy. When the interpreter is invoked, all of the \texttt{do} declarations are run. The cost semantics tallies up the total actual cost of running a single declaration, and presents it, along with the statically predictied cost to the user. By the soundness theorem of \dlambdaamor, the predicted cost will always be an upper bound on the actual cost.
 
 \subsection{Examples and Use}
-Let us return to the
+
+
 \subsection{Experimental Evaluation and Comparison}
 
 
