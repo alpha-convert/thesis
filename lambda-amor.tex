@@ -164,7 +164,7 @@ The syntax associated to the amortized analysis constructs is likely less famili
 \caption{Judgment Forms of the \dlambdaamor Type System}
 \end{figure}
 
-In Figure~\ref{fig:dlambdaamor-typing-judgments}, we provide a listing of the judgments which make up \dlambdaamor's type system. Selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-typing-rules}, and a listing of all rules can be found in Appendix \textbf{??}.
+In Figure~\ref{fig:dlambdaamor-typing-judgments}, we provide a listing of the judgments which make up \dlambdaamor's type system. Selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-typing-rules}, and a listing of all rules can be found in Appendix~\ref{appendix:a}.
 
 \subsubsection{Contexts}
 Judgments in \dlambdaamor have as many as five contexts.
@@ -280,7 +280,7 @@ We say that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau$ when
 \end{definition}
 
 \subsection{Proof Theory of \dlambdaamor}
-Any type system as complex as \dlambdaamor's has heaps of syntactic structure to exploit. This structure comes, as is traditional for type theories and type systems, in the form of admissible rules. Each of \dlambdaamor's five principal judgments have their own set of admissible rules, corresponding to the structuralities of each context and other judgmental structure. Because of this, the proof theory of \dlambdaamor is incredibly rich. We will make no attempt to cover it all here, and instead pick and choose the theorems which will be useful down the line when it comes time to design and prove things about our algorithmic calculus. Below, we present the admissible rules which are used repeatedly in further metatheoretic developments: the rest can be found in Appendix~\textbf{??}.
+Any type system as complex as \dlambdaamor's has heaps of syntactic structure to exploit. This structure comes, as is traditional for type theories and type systems, in the form of admissible rules. Each of \dlambdaamor's five principal judgments have their own set of admissible rules, corresponding to the structuralities of each context and other judgmental structure. Because of this, the proof theory of \dlambdaamor is incredibly rich. We will make no attempt to cover it all here, and instead pick and choose the theorems which will be useful down the line when it comes time to design and prove things about our algorithmic calculus. Below, we present the admissible rules which are used repeatedly in further metatheoretic developments: the rest can be found in Appendix~\ref{appendix:a}.
 
 First, we prove two statements about the context well-formedness judgments that should be intuitively clear: subsets of well-formed contexts are themselves well-formed.
 
@@ -416,7 +416,7 @@ Another option is a type which attaches a single potential to each element of th
 $$
 \forall n : \N .\, L^n\left([1] \, \texttt{nat}\right) \loli \M \, (n,\langle 0,0 \rangle) \, \left(L^n(\texttt{nat})\right)
 $$
-The terms corresponding to both of these types can be found in Appendix~\textbf{??}. Of course, this cost analysis is tight and fairly uninteresting: it requires no ``real" amortized analysis.
+The terms corresponding to both of these types can be found in Appendix~\ref{appendix:a}. Of course, this cost analysis is tight and fairly uninteresting: it requires no ``real" amortized analysis.
 
 To illustrate the utility of \dlambdaamor as a platform for actual amortized analysis, we show how a few classic examples of amortized analysis can be performed by writing the programs in \dlambdaamor.
 
@@ -439,7 +439,7 @@ $$
 $$
 
 We can compute that $\phi(n,\langle 0,0,1\rangle) = \binom{n}{2} = \frac{1}{2}n^2 - \frac{1}{2}n$, which gives \texttt{ins_sort} the requisite quadratic cost bound.
-Of course, this cost analysis is fairly elementary, but the critical aspect of doing this in \dlambdaamor is that checking the proper terms (found in Appendix~\textbf{??}) against these types requires solving only linear constraints over $\R^+$, despite the cost bound being quadratic. Moreover, the terms themselves are reached by inserting the \texttt{ret}s, \texttt{bind}s, and \texttt{shift}s into the proper locations in the term one would already expect to have to write when writing this function.
+Of course, this cost analysis is fairly elementary, but the critical aspect of doing this in \dlambdaamor is that checking the proper terms (found in Appendix~\ref{appendix:a}) against these types requires solving only linear constraints over $\R^+$, despite the cost bound being quadratic. Moreover, the terms themselves are reached by inserting the \texttt{ret}s, \texttt{bind}s, and \texttt{shift}s into the proper locations in the term one would already expect to have to write when writing this function.
 
 
 \subsubsection{Functional Queue}
@@ -463,7 +463,7 @@ $$
 \texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^n([2] \, \tau) \otimes L^m \, \tau\right)\right)
 $$
 
-\texttt{deq} takes a nonempty queue, and produces another queue which has one element removed. The implementation of \texttt{deq} relies on a function \texttt{move}, which reverses the rear list into the front. The terms for \texttt{move} and \texttt{dec} can be found in Appendix~\textbf{??}.
+\texttt{deq} takes a nonempty queue, and produces another queue which has one element removed. The implementation of \texttt{deq} relies on a function \texttt{move}, which reverses the rear list into the front. The terms for \texttt{move} and \texttt{dec} can be found in Appendix~\ref{appendix:a}.
 \red{Do i want to do the binary counter here?}
 
 
@@ -486,7 +486,7 @@ Most importantly, the mapping function has type $!\left(\forall i : \N. [C \, i]
 This is simply an alias for $L^i \, 1$.
 }. Finally, the mapping function requires $C \, i$ potential to run, and incurs no amortized cost, which ensures that its actual cost is bounded by $C \, i$.
 
-Given the mapping function, the function \texttt{map} then transforms an $L^n \, \alpha$ into a monadic computation of an $L^n \, \beta$, incurring $\sum_{0 \leq i < n} C(i)$ amortized (\red{You should go back and make sure you're calling the static costs ``amortized cost" everywhere, that's nice.}) cost. As usual, the term implementing map can be found in Appendix~\textbf{??}
+Given the mapping function, the function \texttt{map} then transforms an $L^n \, \alpha$ into a monadic computation of an $L^n \, \beta$, incurring $\sum_{0 \leq i < n} C(i)$ amortized (\red{You should go back and make sure you're calling the static costs ``amortized cost" everywhere, that's nice.}) cost. As usual, the term implementing map can be found in Appendix~\ref{appendix:a}
 
 
 \subsection{Church Numerals}
@@ -505,7 +505,7 @@ $$
 $$
 
 More interesting however, are the church numeral operations! Most basic among them is the successor function, of type $\forall n : \N. [2] \, 1 \loli \texttt{Nat} \, n \loli \M \, \langle 0 \rangle \, \left(\texttt{Nat} \, (n+1)\right)$. The basic idea is simple: given a church numeral $N$, we produce a new one by iterating from $0$
-to $n$ by $N$, and then applying one last transition function. The full term, however, is fairly involved, and it can be found (along with church numeral addition) in Appendix~\textbf{??}
+to $n$ by $N$, and then applying one last transition function. The full term, however, is fairly involved, and it can be found (along with church numeral addition) in Appendix~\ref{appendix:a}
 
 \section{\bilambdaamor}
 \label{sec:bilambdaamor}
@@ -652,7 +652,7 @@ If $\Gamma \vdash e : \tau \gens \Gamma'$, then for all $\Gamma''$, we have that
 \subsection{Normalization of Types}
 To circumvent the issue of deciding $\beta$-equality of types as a part of \bilambdaamor's subtyping routine, we employ a normalization (or evaluation) procedure to eliminate all $\beta$-redexes from a type. Once these $\beta$-redexes have been eliminated, subtyping only requires congruence rules. The normalization proof that we describe in this section is a normalization relative to the equational theory induced by \dlambdaamor's subtyping relation, that is to say: we will eventually prove that a type and its normal form are mutual subtypes of each other \textit{with the subtyping relation of \dlambdaamor}. This may seem strange-- after all, the normalization is required for \bilambdaamor's subtyping relation. However, we will see in Section~\textbf{??} that to prove the completeness of \bilambdaamor's algorithmic subtyping (Theorem~\textbf{??}), a normalization proof for \dlambdaamor's subtyping is exactly what's required. Moreover, the eventual soundness and completeness theorems for algorithmic subtyping will allow us to transport this normalization result to \bilambdaamor's type system when required.
 
-This normalization procedure computes \textit{normal forms} for types, which should be thought of as canonical representatives of the $\beta$-equivalence classes of types. These normal forms can characterized syntactically: we present a pair of relations $\tau \, \texttt{ne}$ and $\tau \, \texttt{nf}$, which judge a type to be neutral or normal, respectively. Neutral types are those which can be of arrow kind, but will not induce any $\beta$-redexes when applied to, while normal types are types which include no $\beta$-redexes. The former are required to define the latter: the type $\tau \, I$ is only in normal form when $\tau$ is not of the form $\lambda i : S.\tau'$. The rules generating these two relations can be found in Appendix~\textbf{??}.
+This normalization procedure computes \textit{normal forms} for types, which should be thought of as canonical representatives of the $\beta$-equivalence classes of types. These normal forms can characterized syntactically: we present a pair of relations $\tau \, \texttt{ne}$ and $\tau \, \texttt{nf}$, which judge a type to be neutral or normal, respectively. Neutral types are those which can be of arrow kind, but will not induce any $\beta$-redexes when applied to, while normal types are types which include no $\beta$-redexes. The former are required to define the latter: the type $\tau \, I$ is only in normal form when $\tau$ is not of the form $\lambda i : S.\tau'$. The rules generating these two relations can be found in Appendix~\ref{appendix:a}.
 
 Before we present the normalization function, let us briefly take a moment to discuss why the solution we are about to present is incredibly simple. Proofs of normalization for most calculi require fairly high-powered proof techniques such as logical relations or categorical arguments. The inherent complexity of normalization proofs stems from the fact that straightforward induction on terms rarely works, since one would need to induct on substitution instances of lambda terms which are not subterms of the original term. However, \dlambdaamor's type-level lambdas do not range over types, they range over terms. Because of this, a substitution instance $\tau[I/i] : K$ of an open type $i : S \vdash \tau : K$ has the exact same number of type connectives as the open term. Further, substituting an index term into a type cannot introduce any new redexes, and so any substitution instance of an open type in normal form is also normal. These observations are codified in the following theorems.
 
@@ -700,7 +700,7 @@ The most important clauses of the definition can be found in Figure~\ref{fig:sel
 The most important (and only nontrivial) clause of the definition is the application case. To evaluate $\tau \; I$, we begin by evaluating $\tau$. If its normal form
 is a lambda, we simply perform the $\beta$-reduction. Note that we do not need to evaluate this substitution instance, as it must already be in normal form by Theorem~\ref{thm:idx-subst-nf}, assuming the correctness of the \texttt{eval} function. Otherwise, we simply re-apply the index term $I$.
 
-Of course, it is not immediately clear that this function in fact computes what we want! In order for \texttt{eval} function to be a normalization procedure, its image must consist only of types in normal form, and every type must be equivalent to its evaluation. Note that we do not prove the stronger property that equivalence is completely characterized by syntactic equality of normal forms (up to satisfied equality of index terms). While almost certainly true, this property requires a bit more work to prove and is not required for the discussion in Section~\textbf{??}, and so we omit it. Finally, we must also prove that the \texttt{eval} function preserves kinds-- this proof follows the same inductive structure as the proof of normalization, and so we bundle them together. We present the case for evaluation below, and the remainder of the cases can be found in Appendix~\textbf{??}. The Normalization Theorem does depend on a small canonical forms lemma: types of arrow kind in normal form must either be lambdas or neutral.
+Of course, it is not immediately clear that this function in fact computes what we want! In order for \texttt{eval} function to be a normalization procedure, its image must consist only of types in normal form, and every type must be equivalent to its evaluation. Note that we do not prove the stronger property that equivalence is completely characterized by syntactic equality of normal forms (up to satisfied equality of index terms). While almost certainly true, this property requires a bit more work to prove and is not required for the discussion in Section~\textbf{??}, and so we omit it. Finally, we must also prove that the \texttt{eval} function preserves kinds-- this proof follows the same inductive structure as the proof of normalization, and so we bundle them together. We present the case for evaluation below, and the remainder of the cases can be found in Appendix~\ref{appendix:a}. The Normalization Theorem does depend on a small canonical forms lemma: types of arrow kind in normal form must either be lambdas or neutral.
 
 \begin{theorem}[Canonical Forms for $S \to K$]
 If $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ and $\tau \; \texttt{nf}$, then either:
@@ -778,12 +778,12 @@ These judgments will not need to be implemented since typechecking will begin fr
 \caption{Selected Algorithmic Subtyping Rules}
 \end{figure}
 
-In \bilambdaamor, there is not one subtyping judgment, but two. The first, which we will refer to as ``normal form" subtyping (denoted $\subtynf$),  judges one type to be a subtype of another when both are in normal form. This relation contains all of the congruence rules from \dlambdaamor's subtyping relation. All of the congruence rules in the normal form subtyping relation are simply transcriptions of their declarative counterparts. Just like with sort/kind-checking, constraint-validity premises are shuffled to the constraint output of the conclusion, and variables bound in premises are quantified over. Deciding a subtyping relation which only includes congruences is of course trivial, and so this relation is certainly algorithmic.
+In \bilambdaamor, there is not one subtyping judgment, but two. The first, which we will refer to as ``normal form" subtyping (denoted $\subtynf$),  judges one type to be a subtype of another when both are in normal form. This relation contains all of the congruence rules from \dlambdaamor's subtyping relation-- these are simply transcriptions of their declarative counterparts. Just like with sort/kind-checking, constraint-validity premises are shuffled to the constraint output of the conclusion, and variables bound in premises are quantified over. Deciding a subtyping relation which only includes congruences is of course trivial, and so this relation is certainly algorithmic.
 
 The second judgment (denoted $\subty$) is generated by a single rule, AT-Normalize. AT-Normalize encodes the first step of our two-step subtyping algorithm.
 To show that $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi$, it suffices (and indeed it is necessary) to first normalize $\tau_1$ and $\tau_2$, and then judge that their normal forms are related by the normal form subtyping judgment, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$.
  
-This strategy should be familiar to the reader familiar with implementing-dependently typed languages. When implementing a dependent type theory, it is necessary to check equality of types, which may of course include programs. To do so, one first normalizes the types, and then checks them for syntactic equality-- \bilambdaamor's algorithmic subtyping is simply a directed version of this.
+This strategy should be familiar to the reader familiar with implementing dependently-typed languages. When implementing a dependent type theory, it is necessary to check equality of types, which may of course include programs. To do so, one first normalizes the types, and then checks them for syntactic equality-- \bilambdaamor's algorithmic subtyping is simply a directed version of this.
 
 Two distinct phases and normalization aside, the remaining way that \bilambdaamor's subtyping differs from \dlambdaamor's is in the removal of two rules. The rules S-Refl and S-Trans from \dlambdaamor are not included in our algorithmic subtyping relation, as they are not syntax-directed. In Section~\textbf{??}, we show that reflexivity and transitivity are admissible for types in normal form, and that these results may be lifted to the full relation through evaluation.
 
@@ -921,7 +921,7 @@ The four most basic algorithmic judgments of \bilambdaamor mirror their declarat
 
 \red{(For the love of god, don't forget to put the raw proofs in the appendix)}
 
-Below, we will only present the versions of the theorems with presuppositions included: the gory details can be found in Appendix~\textbf{??}. All of the proofs proceed by elementary inductions on derivations, occasionally using easy properties about constraint validity.
+Below, we will only present the versions of the theorems with presuppositions included: the gory details can be found in Appendix~\ref{appendix:a}. All of the proofs proceed by elementary inductions on derivations, occasionally using easy properties about constraint validity.
 
 \begin{theorem}[Soundness of Index Context Well-Formedness]
 If $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$ and $\Theta ; \cdot \vDash \Phi$, then $\Theta \vdash \Delta \; \texttt{wf}$
@@ -1068,7 +1068,7 @@ $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau
 $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K \gens \Phi$, as required.
 \end{proof}
 
-The following theorem is essentially a subtyping version of Theorem~\textbf{??} \red{(cut instances of normal forms)}: not only does index term substitution preserve the property that types are in normal form, it also preserves all subtyping relations. This theorem depends on a series of theorems that index-term substitution is admissible for all of the preceeding judgments. These are all proved (in Appendix~\textbf{??}) by appealing to the corresponding substitution theorem in \dlambdaamor, and taking a round trip through soundness and completeness for the judgment in question.
+The following theorem is essentially a subtyping version of Theorem~\textbf{??} \red{(cut instances of normal forms)}: not only does index term substitution preserve the property that types are in normal form, it also preserves all subtyping relations. This theorem depends on a series of theorems that index-term substitution is admissible for all of the preceeding judgments. These are all proved (in Appendix~\ref{appendix:a}) by appealing to the corresponding substitution theorem in \dlambdaamor, and taking a round trip through soundness and completeness for the judgment in question.
 
 \begin{theorem}[Admissibility of Normal Form Subtyping Substitution]
 \label{thm:subtynf-idx-subst}
@@ -1100,7 +1100,7 @@ By inversion on $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \t
 \end{itemize}
 \end{proof}
 
-Finally, we prove the full completeness of algorithmic subtyping. The proof proceeds by a single induction on the hypothesis. The reflexivity and transitivity cases are handled by Theorems \ref{thm:subty-refl} and \ref{thm:subty-trans}. We present the most interesting case (for S-Fam-Beta1) below, and leave the remaining cases for Appendix~\textbf{??}.
+Finally, we prove the full completeness of algorithmic subtyping. The proof proceeds by a single induction on the hypothesis. The reflexivity and transitivity cases are handled by Theorems \ref{thm:subty-refl} and \ref{thm:subty-trans}. We present the most interesting case (for S-Fam-Beta1) below, and leave the remaining cases for Appendix~\ref{appendix:a}.
 
 \begin{theorem}[Completeness of Algorithmic Subtyping]
 If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$ then  $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
@@ -1215,10 +1215,16 @@ The actual constraint solving of \lambdaamorimpl is handled by the Why3 platform
 \subsubsection{Interpreter}
 Finally, a type-correct program can be interpreted. The interpreter included with \lambdaamorimpl is a straightforward definitional implementaion of the big-step cost-indexed operational semantics of \dlambdaamor: nothing too fancy. When the interpreter is invoked, all of the \texttt{do} declarations are run. The cost semantics tallies up the total actual cost of running a single declaration, and presents it, along with the statically predictied cost to the user. By the soundness theorem of \dlambdaamor, the predicted cost will always be an upper bound on the actual cost.
 
-\subsection{Examples and Use}
+\subsection{Examples and Experimental Evaluation}
+We now return to the examples presented in Section~\ref{sec:dlambdaamor-examples}. All of these programs (and more) have been implemented in \lambdaamorimpl: the source code for each can be found in the \texttt{.la} files in the \texttt{examples/} directory of the artifact repository. Below, we discuss each of the \textbf{??} examples presented previously, as well as some new ones included with \lambdaamorimpl.
 
+\begin{itemize}
+  \item \texttt{examples/addone.la}: 
+  \item \texttt{examples/ins_sort.la}:
+  \item \texttt{examples/queue.la}:
+  \item \texttt{examples/map.la}:
+\end{itemize}
 
-\subsection{Experimental Evaluation and Comparison}
 
 
 \section{Related and Future Work}
