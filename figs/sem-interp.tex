@@ -1,0 +1,55 @@
+\begin{small}
+\[
+\begin{array}{l}
+\scott{\bbbc} = \mathbb{Z} \cup \{\infty\} \\
+\scott{\N} = \N \cup \{\infty\}\\
+\scott{\listty T} = \N \cup \{\infty\}\\
+%% \scott{T_1 \times T_2} = \scott{T_1} \times \scott{T_2}\\
+\scott{T_1 + T_2} = \left(\scott{T_1} + \scott{T_2}\right)/\sim \text{where } \inl{\infty} \sim \inr{\infty} \\
+%% \scott{T_1 \to T_2} = \scott{T_2}^{\scott{T_1}}\\
+\\
+\scott{\Gamma,x:T, \Gamma' \vdash x : T} = \pi_1^k ; \pi_2 \text{ where } \left|\Gamma'\right| = k\\
+\\
+\scott{\Gamma \vdash k : \bbbc} = \const k\\
+\scott{\Gamma \vdash E_1 + E_2 : \bbbc} = (\scott{\Gamma \vdash E_1 : \bbbc},\scott{\Gamma \vdash E_2 : \bbbc}) ; +\\
+\\
+\scott{\Gamma \vdash () : 1} = \const {()}\\
+\\
+
+\scott{\Gamma \vdash \inl E : T_1 + T_2} = \scott{\Gamma \vdash E : T_1} ; \texttt{inl}\\
+
+\scott{\Gamma \vdash \inr E : E_1 + E_2} = \scott{\Gamma \vdash E : E_2} ; \texttt{inr}\\
+\scott{\Gamma \vdash \ccase {E} x {E_1} y {E_2} : T} = \left(1_{\scott{\Gamma}},\scott{\Gamma \vdash E : T_1 + T_2}\right) ; \scase(\scott{\Gamma,x : T_1 \vdash E_1 : T},\scott{\Gamma, y : T_2 \vdash E_2 : T})\\
+\texttt{scase} \in \Hom_{Poset}\left(C^{G \times A}\times C^{G \times B},C^{G\times(A + B)}\right)\\
+\scase(f,g)(\gamma,\inl a) = f(\gamma,a) \vee g(\gamma,\infty)\\
+\scase(f,g)(\gamma,\inr b) = f(\gamma,\infty) \vee g(\gamma,b)\\
+\\
+
+%% \scott{\Gamma \vdash \lambda x.E : T_1 \to T_2} = \curry{\scott{\Gamma,x : T_1 \vdash E : T_2}}\\
+%% \scott{\Gamma \vdash E_1 E_2 : T_2} = (\scott{\Gamma \vdash E_1 : T_1 \to T_2},\scott{\Gamma \vdash E_2 : T_1});\texttt{ev}
+%% \\
+%% \\
+
+%% \scott{\Gamma \vdash (E_1,E_2) : T_1 \times T_2} = (\scott{\Gamma \vdash E_1 : T_1},\scott{\Gamma \vdash E_2 : T_2})\\
+%% \scott{\Gamma \vdash \pi_i E : T_i} = \scott{\Gamma \vdash E : T_1 \times T_2} ; \pi_i\\
+%% \\
+
+\scott{\Gamma \vdash 0 : \N} = \const 0\\
+\scott{\Gamma \vdash S(M) : \N} = \scott{\Gamma \vdash M : \N} ; S\\
+\scott{\Gamma \vdash \nrec {E} {E_1} {E_2} : T} = \left(1_{\scott{\Gamma}}, \scott{\Gamma \vdash E : \N}\right) ; \snrec(\scott{\Gamma \vdash E_1 : 1 \to T},\scott{\Gamma \vdash E_2 : \N\times T \to T})\\
+\texttt{snrec} \in \Hom_{Poset}\left({\left(C^1\right)}^G\times {\left(C^{\N\times C}\right)}^G,C^{G\times\N}\right)\\
+\snrec(f,g)(\gamma,0) = f(\gamma)()\\
+\snrec(f,g)(\gamma,n+1) = g(\gamma)(n,\snrec(f,g)(\gamma,n)) \vee f(\gamma)()\\
+
+\\
+\scott{\Gamma \vdash \elist : \listty A} = \const 0\\
+\scott{\Gamma \vdash \cons {E_1} {E_2} : \listty A} = \scott{\Gamma \vdash E_2 : \listty A} ; S\\
+\scott{\Gamma \vdash \lrec E {E_1} {E_2} : T} = \left(1_{\scott{\Gamma}}, \scott{\Gamma \vdash E : \listty T'}\right) ; \\
+\hspace{11em}\slrec(\scott{\Gamma \vdash E_1 : 1 \to T},\scott{\Gamma \vdash E_2 : T' \times (\listty T' \times T) \to T})\\
+\texttt{slrec} \in  \Hom_{Poset}\left({\left(C^1\right)^G} \times {\left(C^{A \times (\N \times C)}\right)^G},C^{G \times \N}\right)\\
+\slrec(f,g)(\gamma,0) = f(\gamma)()\\
+\slrec(f,g)(\gamma,n+1) = g(\gamma)(\infty,(n,\slrec(f,g)(\gamma,n))) \vee f(\gamma)()\\
+
+\end{array}
+\]
+\end{small}

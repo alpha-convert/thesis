@@ -1,4 +1,5 @@
 \usepackage[utf8]{inputenc}
+\usepackage{import}
 %\usepackage[margin=30pt]{geometry}
 \usepackage{amsmath}
 %\usepackage{amsfonts}
@@ -24,7 +25,14 @@
 \usepackage[numbers]{natbib}
 \usepackage{xspace}
 \usepackage{mathrsfs}
+\usepackage{tikz}
+\import{./}{tikzstyle}
+\usepackage[toc,page]{appendix}
+
 
 %for proofs
 \usepackage{mdframed}
 \usepackage{changepage}
+
+%hyperref wants to be last :(
+\usepackage{hyperref}

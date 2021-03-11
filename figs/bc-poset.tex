@@ -1,0 +1,32 @@
+% Exact:
+%$$
+%\scott{\norm{\texttt{inc}}_p} = \lambda \gamma. \lambda bs. \snrec(
+%     \lambda \gamma.\lambda z. (2,1)
+%     \lambda \gamma. \lambda  p. (\lambda x. \texttt{case}(
+%                                               \lambda \gamma'. (2 + \pi_1\pi_1\pi_2\pi_2\pi_1 \gamma', 1 + \pi_2\pi_1\pi_2\pi_2\pi_1 \gamma'),
+%                                               \lambda \gamma'. (\pi_1\pi_2\pi_2\pi_2\pi_1 \gamma', 1 +  \pi_2\pi_2\pi_2\pi_2\pi_1 \gamma')
+%                                              )(((\gamma,p),x),\pi_1x)
+%                                 (\pi_1 p,((0,\pi_1\pi_2 p),\pi_2 \pi_2 p))
+%)
+%$$
+\begin{small}
+\[
+\begin{array}{l}
+\scott{\norm{\texttt{inc}}_p} = \lambda \gamma. \lambda bs. \slrec(\lambda \gamma.\lambda z. (\framebox{2},1),\\
+\hspace{12.5em}     \lambda \gamma. \lambda  p. \texttt{case}(\lambda x. (\framebox{2}, 1 + \pi_1\pi_2 p),\\
+\hspace{18.25em}                                               \lambda x. (\framebox{$\pi_1\pi_2 \pi_2 p$}, 1 +  \pi_2\pi_2 \pi_2 p)\\
+\hspace{18em}                                              )(\gamma',\pi_1 \pi_1 p)\\
+\hspace{16em} \text{where } \gamma' = ((\gamma,p),(\pi_1 p,((0,\pi_1\pi_2 p),\pi_2 \pi_2 p)))\\
+\hspace{12.25em}       )(\gamma,bs)\\
+
+\scott{\norm{\texttt{set}}_p} = \lambda \gamma. (0,\lambda n.\snrec(\lambda \gamma'.\lambda x.(\framebox{$0$},0)\\
+\hspace{12em} \lambda \gamma. \lambda p. (\framebox{$\pi_1\pi_2p + \pi_2(\scott{\norm{inc}_p}()(\pi_2 \pi_2 p))$},\pi_2(\scott{\norm{inc}_p}()(\pi_2 \pi_2 p)))
+))
+
+%\scott{\norm{\texttt{set}}} = \lambda \gamma . ($0$,\lambda n. \snrec(\lambda \gamma. \lambda x. (\framebox{$0$},0),\\
+%\hspace{13em}                \lambda \gamma.\lambda p. (\framebox{$\pi_1\pi_2p + \pi_1(\scott{\norm{\texttt{inc}}_p}()(\pi_2\pi_2 p))$}, \\
+%\hspace{16.5em}                                          \pi_2(\scott{\norm{\texttt{inc}}_p}()(\pi_2\pi_2 p))))\\
+%\hspace{12.5em}                                         ((\gamma,n),n))
+\end{array}
+\]
+\end{small}

@@ -1,0 +1,82 @@
+% \begin{small}
+% \[
+% \begin{array}{l}
+% \norm{A} = \bbbc \times \angles{A} \\
+% \angles{!^k_\ell A} = \angles{A} \\
+% \angles{1} = 1 \\
+% \angles{A \otimes B} = \angles{A} \times \angles{B} \\
+% \angles{A \oplus B} = \angles{A} + \angles{B} \\
+% \angles{A \loli B} = \angles{A} \to \norm{B} \\
+% \angles{A \amp B} = \norm{A} \times \norm{B} \\
+% \angles{\N} = \N \\
+% \angles{\listty A} = \listty {\angles A} \\
+% \\
+% \norm{x} = (0,x)\\
+% \norm{()} = (0,())\\
+% \norm{\tick M} = 1 +_c \norm{M}\\
+% \norm{(M,N)} = (\norm{M}_c + \norm{N}_c,(\norm{M}_p,\norm{N}_p))\\
+% \norm{\asplit {k'} M x y N} = k'\norm{M}_c +_c \norm{N}[\pi_1\norm{M}_p/x,\pi_2\norm{M}_p/y]\\
+% \norm{\lambda x.M} = (0,\lambda x.\norm{M})\\
+% \norm{M \; N} = (\norm{M}_c + \norm{N}_c) +_c \norm{M}_p \; \norm{N}_p\\
+% \norm{\inl M} = (\norm{M}_c,\inl {\norm{M}_p})\\
+% \norm{\inr M} = (\norm{M}_c,\inr {\norm{M}_p})\\
+% \norm{\acase {k'} M x {N_1} y {N_2}} = k'\norm{M}_c + \ccase {\norm{M}_p} x {\norm{N_1}} y {\norm{N_2}}\\
+% \norm{0} = (0,0)\\
+% \norm{S(M)} = (\norm{M}_c,S(\norm{M}_p))\\
+% \norm{\elist} = (0,\elist)\\
+% \norm{\cons M N} = (\norm{M}_c + \norm{N}_c,\cons {\norm{M}_p} {\norm{N}_p})\\
+% \norm{\tsfer {k'} k \ell x M N} = k'\norm{M}_c +_c \norm{N}[\norm{M}_p/x]\\
+% \norm{\save k \ell M} = (k\norm{M}_c,\norm{M}_p)\\
+% \norm{\wait \ell M} = \ell +_c \norm{M}\\
+% \norm{\disc \ell M} = (-\ell) +_c \norm{M}\\
+% \norm{\amppair M N} = (0,(\norm{M},\norm{N}))\\
+% \norm{\pi_i M} = \norm{M}_c +_c \pi_i\left(\norm{M}_p\right)\\
+% \norm{\nrec M {N_1} {N_2}} = (\norm{M}_c + \norm{N_1}_c + \norm{N_2}_c) +_c \nrec {\norm{M}_p} {\norm{N_1}_p} {\lambda x. \norm{N_2}_p(\pi_1 x,\lambda z.\pi_2 x)}\\
+% \norm{\lrec M {N_1} {N_2}}=(\norm{M}_c+\norm{N_1}_c+\norm{N_2}_c)+_c\lrec {\norm{M}_p} {\norm{N_1}_p} {\lambda x. \norm{N_2}_p (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }\\
+% \end{array}
+% \]
+% \end{small}
+
+\begin{small}
+\[
+\begin{array}{c}
+\norm{A} = \bbbc \times \angles{A} \\
+\angles{1} = 1 \qquad
+\angles{A \otimes B} = \angles{A} \times \angles{B}\qquad
+\angles{A \oplus B} = \angles{A} + \angles{B}\qquad
+\angles{A \loli B} = \angles{A} \to \norm{B} \\
+\angles{!^k_\ell A} = \angles{A} \qquad
+\angles{A \amp B} = \norm{A} \times \norm{B} \\
+\angles{\N} = \N\qquad
+\angles{\listty A} = \listty {\angles A} \\
+\end{array}
+\]
+
+\[
+\begin{array}{c}
+\norm{x} = (0,x) \\
+\norm{()} = (0,()) \qquad
+\norm{(M,N)} = (\norm{M}_c + \norm{N}_c,(\norm{M}_p,\norm{N}_p)) \qquad
+\norm{\pi_i M} = \norm{M}_c +_c \pi_i\left(\norm{M}_p\right)\\ \\
+\norm{\inl M} = (\norm{M}_c,\inl {\norm{M}_p}) \qquad
+\norm{\inr M} = (\norm{M}_c,\inr {\norm{M}_p})\\
+\norm{\acase {k'} M x {N_1} y {N_2}} = k'\norm{M}_c + \ccase {\norm{M}_p} x {\norm{N_1}} y {\norm{N_2}}\\ \\
+\norm{\lambda x.M} = (0,\lambda x.\norm{M}) \qquad
+\norm{M \; N} = (\norm{M}_c + \norm{N}_c) +_c \norm{M}_p \; \norm{N}_p\\ \\
+\norm{\amppair M N} = (0,(\norm{M},\norm{N}))\\
+\norm{\asplit {k'} M x y N} = k'\norm{M}_c +_c \norm{N}[\pi_1\norm{M}_p/x,\pi_2\norm{M}_p/y]\\ \\
+\norm{0} = (0,0) \qquad
+\norm{S(M)} = (\norm{M}_c,S(\norm{M}_p)) \\ \\
+\norm{\elist} = (0,\elist) \qquad
+\norm{\cons M N} = (\norm{M}_c + \norm{N}_c,\cons {\norm{M}_p} {\norm{N}_p}) \\ \\
+\norm{\tick M} = 1 +_c \norm{M}\\
+\norm{\tsfer {k'} k \ell x M N} = k'\norm{M}_c +_c \norm{N}[\norm{M}_p/x] \qquad
+\norm{\save k \ell M} = (k\norm{M}_c,\norm{M}_p)\\
+\norm{\wait \ell M} = \ell +_c \norm{M} \qquad
+\norm{\disc \ell M} = (-\ell) +_c \norm{M}\\ \\
+\norm{\nrec M {N_1} {N_2}} = (\norm{M}_c + \norm{N_1}_c + \norm{N_2}_c) +_c \nrec {\norm{M}_p} {\norm{N_1}_p} {\lambda x. \norm{N_2}_p(\pi_1 x,\lambda z.\pi_2 x)}\\
+\hspace{-10em}\norm{\lrec M {N_1} {N_2}}=(\norm{M}_c+\norm{N_1}_c+\norm{N_2}_c)+_c\\
+\hspace{12em}\lrec {\norm{M}_p} {\norm{N_1}_p} {\lambda x. \norm{N_2}_p (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }\\
+\end{array}
+\]
+\end{small}

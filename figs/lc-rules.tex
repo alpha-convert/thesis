@@ -1,0 +1,125 @@
+\begin{small}
+  \begin{mathpar}
+\infer{
+\Gamma, x : T \vdash x : T
+}{}
+\qquad
+\infer{
+\Gamma \vdash k : \bbbc
+}{
+k \in \mathbb{Z}
+}
+\qquad
+\infer{
+\Gamma \vdash E_1 + E_2 : \bbbc
+}{
+\Gamma \vdash E_1 : \bbbc
+&
+\Gamma \vdash E_2 : \bbbc
+}
+\qquad
+\infer{
+\Gamma \vdash () : 1
+}{}
+
+\\
+
+\infer{
+\Gamma \vdash E_1 \; E_2 : T_2
+}{
+\Gamma \vdash E_1 : T_1 \to T_2
+&
+\Gamma \vdash E_2 : T_1
+}
+\qquad
+\infer{
+\Gamma \vdash \lambda x.E : T_1 \to T_2
+}{
+\Gamma, x : T_1 \vdash E : T_2
+}
+\qquad
+\infer{
+\Gamma \vdash (E_1,E_2) : T_1 \times T_2
+}{
+\Gamma \vdash E_1 : T_1
+&
+\Gamma \vdash E_2 : T_2
+}
+\qquad
+\infer{
+\Gamma \vdash \pi_i E : T_i
+}{
+\Gamma \vdash E : T_1 \times T_2
+}
+
+\\
+
+\infer{
+\Gamma \vdash \inl E : T_1 + T_2
+}{
+\Gamma \vdash E : T_1
+}
+\qquad
+\infer{
+\Gamma \vdash \inr E : T_1 + T_2
+}{
+\Gamma \vdash E : T_2
+}
+\qquad
+\infer{
+\Gamma \vdash \ccase E x {E_1} y {E_2} : T
+}{
+\Gamma \vdash E : T_1 + T_2
+&
+\Gamma, x : T_1 \vdash E_1 : T
+&
+\Gamma, y : T_2 \vdash E_2 : T
+}
+
+\\
+
+\infer{
+\Gamma \vdash 0 : \N
+}{}
+\qquad
+\infer{
+\Gamma \vdash S(E) : \N
+}{
+\Gamma \vdash E : \N
+}
+\qquad
+\infer{
+\Gamma \vdash \nrec {E} {E_1} {E_2} : T
+}{
+\Gamma \vdash E : \N
+&
+\Gamma \vdash E_1 : 1 \to T
+&
+\Gamma \vdash E_2 : \N \times T \to T
+}
+
+\\
+
+\infer{
+\Gamma \vdash \elist : \listty T
+}{}
+\qquad
+\infer{
+\Gamma \vdash \cons {E_1} {E_2} : \listty T
+}{
+\Gamma \vdash E_1 : T
+&
+\Gamma \vdash E_2 : \listty T
+}
+\qquad
+\infer{
+\Gamma \vdash \lrec E {E_1} {E_2} : T
+}{
+  \begin{array}{l}
+    \Gamma \vdash E : \listty {T_1}\\
+\Gamma \vdash E_1 : 1 \to T\\
+\Gamma \vdash E_2 : T_1\times(\listty {T_1} \times T) \to T
+  \end{array}
+}
+\end{mathpar}
+\end{small}

@@ -1,0 +1,77 @@
+
+\begin{mathpar}
+\text{$\lambda^A$ rules:} \qquad
+\infer{\Delta | \Gamma \vdash_f \texttt{Emp} : \tree A}{}
+
+\infer{\Delta | \Gamma \vdash_{f_1+f_2+g_1+g_2} N(M_1,M_2,N_1,N_2) : \tree A}
+{
+\Delta | \Gamma \vdash_{f_1} M_1 : A &
+\Delta | \Gamma \vdash_{f_2} M_2 : \N &
+\Delta | \Gamma \vdash_{g_1} N_1 : \tree A &
+\Delta | \Gamma \vdash_{g_2} N_2 : \tree A
+}\\
+
+\infer{\Delta | \Gamma \vdash_{f + \sum_{i=1}^5 g_i} \trec M {N_1} {N_2} {N_3} {N_4} {N_5} : C}
+{
+\begin{array}{l}
+\Delta | \Gamma \vdash_f M : \tree A\\
+\Delta | \Gamma \vdash_{g_1} N_1 : !^\infty_0(1 \loli C)\\
+\Delta | \Gamma \vdash_{g_2} N_2 : !^\infty_0(A \loli C)\\
+\Delta | \Gamma \vdash_{g_3} N_3 : !^\infty_0(A \otimes \N \otimes A \otimes N \otimes (\tree A \amp C)^2 \loli C)\\
+\Delta | \Gamma \vdash_{g_4} N_4 : !^\infty_0(A \otimes \N \otimes A \otimes N \otimes (\tree A \amp C)^2 \loli C)\\
+\Delta | \Gamma \vdash_{g_5} N_5 : !^\infty_0(A \otimes \N \otimes A \otimes N \otimes A \otimes N (\tree A \amp C)^4 \loli C)\\
+\end{array}
+}
+
+\\
+
+\infer{\trec M {N_1} {N_2} {N_3} {N_4} {N_5} \downarrow^{\left(\sum_{i=1}^7 n_i,\sum_{i=1}^7 r_i\right)} v}{
+\begin{array}{l}
+M \downarrow^{(n_1,r_1)} N(v_1,n_1,N(v_2,n_2,t_{00},t_{01}),N(v_3,n_3,t_{10},t_{11}))\\
+N_1 \downarrow^{(n_2,r_2)} v_1'\\
+N_2 \downarrow^{(n_3,r_3)} v_2'\\
+N_3 \downarrow^{(n_4,r_4)} v_3'\\
+N_4 \downarrow^{(n_5,r_5)} v_4'\\
+N_5 \downarrow^{(n_6,r_6)} \save \infty 0 {\lambda x.N_5'}\\
+N_5'\left[\left(v_1,n_1,v_2,n_2,v_3,n_3,\amppair{t_{00}} {\trec {t_{00}} {v_1'} {v_2'} {v_3'} {v_4'} {\save \infty 0 {\lambda x.N_5'}}},\dots\right) /x \right] \downarrow^{(n_7,r_7)} v
+\end{array}
+}\\
+\end{mathpar}
+
+\hrule
+
+\begin{mathpar}
+\text{$\lambda^\bbbc$ rules:} \qquad
+\infer{\Gamma \vdash \texttt{Emp} : \tree T}{}
+
+\infer{\Gamma \vdash N(E_1,E_2,E'_1,E'_2) : \tree T}
+{
+\Gamma \vdash E_1 : T &
+\Gamma \vdash E_2 : \N &
+\Gamma \vdash E'_1 : \tree T &
+\Gamma \vdash E'_2 : \tree T
+}\\
+
+\infer{
+\Gamma \vdash \trec {E} {E_1} {E_2} {E_3} {E_4} {E_5} : T'
+}
+{
+\begin{array}{l}
+\Gamma \vdash E : \tree T\\
+\Gamma \vdash E_1 : 1 \to T'\\
+\Gamma \vdash E_2 : T \to T'\\
+\Gamma \vdash E_3 : A \times \N \times A \times \N \times (\tree T \times T')^2 \to T'\\
+\Gamma \vdash E_4 : A \times \N \times A \times \N \times (\tree T \times T')^2 \to T'\\
+\Gamma \vdash E_5 : A \times \N \times A \times \N \times A \times \N \times (\tree T \times T')^4 \to T'\\
+\end{array}
+}\\
+
+\begin{array}{l}
+\norm{\trec M {N_1} {N_2} {N_3} {N_4} {N_5}} = \left(\norm{M}_c + \sum_{i=1}^5 \norm{N_i}_c \right) +_c\\
+\hspace{1em} \texttt{trec}(\norm{M}_p,\norm{N_1}_p,\norm{N_2}_p,\lambda (x,n_1,y,n_2,(r_1,t_1),(r_2,t_2)). \norm{N_3}_p (x_1,n_1,y,n_2,((0,r_1),t_1),((0,r_2),t_2)),\dots )
+\end{array}
+%\norm{\trec M {N_1} {N_2} {N_3} {N_4} {N_5}} = \left(\norm{M}_c + \sum_{i=1}^5 \norm{N_i}_c \right) +_c \texttt{trec}(\norm{M}_p,\norm{N_1}_p,\norm{N_2}_p,\lambda (x,n_1,y,n_2,(r_1,t_1),(r_2,t_2)). \norm{N_3}_p (\_),\dots )
+
+\end{mathpar}
+
+

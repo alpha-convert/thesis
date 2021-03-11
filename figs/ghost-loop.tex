@@ -1,0 +1,7 @@
+\[
+\begin{array}{rcl}
+ N_1 & = & {\lambda \_. \pack \alpha 0 {(\save 1 0 {()})}}\\
+ N_2 & = & {\lambda (\_,(\alpha,\save \alpha 1 {()})). \wait 1 {(\pack \beta {\alpha + 1} {\save {\alpha + 1} {1} {()}})}}\\
+\texttt{spawn}(n) &=& \nrec {n} {N_1} {\save \infty 0 {N_2}}  : \exists \alpha . !_\alpha^1 1
+\end{array}
+\]

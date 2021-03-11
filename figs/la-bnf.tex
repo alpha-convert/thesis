@@ -1,0 +1,14 @@
+\begin{small}
+\[\begin{array}{lll}
+\text{Types} & A,B,C & ::= \N \; | \; \listty A \; |\; A \loli B \;|\; A \otimes B \;|\; A \oplus B \;|\; A \amp B \;|\; !^k_\ell A\\
+\text{Terms} & M,N & ::= x \; | \; \texttt{tick} \, ;\, M \;|\; \texttt{create}_\ell \; M \;|\; \texttt{spend}_\ell \; M \;|\;
+\texttt{save}^k_\ell \; M  \;|\; \tsfer {k'} k {\ell} x M N\\
+&& \quad | \; \lambda x.M \;|\; M \; N \;|\; \inl M \;|\; \inr M \;|\;
+\texttt{case}_{k'}(M,x.N_1,y.N_2) \;|\; \amppair{M}{N} \;|\;
+\pi_1 M \;|\; \pi_2 M\\
+&& \quad |\; \texttt{split}(M,\, x.y.N) \;|\;
+0 \;|\; S(M) \;|\; \texttt{nrec}(M,N_1,N_2) \;|\; \texttt{[]} \;|\;
+\cons{M}{N} \;|\; \texttt{lrec}(M,N_1,N_2)\\
+\end{array}
+\]
+\end{small}

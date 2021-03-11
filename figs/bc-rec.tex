@@ -1,0 +1,14 @@
+$$
+\begin{array}{l}
+\cdot \vdash \norm{\texttt{inc}} := (0,\lambda bs. \texttt{lrec}(bs,\lambda\_. (2,\cons {(\inr {()})} {\elist}),\\
+\hspace{9em} \lambda p. (\lambda x. \texttt{case}(\pi_1 x,\\
+    \hspace{16em}\_. {(2 + (\pi_1 \pi_2 x)_c,\cons {(\inr {()})} {(\pi_1\pi_2 x)_p})} \\
+    \hspace{16em}\_. {((\pi_2\pi_2 x)_c,\cons {(\inl {()})} {(\pi_2\pi_2 x)_p})})\\
+ \hspace{10em})(\pi_1 p, ((0,\pi_1 \pi_2 p),\pi_2 \pi_2 p)))) : \bbbc \times (\listty{1 + 1} \to \bbbc \times \listty{1 + 1}
+\\\\
+\cdot \vdash \norm{\texttt{set}} := (0,\lambda n. \texttt{nrec}(n,\lambda \_. (0,\elist),\lambda u.
+{(0,\lambda p. (\pi_2 p \; ())_c +_c \norm{\texttt{inc}}_p (\pi_2 p \; ())_p)_p}\\
+\hspace{17em}(\pi_1 u,\lambda \_. \pi_2 u)
+)) : \bbbc \times (\N \to \bbbc \times \listty{1 + 1})
+\end{array}
+$$

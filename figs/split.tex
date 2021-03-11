@@ -1,0 +1,42 @@
+% \begin{small}
+%   $$
+% \begin{array}{l}
+% \lambda ((\alpha,\save \infty \alpha x),n_1,(\beta,\save \infty \beta y),n_2,(\gamma,\save \infty \gamma z),n_3,a_{11},a_{12},a_{21},a_{22}).\\
+% \hspace{1em} \texttt{if } x \geq p \mathbin{\&\&} y \geq p \texttt{then} \, \texttt{tick} ; \; \texttt{let}\\
+%  \hspace{3em} (small,big) = \disc {\alpha + \beta} {(\texttt{split}(p,a_{11}))}\\
+%  \hspace{3em} d = N(\pack \alpha \gamma {(\save \infty \gamma z)},n_3,a_{21},a_{22})\\
+%  \hspace{3em} n_{12} = \texttt{size}(a_{12})\\
+%  \hspace{3em} n_{big} = \texttt{size}(big)\\
+%  \hspace{3em} t'_{size} = 1 + n_{12} + n_3 \\
+%  \hspace{3em} s'_{size} = 2 + n_{big} + n_{12} + n_3\\
+%  \hspace{3em} ((\alpha',\_),(\beta',\_)) = (\texttt{spawn}(\varphi(t'_{size})),\texttt{spawn}(\varphi(s'_{size})))\\
+%  \hspace{3em} t' = N(\pack \alpha {\alpha'} {(\save \infty {\alpha'} x)},t'_{size},a_{12},d)\\
+%  \hspace{3em} s' = N(\pack \alpha {\beta'} {(\save \infty {\beta'} y)},s'_{size},big,t')\\
+% \hspace{2.5em}\texttt{in} \, (small,s') \, \texttt{end}\\
+% \hspace{1em} \texttt{else} \ldots
+% \end{array}
+% $$
+% \end{small}
+
+\begin{small}
+  $$
+\begin{array}{l}
+\lambda ((\alpha,\save \infty \alpha x),n_1,(\beta,\save \infty \beta y),n_2,(\gamma,\save \infty \gamma z),n_3,a_{11},a_{12},a_{21},a_{22}).\\
+\texttt{if } x \geq p \mathbin{\&\&} y \geq p \texttt{then} \, \texttt{tick} ; \; \texttt{let}\\
+ \hspace{2em} 
+ \begin{array}{l@{\,}c@{\,}ll@{\,}c@{\,}l}
+ (small,big) &=& \disc {\alpha + \beta} {(\texttt{split}(p,a_{11}))} & 
+ d &=& N(\pack \alpha \gamma {(\save \infty \gamma z)},n_3,a_{21},a_{22})\\
+ n_{12} &=& \texttt{size}(a_{12}) &
+ n_{big} &=& \texttt{size}(big)\\
+ t'_{size} &=& 1 + n_{12} + n_3 &
+ s'_{size} &=& 2 + n_{big} + n_{12} + n_3\\
+ ((\alpha',\_),(\beta',\_)) &=& (\texttt{spawn}(\varphi(t'_{size})),\texttt{spawn}(\varphi(s'_{size}))) &
+ t' &=& N(\pack \alpha {\alpha'} {(\save \infty {\alpha'} x)},t'_{size},a_{12},d)\\
+ s' &=& N(\pack \alpha {\beta'} {(\save \infty {\beta'} y)},s'_{size},big,t')
+ \end{array} \\
+\hspace{1em}\texttt{in} \, (small,s') \, \texttt{end}\\
+\texttt{else} \ldots
+\end{array}
+$$
+\end{small}

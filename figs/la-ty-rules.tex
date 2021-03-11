@@ -1,0 +1,139 @@
+\begin{small}
+  \begin{mathpar}
+
+\text{Admissible:}
+\qquad
+\infer{\Gamma \vdash_g M : A}
+      {\Gamma \vdash_f M : A & g \ge f}
+\qquad
+\infer{\Gamma,y:B \vdash_{f+0y} M : A}
+      {\Gamma \vdash_f M : A}
+\qquad
+\infer{\Gamma \vdash_{g[f/x]} N[M/x] : B}
+      {\Gamma \vdash_f M : A&
+        \Gamma, x : A \vdash_g N : B &
+      }
+
+\end{mathpar}
+
+\hrule
+
+\begin{mathpar}
+
+\infer{\Gamma, x : A \vdash_{f+x} x : A}{}
+
+\infer{\Gamma \vdash_f \tick M : A}{\Gamma \vdash_f M : A}
+
+\infer{\Gamma \vdash_f \wait \ell M : A}
+{\Gamma \vdash_{f+\ell} M : A}
+
+\infer{\Gamma \vdash_{f+\ell} \disc \ell M : A}
+{\Gamma \vdash_f M : A}
+
+\\
+
+\infer{
+\Gamma \vdash_g \save k \ell M : !^k_\ell A
+}{
+\Gamma \vdash_f M : A
+& kf+\ell \leq g
+}
+
+\infer{
+\Gamma \vdash_{k'f+g} \tsfer {k'} k \ell x M N : B
+}{
+\Gamma \vdash_f M : !^k_\ell A & \Gamma,x : A \vdash_{g+k'(kx+\ell)} N : B
+}
+\\
+
+\infer{
+\Gamma \vdash_f \lambda x.M : A \loli B
+}{
+\Gamma, x : A \vdash_{f + x} M : B
+}
+
+\infer{
+\Gamma \vdash_{f + g} M \; N : B
+}
+{
+\Gamma \vdash_f M : A \loli B & \Gamma \vdash_g N : A
+}
+\\
+
+\infer{
+\Gamma \vdash_f \inl M : A \oplus B
+}{\Gamma \vdash_f M : A}
+
+\infer{
+\Gamma \vdash_f \inr M : A \oplus B
+}{\Gamma \vdash_f M : B}
+
+\infer{
+\Gamma \vdash_{k'f + g} \acase {k'} M x {N_1} y {N_2} : C
+}{
+  \begin{array}{l}
+    \Gamma \vdash_f M : A \oplus B \\
+    \Gamma, x : A \vdash_{g+k'x} N_1 : C \\ \Gamma, y : B \vdash_{g+k'y}
+    N_2 : C
+  \end{array}
+}
+
+\\
+
+\infer{\Gamma \vdash_f \amppair M N : A \amp B}{\Gamma \vdash_f M : A & \Gamma \vdash_f N : B}
+\qquad
+\infer{\Gamma \vdash_f \pi_i M : A_i}{\Gamma \vdash_f M : A_1 \amp A_2}
+ 
+\\
+
+\infer{\Gamma \vdash_f () : 1}{}
+
+\infer{\Gamma \vdash_{f+g} (M,N) : A \tensor B}{\Gamma \vdash_f M : A & \Gamma \vdash_g N : B}
+
+\infer{\Gamma \vdash_{k'f+g} \asplit {k'} M x y N : C}{\Gamma \vdash_f M : A \tensor B & \Gamma,x:A,y:B \vdash_{g+k'(x+y)} N : C}
+
+\\
+
+\infer{
+\Gamma \vdash_f 0 : \N
+}{}
+
+\infer{
+\Gamma \vdash_f S(M) : \N
+}{
+\Gamma \vdash_f M : \N
+}
+
+\infer{
+\Gamma \vdash_{f+g_1+g_2} \nrec M {N_1} {N_2} : C
+}{
+  \begin{array}{l}
+    \Gamma \vdash_f M : \N
+    \\
+\Gamma \vdash_{g_1} N_1 : 1 \loli C
+\\
+\Gamma\vdash_{g_2} N_2 : !_0^\infty(\N \otimes (1 \loli C) \loli C)
+  \end{array}
+}
+
+
+\\
+
+\infer{\Gamma \vdash_f \elist : \listty A}{}
+\qquad
+\infer{\Gamma \vdash_{f+g} \cons{M_1}{M_2} : \listty A}{
+\Gamma \vdash_f M_1 : A
+&
+\Gamma \vdash_g M_2 : \listty A
+}
+\qquad
+\infer{\Gamma \vdash_{f+g_1+g_2} \lrec M {N_1} {N_2} : C}
+      {\begin{array}{l}
+          \Gamma \vdash_f M : \listty A \\
+          \Gamma \vdash_{g_1} N_1 : 1 \loli C \\
+          \Gamma \vdash_{g_2} N_2 : !_0^\infty(A\tensor(\listty A \amp
+          C) \loli C)
+        \end{array}}
+
+\end{mathpar}
+\end{small}

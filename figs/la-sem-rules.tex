@@ -1,0 +1,143 @@
+\begin{small}
+  \begin{mathpar}
+\infer{\tick M \downarrow^{(1+n,r)} v}{M \downarrow^{(n,r)} v}
+
+\infer{\wait {\ell} M \downarrow^{(n,r+\ell)} v}
+{M \downarrow^{(n,r)} v}
+
+\infer{\disc {\ell} M \downarrow^{(n,r-\ell)} v}
+{M \downarrow^{(n,r)} v}
+
+\\
+
+\infer{
+\save k {\ell} M \downarrow^{(n,kr)} \save k {\ell} v
+}{
+M \downarrow^{(n,r)} v
+}
+
+\infer{
+\tsfer {k'} k {\ell} x M N \downarrow^{(n_1 + n_2,k'r_1 + r_2)} v
+}{
+M \downarrow^{(n_1,r_1)} \save k {\ell} {v_1} & N[v_1/x] \downarrow^{(n_2,r_2)} v
+}
+
+\\
+
+\infer{\lambda x.M \downarrow^{(0,0)} \lambda x.M}{}
+\qquad
+\infer{
+M \; N \downarrow^{(n_1+n_2+n_3,r_1+r_2+r_3)} v
+}{
+  M \downarrow^{(n_1,r_1)} \lambda x.M'&
+  N \downarrow^{(n_2,r_2)}v_1&
+  M'[v_1/x] \downarrow^{(n_3,r_3)} v
+}
+\\
+
+\infer{
+\inr M \downarrow^{(n,r)} \inr v
+}{
+M \downarrow^{(n,r)} v
+}
+\qquad
+\infer{
+\acase {k'} M x {N_1} y {N_2} \downarrow^{(n_1+n_2,k'r_1+r_2)} v
+}{
+M \downarrow^{(n_1,r_1)} \inr v_1
+&
+N_2[v_1/x] \downarrow^{(n_2,r_2)} v
+}
+
+\\
+
+\infer{
+\inl M \downarrow^{(n,r)} \inl v
+}{
+M \downarrow^{(n,r)} v
+}
+\qquad
+\infer{
+\acase {k'} M x {N_1} y {N_2} \downarrow^{(n_1+n_2,k'r_1+r_2)} v
+}{
+M \downarrow^{(n_1,r_1)} \inl v_1
+&
+N_1[v_1/x] \downarrow^{(n_2,r_2)} v
+}
+
+\\
+
+\infer{\amppair M N \downarrow^{(0,0)} \amppair M N}{}
+ 
+\infer{\pi_i M \downarrow^{(n_1+n_2,r_1+r_2)} v}{M \downarrow^{(n_1,r_1)} \amppair {N_1} {N_2} & N_i \downarrow^{(n_2,r_2)} v}
+
+\\
+
+
+\infer{(M,N) \downarrow^{(n_1+n_1,r_1+r_2) }(v_1,v_2)}{
+M \downarrow^{(n_1,r_1)} v_1
+&
+N \downarrow^{(n_2,r_2)} v_2
+}
+
+\infer{\asplit {k'} M x y N \downarrow^{(n_1 + n_2,k'r_1 + r_2)} v}{
+M \downarrow^{(n_1,r_1)} (v_1,v_2)
+&
+N[v_1/x,v_2/y] \downarrow^{(n_2,r_2)} v
+}
+
+\\
+
+\infer{0 \downarrow^{(0,0)} 0}{}
+
+\infer{
+S(M) \downarrow^{(n,r)} S(v)
+}{M \downarrow^{(n,r)} v}
+
+\infer{(\,) \downarrow^{(0,0)} (\,)}{}
+
+
+\\
+
+\infer{
+\nrec M {N_1} {N_2} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3 + r_4)} v
+}{
+M \downarrow^{(n_1,r_1)} 0
+& N_1 \downarrow^{(n_2,r_2)} \lambda x.N_1'
+& N_2 \downarrow^{(n_3,r_3)} v'
+& N_1'[()/x] \downarrow^{(n_4,r_4)} v
+}
+
+\\
+
+\infer{
+\nrec M {N_1} {N_2} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3+r_4)} v
+}{
+\begin{array}{l}
+M \downarrow^{(n_1,r_1)} S(v_1)\\
+N_2 \downarrow^{(n_2,r_2)} \save \infty 0 {(\lambda x.N_2')}\\
+N_1 \downarrow^{(n_3,r_3)} \lambda x.N_1'\\
+N_2'[(v_1,\lambda z. {(\nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} )}) / x] \downarrow^{(n_4,r_4)} v
+\end{array}
+}
+
+\\
+
+
+\infer{\lrec M {N_1} {N_2} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3+r_4)} v}
+{M \downarrow^{(n_1,r_1)} [] & N_1 \downarrow^{(n_2,r_2)} \lambda x.N_1'
+& N_2 \downarrow^{(n_3,r_3)} \save \infty 0 {(\lambda x.N_2')} & N_1'[()/x] \downarrow^{(n_4,r_4)} v
+}
+
+\infer{\lrec M {N_1} {N_2} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3+r_4)} v}
+{
+\begin{array}{l}
+M \downarrow^{(n_1,r_1)} \cons {v_1} {v_2} \\
+N_2 \downarrow^{(n_2,r_2)} \save \infty 0 {(\lambda x.N_2')}\\
+N_1 \downarrow^{(n_3,r_3)} \lambda x.N_1'\\
+N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} })/x] \downarrow^{(n_4,r_4)} v
+\end{array}
+}
+
+\end{mathpar}
+\end{small}

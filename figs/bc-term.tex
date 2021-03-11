@@ -1,0 +1,16 @@
+\begin{small}
+  $$
+\begin{array}{l}
+\cdot \vdash_0 \texttt{inc} := \lambda b. \texttt{lrec}(b,\lambda \_. \tick {\cons {\wait 1 ({\inl ({\save 1 1 {()}})}) } {\elist} },\\
+  \hspace{4em} \texttt{save}^{\infty}_0 (\lambda (a,tr). \texttt{case}_1(a,\_.{\tick {\cons {\wait 1 ({\inl ({\save 1 1 {()}})})} {\pi_1 tr} } },\\
+      \hspace{15.75em} y. \texttt{transfer}_1 \; !^1_1 \_ = y \; \texttt{to} \\
+       \hspace{17em} {\disc 1 {(\tick {\cons {\inl {()}} {\pi_2 tr}})}}))) : \listty {\texttt{bit}} \loli \listty {\texttt{bit}}
+\\\\
+\vdash_{0} \texttt{set} := \lambda n. \texttt{nrec}(n,\lambda \_. \elist,
+  \texttt{save}^\infty_0(\lambda p.
+   \asplit 1 {p} {\_} x {\texttt{inc} \; (x \; ())}
+  )
+) : \N \loli \listty{\texttt{bit}}
+\end{array}
+$$
+\end{small}

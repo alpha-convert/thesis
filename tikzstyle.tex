@@ -1,0 +1,433 @@
+\usetikzlibrary
+{
+	calc ,
+	matrix ,
+	arrows ,
+	angles ,
+	quotes ,
+	intersections ,
+	positioning ,
+	fit ,
+	shapes.geometric ,
+	shapes.misc ,
+	decorations ,
+	decorations.markings ,
+	decorations.pathmorphing ,
+	decorations.pathreplacing ,
+	decorations.text %,
+	%graphdrawing % currently works only with LuaTex
+}
+
+\usepgflibrary
+{
+	arrows.meta
+}
+
+%\usegdlibrary % currently works with LuaTex only
+%{
+%	trees ,
+%	force
+%}
+
+
+\usepackage{xcolor}
+
+% customizations:
+\tikzset
+{
+	% default diagram style
+	diagram/.style =
+	{
+		line cap = butt ,
+		line join = bevel ,
+		arrows = -> ,
+		> = angle 60 ,
+		auto = left ,
+		text height = 1.5ex , % i had this commented for some reason, but don't remember why.  needed for vertical label text alignment, i think.
+		text depth = 0.25ex , % needed for baseline alignment (TiKZ quirk)
+		align = center ,
+	} ,
+	% node style for code diagrams:
+	code node/.append style =
+	{
+		every node/.append style =
+		{
+			execute at begin node = \begin{texttt} ,
+			execute at end node = \end{texttt}
+		}
+	} ,
+	% style for code diagrams:
+	code diagram/.style =
+	{
+		diagram ,
+		code node
+	} ,
+	% node style for math diagrams:
+	math node/.append style =
+	{
+		every node/.append style =
+		{
+			execute at begin node = \begin{math} ,
+			execute at end node = \end{math}
+		}
+	} ,
+	% style for math diagrams:
+	math diagram/.style =
+	{
+		diagram ,
+		math node
+	} ,
+	% style for string diagrams:
+	string diagram/.style =
+	{
+		math diagram ,
+		arrows = - ,
+	} ,
+	% node placement with center anchor
+	online/.style =
+	{
+		shape = rectangle ,
+		rounded corners = 2mm ,
+		inner sep = 1.5pt ,
+		fill = white ,
+		opacity = 1.0 ,
+		anchor = center	
+	} ,
+	% style for double-shafted arrows
+	double arrow/.style =
+	{
+		double distance between line centers = 2pt ,
+		-implies % to get a single tip on a double arrow (TiKZ quirk)
+	} ,
+	% style for equality arrows
+	equals/.style =
+	{
+		double distance between line centers = 2pt ,
+		-implies , % to get a single tip on a double arrow (TiKZ quirk)
+		arrows = -
+	} ,
+	% style for maps-to arrows
+	mapto/.append style =
+	{
+		arrows = |-> ,
+	} ,
+	% style for paths
+	paph/.append style =
+	{
+		decorate ,
+		decoration = {snake , segment length = 5mm , amplitude = 0.5mm} ,
+	} ,
+	% style for left-bending inclusion arrows
+	includel/.append style =
+	{
+		arrows = Hooks[right]-> ,
+	} ,
+	% style for right-bending inclusion arrows
+	includer/.append style =
+	{
+		arrows = Hooks[left]-> ,
+	} ,
+	% style for monic arrows
+	monomorphism/.append style =
+	{
+		arrows = >-> ,
+	} ,
+	% style for epic arrows
+	epimorphism/.append style =
+	{
+		arrows = ->> ,
+	} ,
+	% style for cofibration arrows
+	cofibration/.append style =
+	{
+		arrows = >-> ,
+	} ,
+	% style for fibration arrows
+	fibration/.append style =
+	{
+		arrows = ->> ,
+	} ,
+	% style for weak equivalences
+	equivalence/.append style =
+	{
+		decoration = {markings , mark = at position 1/2 with {\node[online , transform shape] {∼};}} ,
+		postaction = {decorate} ,
+	} ,
+	% style for proarrows
+	proarrow/.append style =
+	{
+		decoration = {markings , mark = at position 1/2 with {\draw [solid , -] (0 , -0.6ex) to (0 , 0.6ex);}} ,
+		postaction = {decorate} ,
+	} ,
+	% style for string diagrams
+	string/.append style =
+	{
+		arrows = - ,
+	} ,
+	% style for cofibration strings
+	cofibration string/.append style =
+	{
+		decoration = {markings , mark = at position 1/4 with {\arrow{>}} , mark = at position 3/4 with {\arrow{>}}} ,
+		postaction = {decorate} ,
+	} ,
+	% style for fibration strings
+	fibration string/.append style =
+	{
+		decoration = {markings , mark = at position 4/8 with {\arrow{>}} , mark = at position 5/8 with {\arrow{>}}} ,
+		postaction = {decorate} ,
+	} ,
+	% style for faking over-crossing
+	overcross/.append style =
+	{
+		preaction = {draw = white , - , line width = 5pt}
+	} ,
+	% style for smaller labels
+	label/.append style =
+	{
+		font = \scriptsize
+	} ,
+	% style for incoming string labels
+	incoming/.append style =
+	{
+		pos = 0 ,
+		anchor = south
+	} ,
+	% style for outgoing string labels
+	outgoing/.append style =
+	{
+		pos = 1 ,
+		anchor = north
+	} ,
+	% style for string labels entering from below
+	outcoming/.append style =
+	{
+		pos = 0 ,
+		anchor = north
+	} ,
+	% style for string labels exiting from above
+	ingoing/.append style =
+	{
+		pos = 1 ,
+		anchor = south
+	} ,
+	% style for labels for strings entering from above
+	fromabove/.append style =
+	{
+		pos = 0 ,
+		anchor = south
+	} ,
+	% style for labels for strings exiting to below
+	tobelow/.append style =
+	{
+		pos = 1 ,
+		anchor = north
+	} ,
+	% style for labels for strings entering from below
+	frombelow/.append style =
+	{
+		pos = 0 ,
+		anchor = north
+	} ,
+	% style for string labels exiting to above
+	toabove/.append style =
+	{
+		pos = 1 ,
+		anchor = south
+	} ,
+	% style for incoming string labels from left in double category
+	fromleft/.append style =
+	{
+		pos = 0 ,
+		anchor = east
+	} ,
+	% style for outgoing string labels to right in double category
+	toright/.append style =
+	{
+		pos = 1 ,
+		anchor = west
+	} ,
+	% style for incoming string labels from right in double category
+	fromright/.append style =
+	{
+		pos = 0 ,
+		anchor = west
+	} ,
+	% style for outgoing string labels to left in double category
+	toleft/.append style =
+	{
+		pos = 1 ,
+		anchor = east
+	} ,
+	% style for arrows quantified
+	forall/.append style =
+	{
+		line width = 0.5pt ,
+		%color = gray!75 % affects the labels too
+	} ,
+	% style for arrows asserted to exist
+	exists/.append style =
+	{
+		densely dashed
+	} ,
+	% style for arrows that are part of the structure under consideration (deemphasized)
+	structural/.append style =
+	{
+		opacity = 2/3 ,
+		%color = gray!75 % affects the labels too
+	} ,
+	% styles for string diagrams
+	0-cell/.style =
+	{
+		shape = rectangle ,
+		rounded corners = 2mm ,
+		inner sep = 2pt
+	} ,
+	1-cell/.style =
+	{
+		shape = rectangle ,
+		rounded corners = 2mm ,
+		inner sep = 1.5pt ,
+		fill = white ,
+		opacity = 1.0 ,
+		anchor = center	
+	} ,
+	% general 2-cell
+	2-cell/.style =
+	{
+		draw = black!75 ,
+		fill = white ,
+		opacity = 0.9 ,
+		inner sep = 0.75mm ,
+		minimum size = 4.0mm
+	} ,
+	% bead 2-cell
+	bead/.style =
+	{
+		2-cell ,
+		shape = rectangle ,
+		rounded corners = 2.0mm
+	} ,
+	% diamond 2-cell
+	diamond/.style =
+	{
+		2-cell ,
+		shape = diamond
+	} ,
+	% dirac bra 2-cell
+	bra/.style =
+	{
+		2-cell ,
+		shape = isosceles triangle ,
+		isosceles triangle apex angle = 70 ,
+		shape border rotate = -90 ,
+		minimum size = 5mm
+	} ,
+	% dirac ket 2-cell
+	ket/.style =
+	{
+		2-cell ,
+		shape = isosceles triangle ,
+		isosceles triangle apex angle = 70 ,
+		shape border rotate = 90 ,
+		minimum size = 6mm
+	} ,
+	% box 2-cell
+	box/.style =
+	{
+		2-cell ,
+		shape = rectangle
+	} ,
+	% white dot 2-cell
+	white dot/.style =
+	{
+		2-cell ,
+		shape = circle ,
+		minimum size = 1.5mm ,
+		fill = white
+	} ,
+	% black dot 2-cell
+	black dot/.style =
+	{
+		2-cell ,
+		shape = circle ,
+		minimum size = 1.5mm ,
+		fill = gray
+	} ,
+	% plain dot 2-cell
+	dot/.style =
+	{
+		2-cell ,
+		shape = circle ,
+		inner sep = 0mm ,
+		minimum size = 0.5mm ,
+		fill = black
+	} ,
+	% sheet style for surface diagrams
+	sheet/.style =
+	{
+		draw = black!75 ,
+		fill = gray!10 ,
+		opacity = 0.9 ,
+		fill opacity = 0.5
+	} ,
+	% torn edge for surfaces
+	torn/.append style =
+	{
+		decoration = {random steps , segment length = 2pt , amplitude = 1pt}
+	} ,
+	% annotations for edge diagrams
+	edge annotation/.append style =
+	{
+		anchor = west
+	} ,
+	% general style for rewrite callout
+	callout/.append style =
+	{
+		minimum height = 2mm ,
+		minimum width = 4mm ,
+		draw ,
+		draw opacity = 0.25
+	} ,
+	% style for rewrite callout - pre
+	callout-pre/.append style =
+	{
+		callout ,
+		inner sep = 1.2mm ,
+		solid
+	} ,
+	% style for rewrite callout - post
+	callout-post/.append style =
+	{
+		callout ,
+		inner sep = 0.8mm ,
+		dashed
+	} ,
+	% style for pullback wedge:
+	pullback/.pic =
+	{
+		\draw [semithick , arrows = -] (-0.1 , 0.1) -- (0.1 , 0.1) -- (0.1 , -0.1) ;
+	} ,
+	% style for pushout wedge:
+	pushout/.pic =
+	{
+		\draw [semithick , arrows = -] (-0.1 , 0.1) -- (-0.1 , -0.1) -- (0.1 , -0.1) ;
+	} ,
+}
+
+% path replacing decoration for offset path
+% from https://tex.stackexchange.com/questions/305161/perpendicular-shift-for-paths
+\pgfdeclaredecoration{simple line}{start}
+{
+  \state{start}[width = +0pt,
+                next state=step]{
+    \pgfpathmoveto{\pgfpoint{0pt}{0pt}}
+  }
+  \state{step}[auto end on length    = 3pt,
+               auto corner on length = 3pt,               
+               width=+1pt]
+  {
+    \pgfpathlineto{\pgfpoint{1pt}{0pt}}
+  }
+  \state{final}
+  {}
+}

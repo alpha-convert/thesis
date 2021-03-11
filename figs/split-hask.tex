@@ -1,0 +1,11 @@
+$$
+\begin{array}{l}
+split \; piv \; (N (x,n_1,N (y,n_2,a_{11},a_{12}), N (z,n_3,a_{21},a_{22})))\\
+\hspace{1em}	| \; x \geq piv \&\& y \geq piv = (small,s')\\
+\hspace{1em} 	\texttt{where}\\
+\hspace{1.5em}    (small,big) = \texttt{split} \; piv \; a_{11}\\
+\hspace{1.5em}	  d = N (z,n_3,a_{21},a_{22})\\
+\hspace{1.5em}    t' = N (x,1+n_{12}+n_3,a_{12},d)\\
+\hspace{1.5em}	  s' = N (y,2+n_{12}+n_3+\texttt{size}(big),big,t')
+\end{array}
+$$

@@ -1,0 +1,63 @@
+\begin{mathpar}
+
+  \mathcal{C} ::= [] \enskip 
+              | \enskip \pi_0 \mathcal{C} \enskip 
+              | \enskip \pi_1 \mathcal{C} \enskip
+              | \enskip \mathcal{C} \; E \enskip
+              | \enskip \ccase {\mathcal{C}} x {E} y {E'} \enskip 
+              | \enskip \nrec {\mathcal{C}} {E_1} {E_2} \enskip
+              | \enskip \lrec {\mathcal{C}} {E_1} {E_2}
+
+\infer{
+\Gamma \vdash \mathcal{C}[E_0] \leq_T \mathcal{C}[E_1]
+}{
+\Gamma, x : T' \vdash \mathcal{C}[x] : T
+&
+\Gamma \vdash E_0 \leq_{T'} E_1
+}
+
+\infer{
+\Gamma \vdash E \leq_T E
+}{}
+
+\infer{
+\Gamma \vdash E_1 \leq_T E_3
+}{
+\Gamma \vdash E_1 \leq_T E_2
+&
+\Gamma \vdash E_2 \leq_T E_3
+}
+
+\infer{
+\Gamma \vdash E_1[E/x] \leq_T \ccase {\inl E} x {E_1} y {E_2}
+}{}
+
+\infer{
+\Gamma \vdash E_2[E/x] \leq_T \ccase {\inr E} x {E_1} y {E_2}
+}{}
+
+\infer{
+\Gamma \vdash E[E'/x] \leq_T (\lambda x.E) \; E'
+}{}
+
+\infer{
+\Gamma \vdash E_i \leq_{T_i} \pi_i(E_1,E_2)
+}{}
+\\
+\infer{
+\Gamma \vdash E_1 \; () \leq_T \nrec 0 {E_1} {E_2}
+}{}
+
+\infer{
+\Gamma \vdash E_2 \; (E,\nrec E {E_1} {E_2}) \leq_T \nrec {S(E)} {E_1} {E_2}
+}{}
+\\
+\infer{
+\Gamma \vdash E_1 \; () \leq_T \lrec {\elist} {E_1} {E_2}
+}{}
+
+\infer{
+\Gamma \vdash E_2 \; (E,(E', \lrec {E'} {E_1} {E_2})) \leq_T \lrec {\cons {E} {E'}} {E_1} {E_2}
+}{}
+
+\end{mathpar}

@@ -3,34 +3,39 @@
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\angles}[1]{\left\llangle #1 \right\rrangle}
 \newcommand{\eval}{\downarrow}
-\newcommand{\val}{\isml{val}}
+\newcommand{\val}{\texttt{val}}
 \newcommand{\bdby}{\sqsubseteq}
 \newcommand{\wknto}{\sqsubseteq}
-\newcommand{\valbd}{\sqsubseteq_{\isml{val}}}
-\newcommand{\subbd}{\sqsubseteq_{\isml{sub}}}
+\newcommand{\valbd}{\sqsubseteq_{\texttt{val}}}
+\newcommand{\subbd}{\sqsubseteq_{\texttt{sub}}}
 \newcommand{\subst}[2]{\left[#1 \middle/ #2 \right]}
 
-
-\newcommand{\save}[3]{\ensuremath{\isml{save}^{#1}_{#2} \; #3}}
-\newcommand{\disc}[2]{\ensuremath{\isml{disc}_{#1} \; #2}}
-\newcommand{\wait}[2]{\ensuremath{\isml{wait}_{#1} \; #2}}
-\newcommand{\tsfer}[6]{\ensuremath{\isml{transfer}_{#1} \, !^{#2}_{#3} \, #4 = #5 \; \isml{to} \; #6}}
-\newcommand{\case}[5]{\ensuremath{\isml{case} \, (#1,\, #2. #3 \, , \, #4 . #5})}
-\newcommand{\inl}[1]{\ensuremath{\isml{inl} \, #1}}
-\newcommand{\inr}[1]{\ensuremath{\isml{inr} \, #1}}
-\newcommand{\elist}{\ensuremath{\isml{[]}}}
+\newcommand{\savename}{\ensuremath{\texttt{save}}}
+\newcommand{\xfername}{\ensuremath{\texttt{transfer}}}
+\newcommand{\waitname}[0]{\ensuremath{\texttt{create}}}
+\newcommand{\discname}{\texttt{spend}}
+\let\createname\waitname
+\let\spendname\discname
+\newcommand{\save}[3]{\ensuremath{\texttt{save}^{#1}_{#2} \; #3}}
+\newcommand{\disc}[2]{\ensuremath{\texttt{disc}_{#1} \; #2}}
+\newcommand{\wait}[2]{\ensuremath{\texttt{wait}_{#1} \; #2}}
+\newcommand{\tsfer}[6]{\ensuremath{\texttt{transfer}_{#1} \, !^{#2}_{#3} \, #4 = #5 \; \texttt{to} \; #6}}
+\newcommand{\case}[5]{\ensuremath{\texttt{case} \, (#1,\, #2. #3 \, , \, #4 . #5})}
+\newcommand{\inl}[1]{\ensuremath{\texttt{inl} \, #1}}
+\newcommand{\inr}[1]{\ensuremath{\texttt{inr} \, #1}}
+\newcommand{\elist}{\ensuremath{\texttt{[]}}}
 \newcommand{\cons}[2]{\ensuremath{#1 \, :: \, #2}}
-\newcommand{\listty}[1]{\ensuremath{\isml{[}#1\isml{]}}}
-\newcommand{\delay}[1]{\ensuremath{\isml{delay} \, #1}}
-\newcommand{\susp}[1]{\ensuremath{\isml{susp} \, #1}}
-\newcommand{\force}[1]{\ensuremath{\isml{force} \, #1}}
-\newcommand{\psplit}[4]{\ensuremath{\isml{split}(#1, \, #2.#3.#4)}}
-\newcommand{\unit}{\ensuremath{\isml{()}}}
+\newcommand{\listty}[1]{\ensuremath{\texttt{[}#1\texttt{]}}}
+\newcommand{\delay}[1]{\ensuremath{\texttt{delay} \, #1}}
+\newcommand{\susp}[1]{\ensuremath{\texttt{susp} \, #1}}
+\newcommand{\force}[1]{\ensuremath{\texttt{force} \, #1}}
+\newcommand{\psplit}[4]{\ensuremath{\texttt{split}(#1, \, #2.#3.#4)}}
+\newcommand{\unit}{\ensuremath{\texttt{()}}}
 \newcommand{\N}{\ensuremath{\mathbb{N}}}
-\newcommand{\nrec}[3]{\ensuremath{\isml{nrec}\left(#1,#2,#3\right)}}
-\newcommand{\lrec}[3]{\ensuremath{\isml{lrec}\left(#1,#2,#3\right)}}
+\newcommand{\nrec}[3]{\ensuremath{\texttt{nrec}\left(#1,#2,#3\right)}}
+\newcommand{\lrec}[3]{\ensuremath{\texttt{lrec}\left(#1,#2,#3\right)}}
 \newcommand{\inj}{\overline}
-\newcommand{\tick}[1]{\ensuremath{\isml{tick} \; \, ; \; #1}}
+\newcommand{\tick}[1]{\ensuremath{\texttt{tick} \; \, ; \; #1}}
 \newcommand{\amp}{\ensuremath{\&}}
 \newcommand{\amppair}[2]{\ensuremath{\langle #1,#2 \rangle}}
 \newcommand{\scott}[1]{\ensuremath{\llbracket #1 \rrbracket}}
@@ -39,6 +44,17 @@
 \newcommand{\scase}{\ensuremath{\texttt{scase}}}
 \newcommand{\ret}[1]{\ensuremath{\texttt{ret} \, #1}}
 \newcommand{\attach}[1]{\ensuremath{\texttt{attach} \, #1}}
+\newcommand{\asplit}[5]{\ensuremath{\texttt{split}_{#1}(#2, \, #3.#4.#5)}}
+\newcommand{\ccase}[5]{\ensuremath{\texttt{case} \, (#1,\, #2. #3 \, , \, #4 . #5})}
+\newcommand{\acase}[6]{\ensuremath{\texttt{case}_{#1} \, (#2,\, #3. #4 \, , \, #5 . #6})}
+
+\newcommand{\bbbc}{\mathbb{C}}
+\newcommand{\tree}[1]{\ensuremath{\texttt{tree}\left(#1\right)}}
+\newcommand{\trec}[6]{\ensuremath{\texttt{trec}\left(#1,#2,#3,#4,#5,#6\right)}}
+\newcommand{\set}[1]{\ensuremath{\texttt{set}\left(#1\right)}}
+\newcommand{\pack}[3]{\ensuremath{\texttt{pack}_{#1 = #2} #3}}
+\newcommand{\unpack}[4]{\ensuremath{\texttt{unpack } (#1,#2) = #3 \texttt{ in } #4}}
+\newcommand{\toC}[1]{\ensuremath{\text{to}\mathbb{C}(#1)}}
 
 
 \DeclareMathOperator{\wb}{WB}
@@ -77,10 +93,17 @@
 \newcommand{\lambdaamorimpl}{\texttt{LambdaAmor}\xspace}
 
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
 
 \newcommand{\potvec}{\vec{\mathbb{R}^+}}
 
 \newcommand{\pvdash}{\vdash_p}
+
+\newcommand{\codeInc}{\texttt{inc}}
+\newcommand{\codeSet}{\texttt{set}}
+\newcommand{\codebitlist}{\texttt{bit\ list}}
+\newcommand{\codenat}{\texttt{nat}}
 
 %theorems
 

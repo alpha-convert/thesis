@@ -1,0 +1,13 @@
+\begin{small}
+  \[
+  \begin{array}{cc}
+\infer{\Delta | \Gamma \vdash_f \pack \alpha c M : \exists \alpha . A}{\Delta | \Gamma \vdash_f M : A[c/\alpha] & \Delta,\alpha \vdash A & \Delta \vdash c \texttt{ credit}}
+&
+\infer{\pack \alpha \ell M \downarrow^{(n,r)} \pack \alpha \ell v}{M \downarrow^{(n,r)} v}
+\\
+\infer{\Delta | \Gamma \vdash_{f + g} \unpack \alpha x M N : C}{\Delta | \Gamma \vdash_f M : \exists \alpha.A & \Delta,\alpha|\Gamma,x : A \vdash_{g+x} N : C & \Delta \vdash C}
+&
+\infer{\unpack \alpha x M N \downarrow^{(n_1+n_2,r_1+r_2)} v}{M \downarrow^{(n_1,r_1)} \pack \alpha\ell {v_1} & N[\ell/\alpha,v_1/x] \downarrow^{(n_2,r_2)} v}
+  \end{array}
+  \]
+\end{small}

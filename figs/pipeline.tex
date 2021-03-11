@@ -1,0 +1,32 @@
+\tikzset
+{
+		line cap = butt ,
+		line join = bevel ,
+		arrows = -> ,
+		> = angle 60 ,
+		auto = left ,
+		text depth = 0.25ex , % needed for baseline alignment (TiKZ quirk)
+		align = center ,
+}
+
+\begin{tikzpicture}
+	% nodes
+	\node (source) at (0,0) {Source \\ language};
+	\node [draw] at ($(source) + (3.5,0)$ ) (affine) {Intermediate \\ language $\lambda^A$};
+	\node [draw] at ($(affine) + (3.5,0)$ ) (syntactic) {Recurrence \\ language $\lambda^\bbbc$};
+	\node [draw] at ($(syntactic) + (3.5,0)$) (semantic) {Semantic \\ recurrences} ;
+	
+	\draw[dotted] (source) to node [auto] {Annotate} (affine);
+	\draw (affine) to node [auto] {$\norm{-}$} (syntactic);
+	\draw (syntactic) to node [auto] {$\scott{-}$} (semantic);
+	\draw[dotted, loop above] (semantic) to node [auto] {Solve} (semantic);
+	
+	%\node (source) at (0 , 0) {source \\ language} ;
+	%\node (syntactic recurrence) at (3/2 , 0) {recurrence \\ language \\ (syntactic recurrence)} ;
+	%\node (semantic recurrence) at (5/2 , 0) {denotational  cost \\ semantics \\ (semantic recurrence)} ;
+	%\node [draw , dashed] (extraction) at ($ (source) + (4/6 , 0) $) {recurrence \\ extraction} ;
+	%\draw (source) to (extraction) ;
+	%\draw (extraction) to (syntactic recurrence) ;
+	%\draw (syntactic recurrence) to (semantic recurrence) ;
+	%\draw (syntactic recurrence) to node [auto] {$\scott{-}$} (semantic recurrence) ;
+\end{tikzpicture}
