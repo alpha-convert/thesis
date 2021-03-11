@@ -2,6 +2,9 @@
 \def\filedate{April 2021}
 
 \documentclass[draft]{westhesis}
+\makeatletter
+\newcommand{\@chapapp}{\relax}%
+\makeatother
 \input{packages}
 
 
@@ -13,6 +16,8 @@
 \advisor{Daniel R. Licata}
 
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{lemma}{Lemma}[section]
 \newtheorem{definition}{Definition}[section]
 
 
@@ -35,14 +40,14 @@ To my parents.
 %\makeabstract
 %\makededication
 %\makeack
-\setcounter{tocdepth}{2}
+%\setcounter{tocdepth}{2}
 \tableofcontents
 \mainmatter
 
 
 \chapter{Introduction}
 %\include{intro}  
-\textbf{Explain Modalities in intro somewhere..}
+\red{Explain modalities}
 
 \chapter{Amortized Analysis with Type Systems}
 \label{chap:lambda-amor}
@@ -51,8 +56,22 @@ To my parents.
 
 \chapter{Amortized Analysis by Recurrence Extraction}
 \label{chap:rec-extr}
+%\include{rec-extr}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
+
+\appendix
+\renewcommand\chaptername{Appendix}
+
+\chapter{}
+\label{appendix:a}
+%\include{appendix-a}
+
+\chapter{}
+\label{appendix:b}
+%\include{appendix-b}
+
+
 
 \end{document}
