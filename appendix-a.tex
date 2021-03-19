@@ -1,7 +1,7 @@
-
+\textbf{SOMETHING IS MESSED UP WITH APPENDIX THEOREM NUMBERING... FIX THIS}
 \section{Rules of \dlambdaamor}
 
-\section{Theorems and Proofs}
+\section{\dlambdaamor Theorems and Proofs}
 
 \ctxwfstreng*
 \begin{proof}
@@ -137,4 +137,64 @@ Induction on $\tau$.
 \end{theorem}
 \begin{proof}
 Simultaneous induction.
+\end{proof}
+
+\section{Rules of \bilambdaamor}
+
+\section{Soundness and Completeness}
+
+\begin{theorem}[Raw Soundness of Sort Checking/Inference]
+If $\Theta;\Delta \vdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then $\Theta;\Delta \vdash I : S$ 
+\label{thm:raw-sort-sound}
+\end{theorem}
+\input{proofs/sort-sound}
+
+\begin{theorem}[Raw Soundness of Constraint Well-Formedness]
+If $\Theta ; \Delta \vdash \Phi \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
+\label{thm:raw-constr-sound}
+\end{theorem}
+\input{proofs/constr-sound}
+
+\idxctxwfsound*
+\begin{proof}
+By induction on $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$. The base case is immediate. Suppose $\Theta \vdash \Delta, \Phi \; \texttt{wf} \gens \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$ with $\Theta ; \cdot \vDash \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$, by way of
+$\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ and $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_2$.
+Since $\Theta ; \cdot \vDash \Phi_1$, we have by IH that $\Theta \vdash \Delta \; \texttt{wf}$. By Theorem~\ref{thm:raw-sort-sound}, since $\Theta ; \Delta \vDash \Phi_2$, we have that $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf}$, and so $\Theta \vdash \Delta, \Phi \; \texttt{wf}$, as required.
+\end{proof}
+
+\sortsound*
+\begin{proof}
+Immediate by Theorem~\ref{thm:raw-sort-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+\end{proof}
+
+
+\constrsound*
+\begin{proof}
+Immediate by Theorem~\ref{thm:raw-constr-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+\end{proof}
+
+\begin{theorem}[Raw Soundness of Kind Checking/Inference]
+If $\Psi ; \Theta ; \Delta \vdash \tau : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ then $\Psi ; \Theta ; \Delta \vdash \tau : K$.
+\label{thm:raw-kind-sound}
+\end{theorem}
+\input{proofs/kind-sound}
+
+\kindsound*
+\begin{proof}
+Immediate by Theorem~\ref{thm:raw-kind-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+\end{proof}
+
+\begin{theorem}[Raw Soundness of Subtyping for Normal Forms]
+If $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ then $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$\label{thm:raw-subtynf-sound}
+\end{theorem}
+\input{proofs/subtynf-sound}
+
+\subtynfsound*
+\begin{proof}
+Immediate by Theorem~\ref{thm:raw-subtynf-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+\end{proof}
+
+\subtysound*
+\begin{proof}
+There is only one case: $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By Theorem~\ref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By Theorem~\ref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
 \end{proof}
