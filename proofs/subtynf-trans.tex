@@ -1,0 +1,613 @@
+\jtheorem{Proof of Theorem~\ref{thm:subtynf-trans}}{
+  \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_2 : K \gens \Phi_1$
+    
+    \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_3 : K \gens \Phi_2$
+    
+    \caseFact{3} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+  }{
+    $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : K \gens \Phi$ such that $\Theta ; \Delta \vDash \Phi$  
+  }
+  
+  \caseText{By strong induction on the sum of the sizes of (1) and (2). We note that for a given choice of final rule for (1), the final rule for (2) must be the same, by inspection of the rules generating $\subtynf$. For this reason, we present the proof as a case analysis over the rules for $\subtynf$.
+  }
+  
+  \jcase{1}{AS-Unit}{Immediate.}
+  \jcase{2}{AS-Var}{Immediate.}
+  
+  \jcase{3}{AS-Arr}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_1' \subtynf \tau_2 \loli \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \loli \tau_2' \subtynf \tau_3 \loli \tau_3' : \star \gens \Phi_3 \wedge \Phi_4$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash \bigwedge_{i=1}^4 \Phi_i$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_1 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_1' \subtynf \tau_2' : \star \gens \Phi_2$
+      
+      \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_3 \subtynf \tau_2 : \star \gens \Phi_3$
+      
+      \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_2' \subtynf \tau_3' : \star \gens \Phi_4$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_1' \subtynf \tau_3 \loli \tau_3' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_3 \subtynf \tau_1 : \star \gens \Phi_1'$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_1'$
+    
+    \caseText{By IH on (5) and (7)}
+    
+    \caseText{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1' \subtynf \tau_3' : \star \gens \Phi_2'$
+    
+    \caseFact{11} $\Theta ; \Delta \vDash \Phi_2'$
+    
+    \caseText{By AS-Arr on (8) and (10)}
+    
+    \caseFact{12} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_1' \subtynf \tau_3 \loli \tau_3' : \star \gens \Phi_1' \wedge \Phi_2'$
+    
+    \caseText{The Goal follows by (9), (11), and (12)}
+  }
+  
+  \jcase{4}{AS-Tensor}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_1' \subtynf \tau_2 \otimes \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \otimes \tau_2' \subtynf \tau_3 \otimes \tau_3' : \star \gens \Phi_3 \wedge \Phi_4$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash \bigwedge_{i=1}^4 \Phi_i$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_1' \subtynf \tau_2' : \star \gens \Phi_2$
+      
+      \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$
+      
+      \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_2' \subtynf \tau_3' : \star \gens \Phi_4$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_1' \subtynf \tau_3 \otimes \tau_3' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi_1'$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_1'$
+    
+    \caseText{By IH on (5) and (7)}
+    
+    \caseText{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1' \subtynf \tau_3' : \star \gens \Phi_2'$
+    
+    \caseFact{11} $\Theta ; \Delta \vDash \Phi_2'$
+    
+    \caseText{By AS-Tensor on (8) and (10)}
+    
+    \caseFact{12} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_1' \subtynf \tau_3 \otimes \tau_3' : \star \gens \Phi_1' \wedge \Phi_2'$
+    
+    \caseText{The Goal follows by (9), (11), and (12)}
+  }
+  
+  \jcase{5}{AS-With}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_1' \subtynf \tau_2 \amp \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \amp \tau_2' \subtynf \tau_3 \amp \tau_3' : \star \gens \Phi_3 \wedge \Phi_4$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash \bigwedge_{i=1}^4 \Phi_i$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_1' \subtynf \tau_2' : \star \gens \Phi_2$
+      
+      \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$
+      
+      \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_2' \subtynf \tau_3' : \star \gens \Phi_4$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_1' \subtynf \tau_3 \amp \tau_3' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi_1'$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_1'$
+    
+    \caseText{By IH on (5) and (7)}
+    
+    \caseText{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1' \subtynf \tau_3' : \star \gens \Phi_2'$
+    
+    \caseFact{11} $\Theta ; \Delta \vDash \Phi_2'$
+    
+    \caseText{By AS-With on (8) and (10)}
+    
+    \caseFact{12} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_1' \subtynf \tau_3 \amp \tau_3' : \star \gens \Phi_1' \wedge \Phi_2'$
+    
+    \caseText{The Goal follows by (9), (11), and (12)}
+  }
+  
+  \jcase{6}{AS-Sum}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_1' \subtynf \tau_2 \oplus \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \oplus \tau_2' \subtynf \tau_3 \oplus \tau_3' : \star \gens \Phi_3 \wedge \Phi_4$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash \bigwedge_{i=1}^4 \Phi_i$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_1' \subtynf \tau_2' : \star \gens \Phi_2$
+      
+      \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$
+      
+      \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_2' \subtynf \tau_3' : \star \gens \Phi_4$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_1' \subtynf \tau_3 \oplus \tau_3' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi_1'$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_1'$
+    
+    \caseText{By IH on (5) and (7)}
+    
+    \caseText{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1' \subtynf \tau_3' : \star \gens \Phi_2'$
+    
+    \caseFact{11} $\Theta ; \Delta \vDash \Phi_2'$
+    
+    \caseText{By AS-Sum on (8) and (10)}
+    
+    \caseFact{12} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_1' \subtynf \tau_3 \oplus \tau_3' : \star \gens \Phi_1' \wedge \Phi_2'$
+    
+    \caseText{The Goal follows by (9), (11), and (12)}
+  }
+  
+  \jcase{7}{AS-Bang}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash !\tau_1 \subtynf !\tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash !\tau_2 \subtynf !\tau_3 : \star \gens \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5}  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash !\tau_1 \subtynf !\tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4) and (5)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Bang on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash !\tau_1 \subtynf !\tau_3 : \star \gens Phi$
+  }
+  
+  \jcase{8}{AS-IForall}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \forall i : S. \tau_1 \subtynf \forall i : S. \tau_2 : \star \gens \forall i : S. \Phi_1$    
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \forall i : S. \tau_2 \subtynf \forall i : S. \tau_3 : \star \gens \forall i : S. \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \forall i : S. \Phi_1 \wedge \forall i : S. \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \forall i : S. \tau_1 \subtynf \forall i : S. \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{Equivalently to (3), $\Theta, i : S; \Delta \vDash \Phi_1$ and $\Theta, i : S; \Delta \vDash \Phi_2$, and so by IH on (4),(5)}
+    
+    \caseFact{6} $\Psi ; \Theta, i :S ;\Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta, i : S: \Delta \vDash \Phi$
+    
+    \caseText{By AS-IForall on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \forall i : S.\tau_1 \subtynf \forall i : S.\tau_3 : \star \gens \forall i : S. \Phi$
+    
+    \caseText{Equivalently to (7)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+    
+    \caseText{The goal follows by (8) and (9)}
+  }
+  
+  \jcase{9}{AS-IExists}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \exists i : S. \tau_1 \subtynf \exists i : S. \tau_2 : \star \gens \forall i : S. \Phi_1$    
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \exists i : S. \tau_2 \subtynf \exists i : S. \tau_3 : \star \gens \forall i : S. \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \forall i : S. \Phi_1 \wedge \forall i : S. \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \exists i : S. \tau_1 \subtynf \exists i : S. \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{Equivalently to (3), $\Theta, i : S; \Delta \vDash \Phi_1$ and $\Theta, i : S; \Delta \vDash \Phi_2$, and so by IH on (4),(5)}
+    
+    \caseFact{6} $\Psi ; \Theta, i :S ;\Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta, i : S: \Delta \vDash \Phi$
+    
+    \caseText{By AS-IExists on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \exists i : S.\tau_1 \subtynf \exists i : S.\tau_3 : \star \gens \forall i : S. \Phi$
+    
+    \caseText{Equivalently to (7)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+    
+    \caseText{The goal follows by (8) and (9)}
+  }
+  
+  \jcase{10}{AS-TForall}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K. \tau_1 \subtynf \forall \alpha : K. \tau_2 : \star \gens \Phi_1$    
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K. \tau_2 \subtynf \forall \alpha : K. \tau_3 : \star \gens \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{4} $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$
+    }{
+       $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K. \tau_1 \subtynf \forall \alpha : K. \tau_3 : \star \gens \Phi$     and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4),(5)}    
+    
+    \caseFact{6} $\Psi , \alpha : K ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-TForall on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K.\tau_1 \subtynf \forall \alpha : K.\tau_3 : \star \gens \Phi$
+  }
+  
+  \jcase{11}{AS-List}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash L^I \tau_1 \subtynf L^J \tau_2 : \star \gens \Phi_1 \wedge (I = J)$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash L^J \tau_2 \subtynf L^K \tau_3 : \star \gens \Phi_2 \wedge (J = K)$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2 \wedge (I = J) \wedge (J = K)$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash L^I \tau_1 \subtynf L^K \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4), (5)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-List on (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1^I \subtynf \tau_3^K : \star \gens \Phi \wedge (I = K)$
+    
+    \caseText{By (3)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash I = K$
+    
+    \caseText{The goal follows by (7), (8), (9)}
+  }
+  
+  \jcase{12}{AS-Impl}{
+  
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi_1' \wedge (\Phi_2 \to \Phi_1)$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \Phi_2 \implies \tau_2 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi_2' \wedge (\Phi_3 \to \Phi_2)$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2' \wedge (Phi_3 \to \Phi_2) \wedge (Phi_2 \to \Phi_1)$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1'$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2'$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4), (5)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Impl on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi \wedge (\Phi_3 \to \Phi_1)$
+    
+    \caseText{By (3)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_3 \to \Phi_1$
+    
+    \caseText{The goal follows by (7), (8), (9)}
+  }
+  
+  \jcase{13}{AS-Conj}{
+  
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \amp \tau_1 \subtynf \Phi_2 \amp \tau_2 : \star \gens \Phi_1' \wedge (\Phi_1 \to \Phi_2)$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \Phi_2 \amp \tau_2 \subtynf \Phi_3 \amp \tau_3 : \star \gens \Phi_2' \wedge (\Phi_2 \to \Phi_3)$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2' \wedge (Phi_1 \to \Phi_3) \wedge (Phi_1 \to \Phi_2)$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1'$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2'$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subtynf \Phi_3 \amp \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4), (5)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Conj on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \amp \tau_1 \subtynf \Phi_3 \amp \tau_3 : \star \gens \Phi \wedge (\Phi_1 \to \Phi_3)$
+    
+    \caseText{By (3)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_1 \to \Phi_3$
+    
+    \caseText{The goal follows by (7), (8), (9)}
+  }
+%{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subtynf \M(J,\vec{p}) \tau_2 : \star \gens (I = J) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi}
+  
+  \jcase{14}{AS-Monad}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{q}) \tau_1 \subtynf \M(J,\vec{p}) \tau_2 : \star \gens (I = J) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi_1$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \M(J,\vec{p}) \tau_2 \subtynf \M(K,\vec{l}) \tau_3 : \star \gens (J = K) \wedge (\vec{p} \leq \vec{l}) \wedge \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash (I = J) \wedge (J = K) \wedge (\vec{q} \leq \vec{p}) \wedge (\vec{p} \leq \vec{l}) \wedge \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{q}) \tau_1 \subtynf \M(K,\vec{l}) \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4), (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{8} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By (3)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash (I = K) \wedge (\vec{q} \leq \vec{l})$
+    
+    \caseText{By AS-Monad on (7)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{q}) \tau_1 \subtynf \M(K,\vec{p}) \tau_3 : \star \gens (I = K) \wedge (\vec{q} \leq \vec{l}) \wedge \Phi$
+    
+    \caseText{Goal follows by (8), (9), (10)}
+  }
+  
+  \jcase{15}{AS-Pot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash [I|\vec{q}] \tau_1 \subtynf [J|\vec{p}] \tau_2 : \star \gens (I = J) \wedge (\vec{q} \geq \vec{p}) \wedge \Phi_1$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash [J|\vec{p}] \tau_2 \subtynf [K|\vec{l}] \tau_3 : \star \gens (J = K) \wedge (\vec{p} \geq \vec{l}) \wedge \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash (I = J) \wedge (J = K) \wedge (\vec{q} \geq \vec{p}) \wedge (\vec{p} \geq \vec{l}) \wedge \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash [I|\vec{q}] \tau_1 \subtynf [K|\vec{l}] \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4), (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{8} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By (3)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash (I = K) \wedge (\vec{q} \geq \vec{l})$
+    
+    \caseText{By AS-Pot on (7)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash [I|\vec{q}] \tau_1 \subtynf [K|\vec{p}] \tau_3 : \star \gens (I = K) \wedge (\vec{q} \geq \vec{l}) \wedge \Phi$
+    
+    \caseText{Goal follows by (8), (9), (10)}
+  }
+  
+  \jcase{16}{AS-ConstPot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash [I] \tau_1 \subtynf [J] \tau_2 : \star \gens (I \leq J) \wedge \Phi_1$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash [J] \tau_2 \subtynf [K] \tau_3 : \star \gens (J \leq K) \wedge \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash (I \leq J) \wedge (J \leq K) \wedge \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash [I] \tau_1 \subtynf [K] \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4), (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{8} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By (3)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash (I \leq K)$
+    
+    \caseText{By AS-ConstPot on (7)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash [I] \tau_1 \subtynf [K] \tau_3 : \star \gens (I \leq K) \wedge \Phi$
+    
+    \caseText{Goal follows by (8), (9), (10)}
+  }
+  
+  \jcase{17}{AS-FamLam}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S.\tau_1 \subtynf \lambda i : S. \tau_2 : S \to K \gens \forall i : S. \Phi_1$    
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S.\tau_2 \subtynf \lambda i : S. \tau_3 : S \to K \gens \forall i : S. \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash \forall i : S.\Phi_1 \wedge \forall i : S.\Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta, i : S; \Delta \vdash \tau_2 \subtynf \tau_3 : K \gens \Phi_2$
+    }{
+      $Psi ; \Theta ; \Delta \pvdash \lambda i : S. \tau_1 \subtynf \lambda i : S. \tau_3 : S \to K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+    
+    \caseText{By IH on (4) and (5)}
+    
+    \caseFact{6}  $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subtynf \tau_3 : K \gens \Phi$
+    
+    \caseFact{7} $\Theta, i : S ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-FamLam on (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S. \tau_1 \subtynf \lambda i : S. \tau_3 : S \to K \gens \forall i : S.\Phi$
+    
+    \caseText{Equivalently to (7)}
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+    
+    \caseText{The Goal follows from (8) and (9)}
+  }
+  
+  \jcase{18}{AS-FamApp}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \; I \subtynf \tau_2 \; J : K \gens (I = J) \wedge \Phi_1$    
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \; J \subtynf \tau_3 \; L : K \gens (J = L) \wedge \Phi_2$
+      
+      \caseFact{3} $\Theta ; \Delta \vDash (I = J) \wedge (J = L) \wedge \Phi_1 \wedge \Phi_2$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : S \to K \gens \Phi_1$
+      
+      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : S \to K \gens \Phi_2$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \; I \subtynf \tau_3 \; L : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (4) and (5)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : S \to K \gens \Phi$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By (3)}
+    
+    \caseFact{7} $\Theta ; \Delta \vDash (I = L)$
+    
+    \caseText{By AS-FamApp on (5)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \; I \subtynf \tau_3 \; L : K \gens (I = L) \wedge \Phi$
+    
+    \caseText{The Goal follows by (6),(7),(8)}
+  }
+}
+
+\iffalse
+
+  \item[(AS-IForall)] Suppose  and
+   from  and . By IH, $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi_1 \wedge \Phi_2$ with $\Theta, i: S ; \Delta \vDash \Phi_1 \wedge \Phi_2$. By AS-IForall, $\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau_1 \subtynf \forall i : S.\tau_3 : \star \gens \forall i : S.(\Phi_1 \wedge \Phi_2)$. But $\Theta, i : S ; \Delta \vDash \Phi_1 \wedge \Phi_2$ is equivalent to $\Theta ; \Delta \vDash \forall i : S. (\Phi_1 \wedge \Phi_2)$, and so we are done.
+  \item[(AS-IExists)]  Suppose $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subtynf \exists i : S. \tau_2 : \star \gens \forall i : S. \Phi_1$ and
+  $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_2 \subtynf \exists i : S. \tau_3 : \star \gens \forall i : S. \Phi_2$ from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$. By IH, $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi_1 \wedge \Phi_2$ with $\Theta, i: S ; \Delta \vDash \Phi_1 \wedge \Phi_2$. By AS-IExists, $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subtynf \exists i : S.\tau_3 : \star \gens \forall i : S.(\Phi_1 \wedge \Phi_2)$. But $\Theta, i : S ; \Delta \vDash \Phi_1 \wedge \Phi_2$ is equivalent to $\Theta ; \Delta \vDash \forall i : S. (\Phi_1 \wedge \Phi_2)$, and so we are done.
+  \item[(AS-TForall)] Suppose $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subtynf \forall \alpha : K. \tau_2 : \star \gens \Phi_1$ and
+  $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_2 \subtynf \forall \alpha : K. \tau_3 : \star \gens \Phi_2$ from
+  $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and
+  $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau32 : \star \gens \Phi_2$.
+  By IH, $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By AS-TForall,
+  $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subtynf \forall \alpha : K. \tau_3 : \star \gens \Phi$ as required.
+  \item[(AS-List)] Suppose $\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subtynf L^J \tau_2 : \star \gens I = J \wedge \Phi_1$ and
+  $\Psi ; \Theta ; \Delta \vdash L^J \tau_2 \subtynf L^K \tau_3 : \star \gens J = K \wedge \Phi_2$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and
+  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$. Since $\Theta ; \Delta \vdash \Phi_1 \wedge \Phi_2$, we have by IH that
+  $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Since $\Theta ; \Delta \vDash I = J \wedge J = K$ also,
+  we have that $\Theta ; \Delta \vDash I = K \wedge \Phi$. Then, by AS-List, we have
+  $\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subtynf L^K \tau_3 : \star \gens I = K \wedge \Phi$, and so we are done.
+  \item[(AS-Impl)] Suppose $\Psi ; \Theta ; \Delta \vdash \Phi_1' \implies \tau_1 \subtynf \Phi_2' \implies \tau_2 : \star \gens \Phi_1 \wedge (\Phi_2' \to \Phi_1')$
+  and $\Psi ; \Theta ; \Delta \vdash \Phi_2' \implies \tau_2 \subtynf \Phi_3' \implies \tau_3 : \star \gens \Phi_2 \wedge (\Phi_3' \to \Phi_2')$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : star \gens \Phi_1$ and 
+  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$. By IH,
+  $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$. with $\Theta ; \Delta \vDash \Phi$.
+  By AS-Impl, $\Psi ; \Theta ; \Delta \vdash \Phi_1' \implies \tau_1 \subtynf \Phi_3' \implies \tau_3 : \star \gens \Phi \wedge (\Phi_3' \to \Phi_1')$. But since $\Theta ; \Delta \vDash (\Phi_3' \to \Phi_2') \wedge (\Phi_2' \to \Phi_1')$, we have that $\Theta ; \Delta \vDash \Phi \wedge (\Phi_3' \to \Phi_1')$, as required.
+  \item[(AS-Conj)] Suppose $\Psi ; \Theta ; \Delta \vdash \Phi_1' \amp \tau_1 \subtynf \Phi_2' \amp \tau_2 : \star \gens \Phi_1 \wedge (\Phi_1' \to \Phi_2')$
+  and $\Psi ; \Theta ; \Delta \vdash \Phi_2' \amp \tau_2 \subtynf \Phi_3' \amp \tau_3 : \star \gens \Phi_2 \wedge (\Phi_2' \to \Phi_3')$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and 
+  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$. By IH,
+  $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$. with $\Theta ; \Delta \vDash \Phi$.
+  By AS-Conj, $\Psi ; \Theta ; \Delta \vdash \Phi_1' \amp \tau_1 \subtynf \Phi_3' \amp \tau_3 : \star \gens \Phi \wedge (\Phi_1' \to \Phi_3')$. But since $\Theta ; \Delta \vDash (\Phi_1' \to \Phi_2') \wedge (\Phi_2' \to \Phi_3')$, we have that $\Theta ; \Delta \vDash \Phi \wedge (\Phi_1' \to \Phi_3')$, as required.
+  \item[(AS-Monad)]
+  Suppose $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subtynf \M(J,\vec{p}) \tau_2 : \star \gens (I = J) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi_1$
+  and $\Psi ; \Theta ; \Delta \vdash \M(J,\vec{p}) \tau_2 \subtynf \M(K,\vec{r}) \tau_3 : \star \gens (J = K) \wedge (\vec{p} \leq \vec{r}) \wedge \Phi_2$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and
+  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$.
+  By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$, with $\Theta ; \Delta \vDash \Phi$.
+  By AS-Monad, $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subtynf \M(K,\vec{r})\tau_3 : \star \gens (I = K) \wedge (\vec{q} \leq \vec{r}) \Phi$.
+  But since $\Theta ; \Delta \vDash (I = J) \wedge (J = K) \wedge (\vec{q} \leq \vec{p}) \wedge (\vec{p} \leq \vec{r})$, we have $\Theta ; \Delta \vDash (I = K) \wedge (\vec{q} \leq \vec{r}) \Phi$, as required.
+  \item[(AS-Pot)] Suppose $\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subtynf [J|\vec{p}] \tau_2 : \star \gens (I = J) \wedge (\vec{q} \geq \vec{p}) \wedge \Phi_1$
+  and $\Psi ; \Theta ; \Delta \vdash [J|\vec{p}] \tau_2 \subtynf [K|\vec{r}] \tau_3 : \star \gens (J = K) \wedge (\vec{p} \geq \vec{r}) \wedge \Phi_2$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and
+  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2$.
+  By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$, with $\Theta ; \Delta \vDash \Phi$.
+  By AS-Pot, $\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subtynf [K|\vec{r}] \tau_3 : \star \gens (I = K) \wedge (\vec{q} \geq \vec{r}) \Phi$.
+  But since $\Theta ; \Delta \vDash (I = J) \wedge (J = K) \wedge (\vec{q} \geq \vec{p}) \wedge (\vec{p} \geq \vec{r})$, we have $\Theta ; \Delta \vDash (I = K) \wedge (\vec{q} \geq \vec{r}) \Phi$, as required.
+  \item[(AS-ConstPot)] Suppose $\Psi ; \Theta ; \Delta \vdash [I] \tau_1 \subtynf [J] \tau_2 : \star \gens \Phi_1 \wedge (J \leq I)$
+  and $\Psi ; \Theta ; \Delta \vdash [J] \tau_2 \subtynf [K] \tau_3 : \star \gens \Phi_2 \wedge (K \leq J)$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_3$.
+  By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$.
+  By AS-ConstPot, $\Psi ; \Theta ; \Delta \vdash [I] \tau_1 \subtynf [K]\tau_3 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi \wedge (K \leq I)$. But, $\Theta ; \Delta \vDash (K \leq J) \wedge (J \leq I)$, so $\Theta ; \Delta \vDash K \leq I$, and so we are done. 
+  \item[(AS-FamLam)] Suppose $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subtynf \lambda i : S. \tau_2 : S \to K \gens \forall i : S. \Phi_1$
+  and $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_2 \subtynf \lambda i : S. \tau_3 : S \to K \gens \forall i : S. \Phi_2$
+  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi_1$
+  and $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_3 : K \gens \Phi_2$.
+  By IH, $\Psi ; \Theta, i :S ; \Delta \vDash \tau_1 \subtynf \tau_3 : K \gens \Phi$ with $\Theta , i : S; \Delta \vDash \Phi$, which is by definition $\Theta ; \Delta \vDash \forall i : S. \Phi$.
+  Then by AS-Fam, $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subtynf \lambda i : S. \tau_3 : S \to K \gens \forall i : S. \Phi$, as required.
+  \item[(AS-FamApp)]  Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subtynf \tau_2 \; J : K \gens (I = J) \wedge \Phi_1$
+  and $\Psi ; \Theta ; \Delta \vdash \tau_2 \; J \subtynf \tau_3 \; L : K \gens (J = L) \wedge \Phi_2$
+  from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : S \to K \gens \Phi_1$ and
+   $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : S \to K \gens \Phi_2$.
+   By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_3 : S \to K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$.
+   By AS-FamApp, $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subtynf \tau_3 \; L :  K \gens \Phi \wedge (I = L)$ with $\Theta ; \Delta \vDash \Phi$.
+   Since $\Theta ; \Delta \vDash (I = J) \wedge (J = L)$, $\Theta ; \Delta \vDash (I=L)$.
+\end{itemize}
+\end{proof}
+
+\fi

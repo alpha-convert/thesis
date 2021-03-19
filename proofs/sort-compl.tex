@@ -1,0 +1,16 @@
+\begin{proof}
+By induction on $\Theta;\Delta \vdash I : S$.
+
+\begin{itemize}
+  \item[(I-Var)] Immediate by AI-Var with $\Phi = \top$.
+  \item[(I-Plus)] Suppose $\Theta ; \Delta \vdash I + J : bS$ from $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$. By IH, $\Theta ; \Delta \vdash I : bS \gens \Phi_1$ and $\Theta ; \Delta \vdash J : bS \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1$ and $\Theta; \Delta \vDash  \Phi_2$. By AI-Plus, $\Theta ; \Delta \vdash I + J : bS \gens \Phi_1 \wedge \Phi_2$
+  \item[(I-Minus)] Suppose $\Theta ; \Delta \vdash I - J : bS$ from $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$, and $\Theta ; \Delta \vDash I \geq J$. By IH, $\Theta ; \Delta \vdash I : bS \gens \Phi_1$ and $\Theta ; \Delta \vdash J : bS \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1$ and $\Theta; \Delta \vDash  \Phi_2$. By AI-Minus, $\Theta ; \Delta \vdash I - J : bS \gens \Phi_1 \wedge \Phi_2 \wedge (I \geq J)$
+  \item[(I-Times-$\mathbb{R}$)]
+  \item[(I-Times-$\vec{\mathbb{R}}$)] 
+  \item[(I-Times-$\mathbb{N}$)]
+  \item[(I-Shift)] Suppose $\Theta ; \Delta \vdash \; \lhd I : \vec{\mathbb{R}^+}$ from  $\Theta ; \Delta \vdash I : \vec{\mathbb{R}^+}$. By IH, $\Theta ; \Delta \vdash I : \vec{\mathbb{R}^+} \gens \Phi$, and $\Theta ; \Delta \vDash \Phi$.  By AI-Shift,  $\Theta ; \Delta \vdash \; \lhd I : \vec{\mathbb{R}^+} \gens \Phi$, as required.
+  \item[(I-Lam)] Suppose $\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S$ from $\Theta, i : bS ; \Delta \vdash I : S$. By IH, $\Theta, i : bS ; \Delta \vdash I : S \gens \Phi$ with $\Theta ; \Delta \vDash  \Phi$. By AI-Lam, $\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S \gens \Phi$.
+  \item[(I-App)]
+  \item[(I-Sum)]
+\end{itemize}
+\end{proof}

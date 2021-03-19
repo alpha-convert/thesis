@@ -1,0 +1,61 @@
+\jtheorem{Proof of Theorem~\ref{thm:subtyne-refl}}{
+
+\jgivengoal{
+  \caseFact{1} $\Psi ; \Theta ;  \Delta \pvdash \tau : K$
+  
+  \caseFact{2} $\tau \;\texttt{nf}$
+}{
+  $\Psi ; \Theta ;  \Delta \pvdash \tau\subtynf \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+}
+
+\caseText{By induction on (1) and inversion on (2)}
+
+\jcase{1}{K-Var}{Immediate}
+
+\jcase{2}{K-Unit}{Immediate}
+
+\jcase{3}{K-FamApp}{
+  \jgivengoal{
+    \caseFact{1} ${\Psi ; \Theta ; \Delta \pvdash \tau \; I : K}$
+    
+    \caseFact{2} $\tau \; I \; \texttt{ne}$
+    
+    \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$
+    
+    \caseFact{4} $\Theta ; \Delta \vdash I : S$
+  }{
+    $\Psi ; \Theta ;  \Delta \pvdash \tau \; I \subtynf \tau \; I: K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+  }
+  
+  \caseText{By inversion on (2)}
+  
+  \caseFact{5} $\tau \; \texttt{ne}$
+  
+  \caseText{By IH on (3)}
+  
+  \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : S \to K \gens \Phi$
+  
+  \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+  
+  \caseText{By AK-FamApp on (6)}
+  
+  \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \tau \; I \subtynf \tau \; I : K \gens \Phi \wedge (I = I)$
+  
+  \caseText{We re-establish the presupposition for (8) by applying Theorem~\ref{thm:sort-sound} to $\Theta ; \Delta \vdash I : S$ from (1)}
+  
+  \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \tau \; I \subtynf \tau \; I : K \gens \Phi \wedge (I = I)$
+  
+  \caseText{By (7), (9), and the fact that $\Theta ; \Delta \vDash I = I$}
+}
+  
+}
+
+\iffalse
+\begin{proof}
+By induction on $\Psi ; \Theta ;  \Delta \vdash \tau : K$. Inverting $\tau \;\texttt{ne}$, we see that the only possible cases are K-Var, K-Unit, and K-FamApp. The K-Var and K-Unit cases are immediate by AS-Var and AS-Unit.
+
+Otherwise, suppose ${\Psi ; \Theta ; \Delta \vdash \tau \; I : K}$ from $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ with $\Theta ; \Delta \vdash I : S$. 
+
+Here, $\tau \; I \; \texttt{ne}$ by way of $\tau \texttt{ne}$, and so by IH, $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : S \to K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By AS-FamApp, $\Psi ; \Theta ; \Delta \vdash \tau \; I \subty \tau \; I: S \to K \gens \Phi\wedge (I=I)$, and of course $\Theta ; \Delta \vDash I = I$, and so we are done.
+\end{proof}
+\fi

@@ -1,0 +1,53 @@
+\begin{proof}
+By induction on the derivation of $\Theta, i ; S ; \Delta \vdash \Phi \; \texttt{wf}$.
+\begin{enumerate}
+  \item[(C-Top)] Immediate.
+  \item[(C-Bot)] Immediate.
+  \item[(C-Conj)] Suppose $\Theta, i : S ; \Delta \vdash \Phi_1 \wedge \Phi_2 \; \texttt{wf}$ by way of
+  $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf}$ and
+  $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf}$.
+  By IH twice,
+  $\Theta; \Delta \pvdash \Phi_1[I/i] \; \texttt{wf}$ and
+  $\Theta; \Delta \pvdash \Phi_2[I/i] \; \texttt{wf}$.
+  Then, by C-Conj,
+  $\Theta ; \Delta \pvdash \Phi_1[I/i] \wedge \Phi_2[I/i] \; \texttt{wf}$
+  as required.
+  \item[(C-Disj)] Suppose $\Theta, i : S ; \Delta \vdash \Phi_1 \vee \Phi_2 \; \texttt{wf}$ by way of
+  $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf}$ and
+  $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf}$.
+  By IH twice,
+  $\Theta; \Delta \pvdash \Phi_1[I/i] \; \texttt{wf}$ and
+  $\Theta; \Delta \pvdash \Phi_2[I/i] \; \texttt{wf}$.
+  Then, by C-Disj,
+  $\Theta ; \Delta \pvdash \Phi_1[I/i] \vee \Phi_2[I/i] \; \texttt{wf}$
+  as required.
+  
+  \item[(C-Impl)]  Suppose $\Theta, i : S ; \Delta \vdash \Phi_1 \to \Phi_2 \; \texttt{wf}$ by way of
+  $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf}$ and
+  $\Theta, i : S ; \Delta, \Phi_1 \vdash \Phi_2 \; \texttt{wf}$.
+  By IH twice,
+  $\Theta; \Delta \pvdash \Phi_1[I/i] \; \texttt{wf}$ and
+  $\Theta; \Delta, \Phi_1 \pvdash \Phi_2[I/i] \; \texttt{wf}$.
+  Then, by C-Impl,
+  $\Theta ; \Delta \pvdash \Phi_1[I/i] \to \Phi_2[I/i] \; \texttt{wf}$
+  as required.
+  
+  \item[(C-Forall)] Suppose $\Theta, i : S ; \Delta \vdash \forall j : S'. \Phi \; \texttt{wf}$ by way of
+  $\Theta, i : S, j : S' ; \Delta \vdash\Phi \; \texttt{wf}$.
+  By IH,
+  $\Theta, j : S' ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
+  By C-Forall,
+  $\Theta;\Delta \pvdash \forall j : S'. \Phi[I/i] \; \texttt{wf}$, as required.
+  
+  \item[(C-Exists)] Suppose $\Theta, i : S ; \Delta \vdash \exists j : S'. \Phi \; \texttt{wf}$ by way of
+  $\Theta, i : S, j : S' ; \Delta \vdash\Phi \; \texttt{wf}$.
+  By IH,
+  $\Theta, j : S' ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
+  By C-Exists,
+  $\Theta;\Delta \pvdash \exists j : S'. \Phi[I/i] \; \texttt{wf}$, as required.
+  
+  \item[(C-Eq)] Immediate by Theorem~\ref{thm:idx-idx-subst}.
+  \item[(C-Leq)] Immediate by Theorem~\ref{thm:idx-idx-subst}.
+  \item[(C-Lt)] Immediate by Theorem~\ref{thm:idx-idx-subst}.
+\end{enumerate}
+\end{proof}

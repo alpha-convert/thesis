@@ -1,0 +1,704 @@
+\begin{proof}
+By a mutual induction on the premises of both cases. We will write this as a case analysis over the AT-* rules.
+We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
+\begin{itemize}
+  \item[(AT-Var-1)] Suppose $\Psi ; \Theta ; \Delta; \Omega ; \Gamma \vdash x \infers \tau \gens \top, \Gamma \setminus \{x : \tau\}$ from $x : \tau \in \Gamma$.
+  By Theorem~\ref{thm:ctx-sub-subset2}, there is some $\tau'$ so that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, and $x : \tau' \in \Gamma'$.
+  By AT-Var-1, $\Psi ; \Theta ; \Delta; \Omega' ; \Gamma' \vdash x \infers \tau' \gens \top, \Gamma' \setminus \{x : \tau'\}$.
+  By Theorem~\ref{thm:subty-compl},  $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$, and so by AT-Sub,
+  $\Psi ; \Theta ; \Delta; \Omega' ; \Gamma' \vdash x \checks \tau \gens \top \wedge \Phi, \Gamma' \setminus \{x : \tau'\}$. Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma' \setminus \{x : \tau'\} \wknto \Gamma' \setminus \Gamma$ and $\Psi ; \Theta ; \Delta \vdash \Gamma' \setminus \{x : \tau'\} \wknto \Gamma \setminus \{x : \tau\}$ since $x : \tau \in \Gamma$, and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, which proves (1). For (2), one use of AT-Anno gives $\Psi ; \Theta ; \Delta; \Omega' ; \Gamma' \vdash (x : \tau) \infers \tau \gens \top \wedge \Phi, \Gamma' \setminus \{x : \tau'\}$. But, $|(x : \tau)| = x$, and so we are done.
+  
+  \item[(AT-Var-2)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x \infers \tau \gens \top, \Gamma$ from $x : \tau \in \Omega$, with $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$ with $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$. By Theorem~\ref{thm:ctx-sub-subset2}, there is some $\tau'$ so that $x : \tau' \in \Omega'$ and $\Phi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. By Theorem~\ref{thm:subty-compl}, $\Phi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. 
+  By AT-Var-2, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash x \infers \tau' \gens \top, \Gamma'$. By AT-Sub, 
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash x \checks \tau \gens \top \wedge \Phi, \Gamma'$, which proves (2). For (1), we apply AT-Anno and note that $|(x : \tau)| = x$.
+  
+  \item[(AT-Unit)] Immediate.
+  \item[(AT-Base)] Immediate.
+  \item[(AT-Absurd)] Immediate.
+  \item[(AT-Nil)] Immediate.
+  
+  \item[(AT-Cons)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 :: e_2 \checks L^I \tau \gens (I \geq 1) \wedge \Phi_1 \wedge \Phi_2, \Gamma_2$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \checks \tau \gens \Phi_1, \Gamma_1$ and 
+       $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks L^{I-1} \tau \gens \Phi_2, \Gamma_2$ with 
+       $\Theta ; \Delta \vDash (I \geq 1) \wedge \Phi_1 \wedge \Phi_2$, 
+       $\Psi ; \Theta ; \Delta \vDash \Gamma' \wknto \Gamma$, and 
+       $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+       By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that $|e_1'| = |e_1|$, 
+       $\Theta ; \Delta \vDash \Phi_1'$, 
+       $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$, 
+       $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+       $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \checks \tau \gens \Phi_1',\Gamma_1'$.
+       By IH, there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that $|e_2'| = |e_2|$,
+       $\Theta ; \Delta \vDash \Phi_2'$,
+       $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+       $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+       $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2',\Gamma_2'$.
+       By AT-Cons,
+       $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' :: e_2' \checks L^I \tau \gens (I \geq 1) \wedge \Phi_1' \wedge \Phi_2',\Gamma_2'$.
+       Since $\Theta ; \Delta \vDash I \geq 1$, we have that $\Theta ; \Delta \vDash (I \geq 1) \wedge \Phi_1' \wedge \Phi_2'$. Further, $|e_1' :: e_2'| = |e_1'| :: |e_2'| = |e_1| :: |e_2| = |e_1 :: e_2|$. Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ by the second IH, and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ by $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$ using Theorem~\ref{thm:ctx-sub-subset2}, which completes (1). For (2), AT-Anno gives
+       $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e_1' :: e_2' : L^I) \infers L^I \tau \gens (I \geq 1) \wedge \Phi_1' \wedge \Phi_2',\Gamma_2'$, as required.
+  
+  \item[(AT-Match)] Suppose 
+   $$\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{match}(e,e_1,h.t.e_2) \checks \tau' \gens \Phi_1 \wedge (I = 0 \to \Phi_2) \wedge (I \geq 1 \to \Phi_3), \Gamma_2 \cap (\Gamma_3 \setminus \{h,t\}$$ from 
+   $$\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \infers L^I \tau \gens \Phi_1, \Gamma_1$$,
+   $$\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_1\vdash e_1 \checks \tau' \gens \Phi_2,\Gamma_2$$
+   $$\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_1, h : \tau, t : L^{I-1} \tau \vdash e_2 \checks \tau' \gens \Phi_3,\Gamma_3$$ with 
+   $$\Theta ; \Delta \vDash \Phi_1 \wedge (I = 0 \to \Phi_2) \wedge (I \geq 1 \to \Phi_3)$$
+   $$\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$$
+   $$\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$$
+   By IH, there are $e'$, $\Phi_1'$, $\Gamma_1'$ with $|e'| = |e|$, 
+   $\Theta ; \Delta \vDash \Phi_1'$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers L^I \tau \gens \Phi_1',\Gamma_1'$.
+   By IH, there are $e_1'$, $\Phi_2'$, $\Gamma_2'$ with $|e_1'| = |e_1|$,
+   $\Theta ; \Delta, I = 0 \vDash \Phi_2'$,
+   $\Psi ; \Theta ; \Delta, I = 0 \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+   $\Psi ; \Theta ; \Delta, I = 0 \vdash \Gamma_2' \wknto \Gamma_2$, and
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_1' \checks \tau' \gens \Phi_2',\Gamma_2'$.
+   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, we have that
+      $\Psi ; \Theta ; \Delta \vdash \Gamma_1', h : \tau, t : L^{I-1} \tau \wknto \Gamma_1, h : \tau, t : L^{I-1} \tau$,
+   and so by IH, there are $e_2'$, $\Phi_3'$, $\Gamma_3'$ such that $|e_2'| = |e_2|$,
+   $\Theta ; \Delta, I \geq 1 \vDash \Phi_3'$,
+   $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_3' \wknto (\Gamma_1',h : \tau, t : L^{I-1} \tau) \setminus (\Gamma_1, h : \tau, t : L^{I-1} \tau)$,
+   $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_3' \wknto \Gamma_3$, and
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1', h : \tau, t : L^{I-1} \tau \vdash e_2' \checks \tau' \gens \Phi_3',\Gamma_3'$.
+   By AT-Match, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{match}(e',e1',h.t.e_2') \checks \tau' \gens \Phi_1' \wedge (I = 0 \to \Phi_2') \wedge (I \geq 1 \to \Phi_3'),\Gamma_2' \cap (\Gamma_3' \setminus \{h,t\})$
+   Firstly, we note that $|\texttt{match}(e',e1',h.t.e_2')| = \texttt{match}(|e'|,|e_1'|,h.t.|e_2'|) = \texttt{match}(|e|,|e_1|,h.t.|e_2|) = \texttt{match}(e,e_1,h.t.e_2)$. Then, since $\Theta ; \Delta \vDash I = 0 \to \Phi_2'$ and $\Theta ; \Delta \vDash I \geq 1 \to \Phi_3'$, we have $\Theta ; \Delta \vDash \Phi_1' \wedge (I = 0 \to \Phi_2') \wedge (I \geq 1 \to \Phi_3')$.
+   Then, 
+   $\Phi ; \Theta ; \Delta \vdash \Gamma_2' \cap (\Gamma_3' \setminus \{h,t\}) \wknto \Gamma' \setminus \Gamma$
+   because of $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$, and $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_3' \wknto \Gamma_1' \setminus \Gamma_1$, making heavy use of Theorem~\ref{thm:ctx-sub-subset2}.
+   Finally, we have   
+   $\Phi ; \Theta ; \Delta \vdash \Gamma_2' \cap (\Gamma_3' \setminus \{h,t\}) \wknto \Gamma_2 \cap (\Gamma_3 \setminus \{h,t\}$
+   since $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_3' \wknto \Gamma_3$. We may strengthen away the assumptions in $\Delta$ because of the presuppositions of well-formedness all contexts involved. This completes (1). For (2), we apply AT-Anno to get
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (\texttt{match}(e',e1',h.t.e_2') : \tau') \infers \tau' \gens \Phi_1' \wedge (I = 0 \to \Phi_2') \wedge (I \geq 1 \to \Phi_3'),\Gamma_2' \cap (\Gamma_3' \setminus \{h,t\})$, and we are done.
+   
+   \item[(AT-ExistI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{pack}[I](e) \checks \exists i:S.\tau \gens \Phi_1 \wedge \Phi_2, \Gamma''$ from
+   $\Theta ; \Delta \vdash I : S \gens \Phi_1$ and
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \checks \tau[I/i] \gens \Phi_2,\Gamma''$,
+   with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+   $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+   By IH, there are $e'$, $\Phi_2'$, $\Gamma'''$ such that
+   $|e'| = |e|$,
+   $\Theta ; \Delta \vDash \Phi_2'$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$, and
+   $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma'\vdash e' \checks \tau[I/i] \gens \Phi_2',\Gamma'''$.
+   By AT-ExistI, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma'\vdash \texttt{pack}[I](e') \checks \exists i : S. \tau[I/i] \gens \Phi_1 \wedge \Phi_2',\Gamma'''$.
+   Since $|\texttt{pack}[I](e')| = \texttt{pack}[I](|e'|) = \texttt{pack}[I](|e|) = |\texttt{pack}[I](e)|$ and $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2'$, this completes (1). For (2), one application of AT-Anno suffices.
+   
+   \item[(AT-ExistE)]
+   Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{unpack } (i,x) = e_1 \texttt{ in } e_2 \checks \tau' \gens \Phi_1 \wedge (\forall i : S. \Phi_2) , \Gamma_2 \setminus \{x : \tau\}$
+   from 
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \infers \exists i : S.\tau \gens \Phi_1, \Gamma_1$
+   and 
+   $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \tau' \gens \Phi_2, \Gamma_2$
+   with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+   $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+   By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that 
+   $|e_1'| = |e_1|$,
+   $\Theta ; \Delta \vDash \Phi_1'$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma'\vdash e_1' \infers \exists i : S.\tau \gens \Phi_1', \Gamma_1'$.
+   Since $\Theta ; \Delta \vDash \Phi_1 \wedge (\forall i : S. \Phi_2)$, we have $\Theta, i : S ; \Delta \vDash \Phi_2$. We also have $\Psi ; \Theta ; \Delta \vdash \Gamma_1', x : \tau \wknto \Gamma_1, x : \tau$. From these two facts we have
+   by IH that there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+   $|e_2'| = |e_2|$,
+   $\Theta, i : S ; \Delta \vDash \Phi_2'$,
+   $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma_2' \wknto (\Gamma_1', x : \tau) \setminus (\Gamma_1, x : \tau)$,
+   $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and that
+   $\Psi ; \Theta, i : S ; \Delta ; \Omega' ; \Gamma_1', x : \tau \vdash e_2' \checks \tau' \gens \Phi_2',\Gamma_2'$.
+   By AT-ExistE, 
+   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{unpack } (i,x) = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge (\forall i : S. \Phi_2'), \Gamma_2'$.
+   Since $\Theta ; \Delta \vDash \Phi_1'$ and $\Theta, i : S; \Delta \vDash \Phi_2'$, we have $\Theta ; \Delta \vDash \Phi_1' \wedge (\forall i : S. \Phi_2')$.
+   Next, we note that $|\texttt{unpack } (i,x) = e_1' \texttt{ in } e_2'| = \texttt{unpack } (i,x) = |e_1'| \texttt{ in } |e_2'| = \texttt{unpack } (i,x) = |e_1| \texttt{ in } |e_2| = |\texttt{unpack } (i,x) = e_1 \texttt{ in } e_2|$. $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ is immediate from the second IH, and the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows from Theorem~\ref{thm:ctx-sub-subset2}. This completes (1), and (2) follows immediately from AT-Anno.
+   
+   \item[(AT-Lam)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e \checks \tau_1 \loli \tau_2 \gens \Phi, \Gamma'' \setminus \{x : \tau_1\}$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e \checks \tau_2, \gens \Phi, \Gamma''$, with $\Theta ; \Delta \vDash \Phi$, $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$. Since $\Psi ; \Theta ; \Delta \vdash \Gamma',x:\tau_1 \wknto \Gamma, x: \tau_1$, by IH there are $\Phi'$, $e'$, $\Gamma'''$ so that
+  $\Theta ; \Delta \vDash \Phi'$, $|e'| = |e|$, $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma \setminus \Gamma'$, and
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and $$\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma',x : \tau_1 \vdash e' : \tau_2 \gens \Phi',\Gamma'''$$.
+  By AT-Lam, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \lambda x.e' : \tau_1 \loli \tau_2 \gens \Phi', \Gamma''' \setminus \{x : \tau_1\}$. Then, $|\lambda x.e'| = \lambda x. |e'| = \lambda x.|e| = |\lambda x.e|$. Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma''' \setminus \{x : \tau_1\} \wknto \Gamma' \setminus \Gamma$
+  and $\Psi ; \Theta ; \Delta \vdash \Gamma''' \setminus \{x : \tau_1\} \wknto \Gamma'' \setminus \{x : \tau_1\}$, which proves (1). For (2), one use of AT-Anno suffices.
+  
+  \item[(AT-App)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \, e_2 \infers  \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \infers \tau_1 \loli \tau_2 \gens \Phi_1, \Gamma_1$ and
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks \tau_1 \gens \Phi_2, \Gamma_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$, and
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$.
+  By IH, there are $e_1'$, $\Phi_1'$, and $\Gamma_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers \tau_1 \loli \tau_2 \gens \Phi_1',\Gamma_1'$.
+  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$,
+  we have by IH that there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_2' \checks \tau_1 \gens \Phi_2',\Gamma_2'$.
+  By AT-App, we have
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \; e_2' \infers \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2'$.
+  This completes (2). For (1), we invoke Theorem~\ref{thm:subty-refl} to get that $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi'$ with
+  $\Theta ; \Delta \vDash \Phi'$. By AT-Sub, we have $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \; e_2' \infers \tau_2 \gens \Phi_1' \wedge \Phi_2' \wedge \Phi', \Gamma_2'$, completing (1).
+  
+  
+  \item[(AT-TensorI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \angles{e_1,e_2} \checks \tau_1 \otimes \tau_2 \gens \Phi_1 \wedge \Phi_2,\Gamma_2$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \checks \tau_1 \gens \Phi_1, \Gamma_1$ and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks \tau_2 \gens \Phi_2, \Gamma_2$, with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$, $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$. By IH, there are $\Phi_1'$, $e_1'$, and $\Gamma_1'$ such that
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $|e_1'| = |e_1|$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$,
+  $$\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' : \tau_1 \gens \Phi_1', \Gamma_1'$$.
+  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, we also have by IH that there are $\Phi_2'$, $e_2'$, $\Gamma_2'$ such that
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $|e_2'| = |e_2|$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$
+  such that
+  $$\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_2' : \tau_2 \gens \Phi_2',\Gamma_2'$$.
+  By AT-TensorI, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \angles{e_1',e_2'} : \tau_1 \otimes \tau_2 \gens (\Phi_1' \wedge \Phi_2'), \Gamma_2'$.
+  We have that $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$ and $|\angles{e_1',e_2'}| = \angles{|e_1'|,|e_2'|} = \angles{|e_1|,|e_2|} = |\angles{e_1,e_2}|$.
+  Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ since $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$ by Theorem~\ref{thm:ctx-sub-subset2}, completing (1). For (2), a single use of
+  AT-Anno gives  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (\angles{e_1',e_2'} : \tau_1 \otimes \tau_2) : \tau_1 \otimes \tau_2 \infers (\Phi_1' \wedge \Phi_2'), \Gamma_2'$, as required.
+  
+  \item[(AT-TensorE)]
+  Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2 \checks \tau' \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x,y\}$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \infers \tau_1 \otimes \tau_2 \gens \Phi_1, \Gamma_1$ and
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,x : \tau_1, y : \tau_2\vdash e_2 \checks \tau' \gens \Phi_2,\Gamma_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$.
+  By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and 
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers \tau_1 \otimes \tau_2 \gens \Phi_1', \Gamma_1'$.
+  Then, since $\Psi ; \Theta ; \Delta \vdash \Gamma_1', x : \tau_1, y : \tau_2 \wknto \Gamma_1, x : \tau_1, y : \tau_2$,
+  we have by IH that there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto (\Gamma_1', x : \tau_1, y : \tau_2) \setminus (\Gamma_1, x : \tau_1, y : \tau_2)$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1', x : \tau_1, y : \tau_2 \vdash e_2' \checks \tau_2 \gens \Phi_2',\Gamma_2'$.
+  By AT-TensorE,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma'\vdash \texttt{let } \angles{x,y} = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge \Phi_2', \Gamma_2' \setminus \{x,y\}$.
+  Of course, $|\texttt{let } \angles{x,y} = e_1' \texttt{ in } e_2'| = |\texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2|$ and $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$ as usual, and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ is immediate by IH. The fact that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows from considering the weakening judgments from both IHs, and liberally applying Theorem~\ref{thm:ctx-sub-subset2}. This completes (1). For (2), we simply apply AT-Anno, and are done.
+  
+ 
+ \item[(AT-WithI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1,e_2) \checks \tau_1 \amp \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_1 \cap \Gamma_2$
+ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \checks \tau_1 \gens \Phi_1, \Gamma_1$ and 
+ $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_2 \checks \tau_2 \gens \Phi_2, \Gamma_2$ with 
+ $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+ $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$, and
+ $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$.
+ By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that
+ $|e_1'| = |e_1|$,
+ $\Theta ; \Delta \vDash \Phi_1'$,
+ $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+ $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+ $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \checks \tau_1 \gens \Phi_1', \Gamma_1'$.
+ Again by IH, there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+ $|e_2'| = |e_2|$,
+ $\Theta ; \Delta \vDash \Phi_2'$,
+ $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$,
+ $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+ $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_2' \checks \tau_2 \gens \Phi_2', \Gamma_2'$.
+ Then, by AT-WithI, 
+ $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e_1',e_2') \checks \tau_1 \amp \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_1' \cap \Gamma_2'$.
+ Then, by Theorem~\ref{thm:ctx-sub-subset2}, we have that $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \cap \Gamma_2' \wknto \Gamma_1 \cap \Gamma_2$,
+ and that $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \cap \Gamma_2' \wknto \Gamma' \setminus \Gamma$. This completes (1), and (2) follows by AT-Anno.
+  
+  
+  \item[(AT-Fst)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e) \infers \tau_1 \gens \Phi,\Gamma''$ by way of
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau_1 \amp \tau_2 \gens \Phi,\Gamma''$
+  with $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, we have $e'$, $\Phi'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers \tau_1 \amp \tau_2 \gens \Phi',\Gamma'''$.
+  By AT-Fst, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fst}(e') \infers \tau_1 \gens \Phi',\Gamma'''$,
+  which completes (2), since $|\texttt{fst}(e')| = \texttt{fst}(|e'|) = \texttt{fst}(|e|) = |\texttt{fst}(e)|$. For (1),
+  by Theorem~\ref{thm:subty-refl}, there is $\Phi''$ such that $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1 : \star \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$. By AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fst}(e') \checks \tau_1 \gens \Phi',\Gamma'''$, completing (1).
+
+  \item[(AT-Snd)] Identical to AT-Fst.
+  
+  \item[(AT-Inl)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inl}(e) \checks \tau_1 \oplus \tau_2 \gens \Phi,\Gamma''$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau_1 \gens \Phi,\Gamma''$, and
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau_1 \gens \Phi',\Gamma'''$.
+  By AT-Inl, we have
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{inl}(e') \checks \tau_1 \oplus \tau_2 \gens \Phi',\Phi'''$,
+  which completes (1), and (2) is done by AT-Anno.
+  
+  \item[(AT-Inr)] Identical to AT-Inl.
+  
+  \item[(AT-Case)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{case}(e,x.e_1,y.e_2) \checks \tau \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3, (\Gamma_2 \setminus \{x : \tau_1\}) \cap (\Gamma_3 \setminus \{y : \tau_2\})$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau_1 \oplus \tau_2 \gens \Phi_1, \Gamma_1$,
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x: \tau_1 \vdash e_1 \checks \tau \gens \Phi_2,\Gamma_2$, and
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, y: \tau_2 \vdash e_2 \checks \tau \gens \Phi_3,\Gamma_3$, and also that
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2 \wedge \Phi_3$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, we have $e'$, $\Phi_1'$, $\Gamma_1'$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers \tau_1 \oplus \tau_2 \gens \Phi_1',\Gamma_1'$.
+  Then, since $\Psi ; \Theta ; \Delta \vdash \Gamma_1', x : \tau_1 \wknto \Gamma_1, x : \tau_1$,
+  we have by IH $e_1'$. $\Phi_2'$. $\Gamma_2'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta  ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma', x : \tau_1 \vdash e_1' \checks \tau \gens \Phi_2',\Gamma_2'$.
+  Similarly, since $\Psi ; \Theta ; \Delta \vdash \Gamma_1', y : \tau_2 \wknto \Gamma_1, y : \tau_2$,
+  we have by IH $e_2'$. $\Phi_3'$. $\Gamma_3'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta  ; \Delta \vDash \Phi_3'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_3' \wknto \Gamma_3$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_3' \wknto \Gamma_1' \setminus \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma', x : \tau_2 \vdash e_2' \checks \tau \gens \Phi_3',\Gamma_3'$.
+  Then, by AT-Case, we have
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{case}(e',x.e_1',y.e_2') \checks \tau \gens \Phi_1' \wedge \Phi_2' \wedge \Phi_3', (\Gamma_2' \setminus \{x : \tau_1\}) \cap (\Gamma_3' \setminus \{y : \tau_2\})$.
+  Of course, $|\texttt{case}(e',x.e_1',y.e_2')| = |\texttt{case}(e,x.e_1,y.e_2)|$
+  since $|e'| = |e|$, $|e_1'| = |e_1|$, and $|e_2'| = |e_2|$.
+  Similarly,
+  $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2' \wedge \Phi_3'$.
+  It remains to show that 
+  $\Psi ; \Theta ; \Delta \vdash (\Gamma_2' \setminus \{x : \tau_1\}) \cap (\Gamma_3' \setminus \{y : \tau_2\}) \wknto (\Gamma_2 \setminus \{x : \tau_1\}) \cap (\Gamma_3 \setminus \{y : \tau_2\})$
+  and
+  $\Psi ; \Theta ; \Delta \vdash (\Gamma_2' \setminus \{x : \tau_1\}) \cap (\Gamma_3' \setminus \{y : \tau_2\}) \wknto \Gamma' \setminus \Gamma$,
+  but both follow from the six weakening judgments and a few applications of Theorem~\ref{thm:ctx-sub-subset2}.
+  This completes (1), and (2) follows immediately by AT-Anno.
+  
+  \item[(AT-Sub)] Suppose 
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma''$ from
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau' \gens \Phi_1,\Gamma''$ and 
+   $\Psi;\Theta;\Delta \vdash \tau' \subty \tau : \star \gens \Phi_2$, and
+   $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+   $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+   $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+   By IH, there are $e'$,$\Phi_1'$, and $\Gamma'''$ such that
+   $|e| = |e'|$,
+   $\Theta ; \Delta \vDash \Phi_1'$,
+   $\Psi ; \Theta ; \Delta \vDash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+   $\Psi ; \Theta ; \Delta \vDash \Gamma''' \wknto \Gamma''$,
+   and $\Psi ; \Theta ; \Delta ; \Omega' \Gamma' \vdash e' \infers \tau' \gens \Phi_1',\Gamma'''$.
+   by AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi_1' \wedge \Phi_2,\Gamma'''$, which proves (1).
+   For (2), we again use AT-Anno.
+   
+  \item[(AT-ExpI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash !e \checks !\tau \gens \Phi, \Gamma$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \cdot \vdash e \checks \tau \gens \Phi, \Gamma''$, and
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH (not weakening the empty affine environment) there are $e'$, $\Phi'$, $\Gamma'''$ such that 
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi'$,
+  and  $\Psi ; \Theta ; \Delta ; \Omega' ; \cdot \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
+  By AT-ExpI,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash !e' \checks \tau \gens \Phi',\Gamma'$.
+  This completes (1), since $|!e'| = |!e|$, $\Theta ; \Delta \vDash \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma'$ and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma' \setminus \Gamma$
+  as consequences of Theorem~\ref{thm:ctx-sub-subset2}.
+  
+  \item[(AT-ExpE)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{let } !x = e_1 \texttt{ in } e_2 \checks \tau' \gens \Phi_1 \wedge \Phi_2, \Gamma_2$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers !\tau \gens \Phi_1,\Gamma_1$
+  and $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_1 \vdash e_2 \checks \tau' \gens \Phi_2,\Gamma_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and  
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers !\tau \gens \Phi_1',\Gamma_1'$.
+  Since $\Psi ; \Theta ; \Delta \vdash \Omega', x : \tau \wknto \Omega, x : \tau$, we have
+  by IH we have $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2'$, and
+  $\Psi ; \Theta ; \Delta ; \Omega', x : \tau ; \Gamma_1' \vdash e_2' \checks \tau' \gens \Phi_2',\Gamma_2'$.
+  By AT-ExpE,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{let } !x = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge \Phi_2', \Gamma_2'$.
+  Applying Theorem~\ref{thm:ctx-sub-subset2} to the inductive hypotheses gives us that
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$, completing (1).
+  For (2), one application of AT-Anno suffices.
+  
+  \item[(AT-TAbs)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda \alpha. e \checks \forall \alpha : K.\tau \gens \Phi,\Gamma''$ from
+  $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi, \Gamma''$, and
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, we have $e'$, $\Phi'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vdash \Phi'$,
+  $\Psi, \alpha : K ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$
+  $\Psi, \alpha : K ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
+  By AT-TAbs, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \forall \alpha : K. \tau \gens \Phi',\Gamma'''$.
+  By Theorem~\ref{thm:ctx-sub-streng}, we have that $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$
+  and $\Psi  ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, which completes (1).
+  For (2), one use of AT-Anno suffices.
+  
+  \item[(AT-TApp)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [\tau'] \infers \tau[\tau'/\alpha] \gens \Phi_1 \wedge \Phi_2, \Gamma''$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \forall \alpha : K.\tau \gens \Phi_1, \Gamma''$ and
+  $\Psi ; \Theta ; \Delta \vdash \tau' : K \gens \Phi_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi_1'$, $\Gamma'''$ such that 
+  $|e'| = |e'|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers \forall \alpha : K.\tau \gens \Phi_1', \Gamma'''$.
+  By AT-TApp,
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' [\tau'] \infers \tau[\tau'/\alpha] \gens \Phi_1' \wedge \Phi_2, \Gamma'''$.
+  Since $|e' [\tau']| = |e'| [\tau'] = |e [\tau']|$ and $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2$, we are done with (1).
+  For (2), a single use of AT-Anno completes the proof.
+  
+  \item[(AT-IAbs)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda i. e \checks \forall i : S. \tau \gens \forall i : S. \Phi, \Gamma''$
+  from $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi, \Gamma''$, with
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By Theorem~\ref{thm:ctx-sub-wkn},
+  $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma' \wknto \Gamma$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta, i : S; \Delta \vDash \Phi'$,
+  $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma'' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma'' \wknto \Gamma''$, and
+  $\Psi ; \Theta, i : S ; \Delta ; \Omega' ; \Gamma' \vdash e' : \tau \gens \Phi', \Gamma'''$.
+  By AT-IAbs,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \Lambda i. e' : \tau \gens \forall i : S. \Phi', \Gamma'''$.
+  By Theorem~\ref{thm:ctx-sub-streng},
+  $\Psi ; \Theta ; \Delta \vdash \Gamma'' \wknto \Gamma' \setminus \Gamma$ and
+  $\Psi ; \Theta ; \Delta \vdash \Gamma'' \wknto \Gamma''$.
+  Finally, the fact that $\Theta ; \Delta \vDash \forall i : S. \Phi'$
+  completes the proof of (1).
+  For (2), AT-Anno suffices.
+  
+  \item[(AT-IApp)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [I] \infers \tau[I/i] \gens \Phi_1 \wedge \Phi_2,\Gamma''$
+  from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \forall i : S.\tau \gens \Phi_1,\Gamma''$ and
+  $\Theta ; \Delta \vdash I : S \gens \Phi_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi_1'$, $\Gamma'''$ such that
+  $|e| = |e'|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e \infers \forall i : S. \tau \gens \Phi_1',\Gamma'''$.
+  By AT-IApp,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e [I] \infers \tau[I/i] \gens \Phi_1' \wedge \Phi_2,\Gamma'''$.
+  Since $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2$ and $|e[I]| = |e|[I] = |e'|[I] = |e'[I]|$, this completes (2).
+  For (1), we have by Theorem~\ref{thm:subty-refl} some $\Phi_3$ such that $\Psi ; \Theta ; \Delta \vdash \tau[I/i] \subty \tau[I/i] : \star \gens \Phi_3$
+  and $\Theta ; \Delta \vDash \Phi_3$.
+  By AT-Sub, we  have that $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e [I] \checks \tau[I/i] \gens \Phi_1' \wedge \Phi_2 \wedge \Phi_3,\Gamma'''$,
+  as required for (1).
+  
+  \item[(AT-Fix)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fix } x.e \checks \tau \gens \Phi,\Gamma$
+  by way of $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e \checks \tau \gens \Phi,\Gamma''$, with
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$. Then,
+  $\Psi ; \Theta ; \Delta \vdash \Omega', x : \tau \wknto \Omega, x : \tau$.
+  By IH, there are $e'$, $\Phi'$, $\Gamma''$ such that
+  $|e| = |e'|$,
+  $\Theta ; \Delta \vDash \Phi'$, and
+  $\Psi ; \Theta ; \Delta ; \Omega', x : \tau ; \cdot \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
+  By AT-Fix,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fix } x.e' \checks \tau \gens \Phi',\Gamma'$.
+  Of course, $|\texttt{fix }x.e'| = \texttt{fix }x.|e'| = \texttt{fix }x.|e| = |\texttt{fix }x.e|$.
+  Further, $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma' \setminus \Gamma$
+  by Theorem~\ref{thm:ctx-sub-subset2}, and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$ by one of the premises.
+  This completes (1), and (2) follows by AT-Anno.
+  
+  \item[(AT-Ret)] Suppose
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret } e \checks \M \, \phi(I,\vec{p}) \, \tau \gens \Phi, \Gamma''$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma''$, with
+  $\Theta ; \Delta \vdash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi'$, $\Gamma'''$ such that 
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi'$,
+  $\Psi ;  \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ;  \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
+  By AT-Ret,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{ret } e' \checks \M \, \phi(I,\vec{p})\, \tau \gens \Phi',\Gamma'''$,
+  completing (1). (2) follows by AT-Anno.
+  
+
+  \item[(AT-Bind)] Suppose
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x : \tau_1\}$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers \M \, \phi(J,\vec{p})\, \tau_1 \gens \Phi_1,\Gamma_1$ and
+  $\Psi ; \Theta; \Delta ; \Omega ; \Gamma_1, x:\tau_1 \vdash e_2 \checks \M \, \phi(I,\vec{q} - \vec{p})\, \tau_2 \gens \Phi_2,\Gamma_2$ with
+  $\Theta ; \Delta \vDash (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers \M \, \phi(J,\vec{p}) \, \tau_1 \gens \Phi_1,'\Gamma_1'$.
+  We note that $\Psi ; \Theta ; \Delta \vdash \Gamma_1',x:\tau_1 \wknto \Gamma_1, x: \tau_1$, and so
+  by IH, there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+  $\Psi ; \Theta; \Delta ; \Omega' ; \Gamma_1', x:\tau_1 \vdash e_2' \checks \M \, \phi(I,\vec{q} - \vec{p})\, \tau_2 \gens \Phi_2',\Gamma_2'$.
+  By AT-Bind,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{bind } x = e_1' \texttt{ in } e_2' \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1' \wedge \Phi_2', \Gamma_2' \setminus \{x : \tau_1\}$.
+  Of course, $|\texttt{bind } x = e_1 \texttt{ in } e_2| = |\texttt{bind } x = e_1' \texttt{ in } e_2'|$.
+  Since $\Theta ; \Delta \vDash (\vec{q} \geq \vec{p}) \wedge (I=J)$, we also have that $\Theta ; \Delta \vDash (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1' \wedge \Phi_2'$.
+  We have $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$  by IH, and
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x : \tau_1\} \wknto \Gamma' \setminus \Gamma$ follows by applying Theorem~\ref{thm:ctx-sub-subset2} to the rest of the weakening premises. This completes (1), and (2) follows by AT-Anno.
+  
+  \item[(AT-Tick)] Immediate.
+  
+  \item[(AT-Release)] Suppose
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens (I = J) \wedge \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x\}$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J | \vec{q}] \tau_1 \gens \Phi_1,\Gamma_1$ and
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2, \Gamma_2$, with
+  $\Theta ; \Delta \vDash (I = J) \wedge \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vDash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vDash \Gamma_1' \wknto \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers [J|\vec{q}] \tau_1 \gens \Phi_1',\Gamma_1'$.
+  Since $\Psi ; \Theta ; \Delta \vDash \Gamma_1', x : \tau \wknto \Gamma_1, x : \tau$, we have
+  by IH that there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1', x : \tau \vdash e_2' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2',\Gamma_2'$.
+  By AT-Release,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{release } x = e_1' \texttt{ in }e_2' \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens (I = J) \wedge \Phi_1' \wedge \Phi_2', \Gamma_2 \setminus \{x\}$.
+  Of course, $|\texttt{release } x = e_1' \texttt{ in }e_2'| = |\texttt{release } x = e_1 \texttt{ in }e_2|$.
+  Since $\Theta ; \Delta \vDash I = J$, we have $\Theta ; \Delta \vDash (I = J) \wedge \Phi_1' \wedge \Phi_2'$.
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma_2 \{x\}$ is implied by $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$,
+  and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma' \setminus \Gamma$ follows from Theorem~\ref{thm:ctx-sub-subset2}. This completes (1), and (2) follows from AT-Anno.
+  
+  \item[(AT-Store)] Suppose
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[K|\vec{w}](e) \checks \M \, \phi(I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi_1 \wedge \Phi_2 \wedge\Phi_3 \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K), \Gamma''$ by way of
+  $\Theta ; \Delta \vdash K : \N \gens \Phi_1$,
+  $\Theta ; \Delta \vdash \vec{w} : \vec{\mathbb{R}^+} \gens \Phi_2$,
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_3,\Gamma''$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2 \wedge\Phi_3 \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K)$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Gamma'''$, $\Phi_3'$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi_3'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi_3', \Gamma'''$.
+  By AT-Store,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{store}[K|\vec{w}](e') \checks \M \, \phi(I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi_1 \wedge \Phi_2 \wedge\Phi_3' \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K), \Gamma'''$,
+  which completes (1). For (2), AT-Anno suffices.
+  
+  \item[(AT-StoreConst)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[J](e) \checks \M \, \phi(K,\vec{p}) \, ([I] \, \tau) \gens (\texttt{const}(I) \leq \texttt{const}(J) \leq \vec{p}) \wedge \Phi_1 \wedge \Phi_2, \Gamma''$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1,\Gamma''$ and
+  $\Theta ; \Delta \vdash J : \mathbb{R} \gens \Phi_2$, with
+  $\Theta ; \Delta \vDash (\texttt{const}(I) \leq \texttt{const}(J) \leq \vec{p}) \wedge \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi_1'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Phi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Phi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Phi ; \Theta ; \Delta ; \Omega' ; \Theta' \vdash e' \checks \tau \gens \Phi_1', \Gamma'''$.
+  By AT-StoreConst,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma \vdash \texttt{store}[J](e') \checks \M \, \phi(K,\vec{p}) \, ([I] \, \tau) \gens (\texttt{const}(I) \leq \texttt{const}(J) \leq \vec{p}) \wedge \Phi_1' \wedge \Phi_2, \Gamma''$, which completes (1). For (2), we use AT-Anno.
+  
+  \item[(AT-ReleaseConst)] Suppose
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x\}$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J] \tau_1 \gens \Phi_1,\Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau_1 \vdash e_2 \checks \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2, \Gamma_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e_1'$, $\Gamma_1'$, $\Phi_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma' \vdash e_1' \infers [J]\tau_1 \gens \Phi_1',\Gamma_1'$.
+  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1',x : \tau_1 \wknto \Gamma_1, x : \tau_1$,
+  we have by IH that there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto (\Gamma_1',x : \tau_1) \setminus (\Gamma_1, x : \tau_1)$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1', x : \tau_1 \vdash e_2' \checks \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2', \Gamma_2'$.
+  By AT-ReleaseCont,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{release } x = e_1' \texttt{ in }e_2' \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2' \setminus \{x\}$.
+  Of course, $|\texttt{release } x = e_1' \texttt{ in }e_2'| = \texttt{release } x = |e_1'| \texttt{ in }|e_2'| = \texttt{release } x = |e_1| \texttt{ in }|e_2|
+  = |\texttt{release } x = e_1 \texttt{ in }e_2|$.
+  Also, $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$.
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ holds by IH.
+  It remains to show that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma' \setminus \Gamma$.
+  This follows by considering the remaining weakening judgments from the IHs with Theorem~\ref{thm:ctx-sub-subset2}.
+  This completes (1). For (2), as usual, we apply AT-Anno.
+  
+  \item[(AT-Shift)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) \checks \M \, \phi(I,\vec{q}) \, \tau \gens (I \geq 1) \wedge \Phi, \Gamma''$ from
+  $\Psi ; \Theta ; \Delta  ; \Omega ; \Gamma \vdash e \checks \M \, \phi(I - 1,\lhd \vec{q}) \, \tau \gens \Phi, \Gamma''$, with
+  $\Theta ; \Delta \vDash (I \geq 1) \wedge \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \M \, \phi(I-1,\lhd \vec{q}) \, \tau \gens \Phi', \Gamma'''$.
+  By AT-Shift,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{shift}(e') \checks \M \, \phi(I,\vec{q}) \, \tau \gens (I \geq 1) \wedge \Phi', \Gamma'''$,
+  which completes (1). For (2), we apply AT-Anno.
+  
+  \item[(AT-CImpI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda .e \checks (\Phi' \Rightarrow \tau) \gens (\Phi' \to \Phi),\Gamma''$ from
+  $\Psi ; \Theta ; \Delta, \Phi'; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma''$, with
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  Using Theorem~\ref{thm:cxt-sub-wkn}, we have by IH that there are $e'$, $\Phi''$, $\Gamma'''$,
+  $|e'| = |e|$,
+  $\Theta ; \Delta, \Phi' \vDash \Phi''$,
+  $\Psi ; \Theta ; \Delta, \Phi' \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta, \Phi' \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta, \Phi' ; \Omega' ; \Gamma' \vdash e \checks \tau \gens \Phi'', \Gamma'''$.
+  By AT-CImpI,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \Lambda .e' \checks (\Phi' \Rightarrow \tau) \gens (\Phi' \to \Phi''),\Gamma'''$.
+  By definition, $|\Lambda .e'| = \Lambda.|e'| = \Lambda.|e| = |\Lambda.e|$.
+  Next, since $\Theta ; \Delta, \Phi' \vDash \Phi''$, we have $\Theta ; \Delta \vDash \Phi' \to \Phi''$.
+  The two weakenings again follow by Theorem~\ref{thm:ctx-sub-subset2}.
+  This completes (1), and (2) follows by AT-Anno.
+  
+  \item[(AT-CImpE)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \{\} \infers \tau \gens \Phi \wedge \Phi',\Gamma''$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers (\Phi' \Rightarrow \tau) \gens \Phi,\Gamma''$, with
+  $\Theta ; \Delta \vDash \Phi \wedge \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi''$. $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi''$.
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers (\Phi' \Rightarrow \tau) \gens \Phi'',\Gamma'''$.
+  By AT-CImpE,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \{\} \infers \tau \gens \Phi'' \wedge \Phi',\Gamma'''$,
+  which completes the proof of (2). For (1), we use Theorem~\ref{thm:subty-refl} to get some $\Phi_1$ with $\Theta ; \Delta \vDash \Phi_1$
+  such that $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star \gens \Phi_1$.
+  Then, by AT-Sub,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \{\} \checks \tau \gens \Phi'' \wedge \Phi' \wedge \Phi_3,\Gamma'''$, as required.
+  
+  \item[(AT-CAndI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash <e> \checks \Phi' \amp \tau \gens \Phi \wedge \Phi',\Gamma''$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma''$, with
+  $\Theta ; \Delta \vDash \Phi \wedge \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi''$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi''$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi'', \Gamma'''$.
+  By AT-CAndI,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash <e'> \checks \Phi' \amp \tau \gens \Phi'' \wedge \Phi',\Gamma'''$,
+  which completes (1). For (2), one use of AT-Anno suffices.
+  
+  \item[(AT-CAndE)] Suppose
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{clet } x = e_1 \texttt{ in } e_2 \checks \tau' \gens \Phi_1 \wedge (\Phi \to \Phi_2),\Gamma_2 \setminus \{x : \tau\}$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers \Phi \amp \tau \gens \Phi_1,\Gamma_1$ and
+  $\Psi ; \Theta ; \Delta, \Phi ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \tau' \gens \Phi_2, \Gamma_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge (\Phi \to \Phi_2)$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e_1'$, $\Phi_1'$, $\Gamma_1'$ such that
+  $|e_1'| = |e_1|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers \Phi \amp \tau \gens \Phi_1',\Gamma_1'$.
+  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, we also have by Theorem~\ref{thm:ctx-sub-wkn}
+  $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_1', x : \tau \wknto \Gamma_1, x : \tau$,
+  and so by IH, there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
+  $|e_2'| = |e_2|$,
+  $\Theta ; \Delta, \Phi \vDash \Phi_2'$,
+  $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$,
+  $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_2' \wknto \Gamma_2$, and
+  $\Psi ; \Theta ; \Delta, \Phi ; \Omega' ; \Gamma_1', x : \tau \vdash e_2' \checks \tau' \gens \Phi_2', \Gamma_2'$.
+  By AT-CAndE,
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{clet } x = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge (\Phi \to \Phi_2'),\Gamma_2' \setminus \{x : \tau\}$.
+  As usual, we have that $|\texttt{clet } x = e_1' \texttt{ in } e_2'| = |\texttt{clet } x = e_1 \texttt{ in } e_2|$.
+  Combining the satisfactions from the premises, we have that $\Theta ; \Delta \vDash \Phi_1' \wedge (\Phi \to \Phi_2')$.
+  The fact that $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_2' \wknto \Gamma_2$ is immediate from IH, 
+  and $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows as usual by considering the rest
+  of the weakening judgments with Theorem~\ref{thm:ctx-sub-subset2}. This completes (1). For (2), we apply AT-Anno.
+   
+  \item[(AT-Sub)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma''$ from
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau' \gens \Phi_1,\Gamma''$ and
+  $\Psi;\Theta;\Delta \vdash \tau' \subty \tau : \star \gens \Phi_2$, with
+  $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi_1'$, $\Gamma'''$ such that
+  $|e'| = |e|$,
+  $\Theta ; \Delta \vDash \Phi_1'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers \tau' \gens \Phi_1', \Gamma'''$.
+  By AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi_1' \wedge \Phi_2,\Gamma'''$,
+  which completes (1). For (2), one use of AT-Anno suffices.
+  
+  \item[(AT-Anno)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e : \tau) \infers \tau \gens \Phi,\Gamma''$ from 
+  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma''$ with
+  $\Theta ; \Delta \vDash \Phi$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
+  $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
+  By IH, there are $e'$, $\Phi'$, $\Gamma'''$ such that
+  $|e| = |e'|$,
+  $\Theta ; \Delta \vDash \Phi'$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
+  $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
+  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
+  By AT-Anno, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e' : \tau) \infers \tau \gens \Phi',\Gamma'''$, which completes (2)
+  since $|(e' : \tau)| = |e'| = |e| = |(e : \tau)|$. For (1), we use Theorem~\ref{thm:subty-refl} to get that $\Psi ; \Theta ; \Delta \vdash \tau \subty  \tau : \star \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$, and so by AT-Sub, we have that $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e' : \tau) \checks \tau \gens \Phi' \wedge \Phi'',\Gamma'''$, completing (1).
+ 
+  
+  
+\end{itemize}
+\end{proof}

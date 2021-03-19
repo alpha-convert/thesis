@@ -1,0 +1,234 @@
+\begin{proof}
+%By induction on $\# \tau$. The base cases (base type and type variables) are immediate. For the inductive case, we break into cases on the syntax of $\tau$, inverting $\Psi ;\Theta ; \Delta \vdash \tau : K$-- since this judgment is syntax directed, we may write this as if it were cases over the derivation.
+
+By induction on $\Psi ; \Theta ; \Delta \vdash \tau : K$.
+
+\begin{enumerate}
+  \item[(K-Var)] Immediate.
+  \item[(K-Unit)] Immediate.  
+  \item[(K-Arr)] Suppose ${\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$ and  $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$. By IH, we have for $i \in \{1,2\}$
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_i) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_i \equiv \texttt{eval}(\tau_i) : \star$
+    \item $\texttt{eval}(\tau_i) \; \texttt{nf}$.
+  \end{enumerate}
+  Note that $\texttt{eval}(\tau_1 \loli \tau_2) = \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2)$. Then,
+  \begin{enumerate}[1.]
+    \item ${\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2) : \star}$ by K-Arr
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 \equiv \texttt{eval}(\tau_1) \loli \tau_2 : \star$ by two uses of S-Arr
+    \item Since $\tau_i \; \texttt{nf}$, we have that $\tau_1 \loli \tau_2 \; \texttt{nf}$.
+  \end{enumerate}
+  as required.
+  \item[(K-Tensor)] Suppose ${\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$ and  $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$. By IH, we have for $i \in \{1,2\}$
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_i) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_i \equiv \texttt{eval}(\tau_i) : \star$
+    \item $\texttt{eval}(\tau_i) \; \texttt{nf}$.
+  \end{enumerate}
+  Note that $\texttt{eval}(\tau_1 \otimes \tau_2) = \texttt{eval}(\tau_1) \otimes \texttt{eval}(\tau_2)$. Then,
+  \begin{enumerate}[1.]
+    \item ${\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2) : \star}$ by K-Tensor
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 \equiv \texttt{eval}(\tau_1) \otimes \tau_2 : \star$ by two uses of S-Tensor
+    \item Since $\tau_i \; \texttt{nf}$, we have that $\tau_1 \otimes \tau_2 \; \texttt{nf}$.
+  \end{enumerate}
+  as required.
+  \item[(K-With)] Suppose ${\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$ and  $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$. By IH, we have for $i \in \{1,2\}$
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_i) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_i \equiv \texttt{eval}(\tau_i) : \star$
+    \item $\texttt{eval}(\tau_i) \; \texttt{nf}$.
+  \end{enumerate}
+  Note that $\texttt{eval}(\tau_1 \amp \tau_2) = \texttt{eval}(\tau_1) \amp \texttt{eval}(\tau_2)$. Then,
+  \begin{enumerate}[1.]
+    \item ${\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \amp \texttt{eval}(\tau_2) : \star}$ by K-With
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 \equiv \texttt{eval}(\tau_1) \amp \tau_2 : \star$ by two uses of S-With
+    \item Since $\tau_i \; \texttt{nf}$, we have that $\tau_1 \amp \tau_2 \; \texttt{nf}$.
+  \end{enumerate}
+  as required.
+  \item[(K-Sum)] Suppose ${\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$ and  $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$. By IH, we have for $i \in \{1,2\}$
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_i) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_i \equiv \texttt{eval}(\tau_i) : \star$
+    \item $\texttt{eval}(\tau_i) \; \texttt{nf}$.
+  \end{enumerate}
+  Note that $\texttt{eval}(\tau_1 \amp \tau_2) = \texttt{eval}(\tau_1) \oplus \texttt{eval}(\tau_2)$. Then,
+  \begin{enumerate}[1.]
+    \item ${\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \oplus \texttt{eval}(\tau_2) : \star}$ by K-Sum
+    \item $\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 \equiv \texttt{eval}(\tau_1) \oplus \tau_2 : \star$ by two uses of S-Sum
+    \item Since $\tau_i \; \texttt{nf}$, we have that $\tau_1 \oplus \tau_2 \; \texttt{nf}$.
+  \end{enumerate}
+  as required.
+  \item[(K-Bang)] Suppose ${\Psi ; \Theta ; \Delta \vdash !\tau : \star}$ from ${\Psi ; \Theta ; \Delta \vdash \tau : \star}$.
+  By IH, we have that
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star}$
+   \item ${\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star}$
+   \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}(!\tau) = !\texttt{eval}(\tau)$,
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta ; \Delta \vdash !\texttt{eval}(\tau) : \star}$ by K-Bang
+   \item ${\Psi ; \Theta ; \Delta \vdash !\tau \equiv !\texttt{eval}(\tau) : \star}$ by S-Bang
+   \item Since $\texttt{eval}(\tau) \; \texttt{nf}$, $!\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-IForall)] Suppose ${\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star}$ from ${\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star}$.
+  By IH,
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau) : \star}$.
+   \item ${\Psi ; \Theta, i : S ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star}$.
+   \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}(\forall i : S. \tau) = \forall i : S.\texttt{eval}(\tau)$, we have that
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta ; \Delta \vdash \forall i : S. \texttt{eval}(\tau) : \star}$ by K-IForall
+   \item ${\Psi ; \Theta ; \Delta \vdash \forall i : S.\tau \equiv \forall i : S. \texttt{eval}(\tau) : \star}$ by S-IForall twice
+   \item $\forall i : S. \texttt{eval}(\tau) \; \texttt{nf}$ since $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-IExists)] Suppose ${\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star}$ from ${\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star}$.
+  By IH,
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau) : \star}$.
+   \item ${\Psi ; \Theta, i : S ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star}$.
+   \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}(\exists i : S. \tau) = \exists i : S.\texttt{eval}(\tau)$, we have that
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta ; \Delta \vdash \exists i : S. \texttt{eval}(\tau) : \star}$ by K-IExists
+   \item ${\Psi ; \Theta ; \Delta \vdash \exists i : S.\tau \equiv \forall i : S. \texttt{eval}(\tau) : \star}$ by S-IExists twice
+   \item $\exists i : S. \texttt{eval}(\tau) \; \texttt{nf}$ since $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-TForall)] Suppose ${\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau : \star}$ from ${\Psi, \alpha : K; \Theta ; \Delta \vdash \tau : \star}$.
+  By IH,
+  \begin{enumerate}[1.]
+   \item ${\Psi, \alpha : K ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star}$.
+   \item ${\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star}$.
+   \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}(\forall \alpha : K. \tau) = \forall \alpha : K.\texttt{eval}(\tau)$, we have that
+  \begin{enumerate}[1.]
+   \item ${\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \texttt{eval}(\tau) : \star}$ by K-TForall
+   \item ${\Psi ; \Theta ; \Delta \vdash \forall \alpha : K.\tau \equiv \forall \alpha : K. \texttt{eval}(\tau) : \star}$ by S-TForall twice
+   \item $\forall \alpha : K. \texttt{eval}(\tau) \; \texttt{nf}$ since $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-List)] Suppose ${\Psi ; \Theta ; \Delta \vdash L^I \tau : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau : \star$ and $\Theta ; \Delta \vdash I : \N$.
+  By IH, we have
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star$
+    \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, recalling that $\texttt{eval}\left(L^I \,\tau\right) = L^I\left(\texttt{eval}(\tau)\right)$, we have
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash L^I\left(\texttt{eval}(\tau)\right) : \star$ by K-List, with $\Theta ; \Delta \vdash I : \N$
+    \item $\Psi ; \Theta ; \Delta \vdash L^I \, \tau \equiv L^I\left(\texttt{eval}(\tau)\right) : \star$ by S-List, using the fact that $\Theta ; \Delta \vDash I = I$
+    \item $L^I\left(\texttt{eval}(\tau)\right) \; \texttt{nf}$ because $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-Conj)] Suppose ${\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau : \star$ and $\Theta ; \Delta \vdash \Phi \texttt{ wf}$. By  IH, we have:
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star$
+    \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}(\Phi \amp \tau) = \Phi \amp \texttt{eval}(\tau)$, we can conclude:
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \Phi \amp\texttt{eval}(\tau) : \star$ by K-Conj with $\Theta ; \Delta \vdash \Phi \texttt{ wf}$.
+    \item $\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau \equiv \Phi \amp\texttt{eval}(\tau) : \star$ by two uses of S-Conj, using the fact that $\Theta ; \Delta \vDash \Phi \to \Phi$.
+    \item $\Phi \amp\texttt{eval}(\tau) \; \texttt{nf}$ since $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-Impl)] Suppose ${\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau : \star$ and $\Theta ; \Delta \vdash \Phi \texttt{ wf}$. By  IH, we have:
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star$
+    \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}(\Phi \implies \tau) = \Phi \implies \texttt{eval}(\tau)$, we can conclude:
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \Phi \implies\texttt{eval}(\tau) : \star$ by K-Impl with $\Theta ; \Delta \vdash \Phi \texttt{ wf}$.
+    \item $\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau \equiv \Phi \amp\texttt{eval}(\tau) : \star$ by two uses of S-Impl, using the fact that $\Theta ; \Delta \vDash \Phi \to \Phi$.
+    \item $\Phi \implies\texttt{eval}(\tau) \; \texttt{nf}$ since $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  \item[(K-Monad)] Suppose ${\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau : \star$ with $ \Theta ; \Delta \vdash I : \mathbb{N}$ and $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$. Then, by IH,
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star$
+    \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Note that $\texttt{eval}(\M(I,\vec{p}) \tau) = \M(I,\vec{p})(\texttt{eval}(\tau))$, and so we may conclude:
+  \begin{enumerate}
+    \item $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p})(\texttt{eval}(\tau)) : \star$ by K-Monad with $ \Theta ; \Delta \vdash I : \mathbb{N}$ and $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$
+    \item $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau \equiv \M(I,\vec{p})(\texttt{eval}(\tau)) : \star$ by two uses of S-Monad, using the fact that $\Theta ; \Delta \vdash (I = I) \wedge (\vec{p} \leq \vec{p})$.
+    \item $\M(I,\vec{p})(\texttt{eval}(\tau)) \; \texttt{nf}$ since $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  \item[(K-Pot)] Suppose ${\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau : \star$ with $\Theta ; \Delta \vdash I : \mathbb{N}$ and $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$. By IH, we have that
+    \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star$
+    \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}([I|\vec{p}] \tau) = [I|\vec{p}] (\texttt{eval}(\tau))$, we may conclude that
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] (\texttt{eval}(\tau)) : \star$ by K-Pot with $\Theta ; \Delta \vdash I : \mathbb{N}$ and $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$
+    \item  $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau \equiv [I|\vec{p}] (\texttt{eval}(\tau)) : \star$ by two uses of S-Pot, using the fact that $\Theta ; \Delta \vdash (I = I) \wedge (\vec{p} \leq \vec{p})$.
+  \end{enumerate}
+  
+  \item[(K-ConstPot)] Suppose ${\Psi ; \Theta ; \Delta \vdash [I] \; \tau : \star}$ from $\Psi ; \Theta ; \Delta \vdash \tau : \star$ and $\Theta ; \Delta \vdash I : \mathbb{R}^+$. By IH,
+  \begin{enumerate}[1.]
+    \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : \star$
+    \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : \star$
+    \item $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  Then, noting that $\texttt{eval}([I] \; \tau) = [I] \; \texttt{eval}(\tau)$, we can conclude:
+  \begin{enumerate}
+   \item $\Psi ; \Theta ; \Delta \vdash [I] \; \texttt{eval}(\tau) : \star$ by K-ConstPot with $\Theta ; \Delta \vdash I : \mathbb{R}^+$
+   \item $\Psi ; \Theta ; \Delta \vdash [I] \; \tau \equiv [I] \; \texttt{eval}(\tau) : \star$ by S-ConstPot, using $\Theta ; \Delta \vDash I = I$.
+   \item $[I] \; \texttt{eval}(\tau) \; \texttt{nf}$ because $\texttt{eval}(\tau) \; \texttt{nf}$
+  \end{enumerate}
+  as required.
+  
+  \item[(K-FamLam)] Suppose ${\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K}$ from ${\Psi ; \Theta, i : S ; \Delta \vdash \tau : K}$. By IH,
+  \begin{enumerate}[1.]
+   \item $\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau) : K$
+   \item $\Psi ; \Theta, i : S ; \Delta\vdash \tau \equiv \texttt{eval}(\tau) : K$
+   \item $\texttt{eval}(\tau) \; \texttt{nf}$
+   %\item $\#\texttt{eval}(\tau) \leq \# \tau$
+\end{enumerate}
+  By definition, $\texttt{eval}(\lambda i : S. \tau) = \lambda i : S. \texttt{eval}(\tau)$. Then, we can proceed to prove the four claims:
+  \begin{enumerate}[1.]
+    \item By K-FamLam, $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \texttt{eval}(\tau) : S \to K$.
+    \item By S-FamLam in both directions, $\Psi ; \Theta ; \Delta\vdash \lambda i : S. \tau \equiv \lambda i : S. \texttt{eval}(\tau) : K$
+    \item Since $\texttt{eval}(\tau) \; \texttt{nf}$, $\lambda i : S. \texttt{eval}(\tau) \; \texttt{nf}$ also.
+    %\item Finally, $\#\texttt{eval}(\lambda i : S. \tau) = \#(\lambda i : S. \texttt{eval}(\tau)) = 1 + \#\texttt{eval}(\tau) \leq 1 + \#\tau = \#(\lambda i : S. \tau)$
+  \end{enumerate}
+  
+  \item[(K-FamApp)] Suppose ${\Psi ; \Theta ; \Delta \vdash \tau \; I : K}$ from $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ and  $\Theta ; \Delta \vdash I : S$. By IH,
+  we have that
+  \begin{enumerate}[1.]
+   \item $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) : S \to K$
+   \item $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : S \to K$
+   \item $\texttt{eval}(\tau) \; \texttt{nf}$
+   %\item $\#\texttt{eval}(\tau) \leq \# \tau$
+  \end{enumerate}
+  By Theorem~\ref{thm:canon-forms}, we have two possibilities for $\texttt{eval}(\tau)$. First, suppose that  $\texttt{eval}(\tau) \; \texttt{ne}$. Then, $\texttt{eval}(\tau \; I) = \texttt{eval}(\tau) \; I$, and so we can easily prove the claims:
+  \begin{enumerate}[1.]
+   \item By K-FamApp, since $\Theta ; \Delta \vdash I : S$, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) \; I : K$.
+   \item By S-FamApp in both directions, we have that $\Psi ; \Theta ; \Delta \vdash \tau \; I \equiv \texttt{eval}(\tau) \; I : S \to K$
+   \item Since $\texttt{eval}(\tau) \; \texttt{ne}$, we have that $\texttt{eval}(\tau) \; I \; \texttt{ne}$, and so $\texttt{eval}(\tau) \; I \; \texttt{nf}$.
+   %\item $\#(\texttt{eval}(\tau) \; I) = 1 + \#\texttt{eval}(\tau) \leq 1 + \#\tau = \#(\tau \; I)$
+  \end{enumerate}
+  Otherwise, suppose that $\texttt{eval}(\tau) = \lambda i : S. \tau'$ with $\tau' \; \texttt{nf}$ and $\Psi ; \Theta , i : S ; \Delta \vdash \tau' : K$. In this case, $\texttt{eval}(\tau \; I) = \tau'[I/i]$:
+  \begin{enumerate}[1.]
+   \item By \textbf{Substitution} with $\Theta ; \Delta \vdash I : S$, we have that $\Psi ; \Theta ; \Delta \vdash \tau'[I/i] : K$.
+   \item We already know that $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : S \to K$, but $\texttt{eval}(\tau) = \lambda i : S. \tau'$, and so
+   $\Psi ; \Theta ; \Delta \vdash \tau \equiv \lambda i : S.\tau' : S \to K$. By S-FamApp, $\Psi ; \Theta ; \Delta \vdash \tau \; I \equiv (\lambda i : S.\tau') \; I : K$. Postcomposing with both directions of S-Fam-Beta-\{1,2\}, we have that $\Psi ; \Theta ; \Delta \vdash \tau \; I \equiv \tau'[I/i] : K$, as required.
+   \item Since $\tau'\; \texttt{nf}$, we have by Theorem~\ref{thm:idx-subst-nf} that $\tau'[I/i] \; \texttt{nf}$.
+  \end{enumerate}
+  
+\end{enumerate}
+\end{proof}

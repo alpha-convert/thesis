@@ -1,0 +1,532 @@
+\jtheorem{Proof of Theorem~\ref{thm:subtynf-idx-subst}}{
+
+  \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subtynf \tau_2 : K \gens \Phi$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseFact{3} $\Theta \vdash \Delta \; \texttt{wf}$
+    
+    \caseFact{4} $\Theta ; \Delta \pvdash I : S \gens \Phi_1$ with $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \pvdash J : S \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_2$ 
+    
+    \caseFact{6} $\Theta ; \Delta \vDash I = J$  
+  }{
+    $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : K \gens \Phi'$ for some $\Phi'$ with $\Theta ; \Delta \vDash \Phi'$
+  }
+  
+  \caseText{In most cases, it suffices to show that $\Psi ; \Theta ; \Delta \vdash \tau_1[I/i] \subtynf \tau_2[J/i] : K \gens \Phi'$ for some solvable $\Phi'$
+    since Theorem~\ref{thm:idx-ctx-wf-compl} on (3), Theorem~\ref{thm:idx-subst-nf} along with the presuppositions for (1) give the presuppositions for the conclusion,
+    using Theorem~\ref{thm:type-idx-algo-subst}. When this is not immediate, we manually reconstruct the presuppositions required.
+  }
+  
+  \jcase{1}{AS-Unit}{Immediate.}
+  \jcase{2}{AS-Var}{Immediate.}
+  \jcase{3}{AS-Arr}{
+   \jgivengoal{
+     \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \loli \tau_2 \subtynf \tau_1' \loli \tau_2' : \star \gens \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1' \subtynf \tau_1 : \star \gens \Phi_1'$
+     
+     \caseFact{9} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2'$
+   }{
+     $\Psi ; \Theta ; \Delta \vdash (\tau_1 \loli \tau_2)[I/i] \subtynf (\tau_1' \loli \tau_2')[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+   }
+   \caseText{By IH on (8) and (9)}
+   
+   \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1'[J/i] \subtynf \tau_1[I/i] : \star \gens \Phi_1''$
+   
+   \caseFact{11} $\Theta ; \Delta \vDash \Phi_1''$
+   
+   \caseFact{12} $\Psi ; \Theta ; \Delta \vdash \tau_2[I/i] \subtynf \tau_2'[J/i] : \star \gens \Phi_2''$
+   
+   \caseFact{13} $\Theta ; \Delta \vDash \Phi_2''$
+   
+   \caseText{By AS-Arr on (10) and (12)}
+   
+   \caseFact{14} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \loli \tau_2[I/i] \subtynf \tau_1'[J/i] \loli \tau_2'[J/i] : \star \gens \Phi_1'' \wedge \Phi_2''$
+   
+   \caseText{Goal follows immediately from (14), with $\Phi' = \Phi_1'' \wedge \Phi_2''$}
+  }
+  \jcase{4}{AS-Tensor}{
+   \jgivengoal{
+     \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \otimes \tau_2 \subtynf \tau_1' \otimes \tau_2' : \star \gens \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star \gens \Phi_1'$
+     
+     \caseFact{9} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2'$
+   }{
+     $\Psi ; \Theta ; \Delta \vdash (\tau_1 \otimes \tau_2)[I/i] \subtynf (\tau_1' \otimes \tau_2')[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+   }
+   \caseText{By IH on (8) and (9)}
+   
+   \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1[J/i] \subtynf \tau_1'[I/i] : \star \gens \Phi_1''$
+   
+   \caseFact{11} $\Theta ; \Delta \vDash \Phi_1''$
+   
+   \caseFact{12} $\Psi ; \Theta ; \Delta \vdash \tau_2[I/i] \subtynf \tau_2'[J/i] : \star \gens \Phi_2''$
+   
+   \caseFact{13} $\Theta ; \Delta \vDash \Phi_2''$
+   
+   \caseText{By AS-Tensor on (10) and (12)}
+   
+   \caseFact{14} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \otimes \tau_2[I/i] \subtynf \tau_1'[J/i] \otimes \tau_2'[J/i] : \star \gens \Phi_1'' \wedge \Phi_2''$
+   
+   \caseText{Goal follows immediately from (14), with $\Phi' = \Phi_1'' \wedge \Phi_2''$}
+  }
+  
+  \jcase{5}{AS-With}{
+   \jgivengoal{
+     \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \amp \tau_2 \subtynf \tau_1' \amp \tau_2' : \star \gens \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star \gens \Phi_1'$
+     
+     \caseFact{9} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2'$
+   }{
+     $\Psi ; \Theta ; \Delta \vdash (\tau_1 \amp \tau_2)[I/i] \subtynf (\tau_1' \amp \tau_2')[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+   }
+   \caseText{By IH on (8) and (9)}
+   
+   \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1[J/i] \subtynf \tau_1'[I/i] : \star \gens \Phi_1''$
+   
+   \caseFact{11} $\Theta ; \Delta \vDash \Phi_1''$
+   
+   \caseFact{12} $\Psi ; \Theta ; \Delta \vdash \tau_2[I/i] \subtynf \tau_2'[J/i] : \star \gens \Phi_2''$
+   
+   \caseFact{13} $\Theta ; \Delta \vDash \Phi_2''$
+   
+   \caseText{By AS-With on (10) and (12)}
+   
+   \caseFact{14} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \amp \tau_2[I/i] \subtynf \tau_1'[J/i] \amp \tau_2'[J/i] : \star \gens \Phi_1'' \wedge \Phi_2''$
+   
+   \caseText{Goal follows immediately from (14), with $\Phi' = \Phi_1'' \wedge \Phi_2''$}
+  }
+  
+  \jcase{6}{AS-Sum}{
+   \jgivengoal{
+     \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \oplus \tau_2 \subtynf \tau_1' \oplus \tau_2' : \star \gens \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star \gens \Phi_1'$
+     
+     \caseFact{9} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2'$
+   }{
+     $\Psi ; \Theta ; \Delta \vdash (\tau_1 \oplus \tau_2)[I/i] \subtynf (\tau_1' \oplus \tau_2')[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+   }
+   \caseText{By IH on (8) and (9)}
+   
+   \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1[J/i] \subtynf \tau_1'[I/i] : \star \gens \Phi_1''$
+   
+   \caseFact{11} $\Theta ; \Delta \vDash \Phi_1''$
+   
+   \caseFact{12} $\Psi ; \Theta ; \Delta \vdash \tau_2[I/i] \subtynf \tau_2'[J/i] : \star \gens \Phi_2''$
+   
+   \caseFact{13} $\Theta ; \Delta \vDash \Phi_2''$
+   
+   \caseText{By AS-Sum on (10) and (12)}
+   
+   \caseFact{14} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \oplus \tau_2[I/i] \subtynf \tau_1'[J/i] \oplus \tau_2'[J/i] : \star \gens \Phi_1'' \wedge \Phi_2''$
+   
+   \caseText{Goal follows immediately from (14), with $\Phi' = \Phi_1'' \wedge \Phi_2''$}
+  }
+  
+  
+  \jcase{7}{AS-Bang}{
+    \jgivengoal{
+       \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash !\tau_1 \subtynf !\tau_2 : \star \gens \Phi$
+       
+       \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (!\tau_1)[I/i] \subtynf (!\tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+    }  
+    
+    \caseText{By IH on (8)}
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+    
+    \caseFact{10} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{By AS-Bang on (9)}
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash !\tau_1[I/i] \subtynf !\tau_2[J/i] : \star \gens \Phi'$
+    
+    \caseText{Goal follows immediately from (9)}
+  }
+  
+  \jcase{8}{AS-IForall}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \forall j : S'. \tau_1 \subtynf \forall j : S'. \tau_2 : \star \gens \forall j : S'. \Phi$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S, j : S'; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (\forall j : S'. \tau_1)[I/i] \subtynf (\forall j : S'. \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$    
+    }
+   \caseText{By (2)}
+   
+   \caseFact{9} $\Theta, i : S, j : S ; \Delta \vDash \Phi $
+   
+   \caseText{IH on (8)}
+   
+   \caseFact{10} $\Psi ; \Theta j : S'; \Delta \vdash \tau_1[I/i] \subtynf \tau_2[J//i] : \star \gens \Phi'$
+   
+   \caseFact{11} $\Theta, j : S' ; \Delta \vDash \Phi'$
+   
+   \caseText{Equivalently to (11)}
+   
+   \caseFact{12} $\Theta ; \Delta \vDash \forall j : S'. \Phi'$
+   
+   \caseText{By AS-IForall on (10)}
+   
+   \caseFact{13} $Psi ; \Theta ; \Delta \vdash \forall j : S'. \tau_1[I/i] \subtynf \forall j : S'.\tau_2[J/i] : \star \gens \forall j : S'.\Phi'$
+   
+   \caseText{Goal follows by (12) and (13)}
+  
+  }
+  
+  \jcase{8}{AS-IExists}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \exists j : S'. \tau_1 \subtynf \exists j : S'. \tau_2 : \star \gens \forall j : S'. \Phi$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S, j : S'; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (\exists j : S'. \tau_1)[I/i] \subtynf (\exists j : S'. \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$    
+    }
+   \caseText{By (2)}
+   
+   \caseFact{9} $\Theta, i : S, j : S ; \Delta \vDash \Phi $
+   
+   \caseText{IH on (8)}
+   
+   \caseFact{10} $\Psi ; \Theta j : S'; \Delta \vdash \tau_1[I/i] \subtynf \tau_2[J//i] : \star \gens \Phi'$
+   
+   \caseFact{11} $\Theta, j : S' ; \Delta \vDash \Phi'$
+   
+   \caseText{Equivalently to (11)}
+   
+   \caseFact{12} $\Theta ; \Delta \vDash \forall j : S'. \Phi'$
+   
+   \caseText{By AS-IExists on (10)}
+   
+   \caseFact{13} $Psi ; \Theta ; \Delta \vdash \exists j : S'. \tau_1[I/i] \subtynf \exists j : S'.\tau_2[J/i] : \star \gens \forall j : S'.\Phi'$
+   
+   \caseText{Goal follows by (12) and (13)}
+  
+  }
+  
+  \jcase{9}{AS-TForall}{
+  
+    \jgivengoal{
+       \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \forall \alpha : K. \tau_1 \subtynf \forall \alpha : K. \tau_2 : \star \gens \Phi$
+       
+       \caseFact{8} $\Psi, \alpha : K ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (\forall \alpha : K. \tau_1)[I/i] \subtynf (\forall \alpha : K. \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$    
+    }
+    
+    \caseText{By IH on (8)}
+    
+    \caseFact{9} $\Psi, \alpha : K ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[I/i] : \star \gens \Phi'$
+    
+    \caseFact{10} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{By AS-TForall on (9)}
+    
+    \caseFact{11} $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K. \tau_1[I/i] \subtynf \forall \alpha : K. \tau_2[I/i] : \star \gens \Phi'$
+    
+    \caseText{Goal follows immediately from (11)}
+   
+  }
+  
+  \jcase{10}{AS-List}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash L^M \tau_1 \subtynf L^N \tau_2 : \star \gens M = N \wedge \Phi'$ 
+      
+      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi'$ 
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (L^M \tau_1)[I/i] \subtynf (L^N \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+    }  
+    \caseText{By (2)}
+    
+    \caseFact{9} $\Theta, i : S ; \Delta \vDash M = N$
+    
+    \caseText{From (9) and (4)}
+    
+    \caseFact{10} $\Theta ; \Delta \vDash M[I/i] = N[J/i]$
+    
+    \caseText{By IH on (8)}
+    
+    \caseFact{11} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi''$
+    
+    \caseFact{12} $\Theta ; \Delta \vDash \Phi''$
+    
+    \caseText{By the presupposition for (7) and two inversions}
+    
+    \caseFact{13} $\Theta, i : S ; \Delta \vdash M : \N \gens \Phi_1$ with $\Theta, i : S ; \Delta \vDash \Phi_1$
+    
+    \caseFact{14} $\Theta, i : S ; \Delta \vdash N : \N \gens \Phi_2$ with $\Theta, i : S ; \Delta \vDash \Phi_2$
+
+    \caseText{By Theorem~\ref{thm:idx-idx-algo-subst} and Theorem~\ref{thm:idx-compl} on (13) (14) (4) (5)}
+    
+    \caseFact{15} $\Theta ; \Delta \vdash M[I/i] : \N \gens \Phi_1'$ with $\Theta;\Delta \vDash \Phi_1'$
+    
+    \caseFact{16} $\Theta ; \Delta \vdash N[J/i] : \N \gens \Phi_2'$ with $\Theta ; \Delta \vDash \Phi_1'$
+    
+    \caseText{By AS-List on (10) and (11)}
+    
+    \caseFact{17} $\Psi ; \Theta ; \Delta \vdash L^{M[I/i]} \tau_1[I/i] \subtynf L^{N[J/i]} \tau_2[J/i] : \star \gens (M[I/i] = N[J/i]) \wedge \Phi''$
+    
+    \caseText{By (15), (16), (17)}
+    
+    \caseFact{18} $\Psi ; \Theta ; \Delta \pvdash L^{M[I/i]} \tau_1[I/i] \subtynf L^{N[J/i]} \tau_2[J/i] : \star \gens (M[I/i] = N[J/i]) \wedge \Phi''$
+    
+    \caseText{Goal follows from (18), taking $\Phi' = (M[I/i] = N[J/i]) \wedge \Phi''$}
+   
+  }
+  
+  \jcase{11}{AS-Conj}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S; \Delta \pvdash \Phi_1 \amp \tau_1 \subtynf \Phi_2 \amp \tau_2 : \star \gens \Phi \wedge (Phi_1 \to \Phi_2)$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (\Phi_1 \amp \tau_1)[I/i] \subtynf (\Phi_2 \amp \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (8)}
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+    
+    \caseFact{10} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{Inverting the presupposition that $\Phi_1 \amp \tau_1 $ and $\Phi_2 \amp \tau_2$ are well-formed types from (1), we have}
+    
+    \caseFact{11} $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf} \gens \Phi_1'$ with $\Theta, i : S ; \Delta \vDash \Phi_1'$
+    
+    \caseFact{12} $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$ with $\Theta, i : S ; \Delta \vDash \Phi_2'$
+    
+    \caseText{By Theorem~\ref{thm:constr-idx-algo-subst}}
+    
+    \caseFact{13} $\Theta ; \Delta \vDash \Phi_1[I/i] \; \texttt{wf} \gens \Phi_1''$ with $\Theta ; \Delta \vDash \Phi_1''$
+    
+    \caseFact{14} $\Theta ; \Delta \vDash \Phi_2[J/i] \; \texttt{wf} \gens \Phi_2''$ with $\Theta ; \Delta \vDash \Phi_2''$
+    
+    \caseText{By AS-Conj on (9)}
+    
+    \caseFact{15} $\Psi ; \Theta ; \Delta \vdash \Phi_1[I/i] \amp \tau_1[I/i] \subtynf \Phi_2[J/i] \amp \tau_2[I/i] \gens \Phi' \wedge (\Phi_1[I/i] \to \Phi_2[J/i])$
+    
+    \caseText{By (11) and (12), the presuppositions for (15) hold}
+    
+    \caseFact{16} $\Psi ; \Theta ; \Delta \pvdash \Phi_1[I/i] \amp \tau_1[I/i] \subtynf \Phi_2[J/i] \amp \tau_2[I/i] \gens \Phi' \wedge (\Phi_1[I/i] \to \Phi_2[J/i])$
+    
+    \caseText{By (2)}
+    
+    \caseFact{17} $\Theta, i : S ; \Delta \vDash \Phi_1 \to \Phi_2$
+    
+    \caseText{By (17) and (6)}
+    
+    \caseFact{18} $\Theta ; \Delta \vDash \Phi_1[I/i] \to \Phi_2[J/i]$
+    
+    \caseText{The result follows by (16) and (18), with $\Phi' = \Phi' \wedge (\Phi_1[I/i] \to \Phi_2[J/i])$}    
+  
+  }
+  
+  \jcase{12}{AS-Impl}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (Phi_2 \to \Phi_1)$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash (\Phi_1 \implies \tau_1)[I/i] \subtynf (\Phi_2 \amp \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (8)}
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+    
+    \caseFact{10} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{Inverting the presupposition that $\Phi_1 \amp \tau_1 $ and $\Phi_2 \amp \tau_2$ are well-formed types from (1), we have}
+    
+    \caseFact{11} $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf} \gens \Phi_1'$ with $\Theta, i : S ; \Delta \vDash \Phi_1'$
+    
+    \caseFact{12} $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$ with $\Theta, i : S ; \Delta \vDash \Phi_2'$
+    
+    \caseText{By Theorem~\ref{thm:constr-idx-algo-subst}}
+    
+    \caseFact{13} $\Theta ; \Delta \vDash \Phi_1[I/i] \; \texttt{wf} \gens \Phi_1''$ with $\Theta ; \Delta \vDash \Phi_1''$
+    
+    \caseFact{14} $\Theta ; \Delta \vDash \Phi_2[J/i] \; \texttt{wf} \gens \Phi_2''$ with $\Theta ; \Delta \vDash \Phi_2''$
+    
+    \caseText{By AS-Implies on (9)}
+    
+    \caseFact{15} $\Psi ; \Theta ; \Delta \vdash \Phi_1[I/i] \implies \tau_1[I/i] \subtynf \Phi_2[J/i] \implies \tau_2[I/i] \gens \Phi' \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$
+    
+    \caseText{By (11) and (12), the presuppositions for (15) hold}
+    
+    \caseFact{16} $\Psi ; \Theta ; \Delta \pvdash \Phi_1[I/i] \implies \tau_1[I/i] \subtynf \Phi_2[J/i] \implies \tau_2[I/i] \gens \Phi' \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$
+    
+    \caseText{By (2)}
+    
+    \caseFact{17} $\Theta, i : S ; \Delta \vDash \Phi_2 \to \Phi_1$
+    
+    \caseText{By (17) and (6)}
+    
+    \caseFact{18} $\Theta ; \Delta \vDash \Phi_2[J/i] \to \Phi_1[I/i]$
+    
+    \caseText{The result follows by (16) and (18), with $\Phi' = \Phi' \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$}    
+  
+  }
+  
+  \jcase{13}{AS-Monad}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \M(M,\vec{q}) \tau_1 \subtynf \M(N,\vec{p}) \tau_2 : \star \gens (M = N) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+      
+    }{
+       $\Psi ; \Theta ; \Delta \vdash (\M(M,\vec{q}) \tau_1) [I/i] \subtynf (\M(N,\vec{p}) \tau_2)[J/i] : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+   
+   \caseText{From (2)}
+   
+   \caseFact{9} $\Theta, i : S ; \Delta \vDash M = N$
+   
+   \caseFact{10} $\Theta, i : S ; \Delta \vDash \vec{q} \leq \vec{p}$
+   
+   \caseText{By IH on (8)}
+   
+   \caseFact{11} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+   
+   \caseFact{12} $\Theta ; \Delta \vDash \Phi'$
+   
+   \caseText{By AS-Monad on (11) and Theorem~\ref{thm:idx-idx-subst} on the presuppositions of (1) for $M,N,\vec{q},\vec{p}$}
+   
+   \caseFact{13} $\Psi ; \Theta ; \Delta \pvdash \M(M[I/i],\vec{q}[I/i]) \; (\tau_1[I/i]) \subtynf \M(N[J/i],\vec{q}[J/i]) \;(\tau_2[J/i]) : \star \gens (M[I/i] = N[J/i]) \wedge (\vec{q}[I/i] \leq \vec{p}[J/i]) \wedge \Phi'$
+   
+   \caseText{By (6), (9), and (10)}
+   
+   \caseFact{14} $\Theta ; \Delta \vDash M[I/i] = N[J/i]$
+   
+   \caseFact{15} $\Theta ; \Delta \vDash \vec{q}[I/i] \leq \vec{p}[J/i]$
+   
+   \caseText{The Goal is immediate from (12), (13), (14), (15)}
+  }
+  
+  \jcase{13}{AS-Pot}{
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash [M|\vec{q}] \tau_1 \subtynf [N|\vec{p}] \tau_2 : \star \gens (M = N) \wedge (\vec{q} \geq \vec{p}) \wedge \Phi$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+      
+    }{
+       $\Psi ; \Theta ; \Delta \vdash ([M|\vec{q}] \tau_1) [I/i] \subtynf ([N|\vec{p}] \tau_2)[J/i] : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+   
+   \caseText{From (2)}
+   
+   \caseFact{9} $\Theta, i : S ; \Delta \vDash M = N$
+   
+   \caseFact{10} $\Theta, i : S ; \Delta \vDash \vec{q} \geq \vec{p}$
+   
+   \caseText{By IH on (8)}
+   
+   \caseFact{11} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+   
+   \caseFact{12} $\Theta ; \Delta \vDash \Phi'$
+   
+   \caseText{By AS-Pot on (11) and Theorem~\ref{thm:idx-idx-subst} on the presuppositions of (1) for $M,N,\vec{q},\vec{p}$}
+   
+   \caseFact{13} $\Psi ; \Theta ; \Delta \pvdash [M[I/i]|\vec{q}[I/i]] \; (\tau_1[I/i]) \subtynf [N[J/i]|\vec{q}[J/i]] \;(\tau_2[J/i]) : \star \gens (M[I/i] = N[J/i]) \wedge (\vec{q}[I/i] \geq \vec{p}[J/i]) \wedge \Phi'$
+   
+   \caseText{By (6), (9), and (10)}
+   
+   \caseFact{14} $\Theta ; \Delta \vDash M[I/i] = N[J/i]$
+   
+   \caseFact{15} $\Theta ; \Delta \vDash \vec{q}[I/i] \geq \vec{p}[J/i]$
+   
+   \caseText{The Goal is immediate from (12), (13), (14), (15)}
+  }
+  
+  \jcase{14}{AS-ConstPot}{
+     \jgivengoal{
+       \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash [M] \; \tau_1 \subtynf [N] \ ; \tau_2 : \star \gens \Phi \wedge (N \leq M)$
+       
+       \caseFact{8} $\Psi ; \Theta, i : S; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$     
+     }{
+       $\Psi ; \Theta ; \Delta ; \vdash ([M] \; \tau_1)[I/i] \subtynf ([N] \; \tau_2)[J/i] : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$     
+     }
+     
+    \caseText{By (2)}
+    
+    \caseFact{9} $\Theta, i : S ; \Delta \vDash N \leq M$
+    
+    \caseText{By IH on (8)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+    
+    \caseFact{11} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{By AS-ConstPot and Theorem~\ref{thm:idx-idx-subst} for $M,N$}
+    
+    \caseFact{12} $\Psi ; \Theta ; \Delta \pvdash \left[M[I/i]\right] \; (\tau_1[I/i]) \subtynf \left[N[I/i]\right] \; (\tau_2[J/i]) : \star \gens \Phi' \wedge (N[J/i] \leq M[I/i])$
+    
+    \caseText{By (9) and (6)}
+    
+    \caseFact{13} $\Theta ; \Delta \vDash N[J/i] \leq M[I/i]$
+    
+    \caseText{Goal follows immediately from (11), (12), (13), with $\Phi' = \Phi' \wedge (N[J/i] \leq M[I/i])$}
+  }
+  
+  \jcase{15}{AS-FamLam}{
+  
+    \jgivengoal{
+      \caseFact{7} $\Psi ; \Theta, i : S ; \Delta \pvdash \lambda j : S'. \tau_1 \subtynf \lambda j : S'.\tau_2 : S \to K \gens \forall j : S. \Phi$
+      
+      \caseFact{8} $\Psi ; \Theta, i : S, j : S' ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash (\lambda j : S'.\tau_1)[I/i] \subtynf (\lambda j: S'.\tau_2)[J/i] : S' \to K \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$    
+    }
+    
+    \caseText{By IH on (8)}
+    
+    \caseFact{9} $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : K \gens \Phi'$
+    
+    \caseFact{10} $\Theta, j : S' ; \Delta \vDash \Phi'$
+    
+    \caseText{By AT-FamLam on (9)}
+    
+    \caseFact{11} $\Psi ; \Theta ; \Delta \pvdash \forall j : S'.\tau_1[I/i] \subtynf \forall j :S'.\tau_2[J/i] : K \gens \forall j : S'.\Phi'$
+  
+    \caseText{The goal is immediate by (10) and (11)} 
+  }
+  
+  \jcase{15}{AS-FamApp}{
+    \jgivengoal{
+       \caseFact{7} $\Psi ; \Theta, i : S; \Delta \pvdash \tau_1 \; M \subtynf \tau_2 \; N : K \gens \Phi \wedge (M = N)$
+       
+       \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : S' \to K \gens \Phi$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \left(\tau_1 \; M\right)[I/i] \subtynf \left(\tau_2[J/i]\right)[J/i] : K \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+    
+    \caseText{By (2)}
+    
+    \caseFact{9} $\Theta, i : S ; \Delta \vDash M = N$
+    
+    \caseText{By (9) and (6)}
+    
+    \caseFact{10}  $\Theta ; \Delta \vDash M[I/i] = N[J/i]$
+    
+    \caseText{IH on (8)}
+    
+    \caseFact{11} $\Psi ; \Theta ; \Delta \vdash \tau_1[I/i] \subtynf \tau_2[J/i] : S' \to K \gens \Phi'$
+    
+    \caseFact{12} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{By AS-FamApp on (11) and Theorem~\ref{thm:idx-idx-algo-subst} on the proofs that $M,N : S'$ in (7)}
+    
+    \caseFact{13} $\Psi ; \Theta ; \Delta \pvdash \left(\tau_1[I/i]\right) \; M[I/i] \subtynf \left(\tau_2[J/i]\right) \; N[J/i] : K \gens \Phi' \wedge (M[I/i] = N[J/i])$
+    
+    \caseText{The Goal follows by (10), (12), (13)}
+    
+  }
+
+}

@@ -1,0 +1,435 @@
+\jtheorem{Proof of Theorem~\ref{thm:subtynf-refl}}{
+
+  \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ;  \Delta \pvdash \tau : K$
+    
+    \caseFact{2} $\tau \;\texttt{nf}$  
+  }{
+    $\Psi ; \Theta ;  \Delta \pvdash \tau\subtynf \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
+  }
+  \caseText{By induction on (1), followed by inversion on (2)}
+  
+  \jcase{1}{K-Var}{Immediate by Theorem~\ref{thm:subtyne-refl}}
+  
+  \jcase{2}{K-Unit}{Immediate by Theorem~\ref{thm:subtyne-refl}}
+  
+  \jcase{3}{K-Arr}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_2 : \star}$
+      
+      \caseFact{2} $\tau_1$ and $\tau_2$ \texttt{nf}
+      
+      \caseFact{3} ${\Psi ; \Theta ; \Delta \vdash \tau_1 : \star}$
+      
+      \caseFact{4} ${\Psi ; \Theta ; \Delta \vdash \tau_2 : \star}$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_2 \subtynf \tau_1 \loli \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AS-Arr on (5) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_2 \subtynf \tau_1 \loli \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal is immediate from (7), (8)}
+  }
+  
+  
+  \jcase{4}{K-Tensor}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_2 : \star}$
+      
+      \caseFact{2} $\tau_1$ and $\tau_2$ \texttt{nf}
+      
+      \caseFact{3} ${\Psi ; \Theta ; \Delta \vdash \tau_1 : \star}$
+      
+      \caseFact{4} ${\Psi ; \Theta ; \Delta \vdash \tau_2 : \star}$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_2 \subtynf \tau_1 \otimes \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AS-Tensor on (5) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_2 \subtynf \tau_1 \otimes \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal is immediate from (7), (8)}
+  }
+  
+  \jcase{5}{K-With}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_2 : \star}$
+      
+      \caseFact{2} $\tau_1$ and $\tau_2$ \texttt{nf}
+      
+      \caseFact{3} ${\Psi ; \Theta ; \Delta \vdash \tau_1 : \star}$
+      
+      \caseFact{4} ${\Psi ; \Theta ; \Delta \vdash \tau_2 : \star}$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_2 \subtynf \tau_1 \amp \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AS-With on (5) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_2 \subtynf \tau_1 \amp \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal is immediate from (7), (8)}
+  }
+  
+  \jcase{6}{K-Sum}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_2 : \star}$
+      
+      \caseFact{2} $\tau_1$ and $\tau_2$ \texttt{nf}
+      
+      \caseFact{3} ${\Psi ; \Theta ; \Delta \vdash \tau_1 : \star}$
+      
+      \caseFact{4} ${\Psi ; \Theta ; \Delta \vdash \tau_2 : \star}$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_2 \subtynf \tau_1 \oplus \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subtynf \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AS-Sum on (5) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_2 \subtynf \tau_1 \oplus \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal is immediate from (7), (8)}
+  }
+  
+  \jcase{7}{K-Bang}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash !\tau : \star$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$    
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash !\tau \subtynf !\tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Bang on (4)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash !\tau \subtynf !\tau : \star \gens \Phi$
+  }
+  
+  \jcase{8}{K-IForall}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star}$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$
+    }{
+      ${\Psi ; \Theta ; \Delta \vdash \forall i :S .\tau \subtynf \forall i : S. \tau: \star \gens \Phi}$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta, i : S;\Delta \vDash \Phi$
+    
+    \caseText{By AS-IForall on (4)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \forall i : S.\tau \subty \forall i : S.\tau : \star \gens \forall i : S. \Phi$
+    
+    \caseText{Equivalently to (5)}
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+  }
+  
+  \jcase{9}{K-IExists}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star}$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$
+    }{
+      ${\Psi ; \Theta ; \Delta \vdash \exists i :S .\tau \subtynf \exists i : S. \tau: \star \gens \Phi}$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta, i : S;\Delta \vDash \Phi$
+    
+    \caseText{By AS-IExists on (4)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \exists i : S.\tau \subty \exists i : S.\tau : \star \gens \forall i : S. \Phi$
+    
+    \caseText{Equivalently to (5)}
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+  }
+  
+  \jcase{10}{K-TForall}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau : \star}$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau \subtynf \forall \alpha : K. \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi , \alpha : K ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-TForall on (4)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau \subtynf \forall \alpha : K. \tau : \star \gens \Phi$
+  }
+  
+  \jcase{11}{K-List}{
+    \jgivengoal{
+      \caseFact{1} ${\Psi ; \Theta ; \Delta \pvdash L^I \tau : \star}$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      
+      \caseFact{4} $\Theta ; \Delta \vdash I : \N$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash L^I\tau \subtynf : L^I\star \gens \Phi$ and $\Theta ;\Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-List on (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash L^I \tau \subtynf L^I \tau : \star \gens \Phi \wedge (I = I)$
+    
+    \caseText{By Theorem~\ref{thm:sound-compl} applied to (4), we may re-establish the presupposition for (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash L^I \tau \subtynf L^I \tau : \star \gens \Phi \wedge (I = I)$
+    
+    \caseText{The goal is immediate from (6), (8), and $\Theta ; \Delta \vDash I = I$}
+  }
+  
+  \jcase{12}{K-Conj}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi' \amp \tau : \star$  
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      
+      \caseFact{4} $\Theta ; \Delta \vdash \Phi' \texttt{ wf}$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \Phi' \amp \tau \subtynf \Phi' \amp \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Conj on (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \Phi' \amp \tau \subtynf \Phi' \amp \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
+    
+    \caseText{By Theorem~\ref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi' \amp \tau \subtynf \Phi' \amp \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
+    
+    \caseText{The goal follows from (6), (8), and $\Theta ; \Delta \vDash \Phi' \to \Phi'$}
+  }
+  
+  \jcase{12}{K-Impl}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi' \implies \tau : \star$  
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      
+      \caseFact{4} $\Theta ; \Delta \vdash \Phi' \texttt{ wf}$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Impl on (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
+    
+    \caseText{By Theorem~\ref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
+    
+    \caseText{The goal follows from (6), (8), and $\Theta ; \Delta \vDash \Phi' \to \Phi'$}
+  }
+  
+  \jcase{13}{K-Monad}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      
+      \caseFact{4} $\Theta ; \Delta \vdash I : \mathbb{N}$
+      
+      \caseFact{5} $\Theta ; \Delta \vdash \vec{p} : \potvec$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau \subtynf \M(I,\vec{p}) \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Monad on (6), followed by Theorem~\ref{thm:sound-compl} on (4) and (5) to establish the presuppositions}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{p}) \tau \subtynf \M(I,\vec{p}) \tau : \star \gens \Phi \wedge (I = I) \wedge (\vec{p} \leq \vec{p})$
+    
+    \caseText{Goal is immediate from (7) and (8)}
+  }
+  
+  \jcase{14}{K-Pot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      
+      \caseFact{4} $\Theta ; \Delta \vdash I : \mathbb{N}$
+      
+      \caseFact{5} $\Theta ; \Delta \vdash \vec{p} : \potvec$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau \subtynf [I|\vec{p}] \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Pot on (6), followed by Theorem~\ref{thm:sound-compl} on (4) and (5) to establish the presuppositions}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash [I|\vec{p}] \tau \subtynf [I|\vec{p}] \tau : \star \gens \Phi \wedge (I = I) \wedge (\vec{p} \leq \vec{p})$
+    
+    \caseText{Goal is immediate from (7) and (8)}
+  }
+  
+  \jcase{15}{K-ConstPot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash [I] \; \tau : \star$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      
+      \caseFact{4} $\Theta ; \Delta \vdash I : \mathbb{R}^+$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash [I]\tau \subtynf [I]\tau: \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-ConstPot on (5) followed by Theorem~\ref{thm:sort-compl} on (4) to re-establish the presupposition}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash [I] \; \tau \subtynf [I] \; \tau : \star \gens \Phi \wedge (I \leq I)$
+    
+    \caseText{Goal is immediate by (7), (6), and $\Theta ; \Delta \vDash I \leq I$}
+     
+  }
+  
+  \jcase{16}{K-FamLam}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S. \tau : S \to K$
+      
+      \caseFact{2} $\tau \; \texttt{nf}$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau \subtynf \tau : S \to K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta, i : S; \Delta \pvdash \tau \subtynf \tau : K \gens \Phi$
+    
+    \caseFact{5} $\Theta , i : S; \Delta \vDash \Phi$
+    
+    \caseText{By AS-FamLam on (4)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S. \tau \subtynf \lambda i : S \tau : S \to K \gens \forall i : S. \Phi$
+    
+    \caseText{Equivalently to (5)}
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+    
+  }
+  
+  \jcase{17}{K-FamApp}{Immediate by Theorem~\ref{thm:subtyne-refl}}
+  
+}
+
+\iffalse
+ 
+  
+  \item[(K-FamLam)] Suppose  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$. By IH,
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau \subtynf \tau : K \gens \Phi$ with $\Theta, i : S ; \Delta \vDash \Phi$. By AS-FamLam, $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau \subtynf \tau : S \to K \gens \forall i : S. \Phi$. But $\Theta, i : S ; \Delta \vDash \Phi$ and so $\Theta ; \Delta \vDash \forall i : S. \Phi$, as required.
+  \item[(K-FamApp)] Done by Theorem~\ref{thm:subtyne-refl}
+\fi

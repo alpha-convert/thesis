@@ -1,0 +1,414 @@
+\jtheorem{Proof of Theorem~\ref{thm:raw-kind-compl}}{
+  \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \tau : K$  
+  }{
+    $\Phi;\Theta;\Delta \vdash \tau : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$  
+  }
+  
+  \jcase{1}{K-Var}{Immediate.}
+  \jcase{2}{K-Unit}{Immediate.}
+  \jcase{3}{K-Arr}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$      
+    }{
+       $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (2) and (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AK-Arr on (4) and (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The Goal follows by (6) and (7), with $\Phi' = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{4}{K-Tensor}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (2) and (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AK-Tensor on (4) and (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The Goal follows by (6) and (7), with $\Phi' = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{5}{K-With}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 : \star$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (2) and (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By K-With on (4) and (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The Goal follows by (6) and (7), with $\Phi' = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{6}{K-Sum}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 : \star$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (2) and (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2$
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By AK-Sum on (4) and (5)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The Goal follows by (6) and (7), with $\Phi' = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{7}{K-Bang}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash !\tau: \star$
+      \caseFact{2} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \vdash !\tau : \star \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$
+    }
+    \caseText{By IH on (2)}
+    
+    \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi'$
+    
+    \caseFact{4} $\Theta ; \Delta \vDash \Phi'$
+    
+    \caseText{By AK-Bang on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash !\tau : \star \gens \Phi'$
+  }
+  
+  
+  \jcase{8}{K-IForall}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star$
+      
+      \caseFact{2} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+    \caseText{By IH on (2)}
+    
+    \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star \gens \Phi$
+    
+    \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi$
+    
+    \caseText{Equivalently to (4)}
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+    
+    \caseText{By AK-IForall on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star \gens \forall i : S. \Phi$
+  }
+  
+  \jcase{9}{K-IExists}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star$
+      
+      \caseFact{2} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+    \caseText{By IH on (2)}
+    
+    \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star \gens \Phi$
+    
+    \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi$
+    
+    \caseText{Equivalently to (4)}
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+    
+    \caseText{By AK-IExists on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star \gens \forall i : S. \Phi$
+  }
+  
+  \jcase{10}{K-List}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash L^I \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \vdash I : \N$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash L^I \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By Theorem~\ref{thm:raw-sort-compl} on (2)}
+    
+    \caseFact{6} $\Theta ; \Delta \vdash I : \N \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{By AK-List on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash L^I \tau : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The goal follows from (5), (7), (8) with $\Phi = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{11}{K-Conj}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    \caseText{By Theorem~\ref{thm:raw-constr-compl} on (2)}
+    
+    \caseFact{4} $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_!$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{By AK-Conj on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The Goal follows by (5), (7), (8)}
+  }
+  
+  \jcase{12}{K-Impl}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    \caseText{By Theorem~\ref{thm:raw-constr-compl} on (2)}
+    
+    \caseFact{4} $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_!$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{By AK-Impl on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{The Goal follows by (5), (7), (8)}
+  }
+  
+
+  \jcase{13}{K-Monad}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \vdash I : \N$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash \vec{p} : \potvec$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    \caseText{By Theorem~\ref{thm:raw-sort-compl} on (2) and (3)}
+    
+    \caseFact{5} $\Theta ; \Delta \vdash I : \N \gens \Phi_1$
+    
+    \caseFact{6} $\Theta ; \Delta \vdash \vec{p} : \potvec \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By IH on (4)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_3$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_3$
+    
+    \caseText{By AK-Monad on (5), (6), (8)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3$
+    
+    \caseText{Goal follows by (7), (9), (10)}
+  
+  }
+  
+  \jcase{14}{K-Pot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \vdash I : \N$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash \vec{p} : \potvec$
+      
+      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    \caseText{By Theorem~\ref{thm:raw-sort-compl} on (2) and (3)}
+    
+    \caseFact{5} $\Theta ; \Delta \vdash I : \N \gens \Phi_1$
+    
+    \caseFact{6} $\Theta ; \Delta \vdash \vec{p} : \potvec \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseText{By IH on (4)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_3$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi_3$
+    
+    \caseText{By AK-Pot on (5), (6), (8)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3$
+    
+    \caseText{Goal follows by (7), (9), (10)}  
+  }
+  
+  \jcase{15}{K-ConstPot}{
+  
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash [I] \; \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \vdash I : \R^+$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+    }{
+     $\Psi ; \Theta ; \Delta \vdash [I] \; \tau : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By Theorem~\ref{thm:raw-sort-compl} on  (2)}
+    
+    \caseFact{4} $\Theta ; \Delta \vdash I : \R^+ \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{Applying AK-ConstPot to (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash [I] \; \tau : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal follows by (5), (7), (8)}
+ 
+   }
+   
+   \jcase{16}{K-FamLam}{
+     \jgivengoal{
+       \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K$
+       
+       \caseFact{2} $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$
+     }{
+       $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+     }
+     \caseText{By IH on (2)}
+     
+     \caseFact{3} $\Psi ; \Theta, i : S; \Delta \vdash \tau : K \gens \Phi$
+     
+     \caseFact{4} $\Theta, i : S; \Delta \vDash \Phi$
+     
+     \caseText{By AK-FamLam on (3)}
+     
+     \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K \gens \forall i : S. \Phi$
+     
+     \caseText{Equivalently to (4)}
+     
+     \caseFact{6} $\Theta ; \Delta \vDash \forall i : S. \Phi$
+   }
+   
+  
+  \jcase{17}{K-FamApp}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \tau \; I : K$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$
+      
+      \caseFact{3} $\Theta ; \Delta \vdash I : S$
+    }{
+      $\Psi ; \Theta ; \Delta \vdash \tau \; I : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+    \caseText{By IH on (2)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau : S \to K \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By Theorem~\ref{thm:raw-sort-compl} on (3)}
+    
+    \caseFact{6} $\Theta ; \Delta \vdash I : S \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{By AK-FamApp on (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \tau \; I : K \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal is done by (5), (7), and (8)}
+  }
+}   

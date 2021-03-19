@@ -1,0 +1,156 @@
+\begin{proof}
+By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$.
+\begin{enumerate}
+  \item[(K-Var)] Immediate.
+  \item[(K-Unit)] Immediate.
+  \item[(K-Arr)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \loli \tau_2 : \star$ from
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
+  By IH twice, we have that
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
+  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
+  But then by K-Arr, we have
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \loli \tau_2[I/i]: \star$
+  as required.
+  \item[(K-Tensor)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \otimes \tau_2 : \star$ from
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
+  By IH twice, we have that
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
+  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
+  But then by K-Tensor, we have
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \otimes \tau_2[I/i]: \star$
+  as required.
+  \item[(K-With)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \amp \tau_2 : \star$ from
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
+  By IH twice, we have that
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
+  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
+  But then by K-With, we have
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \amp \tau_2[I/i]: \star$
+  as required.
+  \item[(K-Sum)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \oplus \tau_2 : \star$ from
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
+  By IH twice, we have that
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
+  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
+  But then by K-Sum, we have
+  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \oplus \tau_2[I/i]: \star$
+  as required.
+  \item[(K-Bang)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash !\tau : \star$ by way of
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$,
+  and so by K-Bang,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : !\star$.
+  \item[(K-IForall)] Suppose $\Psi ; \Theta, i : S;  \Delta \vdash \forall j : S'. \tau : \star$ by way of
+  $\Psi ; \Theta, i : S, j : S' ; \Delta \vdash \tau : \star$.
+  By IH,
+  $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau[I/i] : \star$.
+  By K-IForall,
+  $\Psi ; \Theta ; \Delta \pvdash \forall j : S', \tau[I/i] : \star$, as required.
+  \item[(K-IExists)] Suppose $\Psi ; \Theta, i : S;  \Delta \vdash \exists j : S'. \tau : \star$ by way of
+  $\Psi ; \Theta, i : S, j : S' ; \Delta \vdash \tau : \star$.
+  By IH,
+  $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau[I/i] : \star$.
+  By K-IExists,
+  $\Psi ; \Theta ; \Delta \pvdash \exists j : S', \tau[I/i] : \star$, as required.
+  \item[(K-List)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash L^J \tau : \star$ by way of
+  $\Theta, i : S ; \Delta \vdash J : \N$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
+  By Theorem~\ref{thm:idx-idx-subst},
+  $\Theta ; \Delta \pvdash J[I/i] : \N$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
+  By K-List,
+  $\Psi ; \Theta l \Delta \pvdash L^{J[I/i]}\left(\tau[I/i]\right)$,
+  as required.
+  
+  \item[(K-Impl)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \Phi \implies \tau : \star$ by way of
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$ and
+  $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
+  By Theorem~\ref{thm:constr-idx-subst},
+  $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
+  Then, by K-Conj,
+  $\Psi ; \Theta ; \Delta \vdash \Phi[I/i] \amp \tau[I/i] : \star$
+  as required.
+  Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \Phi \amp \tau : \star$ by way of
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$ and
+  $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
+  By Theorem~\ref{thm:constr-idx-subst},
+  $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
+  Then, by K-Implies,
+  $\Psi ; \Theta ; \Delta \pvdash \Phi[I/i] \implies \tau[I/i] : \star$
+  as required.
+  
+  \item[(K-Monad)] Suppose
+  $\Psi ; \Theta, i : S ; \Delta \vdash \M(J,\vec{p}) \tau : \star$
+  by way of
+  $\Theta, i : S ; \Delta \vdash J : \mathbb{N}$,
+  $\Theta, i : S ; \Delta \vdash \vec{p} : \potvec$, and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
+  By Theorem~\ref{thm:idx-idx-subst}.
+  $\Theta ; \Delta \pvdash J[I/i] : \mathbb{N}$ and
+  $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
+  Then, by K-Monad,
+  $\Psi ; \Theta  \Delta \pvdash \M(J[I/i],\vec{p}[I/i]) \tau[I/i] : \star$
+  
+  \item[(K-Pot)] Suppose
+  $\Psi ; \Theta, i : S ; \Delta \vdash [J|\vec{p}] \tau : \star$
+  by way of
+  $\Theta, i : S ; \Delta \vdash J : \mathbb{N}$,
+  $\Theta, i : S ; \Delta \vdash \vec{p} : \potvec$, and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
+  By Theorem~\ref{thm:idx-idx-subst}.
+  $\Theta ; \Delta \pvdash J[I/i] : \mathbb{N}$ and
+  $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
+  Then, by K-Pot,
+  $\Psi ; \Theta  \Delta \pvdash \left[J[I/i],\vec{p}[I/i]\right] \tau[I/i] : \star$
+  
+  \item[(K-ConstPot)] Suppose
+  $\Psi ; \Theta, i : S ; \Delta \vdash [J] \; \tau : \star$
+  by way of
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$ and
+  $\Theta, i : S ; \Delta \vdash J : \potvec$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
+  By Theorem~\ref{thm:idx-idx-subst},
+  $\Theta ; \Delta \pvdash J[I/i] : \potvec$.
+  By K-ConstPot,
+  $\Psi ; \Theta ; \Delta \pvdash \left[J[I/i]\right] \; \left(\tau[I/i]\right) : \star$
+  as required.
+  
+  \item[(K-FamLam)] Suppose
+  $\Psi ; \Theta, i : S ; \Delta \vdash \lambda j : S'. \tau : S' \to K$
+  by way of
+  $\Psi ; \Theta, i : S, j ; S' ; \Delta \vdash \tau : K$.
+  By IH,
+  $\Psi ; \Theta, j ; S' ; \Delta \pvdash \tau[I/i] : K$.
+  By K-FamLam,
+  $\Psi ; \Theta ; \Delta \pvdash \lambda j : S'.\tau[I/i] : S' \to K$
+  as required.
+  
+  \item[(K-FamApp)] Suppose
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau \; J : K$ by way of
+  $\Theta, i : S ; \Delta \vdash J : S$ and
+  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : S \to K$.
+  By Theorem~\ref{thm:idx-idx-subst},
+  $\Theta ; \Delta \pvdash J[I/i] : S$.
+  By IH,
+  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : S \to K$.
+  By K-FamApp,
+  $\Psi ; \Theta ; \Delta \pvdash \left(\tau[I/i]\right) \; \left(J[I/i]\right) : K$
+  as required.
+  
+\end{enumerate}
+\end{proof}

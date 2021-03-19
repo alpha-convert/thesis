@@ -1,0 +1,12 @@
+\begin{mathpar}
+  \texttt{eval}(\alpha) = \alpha
+  
+  \texttt{eval}(\lambda i : S. \tau) = \lambda i : S. \texttt{eval}(\tau)
+  
+  \\  
+  
+  \texttt{eval}(\tau \; I) = \begin{cases}
+   \tau'[I/i] & \texttt{eval}(\tau) = \lambda i : S. \tau' \\
+   \texttt{eval}(\tau) \; I & \text{otherwise}
+                              \end{cases}
+\end{mathpar}

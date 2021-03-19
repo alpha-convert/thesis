@@ -1,0 +1,10 @@
+\begin{mathpar}
+\inferrule{e \Downarrow v}{\texttt{ret}(e) \Downarrow^0 v}
+
+\inferrule{ }{\texttt{tick}[I|\vec{p}] \Downarrow^{\phi(I,\vec{p})} \, ()}
+
+\inferrule{e \Downarrow v}{\texttt{store}[I|\vec{p}](e) \Downarrow^{\phi(I,\vec{p})} v}
+\\
+
+\inferrule{e_1 \downarrow v_1 \\ v_1 \Downarrow^{\kappa_1} v_1' \\ e_2[v_1'/x] \Downarrow v_2 \\ v_2 \Downarrow^{\kappa_2} v}{\texttt{bind} \, x \, = \, e_1 \, \texttt{in} \, e_2 \Downarrow^{\kappa_1 + \kappa_2} v}
+\end{mathpar}
