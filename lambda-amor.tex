@@ -195,7 +195,7 @@ If we assume that cons operations are the only costly operation, and that they e
 
 This entire informal analysis is captured formally by the types of the enqueue and dequeue operations in \dlambdaamor. To encode this analysis, we define a queue to be of type $ L^n([2] \, \tau) \otimes L^m \, \tau$: a pair of $\tau$-lists, where the front has $2$ potential on each of its $n$ elements.
 
-The enqueue function has the following fairly obvious type.
+The enqueue function has the following type.
 
 $$
 \texttt{enq} \; : \; \forall n,m : \N. \, [3] \, 1 \loli \tau \loli L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \, \langle 0 \rangle \, \left(L^{n+1}([2] \, \tau) \otimes L^m \, \tau\right)
@@ -398,6 +398,9 @@ If $\Gamma \vdash e : \tau \gens \Gamma'$, then for all $\Gamma''$, we have that
 \label{sec:dlambdaamor-syntax-and-types}
 
 \subsection{Syntax of \dlambdaamor}
+
+\red{Holy shit this is a bad way to start this section, what were you thinking?}
+
 In preparation to discuss \dlambdaamor's type system, we present its syntax in Figure~\ref{fig:dlambdaamor-syntax}.
 
 \begin{figure}
@@ -619,7 +622,7 @@ Then, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma_2'$.
 \end{restatable}
 
 \section{Semantics and Soundness of \dlambdaamor}
-For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. To prove that \dlambdaamor's type system is sound in this way, we will appeal to a version of the soundness proof of \lambdaamor. As discussed in Section~\textbf{??}, \lambdaamor differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamor. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamor. Formally, we do not present a true embedding into \lambdaamor, as it does not have a sort of potential vectors! However, potential vectors can be trivially added to \lambdaamor: the kripke logical relation which forms the basis for its soundness proof never inspects index terms, and conflates index terms with the semantic objects they denote. For this reason, we freely consider \lambdaamor as having a sort of potential vectors in the style of \dlambdaamor.
+For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted amortized execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. To prove that \dlambdaamor's type system is sound in this way, we will appeal to a version of the soundness proof of \lambdaamor. As discussed in Section~\textbf{??}, \lambdaamor differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamor. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamor. Formally, we do not present a true embedding into \lambdaamor, as it does not have a sort of potential vectors. However, potential vectors can be trivially added to \lambdaamor: the kripke logical relation which forms the basis for its soundness proof never inspects index terms, and conflates index terms with the semantic objects they denote. For this reason, we freely consider \lambdaamor as having a sort of potential vectors in the style of \dlambdaamor.
 
 In Section~\textbf{??}, we present the operational semantics for \dlambdaamor upon which the soundness theorem is based. This semantics is a big-step cost-indexed operational semantics: the cost indices are the concrete notion of cost that will be bounded by the statically-predicted costs in the soundness theorem.
 
@@ -646,13 +649,13 @@ Finally, the two potential-related operations incur no semantic cost. This may c
 \end{figure}
 
 \subsection{Embedding of \dlambdaamor in \lambdaamor}
-The translation of \dlambdaamor into \lambdaamor requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation on types consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamor $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$. These translations respect rules of the two type systems: the monotonicity and additivity of the $\phi$ function from Theorem~\textbf{??} justify the translations of the \texttt{bind} and \texttt{release} operations, as well as the subtyping rule for costs and potentials. The rest of the translation is primarily an erasure. \lambdaamor's syntax includes no explicit index terms or types at the term level, and so these are all erased. In particular, the shift operation is erased, a move which is justified by Theorem~\ref{thm:raml-shift}. This notion is codified by the erasure theorem below.
+The translation of \dlambdaamor into \lambdaamor requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation on types consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamor $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$. These translations respect rules of the two type systems: the monotonicity and additivity of the $\phi$ function from Theorem~\textbf{??} justify the translations of the \texttt{bind} and \texttt{release} operations, as well as the subtyping rule for costs and potentials. The rest of the translation is primarily an erasure. \lambdaamor's syntax includes no explicit index terms or types at the term level, and so these are all erased. In particular, the shift operation is erased, a move which is justified by Theorem~\ref{thm:raml-shift}.
 
-For the remainder of the section, we will write the embedding on all syntactic forms as $(\cdot)^\circ$. Further, the typing judgments of \lambdaamor will be distinguished by a superscript minus on their turnstiles, while the semantic judgments will be distinguished by a subscript minus on the big-step down-arrow.
+For the remainder of the section, we will write the embedding on all syntactic forms as $(\cdot)^\circ$. Further, the typing judgments of \lambdaamor will be distinguished from those of \dlambdaamor by using a $\Vdash$ for their turnstile, while the evaluation relation of \lambdaamor will be written with a single arrow $\downarrow$.
 
 \begin{theorem}
 \label{thm:dla-trans-sound}
-If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau$ then $\Psi^\circ ; \Theta^\circ ; \Delta^\circ ; \Omega^\circ ; \Gamma^\circ \vdash_{-} e^\circ : \tau^\circ$
+If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau$ then $\Psi^\circ ; \Theta^\circ ; \Delta^\circ ; \Omega^\circ ; \Gamma^\circ \Vdash e^\circ : \tau^\circ$
 \end{theorem}
 
 
@@ -661,17 +664,17 @@ To prove the soundness of \dlambdaamor, we begin by noting that its operational 
 
 \begin{theorem}
 \label{thm:dla-trans-sem-sound}
-If $e \Downarrow^\kappa v$, then $e^\circ \Downarrow_{-}^\kappa v^\circ$
+If $e \Downarrow^\kappa v$, then $e^\circ \downarrow^\kappa v^\circ$
 \end{theorem}
 
 From this, the soundness theorem for \dlambdaamor follows immediately: the actual cost of running a closed monadic computation is bounded above by its statically-predicted amortized cost.
 
 \begin{theorem}
 \label{thm:dlambdaamor-sound}
-If $\cdot \vdash e : \M \, (I,\vec{p}) \, \tau$ and $e \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$.
+If $\cdot \pvdash e : \M \, (I,\vec{p}) \, \tau$ and $e \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$.
 \end{theorem}
 \begin{proof}
-By Theorem~\ref{thm:dla-trans-sound} and Theorem~\ref{thm:dla-trans-sem-sound}, we have that $\cdot \vdash e^\circ  : \M \, \phi(I,\vec{p}) \, \tau^\circ$, and $e^\circ \Downarrow^\kappa v^\circ$. Then, by Theorem 1 of \citet{rajani-et-al:popl21}, we have that $\kappa \leq \phi(I,\vec{p})$, as required.
+By Theorem~\ref{thm:dla-trans-sound} and Theorem~\ref{thm:dla-trans-sem-sound}, we have that $\cdot \Vdash e^\circ  : \M \, \phi(I,\vec{p}) \, \tau^\circ$, and $e^\circ \downarrow^\kappa v^\circ$. Then, by Theorem 1 of \citet{rajani-et-al:popl21}, we have that $\kappa \leq \phi(I,\vec{p})$, as required.
 \end{proof}
 
 
@@ -982,7 +985,7 @@ As is to be expected, the soundness of the bidirectional type-checking judgment 
 First, we prove (as was noted before) that the output contexts of the I/O method in both typing judgments have a strong regularity condition: the output context is always a subset\footnote{
 This containment is almost always strict: in fact, a corollary of Theorem~\ref{thm:tycheck-sound}, is that the containment is strict unless the term is closed.
 }
-of the input context. \red{(Should I even be talking about this? Or should I skip to the main theorem)}
+of the input context.
 
 \begin{restatable}{theorem}{lsc}
 If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \updownarrow \tau \gens \Phi, \Gamma'$ then $\Gamma' \subseteq \Gamma$.
@@ -1205,7 +1208,7 @@ The lexer and parser are specified in \texttt{src/lexer.mll}, respectively \text
 
 
 \subsubsection{AST Freshening Pass}
-Since this development includes no mechanized metatheory, all variables in \lambdaamorimpl are represented as strings for simplicity. This, of course, poses complications for the substitution operation. In order to resolve this once and for all, the AST of a program is fed to a ``freshener" immediately after parsing, which $\alpha$-converts all terms so that every bound variable is globally unique. This pass is modeled off of a similar one from the Granule language \citehere, a language with a sophisticated modal type system for quantatative static program analysis.
+Since this development includes no mechanized metatheory, all variables in \lambdaamorimpl are represented as strings for simplicity. This, of course, poses complications for the substitution operation. In order to resolve this once and for all, the AST of a program is fed to a ``freshener" immediately after parsing, which $\alpha$-converts all terms so that every bound variable is globally unique. This pass is modeled off of a similar one from the Granule language \citehere.
 
 \subsubsection{Normalization}
 Thanks to the theoretical simplicity of \lambdaamor's type normalization algorithm, \lambdaamorimpl's implementation of it is similarly simple: the code (in \texttt{src/normalize.ml}) is only $\approx 150$ lines. The procedure works in two passes, first by evaluating object-language types into a meta-language type of types \textit{in normal form}, and then quoting back. In practice, most types in \lambdaamor programs are in normal form. To avoid unnecessarily normalizing types, we tag type with a status bit which signals if it's already in normal form.
@@ -1244,13 +1247,14 @@ We now return to the examples presented in Section~\ref{sec:dlambdaamor-examples
   \item \texttt{examples/foldr.la}: The analysis and type of \texttt{foldr} can be expressed in a similar manner to that of \texttt{map}. We include this example primarily because it is discussed in depth in the original \lambdaamor paper \cite{rajani-et-al:popl21}
   \item \texttt{examples/church.la}: Our final example is the assignment of a \textit{very} complex type to church numerals. In short, we generalize the type of the ``iterate" function $!(\tau \loli \tau) \loli \N \loli \tau \loli \tau$ to operate over a type family $\alpha : \N \to \star$ and a cost family $C : \N \to \R^+$ to get the much more precise type:
   $$
-   \left(\forall i. \alpha \, i \loli \M \, \langle C \, i \rangle \, \left(\alpha \, (i+1)\right)\right) \loli \texttt{Nat}(n) \loli \alpha \, 0 \loli \M \, \langle \sum C\, i\rangle \, \left(\alpha n\right)
+   \forall \alpha : \N \ \to \star. \forall C : \N \to \R^+. \left(\forall i. \alpha \, i \loli \M \, \langle C \, i \rangle \, \left(\alpha \, (i+1)\right)\right) \loli \texttt{Nat}(n) \loli \alpha \, 0 \loli \M \, \langle \sum C\, i\rangle \, \left(\alpha n\right)
   $$
   Further details can be found in \citet{rajani-et-al:popl21}. The file includes two operations defined on these church numerals, namely successor and addition.
 \end{itemize}
 
-The type-checking times for all of these examples can be found in Figure~\ref{fig:lambdaamorimpl-eval}. The total time is an average over ten runs of the difference between Unix timestamps at the beginning and end of execution, while the non-solver time is an average of the time spent outside the call to the solver. In all cases, the execution time not spent constraint solving is negligible-- the SMT solver is by far the largest bottleneck. However, the total time remains low, even for programs like \texttt{church} which emit very large high-order constraints. The evaluation was performed on a 2018 MacBook Pro running OSX 10.13.6 with a 2.3GHz Intel Core i5 processor and 8GB of memory. The artifact itself is written in OCaml, and was compiled using OCaml v4.09.1, along with its included version s of OCamllex and OCamlyacc. Library dependencies can be found in the \texttt{dune} file.
-Constraints emitted from the typechecker were solved by Why3 v1.3.1 \citehere, using Z3 v4.8.5 \citehere as a prover.
+The type-checking times for all of these examples can be found in Figure~\ref{fig:lambdaamorimpl-eval}. Total time denotes the end-to-end running time, from parsing the input file all the way through running the program (when applicable). Solving time refers to the amount of time spent by the prover in solving the constraints, while checking time refers to the time taken by the type checker itself, as well as the constraint elaboration phase. Each statistic is an average over ten runs. In all cases, the execution time not spent constraint solving is negligible-- the SMT solver is by far the largest bottleneck. However, the total time remains low, even for programs like \texttt{church} which emit very large high-order constraints. Finally, the total time not accounted for by checking and solving can be atributed to Why3 initialization and file IO. 
+
+The evaluation was performed on a 2018 MacBook Pro running OSX 10.13.6 with a 2.3GHz Intel Core i5 processor and 8GB of memory. The artifact itself is written in OCaml, and was compiled using OCaml v4.09.1, along with its included versions of OCamllex and OCamlyacc. Library dependencies can be found in the \texttt{dune} file. Constraints emitted from the typechecker were solved by Why3 v1.3.1 \citehere, using Z3 v4.8.5 \citehere as a prover.
 
 \begin{figure}
 \input{figs/lambdaamorimpl-eval}
@@ -1259,4 +1263,4 @@ Constraints emitted from the typechecker were solved by Why3 v1.3.1 \citehere, u
 \end{figure}
 
 
-\section{Related and Future Work}
+%\section{Related and Future Work}
