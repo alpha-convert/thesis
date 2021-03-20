@@ -198,3 +198,7 @@ Immediate by Theorem~\ref{thm:raw-subtynf-sound} and Theorem~\ref{thm:idx-ctx-wf
 \begin{proof}
 There is only one case: $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By Theorem~\ref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By Theorem~\ref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
 \end{proof}
+
+
+
+
