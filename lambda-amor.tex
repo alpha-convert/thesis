@@ -1126,13 +1126,13 @@ Finally, we prove the full completeness of algorithmic subtyping. The proof proc
 If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$ then  $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
 \label{thm:subty-compl}
 \end{restatable}
-\begin{proof}
-~\begin{itemize}
-   \item[(S-Fam-Beta1)] Suppose $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$. By AS-Normalize, it suffices to show that
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
-   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by Theorem~\ref{thm:idx-subst-eval}. By Theorem~\ref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by Theorem~\ref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
- \end{itemize}
-\end{proof}
+%\begin{proof}
+%~\begin{itemize}
+%   \item[(S-Fam-Beta1)] Suppose $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$. By AS-Normalize, it suffices to show that
+%   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
+%   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by Theorem~\ref{thm:idx-subst-eval}. By Theorem~\ref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by Theorem~\ref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
+% \end{itemize}
+%\end{proof}
 
 \subsubsection{Completeness of Typechecking}
 
@@ -1140,7 +1140,7 @@ Finally, we arrive at the completeness of \bilambdaamor's typechecking algorithm
 
 \red{(How the hell do I make this readable??)}
 
-\begin{restatable}[Admissibility of Algorithmic Weakening]{theorem}{admits-weaken}
+\begin{restatable}[Admissibility of Algorithmic Weakening]{theorem}{admitsweaken}
 ~\begin{enumerate}
   \item If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \checks \tau \gens \Phi,\Gamma''$ with $\Theta ; \Delta \vDash \Phi$, then whenever $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$ and $\Psi ; \Theta ; \Delta \pvdash \Omega' \wknto \Omega$, there are $\Phi_1$, $e_1$, $\Gamma_1$ so that $|e_1| = |e|$, $\Theta ; \Delta \vDash \Phi_1$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma' \setminus \Gamma$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma''$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \pvdash e_1 \checks \tau \gens \Phi_1,\Gamma_1$.
   \item If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \infers \tau \gens \Phi,\Gamma''$ with $\Theta ; \Delta \vDash \Phi$, then whenever $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$ and $\Psi ; \Theta ; \Delta \pvdash \Omega' \wknto \Omega$, there are $\Phi_2$, $e_2$, $\Gamma_2$ so that $|e_2| = |e|$, $\Theta ; \Delta \vDash \Phi_2$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma' \setminus \Gamma$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma''$ and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \pvdash e_2 \infers \tau \gens \Phi_2,\Gamma_2$.
