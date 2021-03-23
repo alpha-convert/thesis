@@ -486,7 +486,7 @@ confusion with ``affine logic'' (allowing weakening but not contraction).
 
 The rules make three structural principles admissible:
 
-\begin{theorem} \label{thm:la-structural}\hfill
+\begin{restatable}[Admissible structural rules]{theorem}{lastructural} \label{thm:la-structural}\hfill
   \begin{itemize}
 \item Resource Weakening: Write $g \ge f$ for the coefficient-wise
   partial order on resource terms ($a_1 x_1 + a_2 x_2 + \ldots + \ell
@@ -503,7 +503,7 @@ If $\Gamma \vdash_f M : A$ and $\Gamma, x : A \vdash_g N : B$, then
 $\Gamma \vdash_{g[f/x]} N[M/x] : B$
 
   \end{itemize}
-\end{theorem}
+\end{restatable}
 \begin{proof}
 By induction on derivations.
 \end{proof}
@@ -611,16 +611,14 @@ The $!$ modality satisfies the following interactions with other logical
 connectives, where we write $A \dashv \vdash B$ to mean
 interprovability/functions in both directions:
 
-\begin{theorem}\hfill
+\begin{restatable}[Fusion Laws]{theorem}{fusion}\hfill
 \label{thm:fusion}
 \begin{enumerate}
   \item $!^{k_1k_2}_{\ell_1 + k_1 \cdot \ell_2} A \dashv \vdash \, !^{k_1}_{\ell_1} !^{k_2}_{\ell_2} A$
   \item $!^k_{\ell_1 + \ell_2} (A \otimes B) \dashv \vdash \, !^k_{\ell_1} A \otimes !^k_{\ell_1} B$
   \item $!^k_\ell (A \oplus B) \dashv \vdash \, !^k_\ell A \oplus !^k_\ell B$
 \end{enumerate}
-\end{theorem}
-%% PROOF
-%% \input{proofs/fusion}
+\end{restatable}
 
 \subsubsection{Natural Number Recursor} \label{sec:ns-rules}
 
@@ -909,20 +907,20 @@ relatively straightforward and may be found
 Appendix~\ref{appendix:b}.%\end{arxiv}
 
 
-\begin{theorem}[Preservation Bound]
+\begin{restatable}[Preservation Bound]{theorem}{pres}
 \label{thm:pres}
 If $\cdot \vdash_a M : A$ and $M \downarrow^{(n,r)} v$, then $a + r \geq 0$ and $\cdot \vdash_{a + r} v : A$. 
-\end{theorem}
+\end{restatable}
 
 We also have that values evaluate in 0 steps:
-\begin{theorem}\label{thm:val-eval-none}
+\begin{restatable}[]{theorem}{valevalzero}\label{thm:val-eval-none}
 If $v$ is a value, and $v \downarrow^{(n,r)} v$, then $n = r = 0$.
-\end{theorem}
+\end{restatable}
 
 and that values of type $\N$ contain no credits:
-\begin{theorem}[Resource strengthening for $\N$]\label{thm:nat-strengthening}
+\begin{restatable}[Resource strengthening for $\N$]{theorem}{natstren}\label{thm:nat-strengthening}
 If $\cdot \vdash_a v : \N$, then $\cdot \vdash_0 v : \N$
-\end{theorem}
+\end{restatable}
 
 
 
@@ -1069,9 +1067,9 @@ T$.
 
 Overall, the idea is that a term is translated to a function from
 potentials of its context to complexities of its type:
-\begin{theorem}[Extraction Preserves Types]\label{thm:extr-sound}
+\begin{restatable}[Extraction Preserves Types]{theorem}{extrsound}\label{thm:extr-sound}
 If $\Gamma \vdash_a M : A$ then $\angles{\Gamma} \vdash \norm M : \norm A$
-\end{theorem}
+\end{restatable}
 
 We comment on some of the less obvious aspects of this translation:
 
@@ -1271,55 +1269,53 @@ For all $\cdot \vdash_a v : \N$, if $v \valbd^{\N,a} E$, then $v \valbd^{\N,0} E
 
 Second, we can weaken a bound by recurrence language inequality:
 
-\begin{theorem}[Weakening] \hfill
+\begin{restatable}[Weakening]{theorem}{weakening} \hfill
 \label{thm:weakening}
 \begin{enumerate}
     \item If $M \bdby^{A,a} E$, and $E \leq_{\norm{A}} E'$, then $M \bdby^{A,a} E'$
     \item If $v \valbd^{A,a} E$, and $E \leq_{\llangle A \rrangle} E'$, then $v \valbd^{A,a} E'$
 \end{enumerate}
-\end{theorem}
+\end{restatable}
 %% PROOF
 %% \input{proofs/weakening}
 
 Next, we have an analogue of resource weakening in
 Theorem~\ref{thm:la-structural}:
 
-\begin{theorem}[Credit Weakening]
+\begin{restatable}[Credit Weakening]{theorem}{credwkn}
 If $a_1 \leq a_2$, then:
 \begin{enumerate}
   \item[(1)] If $M \bdby^{A,a_1} E$, then $M \bdby^{A,a_2} E$
   \item[(2)] If $v \valbd^{A,a_1} E$, then $v \valbd^{A,a_2} E$ 
 \end{enumerate}
-\end{theorem}
-%% PROOF
-%% \input{proofs/cred-weakening}
+\end{restatable}
 
 Next, we have inductive lemmas that will be used in the recursor cases
 of the fundamental theorem:
 
-\begin{theorem}[$\N$-Recursor]
+\begin{restatable}[$\N$-Recursor]{theorem}{nreclemma}
 \label{thm:nrec-lemma}
 If $\lambda x.N_1' \valbd^{1 \loli C,c_3} E_1$, $\lambda x.N_2' \valbd^{\N
 \otimes (1 \loli C) \loli C,d} E_2$ with $d \geq 0$, then $\forall n \geq 0$, if $\inj n \valbd^{\N,0} E$, then $\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} \bdby^{C,c_3 + \infty \cdot d} \nrec E {E_1} {\lambda p. E_2 \; (\pi_1 p, \lambda z.\pi_2 p)}$
-\end{theorem}
+\end{restatable}
 
-\begin{theorem}[$\listty A$-Recursor]
+\begin{restatable}[$\listty A$-Recursor]{theorem}{lreclemma}
 \label{thm:lrec-lemma}
 If $\lambda x.N_1' \valbd^{1 \loli C,c_1} E_1$ and $\lambda x.N_2'
 \valbd^{A \otimes (\listty A \amp C) \loli C,c_2} E_2$, then for all
 values $\cdot \vdash_d v : \listty A$ such that $v \valbd^{\listty A,d}
 E$, we have that\\
 $\lrec v {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_1+d + \infty \cdot c_2} \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }$
-\end{theorem}
+\end{restatable}
 %% PROOF
 %% \input{proofs/lrec-lemma}
 
 Using these, we prove the main result:
 
-\begin{theorem}[Bounding Theorem]
+\begin{restatable}[Bounding Theorem]{theorem}{bounding}
 \label{thm:bounding}
 If $\Gamma \vdash_f M : A$, then $M \bdby^A \norm{M}$
-\end{theorem}
+\end{restatable}
 
 Finally, for terms that use no external credits, the true cost is
 bounded by the extracted recurrence: 
@@ -1422,14 +1418,14 @@ function $S$, where $S(\infty) = \infty$; these are used to interpret
 The elimination forms for positives are more complex, and use some
 auxiliary monotone functions (which are the morphisms in the category of
 posets):
-\begin{theorem}\label{thm:aux-sem-lemma}
+\begin{restatable}{theorem}{auxsemlemma}\label{thm:aux-sem-lemma}
 For any posets $A,B,C,G$ with $\infty$ and $\vee$,
 \begin{enumerate}
   \item $\texttt{snrec} \in \Hom_{Poset}\left({\left(C^1\right)}^G\times {\left(C^{\N\times C}\right)}^G,C^{G\times\N}\right)$
   \item $\texttt{slrec} \in  \Hom_{Poset}\left({\left(C^1\right)^G} \times {\left(C^{A \times (\N \times C)}\right)^G},C^{G \times \N}\right)$
   \item $\texttt{scase} \in \Hom_{Poset}\left(C^{G \times A}\times C^{G \times B},C^{G\times(A + B)}\right)$
 \end{enumerate}
-\end{theorem}
+\end{restatable}
 
 
 The definition of \texttt{scase} is required to respect the quotienting
@@ -1461,22 +1457,22 @@ are in Appendix~\ref{appendix:b}.%\end{arxiv}
 %% verified in Hudson (\cite{hudson}), and so we omit all but the new
 %% ones for \texttt{nrec} and \texttt{lrec}.
 
-\begin{theorem}[Compositionality]
+\begin{restatable}[Compositionality]{theorem}{semsubst}
 \label{thm:sem-subst}
 If $\Gamma, x : T_1 \vdash E : T_2$, and $\Gamma \vdash E' : T_1$, then $\scott{\Gamma \vdash E[E'/x] : T_2} =  \left(1_{\scott{\Gamma}},\scott{\Gamma \vdash E' : T_1}\right) ; \scott{\Gamma, x:T_1 \vdash E : T_2}$
-\end{theorem}
+\end{restatable}
 
 
-\begin{theorem}[Soundness (Terms)]
+\begin{restatable}[Soundness (Terms)]{theorem}{interpsound}
 \label{thm:term-soundness}
 If $\Gamma \vdash E : T$, then $\scott{\Gamma \vdash E : T} \in \Hom\left(\scott{\Gamma},\scott{T}\right)$
-\end{theorem}
+\end{restatable}
 
 
-\begin{theorem}[Soundness (Inequality)]
+\begin{restatable}[Soundness (Inequality)]{theorem}{preordsound}
 \label{thm:soundness-inequality}
 If $\Gamma \vdash E \leq E'$, then for all $\gamma \in \scott{\Gamma}$, $\scott{\Gamma \vdash E : T}(\gamma) \leq \scott{\Gamma \vdash E' : T}(\gamma)$
-\end{theorem}
+\end{restatable}
 
 \subsection{Binary Counter Conclusion}
 
@@ -1619,17 +1615,17 @@ precisely the credit values $\ell$ used above.
 
 For this extension, substitution and type preservation are stated as follows:
 
-\begin{theorem}[Substitution]\label{thm:subst-ext}
+\begin{restatable}[Substitution]{theorem}{substext}\label{thm:subst-ext}
 $\;$
 \begin{itemize}
   \item If $\Delta \vdash c \texttt{ credit}$ and $\Delta,\alpha \vdash c' \texttt{ credit}$, then $\Delta \vdash c'[c/\alpha] \texttt{ credit}$
   \item If $\Delta \vdash c \texttt{ credit}$ and $\Delta,\alpha|\Gamma\vdash_f M : A$, then $\Delta|\Gamma[c/\alpha] \vdash_{f[c/\alpha]} M[c/\alpha] : A[c/\alpha]$
 \end{itemize}
-\end{theorem}
+\end{restatable}
 
-\begin{theorem}[Preservation]\label{thm:pres-ext}
+\begin{restatable}[Preservation]{theorem}{presext}\label{thm:pres-ext}
 If $\cdot | \cdot \vdash_a M : A$ and $M \downarrow^{(n,r)} v$, then $a + r \geq 0$ and $\cdot | \cdot \vdash_{a + r} v : A$.
-\end{theorem}
+\end{restatable}
 
 \subsection{Extracting Recurrences for Existentials}
 \begin{figure}
@@ -1651,9 +1647,9 @@ Recalling that costs $\bbbc$, though axiomatized as a monoid with some operation
 %% Most notably, this extraction, as shown in Figure~\ref{fig:lc-ex} necessitates that credit variables appear in recurrences. For example, the term $\alpha | \cdot \vdash_3 \pack \beta {\alpha + 2} M : \exists \alpha. A$ extracts to the recurrence $(\norm{M}_c,(\alpha + 2,\norm{M}_p))$.
 %% For these recurrences to be well-typed, the the type-level context $\Delta$ must be demoted in the recurrence extraction to be included in the $\lambda^\bbbc$ term variable context. Once this is established, the extraction for \texttt{pack} and \texttt{unpack} is straightforwardly defined.
 
-\begin{theorem}[Extraction Preserves Types]\label{thm:extr-sound-ex}
+\begin{restatable}[Extraction Preserves Types]{theorem}{extrsoundex}\label{thm:extr-sound-ex}
 If $\Delta | \Gamma \vdash_f M : A$, then $\angles{\Delta},\angles{\Gamma} \vdash \norm{M} : \norm{A}$
-\end{theorem}
+\end{restatable}
 
 
 \subsection{Bounding Relation and Bounding Theorem}
@@ -1672,10 +1668,10 @@ The definition of the bounding relation for open terms must also be modified to 
 First, if $\omega$ is a substitution of credit amounts $\ell$ for credit variables, and $\Omega$ is a substitution of closed terms of type $\$$ for recurrence language variables, then $\omega \bdby^{\Delta} \Omega$ means that for all $\alpha \in \Delta$, $\omega(\alpha) \leq_\$ \Omega(\alpha)$.
 Then for $\Delta | \Gamma \vdash_f M : A$ we write $M \bdby^A E$ if for all $\omega \bdby^{\Delta} \Omega$ and for all $\theta \bdby^{\Gamma[\omega],\sigma} \Theta$, we have that $M[\omega,\theta] \bdby^{A[\omega],f[\omega,\sigma]} E[\Omega,\Theta]$.
 Using this notation, the bounding theorem is
-\begin{theorem}[Bounding Theorem]
+\begin{restatable}[Bounding Theorem]{theorem}{boundingex}
 \label{thm:bounding-ex}
 If $\Delta | \Gamma \vdash_f M : A$, then $M \bdby^A \norm{M}$
-\end{theorem}
+\end{restatable}
 \noindent and the cases which differ from the original Theorem~\ref{thm:bounding} are proved in the supplementary materials.
 
 
