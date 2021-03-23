@@ -6,6 +6,9 @@ The second category is exemplified by verification techniques such as program lo
 
 In this thesis, we will explore and extend one development in each of these two categories. More specifically, we will specialize our notion of resource to only consider algorithmic complexity or time cost, and examine two techniques which analyze it using amortized analysis.
 
+
+\textbf{\red{FINISH}}
+
 \subsection{Contributions}
 
 
@@ -124,3 +127,42 @@ The reader may note that the proof of Theorem~\ref{thm:bc-bank} was remarkably s
 On the whole, the two methods of amortized analysis are essentially equivalent in power. Given a banker's method analysis, we may turn it into a physicist's method analysis by taking the potential function to be the total number of credits. Conversely, physicist's method analyses can be converted to use the banker's method by maintaining the invariant that $ \left\lceil{\Phi(\texttt{s})}\right \rceil$ credits be kept on the value \texttt{s}.
 
 Proofs using the banker's method are often more tedious and traditionally less formal. In Chapter~\ref{chap:rec-extr}, we present a formalization of the banker's method by way of recurrence extraction. Chapter~\ref{chap:lambda-amor} presents \lambdaamor, which is based primarily on the physicist's method.
+
+\section{Substructural and Modal Types Primer}
+\label{sec:modal-and-substructural}
+While Chapter~\ref{chap:rec-extr} is primarily concerned with approaching cost analysis from a recurrence extraction angle, it will, like Chapter~\ref{chap:lambda-amor}, involve the creation of a type system. The two type systems under consideration, those of \lambdaA and \lambdaamor, share a major feature which is common to most developments in resource analysis: they are both \textit{affine substructural} type systems. Most type systems have three ``non-logical" rules governing the behavior of their typing context. The rule that allows contexts to be freely considered up to permutations is called \textit{exchange}, the rule allowing variables to be dropped from the context is called \textit{weakening}, and the rule which allows variables to be duplicated is referred to as \textit{contraction}. The three rules are sometimes explicitly included in the list of rules generating a typing judgment, but more often than not they are omitted and derived as admissible rules.
+
+Substructural type systems are ones in which some or all of the traditional structural rules governing typing contexts are disallowed. Disallowing all of them yields ordered types \citehere and allowing only exchange yields linear types \citehere. Most importantly for this thesis however, is the combination of exchange and weakening (but not contraction), which yields an \textit{affine} type system. In an affine type system, contexts are sets, where each variable from the context may be used at most once.
+
+The rules of an affine type system are set up in such a way that the contraction rule is inadmissible. In particular, every multi-premise rule ``splits" the context so that a variable cannot be used by more than one sub-term. For instance, consider the usual product introduction rule of a fully-structural type system:
+$$
+\inferrule{\Gamma \vdash e_1 : A \\ \Gamma \vdash e_2 : B}{\Gamma \vdash (e_1,e_2) : A \times B}
+$$
+is transformed into the following rule to support affine types:
+$$
+\inferrule{\Gamma_1 \vdash e_1 : A \\ \Gamma_2 \vdash e_2 : B}{\Gamma_1,\Gamma_2 \vdash (e_1,e_2) : A \otimes B}
+$$
+The context must be divided into two disjoint parts $\Gamma_1$ and $\Gamma_2$ to be given to the two premises\footnote{
+The name of the connective changes also-- in a fully structural type system, positive and negative products are isomorphic, and thus written $\times$. Passing to a substructural type system disentangles the two notions.
+}.
+
+Affine types are a natural object of study in the resource-usage literature, since they naturally enforce a resource-usage restriction: using a variable ``consumes" it, which corresponds to the consumption of the resources the variable holds. In the type systems we will study for the remainder of this thesis, the notion of resource which our affine type systems will track will be the credits and potentials of amortized analysis. Indeed, non-duplication of variables in an affine type system can be leveraged to enforce the non-duplication requirement of credits and potential in the bankers and physicists method of amortized analysis.
+
+Of course, this restriction on the usage of variables is very strong from a programming perspective. Even incredibly simple programs often require the re-use of a single variable. The traditional solution to this is the introduction of a new type $!A$, which represents values of type $A$ that can be used arbitrarily many times. This $!$, usually referred to as the \textit{exponential modality} is our first example of a modality, or a unary operator on types. To ``implement" this modality in the type system, one usually adds a second context to the typing judgment of so-called exponential variables, which can be used multiple times \citehere. This context is fully structural-- it is not split in multi-premise rules. For instance, the product introduction rule becomes something like:
+$$
+\inferrule{\Omega;\Gamma_1 \vdash e_1 : A \\ \Omega; \Gamma_2 \vdash e_2 : B}{\Omega; \Gamma_1,\Gamma_2 \vdash (e_1,e_2) : A \otimes B}
+$$
+and we also add an exponential variable rule to use variables from the $\Omega$ context.
+$$
+\inferrule{ }{\Omega, x : A; \Gamma \vdash x : A}
+$$
+The modality itself is governed by a pair of simple introduction and elimination rules. A term can be made exponential with the introduction rule, so long as it does not depend on any affine resources:
+$$
+\inferrule{\Omega ; \cdot \vdash e : A}{\Omega ; \Gamma \vdash e : \, !A}
+$$
+The elimination rule allows for a term of type $!A$ to be bound as one of type $A$ in the exponential context, and thus be used many times:
+$$
+\inferrule{\Omega ; \Gamma_1 \vdash e : \,!A \\ \Omega, x :: A ; \Gamma_2 \vdash e' : B}{\Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{let} \, !x \, = \, e \,\texttt{in}\, e' : B}
+$$
+
+Both \lambdaA and \lambdaamor make use of versions of this modality, but \lambdaA generalizes it to also allow $n$-affine types, whose values may be used at most $n$ times. In addition, each type system uses a \textit{graded} modality to quantify the usage of potential and credits. While the presentation (and terminology) is slightly different, the $!_r A$ modality of \lambdaA and the $[I] \, A$ modality of \lambdaamor can be thought of as essentially one and the same. 
