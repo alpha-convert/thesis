@@ -66,7 +66,8 @@ The most important operation associated with the potential modality is the abili
 
 Potential may also be created, and attached to values. In \lambdaamor, these two functions are handled by the same construct. For terms $e : \tau$, we may form $\texttt{store}[I](e) : \M \; I \; ([I] \; \tau)$, which is a computation which runs for at most $I$ units of time, and returns a $\tau$ with $I$ potential attached. The fact that \texttt{store} incurs this cost is what justifies the term \texttt{release}-- the program has paid an ``extra" cost of $I$ to create $[I] \; \tau$, and thus can exercise this option to reduce the cost of a subsequent computation with \texttt{release}.
 
-This dynamic between \texttt{store} and \texttt{release} forces a restriction on the type system-- variables can only be used at most once. Our argument for the soundness of \texttt{release} relies on an the assumption that the potential we are releasing has not already been released elsewhere, and so duplication of variables must be disallowed. Of course, this kind of restriction is very common-- we simply require that \lambdaamor be \textit{affine}: weaking of the context is allowed, but contraction is disallowed. 
+This dynamic between \texttt{store} and \texttt{release} forces a restriction on the type system-- variables can only be used at most once. Our argument for the soundness of \texttt{release} relies on an the assumption that the potential we are releasing has not already been released elsewhere, and so duplication of variables must be disallowed. Of course, this kind of restriction is very common, as discussed in Section~\ref{sec:modal-and-substructural}. We simply require that \lambdaamor be \textit{affine}.
+
 
 \subsubsection{Refinement Types and Index Terms}
 \label{sec:lambdaamor-overview-refty}
@@ -105,6 +106,7 @@ Let $\vec{p}$ and $\vec{q}$ be potential vectors.
   \item If $\vec{p} \leq \vec{q}$ componentwise, then $\phi(n,\vec{p}) \leq \phi(n,\vec{q})$.
   \item $\phi(n,\vec{p} + \vec{q}) = \phi(n,\vec{p}) + \phi(n,\vec{q})$
 \end{enumerate}
+\label{thm:phi-linear}
 \end{theorem}
 
 The fact that $\phi$ is monotone in its second argument allows us to reduce the problematic subtyping rule for potentials (and costs) to generating linear inequalities and equalities\footnote{
@@ -136,7 +138,27 @@ we may compute as follows:
 \end{align*}
 \end{proof}
 
-The shift operator allows us to define the proper type of the \texttt{shift} operator: $\texttt{shift}(e)$ has type $\M (n,\vec{p}) \, \tau$ when $e$ has type $\M (n-1,\lhd\vec{p})$. This shift in perspective will be of critical importance when performing RAML-style analyses: when required to provide a term of type $\M (n,\vec{p}) \, \tau$, we will often find ourselves in posession of only costly computations with base $n-1$, and so it we will be required to \texttt{shift} our perspective.
+The shift operator allows us to define the proper type of the \texttt{shift} operator: $\texttt{shift}(e)$ has type $\M (n,\vec{p}) \, \tau$ when $e$ has type $\M (n-1,\lhd\vec{p})$. This shift in perspective will be of critical importance when performing AARA-style analyses: when required to provide a term of type $\M (n,\vec{p}) \, \tau$, we will often find ourselves in posession of only costly computations with base $n-1$, and so it we will be required to \texttt{shift} our perspective.
+
+\subsection{Cost and Potential Foundations}
+The more logically-inclined reader is likely to be unsatisfied with the presentation of the potential and cost modalities thusfar. Luckily, the two modalities are far from ad-hoc. In fact, they can easily be explained as being user-optimized instances of a more basic phenomenon. Consider an atomic type $P$ which encodes a single unit of potential. The potential type $[I|\vec{p}] \, \tau$ can be encoded as $P^{\phi(I,\vec{p})} \otimes \tau$, where $P^k$ is the $k$-fold tensor of $P$ with itself\footnote{
+This analogy breaks down slightly when $\phi(I,\vec{p})$ is not an integer, but the principle stands.
+}. This is in line with our intuitive understand of the potential type as carrying $I$ potential along with a value of type $\tau$. On the other hand, the cost type $M \,(I,\vec{p}) \, \tau$ is encoded as $P^{\phi(I,\vec{p})} \loli \tau$. While potentially less intuitively clear, this shows a monadic computation which costs up to $\phi(I,\vec{p})$ as a function \textit{requiring} that much potential to be provided in order to produce the result.
+
+%Compile the ops to basic ones
+Under this framing, all of the operations on costs and potentials in \dlambdaamor can be thought of as passing around values of these underlying atomic potential types. For example, the \texttt{store} operation, which has type $\tau \loli \M \, (I,\vec{p}) \, ([I|\vec{p}] \, \tau)$ can be thought of as having type $\tau \loli P^{\phi(I,\vec{p})} \loli P^{\phi(I,\vec{p})} \otimes \tau$, which is plainly the pairing function. Similarly, the \texttt{release} function of type $[I|\vec{p}] \, \tau \loli (\tau \loli \M \, (I,\vec{p} + \vec{q}) \, \sigma) \loli \M \, (I,\vec{q})\, \sigma$ can instead be thought of a function of type:
+$$
+P^{\phi(I,\vec{p})} \otimes \tau \loli (\tau \loli P^{\phi(I,\vec{p} + \vec{q})} \loli \sigma) \loli P^{\phi(I,\vec{q})} \loli \sigma
+$$
+which operates by using Theorem~\ref{thm:phi-linear} to equate the types $P^{\phi(I,\vec{p})} \otimes P^{\phi(I,\vec{q})} = P^{\phi(I,\vec{p} + \vec{q})} = P^{\phi(I,\vec{p} + \vec{q})}$.
+
+This presentation also serves to motivate two of the fundamental strictures of programming in \dlambdaamor. Since we have provided no introduction or elimination forms for the (imagined) type $P$, it is impossible to construct a closed term of that type. This is in line with the intended mental model of potentials in \dlambdaamor and amortized analysis more generally: potentials are unobservable, and thus should never ``escape" a program. The first consequence of this fact is that there are no closed terms of type $[I] \, \tau$: potential can only occur under a monadic computation. Second, given a function $P \loli \tau$, one should not be able to recover a $\tau$ in a closed context. Correspondingly, a programmer in \dlambdaamor can never internally ``run" a monadic computation of type $M \, (I,\vec{p}) \, \tau$ to get at the underlying $\tau$. This stricture is similar in spirit to Haskell's IO monad \citehere, whose terms cannot be evaluated except at the interactive top level. 
+
+Finally, considering the two modalities in this fashion makes plain their potentially confusing subtyping rules. First, for $[I|\vec{p}] \, \tau$ to be a subtype of $[I|\vec{q}] \, \sigma$, we require that $\vec{p} \geq \vec{q}$ and $\tau \subty \sigma$. The first condition is sufficient for $\phi(I,\vec{p}) \geq \phi(I,\vec{q})$ by Theorem~\ref{thm:phi-linear}, and so the rule simply for allows potential to be thrown away under during subtyping. Importantly, this subtyping rule agrees with the one implied by the encoding. $P^{\phi(I,\vec{p})} \otimes \tau \subty P^{\phi(I,\vec{p})} \otimes \sigma$ when $\tau \subty \sigma$ and $P^{\phi(I,\vec{p})} \subty P^{\phi(I,\vec{q})}$ by the usual subtyping rule for $\otimes$, and the subtyping between potentials is thought holds when $\phi(I,\vec{p}) \geq \phi(I,\vec{q})$, by restriction. The analysis of subtyping for the cost monad is slightly different, but follows the same structure.
+
+The subtyping rule for costs is a common source of confusion in \dlambdaamor, since the cost monad behaves like a reader monad ($P \loli \cdot$), instead of a writer ($P \times \cdot$)\footnote{
+This is also a potential sense of confusion between this chapter and Chapter~\ref{chap:rec-extr}, where the costs in question are captured with a writer monad.
+}. To show $\M \, (I,\vec{p}) \, \tau$ is a subtype of $\M \, (I,\vec{q}) \, \sigma$, it suffices to show that $\tau \subty \sigma$ and $\vec{p} \leq \vec{q}$. Intuitively, this is clear: a computation incurring no more than $\phi(I,\vec{p})$ cost can be used in place of one that incurs no more than $\phi(I,\vec{q})$, a larger amount of cost. However, the unintuitiveness of $\loli$ rule for sub-typing reveals the confusion. For $P^{\phi(I,\vec{p})} \loli \tau$ to be a subtype of $P^{\phi(I,\vec{q})} \loli \sigma$, the $\loli$ rule requires that $P^{\phi(I,\vec{q})} \subty P^{\phi(I,\vec{p})}$ and $\tau \loli \sigma$, but the first condition is the same as $\phi(I,\vec{p}) \leq \phi(I,\vec{q})$, again by restriction.
 
 \section{Examples of Programs in \dlambdaamor}
 \label{sec:dlambdaamor-examples}
@@ -338,7 +360,7 @@ This scheme is pervasive. Since every judgment in \dlambdaamor either has a rule
 
 \subsubsection{I/O Method}
 \label{sec:bilambdaamor-overview-io}
-To maintain the soundness of potentials, \dlambdaamor has an affine type system. On top of the implementation challenges created by the fancier aspects of \dlambdaamor's type system, its affine-ness presents a well-understood barrier to implementation. To illustrate, consider writing the following case of the \texttt{check:ctx->tm->typ->bool} function from earlier.\footnote{
+On top of the implementation challenges created by the fancier aspects of \dlambdaamor's type system, its affine-ness presents a well-understood barrier to implementation. To illustrate, consider writing the following case of the \texttt{check:ctx->tm->typ->bool} function from earlier.\footnote{
 To simplify some of the presentation of this section, we will specialize to the non-bidirectional setting, and work in a simply-typed language where binders are fully annotated.
 }
 
@@ -397,20 +419,19 @@ If $\Gamma \vdash e : \tau \gens \Gamma'$, then for all $\Gamma''$, we have that
 \section{Syntax and Type System of \dlambdaamor}
 \label{sec:dlambdaamor-syntax-and-types}
 
-In this section, we will finally rip off the band-aid and begin to discuss the formal system that makes up \dlambdaamor. All of the main motivating concepts for the design of this formalism have been discussed in the previous sections: the cost monad and potential modalities with their AARA-style representations, as well as the refinements. When paired with with polymorphism and the littany of types, we have a recipe for some potentially convoluted inference rules-- the puzzled reader is encouraged to refer to \citet{xi:jfp07} for a presentation of refinements, without any of the added burden of resource tracking.
+In this section, we will finally rip off the band-aid and begin to discuss the formal system that makes up \dlambdaamor. All of the main motivating concepts for the design of this formalism have been discussed in the previous sections. When the cost monad and potential modalities with their AARA-style representations, refinements, and polymorphism are combined, we have a recipe for some potentially convoluted inference rules. The puzzled reader is encouraged to refer to \citet{xi:jfp07} for an account of similar material, without any of the added burden of resource-tracking features.
 
-Since \dlambdaamor is only a minor revision of \lambdaamor, the structure of its formalism closely follows that of the original found in \citet{rajani-et-al:popl20}. 
+Since \dlambdaamor is only a minor revision of \lambdaamor, the structure of its formalism closely follows that of the original found in \citet{rajani-et-al:popl21}. 
 We will begin by presenting its syntax, which differs from \lambdaamor only in its added term-level index and type variables, which are added tor syntax-directedness purposes. Next, we discuss \dlambdaamor's type system, which mirrors \lambdaamor's judgment-for-judgment. The only major difference between the systems is that we take some extra care to pin down the invariants and presuppositions of each judgment: this extra level of precision and formality is required to prove some of the proof-theoretic properties of \dlambdaamor with which we conclude the section.
 
 \subsection{Syntax of \dlambdaamor}
-
-In preparation to discuss \dlambdaamor's type system, we present its syntax in Figure~\ref{fig:dlambdaamor-syntax}.
-
 \begin{figure}
 \input{figs/dlambdaamor-syntax}
 \caption{Syntax of \dlambdaamor}
 \label{fig:dlambdaamor-syntax}
 \end{figure}
+
+In preparation to discuss \dlambdaamor's type system, we present its syntax in Figure~\ref{fig:dlambdaamor-syntax}.
 
 \subsubsection{Index Terms, Sorts, Kinds, and Constraints}
 \dlambdaamor's refinement types are modeled in the style of DML, which takes the form of a two-level type system. As discussed in Section \textbf{??}, these refinements allow the user to assign types potential which depend on the sizes of data structures, such as the length of lists. These numerical values are denoted by \textit{index terms} ($I,J$) which decorate some of the types and surface syntax of \dlambdaamor. Index terms may be of three possible numerical \textit{base sorts}: natural numbers $\N$, positive real numbers $\R^+$, and potential vectors of some fixed length $k$, $\vec{\R^+}$. Additionally, \dlambdaamor also includes first-order sort-level functions.
@@ -623,6 +644,7 @@ Suppose that
 Then, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma_2'$.
 \label{thm:ctx-sub-swap}
 \end{restatable}
+
 
 \section{Semantics and Soundness of \dlambdaamor}
 For \dlambdaamor to be useful, its type system must be \textit{sound}. In this context, soundness means that the statically-predicted amortized execution costs from the types given to programs are in fact actual upper bounds on the programs' real execution cost. To prove that \dlambdaamor's type system is sound in this way, we will appeal to a version of the soundness proof of \lambdaamor. As discussed in Section~\textbf{??}, \lambdaamor differs from \dlambdaamor mainly in its treatment of potentials and costs. In fact the two languages are sufficiently similar (by design, of course) that there is a straightforward embedding of \dlambdaamor into \lambdaamor. This embedding is cost-preserving, and so the soundness of \dlambdaamor follows immediately from the soundness of \lambdaamor. Formally, we do not present a true embedding into \lambdaamor, as it does not have a sort of potential vectors. However, potential vectors can be trivially added to \lambdaamor: the kripke logical relation which forms the basis for its soundness proof never inspects index terms, and conflates index terms with the semantic objects they denote. For this reason, we freely consider \lambdaamor as having a sort of potential vectors in the style of \dlambdaamor.
@@ -1227,7 +1249,7 @@ Top level term declarations $\texttt{let x : t = e}$ are implicitly typed as exp
 The only terms which are bound in the affine context at top level are variables resulting from the \texttt{do} declarations, which are checked to have monadic type. Since the result of a monadic computation can store potential, the result of a \texttt{do} declaration must not be duplicated.
 
 \subsubsection{Constraint Elaboration}
-The language of \dlambdaamor's constraints includes equations and inequalities over potential vectors (index terms of sort $\potvec$). We eventually plan to send these constraints to an SMT solver, yet solvers don't have theories this fairly unusual type of variable-length vectors over a monoid. While many solvers allow us to define our own theories, it would be preferable to instead appeal to built-in (and highly optimized) real arithmetic theories of modern SMT solvers. For this purpose, all constraints output from the typechecker are elaborated to transform equalities over potential vectors to componentwise equalities over reals. This transformation is functionally identical to the index term component of the \dlambdaamor-to-\lambdaamor compilation pass sketched in Section~\textbf{??}, and is implemented in \texttt{src/constr_elab.ml}
+The language of \dlambdaamor's constraints includes equations and inequalities over potential vectors (index terms of sort $\potvec$). While many solvers allow us to define our own theory to handle this nonstandard type, it is instead  preferable to instead appeal to built-in (and highly optimized) real arithmetic theories. For this purpose, all constraints output from the typechecker are elaborated to transform equalities over potential vectors to componentwise equalities over reals. This elaboration only works because the language of index terms is sufficiently first-order-- if one added truly higher-order index terms, the elaboration would be significantly more complex. The implementation of this transformation is quite simple, and can be found in \texttt{src/constr_elab.ml}.
 
 \subsubsection{Constraint Solving}
 The actual constraint solving of \lambdaamorimpl is handled by the Why3 platform \citehere. Why3 is a unified frontend for a number of SMT solvers, which allows the user to switch between the proovers of their choosing. After the constraint elaboration phase, the constraints are translated into a format understandable by Why3 using its OCaml API. We then interface with the prover by building a Why3 proof goal for each constraint emitted by the typechecker. This set of proof goals is then checked in sequence by the prover, and the results are reported to the user.
@@ -1261,6 +1283,3 @@ The evaluation was performed on a 2018 MacBook Pro running OSX 10.13.6 with a 2.
 \caption{Benchmarks of \lambdaamorimpl}
 \label{fig:lambdaamorimpl-eval}
 \end{figure}
-
-
-%\section{Related and Future Work}
