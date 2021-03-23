@@ -1,0 +1,88 @@
+\semsubst*
+\begin{proof}
+By induction on $\Gamma, x : T_1 \vdash E : T_2$.
+\begin{itemize}
+  \item (\texttt{nrec}): Suppose $\Gamma, x : T_1 \vdash \nrec E {E_1} {E_2} : T_2$. By inversion, $\Gamma x : T_1 \vdash E : \N $, $\Gamma, x : T_1 \vdash E_1 : 1 \to T_2$, and $\Gamma, x: T_1 \vdash E_2 : \N \times T_2 \to T_2$. By IH,
+  \begin{itemize}
+   \item  $\scott{\Gamma \vdash E[E'/x] : \N} = (1_{\scott{\Gamma}},\scott{\Gamma \vdash E' : T_1}) ; \scott{\Gamma, x : T_1 \vdash E : \N}$  
+   \item $\scott{\Gamma \vdash E_1[E'/x] : 1 \to T_2} = (1_{\scott{\Gamma}},\scott{\Gamma \vdash E' : T_1}) ; \scott{\Gamma, x : T_1 \vdash E_1 : 1 \to T_2}$
+   \item $\scott{\Gamma \vdash E_2[E'/x] : \N \times T_2 \to T_2} = (1_{\scott{\Gamma}},\scott{\Gamma \vdash E' : T_1}) ; \scott{\Gamma, x: T_1 \vdash E_2 : \N \times T_2 \to T_2}$
+  \end{itemize}. For ease of notation, we let $f = \scott{\Gamma \vdash E' : T_1}$, $g = \scott{\Gamma, x : T_1 \vdash E : \N}$, $h_1 =  \scott{\Gamma, x : T_1 \vdash E_1 : 1 \to T_2}$, and $h_2 = \scott{\Gamma, x: T_1 \vdash E_2 : \N \times T_2 \to T_2}$.
+  Then, we compute:
+  \begin{align*}
+  &\scott{\Gamma \vdash \left(\nrec E {E_1} {E_2}\right)[E'/x] : T_2} \\
+  &= \scott{\Gamma \vdash \nrec {E[E'/x]} {E_1[E'/x]} {E_2[E'/x]}}\\
+  &= (1_{\scott{\Gamma}}, \scott{\Gamma \vdash E[E'/x] : \N}) ; \snrec(\scott{\Gamma \vdash E_1[E'/x] : 1 \to T_2},\scott{\Gamma \vdash E_2[E'/x] : \N \times T_2 \to T_2})\\
+  &= (1_{\scott{\Gamma}},(1_{\scott{\Gamma}},f) ; g) ; \snrec((1_{\scott{\Gamma}},f) ; h_1,(1_{\scott{\Gamma}},f) ; h_2)
+  \end{align*}
+  It remains to show that
+  $$
+(1_{\scott{\Gamma}},(1_{\scott{\Gamma}},f) ; g) ; \snrec((1_{\scott{\Gamma}},f) ; h_1,(1_{\scott{\Gamma}},f) ; h_2) = (1_{\scott{\Gamma}},f);(1_{\scott{\Gamma,x:T_1}},g);\snrec(h_1,h_2)  
+  $$
+  Let $\gamma \in \scott{\Gamma}$.
+  Applying the left hand side to $\gamma$, we get
+  $$
+  \snrec((1_{\scott{\Gamma}},f);h_1,(1_{\scott{\Gamma}},f);h_1)(\gamma,g(\gamma,f(\gamma)))
+  $$
+  and on the right:
+  $$
+  \snrec(h_1,h_2)((\gamma,f(\gamma)),g(\gamma,f(\gamma)))  
+  $$
+  Letting $\gamma' = (\gamma,f(\gamma))$, we must show that $\snrec((1_{\scott{\Gamma}},f);h_1,(1_{\scott{\Gamma}},f);h_1)(\gamma,g(\gamma')) = \snrec(h_1,h_2)(\gamma',g(\gamma'))$. We proceed by induction on $n = g(\gamma')$.
+  \begin{itemize}
+    \item $n = 0$. 
+    \begin{align*}
+      \snrec((1_{\scott{\Gamma}},f);h_1,(1_{\scott{\Gamma}},f);h_1)(\gamma,0) &= ((1_{\scott{\Gamma}},f);h_1)(\gamma)()\\
+      &= h_1(\gamma,f(\gamma))()\\
+      &= h_1(\gamma')()\\
+      \snrec(h_1,h_2)(\gamma',0) &= h_1(\gamma')()
+    \end{align*}
+    as required.
+    \item $n+1$:
+    \begin{align*}
+    &\snrec((1_{\scott{\Gamma}},f);h_1,(1_{\scott{\Gamma}},f);h_1)(\gamma,n+1)\\
+    &= ((1_{\scott{\Gamma}},f);h_1)(\gamma)(n,\snrec((1_{\scott{\Gamma}},f);h_1,(1_{\scott{\Gamma}},f);h_1)(\gamma,n)) \vee h_1(\gamma')()\\
+    &= h_1(\gamma')(n,\snrec(h_1,h_2)(\gamma',n)) \vee h_1(\gamma')()\\
+    &= \snrec(h_1,h_2)(\gamma',n+1)
+    \end{align*}
+  \end{itemize}
+  
+  \item (\texttt{lrec}): Suppose $\Gamma, x : T_1 \vdash \lrec {E'} {E_1} {E_2} : T_2$, and $\Gamma \vdash E : T_1$. By inversion, $\Gamma,x:T_1 \vdash E : \listty T$, $\Gamma, x : T_1 \vdash E_1 : 1 \to T_2$, and $\Gamma,x:T_1 \vdash E_2 : T \times (\listty T \times T_2) \to T_2$.
+  By IH, we have that:
+  \begin{itemize}
+    \item $\scott{\Gamma \vdash E'[E/x] : \listty T} = (1_{\scott{\Gamma}},\scott{\Gamma \vdash E : T_1}) ; \scott{\Gamma,x:T_1 \vdash E : \listty T}$
+    \item $\scott{\Gamma \vdash E_1[E/x] : 1 \to T_2} = (1_{\scott{\Gamma}},\scott{\Gamma \vdash E : T_1}) ; \scott{\Gamma, x : T_1 \vdash E_1 : 1 \to T_}$
+    \item $\scott{\Gamma \vdash E_2[E/x] : T \times (\listty T \times T_2) \to T_2} = (1_{\scott{\Gamma}},\scott{\Gamma \vdash E : T_1}) ; \scott{\Gamma,x:T_1 \vdash E_2 : T \times (\listty T \times T_2) \to T_2}$
+  \end{itemize}
+  Let $f = \scott{\Gamma \vdash E : T_1}$, $g = \scott{\Gamma,x : T_1 \vdash E' : \listty T}$, $h_1 = \scott{\Gamma,x:T_1 \vdash E_1 : 1 \to T_2}$, and $h_2 = \scott{\Gamma,x:T_1 \vdash E : T \times (\listty T \times T_2) \to T_2}$
+  
+  
+  We must show that 
+  $$
+   (1_{\scott{\Gamma}},f) ; (1_{\scott{\Gamma} \times \scott{T_1}},g) ; \slrec(h_1,h_2) = (1_{\scott{\Gamma}},(1_{\scott{\Gamma}},f);g) ; \slrec((1_{\scott{\gamma}},f) ; h_1,(1_{\scott{\gamma}},f) ; h_2)
+  $$
+  
+  Let $\gamma \in \scott{\Gamma}$, and let $\gamma' = (\gamma,f(\gamma))$. We must then show that
+  
+  $$\slrec(h_1,h_2)(\gamma',g(\gamma')) = \slrec((1_{\scott{\gamma}},f) ; h_1,(1_{\scott{\gamma}},f) ; h_2)(\gamma,g(\gamma'))$$
+  
+  We proceed by induction on $n = g(\gamma')$.
+  
+  \begin{itemize}
+    \item ($n = 0$): The LHS is $\slrec(h_1,h_2)(\gamma',0) = h_1(\gamma')()$, and the RHS is 
+    $$\slrec((1_{\scott{\gamma}},f) ; h_1,(1_{\scott{\gamma}},f) ; h_2)(\gamma,0) = h_1(\gamma,f(\gamma))() = h_1(\gamma')()$$.
+    \item ($n > 0$): The LHS is:
+    \begin{align*}
+      &\slrec(h_1,h_2)(\gamma',n+1)\\
+      &= h_2(\gamma')(\infty,(n,\slrec(h_1,h_2)(\gamma',n))) \vee h_1(\gamma')()
+    \end{align*}
+    and the RHS (applying the IH in the 2nd step) is
+    \begin{align*}
+     &\slrec((1_{\scott{\Gamma}},f) ; h_1,(1_{\scott{\Gamma}},f) ; h_2)(\gamma,n+1)\\
+     &= h_2(\gamma')(\infty,(n,\slrec((1_{\scott{\Gamma}},f) ; h_1,(1_{\scott{\Gamma}},f) ; h_2)(\gamma,n))) \vee  h_1(\gamma')()\\
+     &= h_2(\gamma')(\gamma,(n,\slrec(h_1,h_2)(\gamma',n))) \vee h_1(\gamma')()
+    \end{align*}
+    as required.
+  \end{itemize}
+\end{itemize}
+\end{proof}

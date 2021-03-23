@@ -1,0 +1,43 @@
+\nreclemma*
+\begin{proof}
+Proceed by induction on $n$.
+
+For notational simplicity, let $E_2^* = \lambda p. E_2 (\pi_1 p,(\lambda z. \pi_2 p))$
+
+\begin{itemize}
+  \item ($n = 0$): To show $\nrec 0 {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_3 + \infty \cdot d} \nrec {E} {E_1} {E_2^*}$, suppose that $\nrec 0 {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \downarrow^{(n,r)} v$ by way of $N_1'[()/x] \downarrow^{(n,r)}$.
+  
+  We must show that :
+  \begin{itemize}
+    \item $n \leq \nrec E {E_1} {E_2^*}_c - r$
+    \item $v \valbd^{C,c_3 + \infty \cdot d} \nrec E {E_1} {E_2^*}_p$
+  \end{itemize}
+  We know $N_1[()/x] \bdby^{C,c_3} E_1 \; ()$, since $() \valbd^{1,0} ()$, and so:
+  \begin{itemize}
+    \item $n \leq (E_1 \; ())_c - r$
+    \item $v \valbd^{C,c_3} (E_1 \; ())_p$
+  \end{itemize}
+  
+  Since $0 \valbd^{\N,0} E$, $0 \leq_\N E$, and so $E_1 \; () \leq \nrec 0 {E_1} {E_2^*} \leq \nrec E {E_1} {E_2^*}$.
+  
+  \item \sloppypar ($n > 0$): Suppose that $\nrec {S(\overline{n})} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \downarrow^{(n',r)} v$ by way of 
+$$
+  N_2'[(\overline{n},\lambda z.\nrec {\overline{n}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}})] \downarrow^{(n',r)} v.
+$$ 
+We must show that:
+  \begin{itemize}
+    \item $n' \leq \nrec {E} {E_1} {E_2^*}_c - r$;
+    \item $v \valbd^{C,c_3+\infty \cdot d + r} \nrec E {E_1} {E_2^*}_p$.
+  \end{itemize}
+  Since $S(\overline{n}) \valbd^{\N,0} E$, there is an $E'$ so that $S(E') \leq_\N E$, and $\overline{n} \valbd^{\N,0} E'$. For notational convenience, let $E^* = (E',\nrec {E'} {E_1} {E_2^*})$. Note that $E' \leq \pi_1 E^*$, and that $\nrec {E'} {E_1} {E_2^*} \leq \pi_2 E^*$. By IH, $\nrec {\overline{n}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_3 + \infty \cdot d} \nrec {E'} {E_1} {E_2^*}$, and thus by weakening $\nrec {\overline{n}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_3 + \infty \cdot d} \pi_2 E^*$. For some variable $z$ not free in the term on the left, $\lambda z. \nrec {\overline{n}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \valbd^{1 \loli C,c_3 + \infty \cdot d} \lambda z. \pi_2 E^*$, and so $(\overline{n},\lambda z. \nrec {\overline{n}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}) \valbd^{\N \otimes (1 \loli C),c_3 + \infty \cdot d} (\pi_1 E^*,\lambda z. \pi_2 E^*s)$, and since $\lambda x.N_2' \valbd^{\N \times (1 \loli C) \loli C,d} E_2$, using the fact that $\infty \cdot d + d = \infty \cdot d$
+  $$N_2'[(\overline{n},\lambda z. \nrec {\overline{n}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}})/x] \bdby^{C,c_3 + \infty \cdot d} E_2 \; (\pi_1 E^*,\lambda z.\pi_2 E^*)$$
+  but,
+  \begin{align*}
+   E_2 \; (\pi_1 E^*,\lambda z.\pi_2 E^*) &\leq (\lambda p. E_2 \; (\pi_1 p, \lambda z.\pi_2 p)) E^*\\
+   &= E_2^* (E',\nrec {E'} {E_1} {E_2^*})\\
+   &\leq \nrec {S(E')} {E_1} {E_2^*}\\
+   &\leq \nrec {E} {E_1} {E_2^*}
+  \end{align*}
+  and so we are done by weakening.
+\end{itemize}
+\end{proof}

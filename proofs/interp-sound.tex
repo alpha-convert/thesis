@@ -1,0 +1,8 @@
+\begin{proof}
+By induction on $\Gamma \vdash E : T$.
+\begin{itemize}
+  \item ($\texttt{nrec}$): Let $\Gamma \vdash \nrec E {E_1} {E_2} : T$. By inversion, $\Gamma \vdash E : \N$, $\Gamma \vdash E_1 : 1 \to T$, and $\Gamma \vdash E_2 : \N \times C \to C$. By IH, $\scott{\Gamma \vdash E : \N} \in \Hom(\scott{\Gamma},\N)$. Then, $(1_{\Gamma},\scott{\Gamma \vdash E : \N}) \in \Hom(\scott{\Gamma},\scott{\Gamma}\times \N)$. By IH, $\scott{\Gamma \vdash E_1 : 1 \to T} \in \Hom(\scott{\Gamma},\scott{T}^1)$ and $\scott{\Gamma \vdash E_2 : \N \times T \to T} \in \Hom(\scott{\Gamma},\scott{T}^{\N \times \scott{T}})$. Then, by Theorem~\ref{thm:aux-sem-lemma} and composition, $(1_{\Gamma},\scott{\Gamma \vdash E : \N}) ; \snrec(\scott{\Gamma \vdash E_1 : 1 \to T},\scott{\Gamma \vdash E_2 : \N \times T \to T}) \in \Hom(\scott{\Gamma},\scott{T})$, as required.
+  
+  \item ($\texttt{lrec}$): Let $\Gamma \vdash \lrec E {E_1} {E_2} : T$. By inversion, $\Gamma \vdash E : \listty {T'}$, $\Gamma \vdash E_2 : 1 \to T$, and $\Gamma \vdash E_2 : T' \times (\listty {T'} \times T) \to T$. Applying the IH to all of these premises, we have that $\scott{\Gamma \vdash E : \listty {T'}} \in \Hom(\scott{\Gamma},\N)$, $\scott{\Gamma \vdash E_2 : 1 \to T} \in \Hom(\scott{\Gamma},\scott{T}^1)$, and $\scott{\Gamma \vdash E_2 : T' \times (\listty {T'} \times T) \to T} \in \Hom(\scott{\Gamma},\scott{T}^{\scott{T'}\times(\N\times\scott{T})})$. By Theorem~\ref{thm:aux-sem-lemma} and composition, $(1_{\scott{\Gamma}},\scott{\Gamma \vdash E : \listty {T'}}) ; \slrec(\scott{\Gamma \vdash E_2 : 1 \to T},\scott{\Gamma \vdash E_2 : T' \times (\listty {T'} \times T) \to T}) \in \Hom(\scott{\Gamma},\scott{T})$ as required.
+\end{itemize}
+\end{proof}

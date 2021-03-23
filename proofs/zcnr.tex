@@ -1,0 +1,35 @@
+\begin{proof}
+We prove this by induction on $n$. For the base case, suppose $\nrec 0 {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} \downarrow^{(n,r)} v$: 
+by inversion it was by $N_1'[()/x] \downarrow^{(n,r)} v$. It suffices to show that
+\begin{itemize}
+  \item $n \leq \nrec E {E_1} {E_2}_c - r$
+  \item $v \valbd^{C,c_3 + r}  \nrec E {E_1} {E_2}_p$
+\end{itemize}
+Since $() \leq_1 ()$, $() \valbd^{1,0} ()$, so $N_1'[()/x] \bdby^{C,c_3} E_1 \; ()$, which, since $N_1'[()/x] \downarrow^{(n,r)} v$,
+\begin{itemize}
+  \item $n \leq (E_1 \; ())_c - r$
+  \item $v \valbd^{C,c_3 + r} (E_1 \; ())_p$
+\end{itemize}
+Since $0 \valbd^{\N,0} E$, we have $0 \leq_\N E$, and so $E_1 \; () \leq_C \nrec 0 {E_1} {E_2} \leq_C \nrec E {E_1} {E_2}$ by $\beta$ and congruence. Thus we are done by weakening.
+
+For the inductive step, suppose that $\nrec {S(\inj n)} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} \downarrow^{(n',r)} v$, by inversion it was by $N_2'[(\inj n,\delay {(\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} )})] \downarrow^{(n',r)}$. It suffices to show that
+\begin{itemize}
+  \item $n' \leq \nrec E {E_1} {E_2}_c - r$
+  \item $v \valbd^{C,c_3+r}  \nrec E {E_1} {E_2}_p$
+\end{itemize}
+We know that $S(\inj n) \valbd^{\N,0} E$, so there is some $E' $such that $\inj n \valbd^{\N,0} E'$ and $S(E') \leq E$. By the IH, we know that 
+$\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} \bdby^{C,c_3} \nrec E {E_1} {E_2}$, which, by the definitions of value bounding at $\otimes$ and $\texttt{susp}$, 
+$$
+(\inj n,\delay {(\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} )}) \valbd^{\N \otimes \susp C,c_3} (E', \nrec E {E_1} {E_2})
+$$
+which, since $\lambda x.N_2' \valbd^{\N \otimes \susp C \loli C,0} E_2$, means that
+$$
+N_2'[(\inj n,\delay {(\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} )})/x] \bdby^{C,c_3} E_2 \; (E', \nrec E {E_1} {E_2})
+$$
+so we have that
+\begin{itemize}
+  \item $n' \leq (E_2 \; (E', \nrec E' {E_1} {E_2}))_c - r$
+  \item $v \valbd^{C,c_3 + r} (E_2 \; (E', \nrec E' {E_1} {E_2}))_p$
+\end{itemize}
+But, $E_2 \; (E', \nrec E' {E_1} {E_2}) \leq \nrec {S(E')} {E_1} {E_2} \leq \nrec E {E_1} {E_2}$, and so we are done by weakening.
+\end{proof}

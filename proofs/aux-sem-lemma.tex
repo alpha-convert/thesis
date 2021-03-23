@@ -1,0 +1,48 @@
+\auxsemlemma*
+\begin{proof}
+Let $A,B,C,G$ be posets. Note that these are not required to be in the image of $\scott{\cdot}$. For each case we must show two statements: the function is in fact montonic, and that the functions in its image (an exponential poset) are themselves monotonic.
+\begin{enumerate}
+  \item Suppose $(f,g) \leq (f',g')$ as elements of ${\left(C^1\right)}^G\times {\left(C^{\N\times C}\right)}^G$. To show that $\texttt{snrec}(f,g) \leq \texttt{snrec}(f',g')$, it suffices to show that for all $\gamma,n$, that $\snrec(f,g)(\gamma,n) \leq \snrec(f',g')(\gamma,n)$. Proceed by induction on $n$.
+  \begin{itemize}
+    \item $n = 0$. By the definition of $\snrec$, it suffices to show that $f(\gamma)() \leq f'(\gamma)()$, which is true since $f \leq f'$.
+    \item $n+1$ By definition of $\snrec$, it suffces to show $g(\gamma)(n,\snrec(f,g)(\gamma,n)) \vee f(\gamma)() \leq g'(\gamma)(n,\snrec(f',g')(\gamma,n)) \vee f(\gamma)()$. We have already shown that $f(\gamma)() \leq f'(\gamma)()$, so it remains to show $g(\gamma)(n,\snrec(f,g)(\gamma,n)) \leq g'(\gamma)(n,\snrec(f',g')(\gamma,n))$. Since $g \leq g'$, $g(\gamma) \leq g'(\gamma)$. By reflexivity, $n \leq n$. By IH, $\snrec(f,g)(\gamma,n) \leq \snrec(f',g')(\gamma)(n)$, and so we are done.
+    
+    Now, let $(f,g) \in {\left(C^1\right)}^G\times {\left(C^{\N\times C}\right)}^G$. We must show that if $(\gamma,n) \leq (\gamma',n')$ in $G \times \N$, then $\snrec(f,g)(\gamma,n) \leq \snrec(f,g)(\gamma',n')$. Proceed by induction on $n$. We have three cases to consider.
+    \begin{itemize}
+      \item $n = n' = 0$. By definition of $\snrec$, it suffices to show that $f(\gamma)() \leq f(\gamma')()$, which is true since $\gamma \leq \gamma'$.
+      \item $n = 0$, $n' + 1$: By the definition of $\snrec$, we must show that $f(\gamma)() \leq g(\gamma')(n',\snrec(f,g)(\gamma',n')) \vee f(\gamma')()$, for which it suffices to show $f(\gamma)() \leq f(\gamma')()$, which we already argued was true.
+      \item $n+1$, $n'+1$. Expanding definitions again and simplifying, it suffices to show that $g(\gamma)(n,\snrec(f,g)(\gamma,n)) \leq g(\gamma')(n',\snrec(f,g)(\gamma',n'))$. Since $g$ is monotonic, $g(\gamma) \leq g(\gamma')$. Since $n + 1 \leq n' + 1$, $n \leq n'$. By IH, $\snrec(f,g)(\gamma,n) \leq \snrec(f,g)(\gamma',n')$, and so $g(\gamma)(n,\snrec(f,g)(\gamma,n)) \leq g(\gamma')(n',\snrec(f,g)(\gamma',n'))$, as required.
+    \end{itemize}
+  \end{itemize}
+  \item Let $(f,g) \leq (f',g) \in {\left(C^1\right)^G} \times {\left(C^{A \times (\N \times C)}\right)^G}$. We want to show that $\slrec(f,g) \leq \slrec(f',g')$. Fix $\gamma \in G$, we prove by induction on $n$ that for all $n \in \N$, $\slrec(f,g)(\gamma,n) \leq \slrec(f',g')(\gamma,n)$.
+    \begin{itemize}
+      \item $n = 0$: expanding the definition of $\slrec$, we must show that $f(\gamma)() \leq f'(\gamma)()$, which is true because $f \leq f'$.
+      \item $n > 0$. It suffices to show that $g(\gamma)(\infty,(n,\slrec(f,g)(\gamma,n))) \leq g'(\gamma)(\infty,(n,\slrec(f',g')(\gamma,n)))$. Since $g \leq g'$, $g(\gamma) \leq g'(\gamma)$. Further, $\infty \leq \infty$, $n \leq n$, and by IH, $\slrec(f,g)(\gamma,n) \leq \slrec(f',g')(\gamma,n)$, as required.
+    \end{itemize}
+    
+    Now, let $(f,g) \in {\left(C^1\right)^G} \times {\left(C^{A \times (\N \times C)}\right)^G}$. We must show that if $(\gamma,n) \leq (\gamma',n')$, $\slrec(f,g)(\gamma,n) \leq \slrec(f,g)(\gamma,n')$. We again prove this by induction on $n$. There are three cases we must consider.
+    \begin{itemize}
+      \item $n = n' = 0$. Immediate.
+      \item $n = 0, n' > 0$. Identical to the similar case for \texttt{snrec}.
+      \item $n,n' > 0$. To show that 
+      $$g(\gamma)(\infty,(n,\snrec(f,g)(\gamma,n))) \vee f(\gamma)() \leq g(\gamma')(\infty,(n',\snrec(f,g)(\gamma',n))) \vee f(\gamma')()$$
+      it suffices to show that $f(\gamma) \leq f(\gamma')$ (which is true because $\gamma \leq \gamma'$ and $f$ is monotonic) and $g(\gamma)(\infty,(n,\snrec(f,g)(\gamma,n))) \leq g(\gamma')(\infty,(n',\snrec(f,g)(\gamma',n')))$. Since $n + 1 \leq n'+1$, $n \leq n'$, and so the desired result follows from IH and the fact that $g(\gamma)$
+    \end{itemize}
+    
+  \item Let $(f,g) \leq (f',g') \in C^{G \times A}\times C^{G \times B}$. We must show that $\scase(f,g) \leq \scase(f',g')$ in $C^{G \times (A + B)}$ Let $(\gamma,x) \in G \times (A+B)$. The two cases for $x$ are symmetrical, so we consider when $x = \inl a$. Then,
+    \begin{align*}
+      \scase(f,g)(\gamma,\inl a) &= f(\gamma,a) \vee g(\gamma,\infty)\\
+                                 &\leq f'(\gamma,a) \vee g(\gamma,\infty)\\
+                                 &= \scase(f',g')(\gamma,\inl a)
+    \end{align*}
+    as required.
+    
+    Now, fix $(f,g) \in C^{G \times A}\times C^{G \times B}$. We must show that for all $(\gamma,x) \leq (\gamma',y)$, $\scase(f,g)(\gamma,x) \leq \scase(f,g)(\gamma',y)$. We have two symmetric cases to consider, so we present the case where $x = \inl a$ and $y = \inl a'$. Then,
+    \begin{align*}
+      \scase(f,g)(\gamma,\inl a) &= f(\gamma,a) \vee g(\gamma,\infty)\\
+                                 &\leq f(\gamma',a') \vee g(\gamma',\infty)\\
+                                 &= \scase(f,g)(\gamma',\inl a')
+    \end{align*}
+    as required.
+\end{enumerate}
+\end{proof}

@@ -1,0 +1,28 @@
+\weakening*
+\begin{proof}
+We prove 1 and 2 simultaneously by induction on $A$.
+\begin{enumerate}
+  \item Suppose $M \bdby^{A,a} E$, and $E \leq_{\mathbb{C} \times \angles{A}} E'$. We need to show that $M \bdby^{A,a} E'$. Suppose $M \downarrow^{(n,r)} v$.
+  We need to show:
+  \begin{itemize}
+    \item $n \leq E'_c - r$
+    \item $v \valbd^{A,a+r} E'_p$
+  \end{itemize}
+  But, since $M \bdby^{A,a} E$
+  \begin{itemize}
+    \item $n \leq E_c - r$
+    \item $v \valbd^{A,a+r} E_p$
+  \end{itemize} 
+  so, it suffices to show that $E_c \leq_{\mathbb{C}} E'_c$ and $E_p \leq_{\angles A} E'_p$, which is true by the $\pi_1(-)$ and $\pi_2(-)$ congruences, recalling that $(-)_c$ and $(-)_p$ are simply $\pi_1$ and $\pi_2$.
+  \item Let $E \leq_{\angles A} E'$. We have a few cases to consider.
+  \begin{itemize}
+    \item[($!$)] Suppose $\save k l v \valbd^{!^k_l A,a} E$. We must show that $\save k l v \valbd^{!^k_l A,a} E'$. We know that there is a $d \geq 0$ such that $ka+l \leq d$, and $v \valbd^{A,d} E$. So, by IH, $v \valbd^{A,d} E'$, and hence $\save k l v \valbd^{!^k_l A,a} E'$, as required.
+    \item[($\loli$)] Suppose $\lambda x.M \valbd^{A\loli B,a} E$. We need to show that $\lambda x.M \valbd^{A\loli B,a} E'$. Let $v \valbd^{A,b} E_v$. Then, $M[v/x] \bdby^{B,a+b} E \; E_v$. Using the application congruence and 1, $M[v/x] \bdby^{B,a+b} E' \; E_v$. Since $v,b,E_v$ were chosen arbitrarily, $\lambda x.M \valbd^{A \loli B,a} E'$ as required.
+    \item[($\tensor$)] Suppose $(v_1,v_2) \valbd^{A_1\otimes A_2,a} E$. Then, there are $a_1,a_2$ such that $a_1 + a_2 = a$, and $v_i \valbd^{A_i,a_i} \pi_i E$, and so by $\pi_i$-congruence and the IH, $v_i \valbd^{A_i,a_i} \pi_i E'$, so $(v_1,v_2) \valbd^{A_1\otimes A_2,a} E'$, as required.
+    \item[($\listty{A}$)] Both cases are immediate by transitivity.
+    \item[($\N$)] Both cases are immediate by transitivity.
+    \item[($\oplus$)] Both cases are immediate by transitivity.
+    \item[($A \amp B$)] Suppose $\amppair {M_1} {M_2} \valbd^{A_1 \amp A_2,a} E$. Then, for $i \in \{1,2\}$, $M_i \bdby^{A_i,a} \pi_i E$. By $\pi_i$-congruence, $\pi_i E \leq_{\norm{A}} \pi_i E'$, and so by IH from 1, we know that $M_i \bdby^{A_i,a} \pi_i E'$, and are done.
+  \end{itemize}
+\end{enumerate}
+\end{proof}

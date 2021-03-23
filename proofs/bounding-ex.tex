@@ -1,0 +1,30 @@
+\boundingex*
+\begin{proof}
+$\;$
+\begin{itemize}
+  \item (\texttt{pack}): Suppose $\Delta | \Gamma \vdash_f \pack \alpha c M : \exists \alpha. A$ by way of $\Delta | \Gamma \vdash_f M : A[c/\alpha]$. Let $\omega \bdby_{\texttt{credit}}^\Delta \Omega$ and $\theta \subbd^{\Gamma[\omega],\sigma} \Theta$. We must show that $\pack \alpha {c[\omega]} {M[\omega,\theta]} \bdby^{\exists \alpha.A[\omega],f[\omega,\sigma]} (\norm{M}_c[\Omega,\Theta],(c[\Omega],\norm{M}_p[\Omega,\Theta]))$. Suppose $\pack \alpha {c[\omega]} {M[\omega,\theta]} \downarrow^{(n,r)} \pack \alpha {c[\omega]} v$ by way of $M[\omega,\theta] \downarrow^{(n,r)} v$. It suffices to show
+  \begin{itemize}
+    \item $n + r \leq \norm{M}_c[\Omega,\Theta]$
+    \item $\pack \alpha {c[\omega]} v \valbd^{\exists \alpha.A[\omega],f[\omega,\sigma] + r} (c[\Omega],\norm{M}_p[\Omega,\Theta])$
+  \end{itemize}
+  The second item is equivalent to proving that $c[\omega] \leq c[\Omega]$ (which is true because credit terms are monotone), and that $v \valbd^{A[c/\alpha,\omega],f[\omega,\sigma] + r} \norm{M}_p[\Omega,\Theta]$, which follows immediately by IH.
+  
+  \item (\texttt{unpack}): Suppose that $\Delta | \Gamma \vdash_{f+g} \unpack \alpha x M N : C$ by way of $\Delta | \Gamma \vdash_f M : \exists \alpha.A$ and $\Delta,\alpha | \Gamma,x:A \vdash_{g+x} N : C$ with $\alpha$ not free in $C$. Let $\omega \bdby_\texttt{credit}^\Delta \Omega$ and $\theta \subbd^{\Gamma[\omega],\sigma} \Theta$. Suppose $ \unpack \alpha x {M[\omega,\theta]} {N[\omega,\theta]} \downarrow^{(n_1+n_2,r_1+r_2)} v$ by way of $M[\omega,\theta] \downarrow^{(n_1,r_1)} \pack \alpha \ell {v_1}$ and $N[\omega,\theta,\ell/\alpha,v_1/x]  \downarrow^{(n_2,r_2)} v$. It suffices to show that
+  \begin{itemize}
+    \item $n_1 + n_2 + r_1 + r_2 \leq \norm{M}_c[\Omega,\Theta] + \norm{N}_c[\Omega,\Theta,\pi_1\norm{M}_p[\Omega,\Theta]\alpha,\pi_2\norm{M}_p[\Omega,\Theta]/x]$
+    \item $v \valbd^{C[\omega],f[\omega,\sigma] + g[\omega,\sigma] + r_1 + r_2} \norm{N}_p[\Omega,\Theta,\pi_1\norm{M}_p[\Omega,\Theta]\alpha,\pi_2\norm{M}_p[\Omega,\Theta]/x]$
+  \end{itemize}
+  By IH, $M[\omega,\theta] \bdby^{\exists \alpha.A[\omega],f[\omega,\sigma]} \norm{M}[\Omega,\Theta]$, and so
+  \begin{itemize}
+    \item $n_1 + r_1 \leq \norm{M}_c[\Omega,\Theta]$
+    \item $\pack \alpha \ell {v_1} \valbd^{\exists \alpha.A[omega],f[\omega,\sigma] + r_1}\norm{M}_p[\Omega,Theta]$
+  \end{itemize}
+  which means that $\ell \leq \pi_1 \norm{M}_p[\Omega,Theta]$ and that $v_1 \valbd^{A[\omega,\ell/\alpha],f[\omega,\sigma] + r_1} \pi_2 \norm{M}_p[\Omega,Theta]$.
+  Hence, $(\omega,\ell/\alpha) \bdby_{\texttt{credit}}^{\Delta,\alpha}(\Omega,\pi_1 \norm{M}_p[\Omega,\Theta]/\alpha)$, and $(\theta,v_1/x) \subbd^{\Gamma[\omega],x:A[\ell/\alpha],\sigma,x\mapsto f[\omega,\sigma] + r_1} (\Theta,\pi_2 \norm{M}_p[\Omega,\Theta]/x)$. Thus, by IH, $$N[\omega,\theta,\ell/\alpha,v_1/x] \bdby^{C[\omega],g[\omega,\sigma] + f[\omega,\sigma] + r_1} \norm{N}[\Omega,\Theta,\pi_1 \norm{M}_p[\Omega,\Theta]/\alpha,\pi_2 \norm{M}_p[\Omega,\Theta]/x]$$ By definition,
+  \begin{itemize}
+    \item $n_2 + r_2 \leq \norm{N}_c[\Omega,\Theta,\pi_1 \norm{M}_p[\Omega,\Theta]/\alpha,\pi_2 \norm{M}_p[\Omega,\Theta]/x]$
+    \item $v \valbd^{C[\omega],f[\omega,\sigma] + g[\omega,\sigma] + r_1 + r_2} \norm{N}_p[\Omega,\Theta,\pi_1 \norm{M}_p[\Omega,\Theta]/\alpha,\pi_2 \norm{M}_p[\Omega,\Theta]/x]$
+  \end{itemize}
+  as required.
+\end{itemize}
+\end{proof}

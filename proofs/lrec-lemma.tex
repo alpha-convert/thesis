@@ -1,0 +1,58 @@
+\lreclemma*
+\begin{proof}
+We proceed by induction on the derivation of $\cdot \vdash_d v : \listty A$.
+First, suppose $v = []$.  To show that $\lrec {[]} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_1+d+\infty \cdot c_2} \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x))}$, assume that  $\lrec {[]} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \downarrow^{(n,r)} v$. By inversion, it was by way of $N_1'[()/x] \downarrow^{(n,r)} v$. It suffices to show 
+\begin{itemize}
+   \item $n \leq \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x))}_c - r$
+   \item $v\ \valbd^{C,c_1+d+\infty \cdot c_2 + r} \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }_p$
+\end{itemize}
+Since $() \leq_1 ()$, $() \valbd^{1,d} ()$, so $N_1'[()/x] \bdby^{C,c_1+d} E_1 \; ()$, and so
+\begin{itemize}
+  \item $n \leq (E_1 \; ())_c - r$
+  \item $v \valbd^{C,c_1+d+r} (E_1 \; ())_p$
+\end{itemize}
+But, $\infty \cdot c_2 > 0$ since $c_2 > 0$, and so by credit weakening, $v \valbd^{C,c_1+d+\infty \cdot c_2 +r} (E_1 \; ())_p$. Note that, by assumption, $[] \valbd^{1,d} E$, which means that $[] \leq_{\listty {\angles A}} E$. So,
+$$
+E_1 \; () \leq \lrec {[]} {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) } \leq \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }
+$$
+and so we are done by weakening.
+
+Otherwise, suppose $v = \cons {v_1} {v_2}$. To show that $\lrec {\cons {v_1} {v_2}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_1+d+\infty \cdot c_2} \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }$, suppose $\lrec {\cons {v_1} {v_2}} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \downarrow^{(n,r)} v$. By inversion, it was by $N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] \downarrow^{(n,r)} v$. It suffices to show:
+\begin{itemize}
+  \item $n \leq \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }_c - r$
+  \item $v \valbd^{C,c_1+d+\infty \cdot c_2 + r} \lrec E {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }_p$
+\end{itemize}
+
+Since $\cons {v_1} {v_2} \valbd^{\listty A,d} E$, there are $d_1,d_2 \geq 0$ such that $d_1 + d_2 = d$, along with $E'$,$E''$ such that $v_1 \valbd^{A,d_1} E'$ and $v_2 \valbd^{\listty A,d_2} E''$, and $\cons {E'} {E''} \leq E$
+
+By IH, $\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,c_1 + d_2 + \infty \cdot c_2} \lrec {E''} {E_1} {\ldots}$. 
+Since $v_2 \valbd^{\listty A,d_2} E''$, $v_2 \bdby^{\listty A,d_2} (0,E'')$, 
+and since $c_1 + \infty \cdot c_2 \geq 0$, we have by credit weakening that $v_2 \bdby^{\listty A,c_1 + d_2 + \infty \cdot c_2} (0,E'')$. 
+So, 
+$\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}} \valbd^{\listty A \amp C,c_1 + d_2 + \infty \cdot c_2} ((0,E''),\lrec {E''} {E_1} {\ldots})$. 
+Further, using the fact that $d_1 + d_2 = d$, 
+
+$$
+\begin{array}{l}
+(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}}) \valbd^{A \otimes (\listty A \amp C), c_1 + d + \infty \cdot c_2}\\ (E',((0,E''),\lrec {E''} {E_1} {\ldots}))
+\end{array}
+$$
+Thus, since $\lambda x.N_2' \valbd^{A \otimes (\listty A \amp C) \loli C,c_2} E_2$, we have (using the fact that $c_2 + \infty \cdot c_2 = \infty \cdot c_2$)
+$$
+N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] \bdby^{C,c_1+d+\infty \cdot c_2} E_2 \; (E',((0,E''),\lrec {E''} {E_1} {\ldots}))
+$$
+By definition, this means that
+\begin{itemize}
+  \item $n \leq (E_2 \; (E',((0,E''),\lrec {E''} {E_1} {\ldots})))_c - r$
+  \item $v \valbd^{c_1+d+\infty \cdot c_2 + r} (E_2 \; (E',((0,E''),\lrec {E''} {E_1} {\ldots})))_p$
+\end{itemize}
+We then compute:
+\begin{align*}
+&E_2 \; (E',((0,E''),\lrec {E''} {E_1} {\ldots}))\\
+&\leq (\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x))) \; (E',(E'',\lrec {E''} {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x))}))\\
+&\leq \lrec {\cons {E'} {E''}} {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x))s}\\
+&\leq \lrec {E} {E_1} {\lambda x. E_2 (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x)) }
+\end{align*}
+
+and hence we are done by weakening.
+\end{proof}

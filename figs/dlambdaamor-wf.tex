@@ -1,0 +1,9 @@
+\begin{mathpar}
+\inferrule[WF-CCtxE]{ }{\Theta \vdash \cdot \; \texttt{wf}}
+
+\inferrule[WF-CCtxNe]{\Theta \vdash \Delta \; \texttt{wf}\\ \Theta ; \Delta \vdash \Phi \; \texttt{wf}}{\Theta \vdash \Delta,\Phi \; \texttt{wf}}
+
+\inferrule[WF-TCtxE]{ }{\Psi ; \Theta ; \Delta \vdash \cdot \; \texttt{wf}}
+
+\inferrule[WF-TCtxNE]{\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \Gamma, x : \tau \; \texttt{wf}}
+\end{mathpar}

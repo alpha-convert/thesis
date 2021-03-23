@@ -1,0 +1,11 @@
+\fusion*
+\begin{proof}
+We present terms going in both directions for each caes.
+\begin{enumerate}
+  \item $x : !^{k_1k_2}_{\ell_1 + k_1\ell_2} \vdash_x \tsfer 1 {k_1k_2} {\ell_1 + k_1\ell_2} y x {\save {k_1} {\ell_1} {(\save {k_2} {\ell_2} {y})}} : !^{k_1}_{\ell_1} !^{k_2}_{\ell_2} A$ and $x : !^{k_1}_{\ell_1} !^{k_2}_{\ell_2} A \vdash_x \tsfer 1 {k_1} {\ell_1} y x {\tsfer {k_1} {k_2} {\ell_2} z y {\save {k_1k_2} {\ell_1 + k_1\ell_2} {z}}} : !^{k_1k_2}_{\ell_1 + k_1\ell_2}$
+  
+  \item $x : !^k_{\ell_1 + \ell_2}(A \otimes B) \vdash_x \tsfer 1 k {\ell_1 + \ell_2} y x {\asplit {k'} y {z_1} {z_2} {(\save k {\ell_1} {z_1}, \save k {\ell_2} {z_2})}} : !^k_{\ell_1} A \otimes !^k_{\ell_1} B$ and $x : !^k_{\ell_1} A \otimes !^k_{\ell_2} B \vdash_x \asplit 1 x {z_1} {z_2} {\tsfer 1 k {\ell_1} {y_1} {z_1} {\tsfer 1 k {\ell_2} {y_2} {z_2} {\save k {\ell_1 + \ell_2} (y_1,y_2)}}} : !^k_{\ell_1 + \ell_2}(A \otimes B)$.
+  
+  \item $x : !^k_\ell (A \oplus B) \vdash_x \tsfer 1 k {\ell} y x {\acase k y {z_1} {\inl {(\save k \ell {z_1})}} {z_2} {\inr {(\save k \ell {z_2})}}} : !^k_\ell A \oplus !^k_\ell B$ and $x : !^k_\ell A \oplus !^k_\ell B \vdash_x \acase 1 x {z_1} {\tsfer 1 k {\ell} y {z_1} {\save k \ell {(\inl y)}}} {z_2} {\tsfer 1 k {\ell} y {z_2} {\save k \ell {(\inr y)}}} : !^k_\ell (A \oplus B)$
+\end{enumerate}
+\end{proof}

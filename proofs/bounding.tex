@@ -1,0 +1,452 @@
+\bounding*
+\begin{proof}
+By induction on $\Gamma \vdash_f M : A$.
+\begin{itemize}
+
+\item[($!$-I)] 
+Let $\Gamma \vdash_g \save k l M : !^k_l A$. By inversion, we have $\Gamma \vdash_f M : A$ with $kf + l \leq g$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. To show $\save k l {M}[\theta] \bdby^{!^k_l A,g[\sigma]} (k\norm{M}[\Theta]_c,\norm{M}[\Theta]_p)$, it suffices to show $\save k l {M}[\theta] \bdby^{!^k_l A,kf[\sigma] + l} (k\norm{M}[\Theta]_c,\norm{M}[\Theta]_p)$ by credit weakening. So, let $\save k l M \downarrow^{(n,kr)} \save k l v$ by way of $M \downarrow^{(n,r)} v$. It suffices to show, using the fact that $kf[\sigma] + l + kr = k(f[\sigma] + r) + l$
+\begin{itemize}
+  \item $n \leq k\norm{M}[\Theta]_c - kr$
+  \item $\save k l v \valbd^{!^k_l A,k(f[\sigma] + r) + l} \norm{M}[\Theta]_p$
+\end{itemize}
+
+To show $\save k l v \valbd^{!^k_l A,k(f[\sigma] + r) + l} \norm{M}[\Theta]_p$, it suffices to provide $d \geq 0$ such that $kd+l \leq k(f[\sigma] + r) + l$, and $v \valbd^{A,d} \norm{M}[\Theta]_p$.
+By IH, $M[\theta] \bdby^{A,f[\sigma]} \norm{M}[\Theta]$, which means that
+\begin{itemize}
+ \item $n \leq \norm{M}[\Theta]_c - r$
+ \item $v \valbd^{A,f[\sigma] + r} \norm{M}[\Theta]_p$
+\end{itemize}
+So, $d = f[\sigma] + r$, and the inequality $n \leq kn \leq k\norm{M}[\Theta]_c - kr$ follows by multiplying the above one by $k$ (since $k \geq 1$).
+
+\item[($!$-E)]  Let $\Gamma \vdash_{k'f + g} \tsfer {k'} k l x M N : C$. By inversion, we have that $\Gamma \vdash_f M : !^k_l A$, as well as $\Gamma,x : A\vdash_{g+k'(kx+l)} N : C$. Suppose $\theta \subbd^{\Gamma,\sigma} \Theta$. 
+We need to show that $\tsfer {k'} k l x {M[\theta]} {N[\theta]} \bdby^{C,k'f[\sigma] + g[\sigma]} \norm{M}[\Theta]_c +_c \norm{N}[\Theta,\norm{M}[\Theta]_p/x]$. 
+Suppose $\tsfer {k'} k l x {M[\theta]} {N[\theta]} \downarrow^{(n_1+n_2,k'r_1+r_2)} v$. By inversion, it was by $M[\theta] \downarrow^{(n_1,r_1)} \save k l {v_1}$ and $N[\theta,v_1/x] \downarrow^{(n_2,r_2)} v$.
+It suffices to show that
+\begin{itemize}
+  \item $n_1 + n_2 \leq k'\norm{M}[\Theta]_c + \norm{N}[\Theta,\norm{M}[\Theta]_p/x]_c - (k'r_1 + r_2)$
+  \item $v \valbd^{C,k'f[\sigma] + g[\sigma] + k'r_1 + r_2} \norm{N}[\Theta,\norm{M}[\Theta]_p/x]_p$
+\end{itemize}
+By IH, we have that $M[\theta] \bdby^{!^k_l A, f[\sigma]} \norm{M}[\Theta]$, which means that there are $b_1,c_1$ with $b_1 + c_1 = f[\sigma]$ and
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $\save k l {v_1} \valbd^{!^k_l A,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+Since $\save k l {v_1} \valbd^{!^k_l A,f[\sigma] + r_1} \norm{M}[\Theta]_p$, there is a $d \geq 0$ such that $kd+l \leq f[\sigma] + r_1$, and $v_1 \valbd^{A,d} \norm{M}[\Theta]_p$. Thus, $(\theta,v_1/x) \subbd^{(\Gamma,x:A),(\sigma,x\mapsto d)} (\Theta,\norm{M}[\Theta]_p/x)$, and so by IH, $N[\theta,v_1/x] \bdby^{C,g[\sigma] + k'(kd+l)} \norm{N}[\Theta,\norm{M}[\Theta]_p/x]$.
+By credit weakening, since $kd+l \leq f[\sigma] + r_1$,  $N[\theta,v_1/x] \bdby^{C,g[\sigma] + k'(f[\sigma] + r_1)} \norm{N}[\Theta,\norm{M}[\Theta]_p/x]$. This gives us that
+\begin{itemize}
+  \item $n_2 \leq \norm{N}[\Theta,\norm{M}[\Theta]_p/x]_c - r_2$
+  \item $v \valbd^{C,g[\sigma] + k'(f[\sigma] + r_1) + r_2} \norm{N}[\Theta,\norm{M}[\Theta]_p/x]_p$
+\end{itemize}
+To establish the desired inequality, we multiply the first inequality by $k'$, to find that $k'n_1 \leq k'\norm{M}[\Theta]_c - k'r_1$. But $k' \geq 1$,
+so $n_1 \leq k'n_1 \leq k'\norm{M}[\Theta]_c - k'r_1$. Therefore, $n_1 + n_2 \leq k'\norm{M}[\Theta]_c + \norm{N}[\Theta,\norm{M}[\Theta]_p/x]_c - (k'r_1 + r_2)$ as required. For value bounding, we note that $g[\sigma] + k'(f[\sigma] + r_1) + r_2 = k'f[\sigma] + g[\sigma] + k'r_1 +r_2$, and are done.
+
+\item[(\discname)] Let $\Gamma \vdash_{f + l} \disc l M : A$.  By inversion, $\Gamma \vdash_f M : A$.
+ To show $\disc l M \bdby^{A} (-l) +_c \norm{M}$, suppose $\theta \subbd^{\Gamma,\sigma} \Theta$. 
+ To show $\disc l M[\theta] \bdby^{A,f[\sigma] + l} (-l) +_c \norm{M}[\Theta]$, suppose $\disc l M[\theta] \downarrow^{(n,r-l)} v$. 
+ By inversion we also have that $M[\theta] \downarrow^{(n,r)} v$. 
+ It suffices to show
+ \begin{itemize}
+   \item $n \leq -l + \norm{M}[\Theta]_c - (r - l)$
+   \item $v \valbd^{A,f[\sigma] + l + r - l} \norm{M}[\Theta]_p$
+ \end{itemize}
+ or, canceling, it suffices to show $n \leq \norm{M}[\Theta]_c  - r$ and $v \valbd^{A,f[\sigma] + r} \norm{M}[\Theta]_p$, which is precisely what we get from the IH.
+
+\item[(\waitname)] Let $\Gamma \vdash_f \wait l M : A$. By inversion, $\Gamma \vdash_{f+l} M : A$. To show $\wait l M \bdby^{A} l +_c \norm{M}$, suppose $\theta \subbd^{\Gamma,\sigma} \Theta$, 
+to show $\wait l M[\theta] \bdby^{A,f[\sigma]} l +_c \norm{M}[\Theta]$, 
+suppose $\wait l M[\theta] \downarrow^{(n,r+l)} v$. 
+By inversion, $M[\theta] \downarrow^{(n,r)} v$.
+It suffices to show
+\begin{itemize}
+  \item $n \leq l + \norm{M}[\theta]_c - (r + l)$
+  \item $v \valbd^{f[\sigma] + r + l}$
+\end{itemize}
+By IH, we have that $M[\theta] \bdby^{A,f[\sigma] + l} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n \leq \norm{M}[\Theta]_c - r$
+  \item $v \valbd^{A,f[\sigma] + l + r}$
+\end{itemize}
+and so we are done, canceling the $l$s in the first inequality.
+
+
+\item[(tick)] Immediate from IH, canceling $1$s.
+
+\item[($\loli$-I)] Let $\Gamma \vdash_f \lambda x.M : A \loli B$. By inversion, $\Gamma, x : A \vdash_{f + x} M : B$. 
+Let $\theta \subbd^{\Gamma,\sigma} \Theta$. 
+To show $\lambda x.M[\theta] \bdby^{A\loli B,f[\sigma]} (0,\lambda x.\norm{M}[\Theta])$, let $\lambda x.M[\theta] \downarrow^{(0,0)} \lambda x.M[\theta]$.
+The first condition is trivial ($0 \leq 0$). We need to show that $\lambda x.M \valbd^{f[\sigma]} \lambda x.\norm{M}[\Theta]$. Let $v \valbd^{A,d} E$. We must show that $M[\theta,v/x] \bdby^{B,f[\sigma] + d} (\lambda x.\norm{M}[\Theta]) E$, or by weakening, that $M[\theta,v/x] \bdby^{B,f[\sigma]+d} \norm{M}[\Theta,E/x]$. But, since $v \valbd^{A,d} E$, we have $(\theta,v/x) \subbd^{(\Gamma,x:A),(\sigma, x \mapsto d)} (\Theta,E/x)$, and so by IH, $M[\theta,v/x] \bdby^{B,f[\sigma] + d} \norm{M}[\Theta,E/x]$, as required.
+
+\item[($\loli$-E)] Let $\Gamma \vdash_{f + g} M \, N : B$.  Inversion gives $\Gamma \vdash_f M : A \loli B$ and $\Gamma \vdash_g N : A$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. We must show $M[\theta] \, N[\theta] \bdby^{B,f[\sigma] + g[\sigma]} (\norm{M}[\Theta]_c + \norm{N}[\Theta]_c) +_c \norm{M}[\Theta]_p\norm{N}[\Theta]_p$. Suppose $M[\theta] \, N[\theta] \downarrow^{(n_1+n_2+n_3,r_1+r_2+r_3)} v$. Inversion gives us that $M[\theta] \downarrow^{(n_1,r_1)} \lambda x.M'$, $N[\theta] \downarrow^{(n_2,r_2)} v_1$, and $M'[v_1/x] \downarrow^{(n_3,r_3)} v$. It remains to show that 
+\begin{itemize}
+  \item $n_1 + n_2 + n_3 \leq \norm{M}[\Theta]_c + \norm{N}[\Theta]_c + (\norm{M}[\Theta]_p\norm{N}[\Theta]_p)_c - (r_1 + r_2 + r_3)$
+  \item $v \valbd^{B,f[\sigma] + g[\sigma] + r_1 + r_2 + r_3} (\norm{M}[\Theta]_p\norm{N}[\Theta]_p)_p$
+\end{itemize}
+ By the IH applied to $\Gamma \vdash_f M : A \loli B$, we know that $M[\theta] \bdby^{A\loli B,f[\sigma]} \norm{M}[\Theta]$, so
+ \begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $\lambda x.M' \valbd^{A \loli B,f[\sigma] + r_1} \norm{M}[\Theta]_p$.
+ \end{itemize}  
+ Again applying the IH to $\Gamma \vdash_g N : A$, we know $N[\theta] \bdby^{A,g[\sigma]} \norm{N}[\Theta]$, so
+\begin{itemize}
+  \item $n_2 \leq \norm{N}[\Theta]_c - r_2$
+  \item $v_1 \valbd^{A,g_[\sigma] + r_2} \norm{N}[\Theta]_p$
+\end{itemize}
+  
+But since $\lambda x.M' \valbd^{A \loli B,f[\sigma] + r_1} \norm{M}[\Theta]_p$ and $v_1 \valbd^{A,g[\sigma] + r_2} \norm{N}[\Theta]_p$, we have $M'[v_1/x] \bdby^{B,f[\sigma] + g[\sigma] + r_1 + r_2} \norm{M}[\Theta]_p\norm{N}[\Theta]_p$, which means that:
+\begin{itemize}
+  \item $n_3 \leq (\norm{M}[\Theta]_p\norm{N}[\Theta]_p)_c - r_3$
+  \item $v \valbd^{B,f[\sigma] + g[\sigma] + r_1 + r_2 + r_3} (\norm{M}[\Theta]_p\norm{N}[\Theta]_p)_p$
+\end{itemize}
+We add the inequalities together, and are done.
+
+\item[($\tensor$-I)] Let $\Gamma \vdash_{f_1 + g_1} (M_1,M_2) : A_1 \tensor A_2$. By inversion, we have that $\Gamma \vdash_{f_i} M_i : A_i$ for $i = 1,2$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. Towards proving $(M_1[\theta],M_2[\theta]) \bdby^{A_1\tensor A_2,f_1[\sigma] + f_2[\sigma]} (\norm{M_1}[\Theta]_c + \norm{M_2}[\Theta]_c,(\norm{M_1}[\Theta]_p,\norm{M_2}[\Theta]_p))$, assume $(M_1[\theta], M_2[\theta]) \downarrow^{(n_1+n_2,r_1+r_2)} (v_1,v_2)$. By inversion, it must also be that $M_i[\theta] \downarrow^{(n_i,r_i)} v_i$ for $i = 1,2$.
+If suffices to show:
+\begin{itemize}
+  \item $n_1 + n_2 \leq \norm{M_1}[\Theta]_c + \norm{M_2}[\Theta] - (r_1 + r_2)$
+  \item $(v_1,v_2) \valbd^{A_1 \tensor A_2,f_1[\sigma] + f_2[\sigma] + r_1 + r_2} (\norm{M_1}[\Theta]_p,\norm{M_2}[\Theta]_p)$
+\end{itemize}
+By IH, we have that, for $i \in \{1,2\}$
+\begin{itemize}
+  \item $n_i \leq \norm{M_i}[\Theta]_c - r_i$
+  \item $v_i \valbd^{A_i,f[\sigma]_i + r_i} \norm{M_i}[\Theta]_p$
+\end{itemize}
+Adding the two inequalities and applying the definition of value bounding at $\otimes$, we are done.
+
+\item[($\tensor$-E)]
+Let $\Gamma \vdash_{k'f + g} \asplit {k'} M x y N : C$. Inversion gives $\Gamma \vdash_f M : A \tensor B$, and $\Gamma,x : A, y : B \vdash_{g + k'(x + y)} N : C$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. We must show that
+$$
+\asplit {k'} {M[\theta]} x y {N[\theta]} \bdby^{C,k'f[\sigma] + g[\sigma]} k'\norm{M}[\Theta]_c +_c \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]
+$$
+Suppose that $\asplit {k'} {M[\theta]} x y {N[\theta]} \downarrow^{(n_1 + n_2,k'r_1 + r_2)} v$ by way of $M[\theta] \downarrow^{(n_1,r_1)} (v_1,v_2)$ and $N[\theta,v_1/x,v_2/y] \downarrow^{(n_2,r_2)} v$. It remains to show that
+\begin{itemize}
+  \item $n_1 + n_2 \leq k'\norm{M}[\Theta]_c + \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]_c - (k'r_1 + r_2)$
+  \item $v \valbd^{C,k'f[\sigma] + g[\sigma] + k'r_1 + r_2} \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]_p$
+\end{itemize}
+By IH, $M[\theta] \bdby^{A \otimes B,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $(v_1,v_2) \valbd^{A \otimes B,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+and so there are $c_1,c_2 \geq 0$ so that $c_1 + c_2 = f[\sigma] + r_1$ and $v_1 \valbd^{A,c_1} \pi_1\norm{M}[\Theta]_p$ and $v_2 \valbd^{B,c_2} \pi_2\norm{M}[\Theta]_p$. So, $(\theta,v_1/x,v_2/y) \subbd^{(\Gamma,x:A,y:B),(\sigma,x\mapsto c_1,y\mapsto c_2)} (\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y)$. So, by IH,
+$N[\theta,v_1/x,v_2/y] \bdby^{C,g[\sigma] + k'(f[\sigma] + r_1)} \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]$, so
+\begin{itemize}
+  \item $n_2  \leq \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]_c - r_2$
+  \item $v \valbd^{C,k'f[\sigma] + g[\sigma] + k'r_1 + r_2} \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]_p$
+\end{itemize}
+Then,
+\begin{align*}
+ n_1 + n_2 &\leq k'n_1 + n_2\\
+ &\leq k'\norm{M}[\Theta]_c + \norm{N}[\Theta,\pi_1\norm{M}[\Theta]_p/x,\pi_2\norm{M}[\Theta]_p/y]_c - (k'r_1 + r_2)
+\end{align*}
+as required.
+
+\item[($\oplus$-E)] Let $\Gamma \vdash_{k'f + g_1 + g_2} \acase {k'} M x {N_1} y {N_2} : C$. By inversion, $\Gamma \vdash_f M : A \oplus B$, $\Gamma,x:A \vdash_{g_1 + k'x} N_1 : C$, and $\Gamma, y : B \vdash_{g_2 + k'y} N_2 : C$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. We must show that
+$$
+\acase {k'} {M[\theta]} x {N_1[\theta]} y {N_2[\theta]} \bdby^{C,k'f[\sigma] + g_1[\sigma] + g_2[\sigma]} k'\norm{M}[\Theta]_c +_c \ccase {\norm{M}[\Theta]_p} x {\norm{N_1}} y {\norm{N_2}}
+$$
+\sloppypar Because the two cases are symmetric, we consider only the following evaluation: $\acase {k'} {M[\theta]} x {N_1[\theta]} y {N_2[\theta]} \downarrow^{(n_1 + n_2,k'r_1 + r_2)} v$ by way of $M[\theta] \downarrow^{(n_1,r_1)} \inl {v_1}$ and $N_1[\theta,v_1/x] \downarrow^{(n_2,r_2)}v$. We must show that
+\begin{itemize}
+  \item $n_1 + n_2 \leq k'\norm{M}[\Theta]_c + \ccase {\norm{M}[\Theta]_p} x {\norm{N_1}} y {\norm{N_2}}_c - (k'r_1 + r_2)$
+  \item $v \valbd^{C,k'f[\sigma]+g_1[\sigma] + g_2[\sigma] + k'r_1 + r_2} \ccase {\norm{M}[\Theta]_p} x {\norm{N_1}} y {\norm{N_2}}_p$
+\end{itemize}
+By IH, $M[\theta] \bdby^{A \oplus B,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $\inl {v_1} \valbd^{A \oplus B,f[\sigma] + r_1}\norm{M}[\Theta]_p$
+\end{itemize}
+so there is an $E$ such that $\inl E \leq_{\angles A + \angles B} \norm{M}[\Theta]_p$ and $v_1 \valbd^{A,f[\sigma] + r_1} E$. So, $(\theta,v_1/x) \subbd^{(\Gamma,x:A),(\sigma,x\mapsto f[\sigma]+r_1)} (\Theta,E/x)$ and hence by IH, $N_1[\theta,v_1/x] \bdby^{g_1[\sigma]  + k'(f[\sigma] + r_!)} \norm{N_1}[\Theta,E/x]$, so
+\begin{itemize}
+  \item $n_2 \leq \norm{N_1}[\Theta,E/x]_c - r_2$
+  \item $v \valbd^{C,k'f[\sigma] + g_1[\sigma] + k'r_1 + r_2} \norm{N_1}[\Theta,E/x]_p$
+\end{itemize}
+Since $g_2[\sigma] \geq 0$, we have by credit weakening that $v \valbd^{C,k'f[\sigma] + g_1[\sigma] + g_2[\sigma] + k'r_1 + r_2} \norm{N_1}[\Theta,E/x]_p$.
+Then, we compute:
+\begin{align*}
+\norm{N_1}[\Theta,E/x] &\leq_{\norm C} \textsc{\ccase {\inl E} x {\norm{N_1}[\Theta]} y {\norm{N_2}[\Theta]}}\\
+&\leq \ccase {\norm{M}[\Theta]_p} x {\norm{N_1}[\Theta]} y {\norm{N_2}[\Theta]}
+\end{align*}
+which gives us the value bounding condition, and again compute:
+\begin{align*}
+n_1 + n_2 &\leq k'n_1 + n_2\\
+&\leq k'\norm{M}[\Theta]_c + \ccase {\norm{M}[\Theta]_p} x {\norm{N_1}} y {\norm{N_2}}_c - (k'r_1 + r_2)
+\end{align*}
+which gives us the cost bounding condition.
+
+\item[($\oplus$-I)] The cases for $\inl M$ and $\inr M$ are symmetric, so we let $\Gamma \vdash_f \inl M : A \oplus B$. Inversion gives $\Gamma \vdash_f M : A$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. 
+To show that $\inl {M[\theta]} \bdby^{A \oplus B,f[\sigma]} (\norm{M}[\Theta]_c,\inl{\norm{M}[\Theta]_p})$,
+we let $\inl{M[\theta]} \downarrow^{(n,r)} \inl v$. 
+Inverting, we have $M[\theta] \downarrow^{(n,r)} v$. 
+It suffices to show that $n \leq \norm{M}[\Theta]_c - r$, and that $\inl v \valbd^{A \oplus B,f[\sigma] + r} \inl {\norm{M}[\Theta]_p}$. By IH we have $n \leq \norm{M}[\Theta]_c - r$, and $v \valbd^{A,f[\sigma] + r} \norm{M}[\Theta]_p$. So we are done by the definition of value bounding at $\oplus$ for $\texttt{inl}$.
+
+\item[($\listty A$-I, cons)] Let $\Gamma \vdash_{f+g} \cons M N : \listty A$. 
+By inversion, $\Gamma \vdash_f M : A$ and $\Gamma \vdash_g N : \listty A$.
+Let $\theta \subbd^{\Gamma,\sigma} \Theta$. 
+To show that $\cons M N \bdby^{\listty A, f[\sigma] + g[\sigma]} (\norm{M}[\Theta]_c + \norm{N}[\Theta]_c, \cons {\norm{M}[\Theta]_p} {\norm{N}[\Theta]_p})$, 
+let $\cons M N \downarrow^{(n_1 + n_2,r_1 + r_2)} \cons {v_1} {v_2}$. 
+By inversion, $M \downarrow^{(n_1,r_1)} v_1$ and $N \downarrow^{(n_2,r_2)} v_2$. It suffices to provide $b,c$ where $c \geq 0$ and $b + c = f[\sigma] + g[\sigma]$ and that
+\begin{itemize}
+  \item $n_1 + n_2 \leq\norm{M}[\Theta]_c + \norm{N}[\Theta]_c - (r_1 + r_2)$
+  \item $\cons {v_1} {v_2} \valbd^{\listty A, f[\sigma] + g[\sigma] + r_1 + r_2} \cons {\norm{M}[\Theta]_p} {\norm{N}[\Theta]_p}$.
+\end{itemize}
+By IH,
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $v_1 \valbd^{A,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+and by IH on $N$, there are $b_2,c_2$ with $c_2 \geq 0$ and $b_2 + c_2 = g[\sigma]$ such that
+\begin{itemize}
+  \item $n_2 \leq \norm{N}[\Theta]_c - r_2$
+  \item $v_2 \valbd^{\listty A,g[\sigma] + r_2} \norm{N}[\Theta]_p$
+\end{itemize}
+Thus, the desired inequality follows from adding the two inductively computed ones, and the value bounding relation for $\cons {v_1} {v_2}$ is immediate by the definition.
+
+
+
+\item[($\listty A$-E)] Suppose $\Gamma \vdash_{f+g_1+g_2} \lrec M {N_1} {N_2} : C$. By inversion, $\Gamma \vdash_f M : \listty A$, $\Gamma \vdash_{g_1} N_1 : 1 \loli C$, $\Gamma \vdash_{g_2} N_2 : !^\infty_0 (A \otimes (\listty A \amp C) \loli C)$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. To show that
+\begin{align*}
+\lrec {M[\theta]} {N_1[\theta]} {N_2[\theta]} \bdby^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma]} &(\norm{M}[\Theta]_c + \norm{N_1}[\Theta]_c + \norm{N_2}[\Theta]_c) +_c\\ 
+&\lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\lambda (a,(as,r)). \norm{N_2}[\Theta]_p\;  (a,((0,as),r))}
+\end{align*}
+we break into the two evaluation cases. Firstly, suppose that $\lrec {M[\theta]} {N_1[\theta]} {N_2[\theta]} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3+r_4)} v$ by way of $M[\theta] \downarrow^{(n_1,r_1)} \elist$, $N_1[\theta] \downarrow^{(n_2,r_2)} \lambda x.N_1'$, $N_2[\theta] \downarrow^{(n_3,r_3)} \save \infty 0 {(\lambda x.N_2')}$, and $N_1'[()/x] \downarrow^{(n_4,r_4)} v$. From here, denote we denote $\lambda x. \norm{N_2}[\Theta]_p (\pi_1 x,((0,\pi_1 \pi_2 x),\pi_2\pi_2 x))$ as $\norm{N_2}^*$.
+
+ It suffices to show that:
+\begin{itemize}
+  \item $n_1 + n_2 + n_3 + n_4 \leq \norm{M}[\Theta]_c + \norm{N_1}[\Theta]_c + \norm{N_2}[\Theta]_c + \lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}_c - (r_1 + r_2 + r_3 + r_4)$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3 + r_4} \lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}_p$
+\end{itemize}
+By IH, $M[\theta] \bdby^{\listty A,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $\elist \valbd^{f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+The second condition tells us that $\elist \leq \norm{M}[\Theta]_p$.
+Again by IH, $N_2[\theta] \bdby^{!^\infty_0(A \otimes (\listty A \amp C) \loli C),g_2[\sigma]} \norm{N_2}[\Theta]$, so
+\begin{itemize}
+  \item $n_3 \leq \norm{N_2}[\Theta]_p - r_3$
+  \item $\save \infty 0 {(\lambda x.N_2')} \valbd^{!^\infty_0(A \otimes (\listty A \amp C) \loli C),g_2[\sigma] + r_3} \norm{N_2}[\Theta]_p$
+\end{itemize}
+In particular, by preservation, $g_2[\sigma] + r_3 \geq 0$.
+Thirdly by IH, $N_1[\theta] \bdby^{1 \loli C,g_1[\sigma]} \norm{N_1}[\Theta]$, which means
+\begin{itemize}
+  \item $n_2 \leq \norm{N_1}[\Theta]_c - r_2$
+  \item $\lambda x.N_1' \valbd^{1 \loli C,g_1[\sigma] + r_2} \norm{N_1}[\Theta]_p$
+\end{itemize}
+Since $() \leq ()$, $() \valbd^{1,f[\sigma] + r_1} ()$. Hence, $N_2'[()/x] \bdby^{C,g_1[\sigma] + f[\sigma] + r_1 + r_2} \norm{N_1}[\Theta]_p \; ()$. This means that
+\begin{itemize}
+  \item $n_4 \leq (\norm{N_1}[\Theta]_p \; ())_c - r_4$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + r_1 + r_2 + r_4} (\norm{N_1}[\Theta]_p \; ())_p$
+\end{itemize}
+But by credit weakening, since $g_2[\sigma] + r_3 \geq 0$, we have 
+$v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3 + r_4} (\norm{N_1}[\Theta]_p \; ())_p$. But, we can compute:
+$$
+\norm{N_1}[\Theta]_p \; () \leq \lrec {\elist} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p} \leq \lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}
+$$
+and we are done by weakening.\\
+
+
+Otherwise, assume $M[\theta] \downarrow^{(n_1,r_1)} \cons {v_1} {v_2}$, $N_2[\theta] \downarrow^{(n_2,r_2)} \save \infty 0 {(\lambda x.N_2')}$, $N_1[\theta] \downarrow^{(n_3,r_3)} \lambda x.N_1'$, and $$N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})] \downarrow^{(n_4,r_4)} v$$.
+Just like the previous case, it suffices to show
+\begin{itemize}
+  \item $n_1 + n_2 + n_3 + n_4 \leq \norm{M}[\Theta]_c + \norm{N_1}[\Theta]_c + \norm{N_2}[\Theta]_c + \lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}_c - (r_1 + r_2 + r_3 + r_4)$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3 + r_4} \lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p}_p$
+\end{itemize}
+By IH, $M[\theta] \bdby^{\listty A,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $\cons {v_1} {v_2} \valbd^{\listty A,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+By the second condition, we know that there are $d_1,d_2 \geq 0$ with $d_1 + d_2 = f[\sigma] + r_1$, and $E_1,E_2$ with $\cons {E_1} {E_2} \leq \norm{M}[\Theta]_p$ such that $v_1 \valbd^{A,d_1} E_1$, and $v_2 \valbd^{\listty A,d_2} E_2$.
+By IH, $N_1[\theta] \bdby^{1 \loli C,g_1[\sigma]} \norm{N_1}[\Theta]$, so
+\begin{itemize}
+  \item $n_3 \leq \norm{N_1}[\Theta]_c - r_3$
+  \item $\lambda x.N_1' \valbd^{1 \loli C,g_1[\sigma] + r_3} \norm{N_1}[\Theta]_p$
+\end{itemize}
+Again by IH, $N_2[\theta] \bdby^{!^\infty_0(A \otimes (\listty A \amp C) \loli C),g_2[\sigma]} \norm{N_2}[\Theta]$, which means that
+\begin{itemize}
+  \item $n_2 \leq \norm{N_2}[\theta]_c - r_2$
+  \item $\save \infty 0 {(\lambda x.N_2')} \valbd^{!^\infty 0 (A \otimes (\listty A \amp C) \loli C),g_2[\sigma] + r_2} \norm{N_2}[\Theta]_p$
+\end{itemize}
+The second condition means by definition that there is a $c \geq 0$ such that $\infty \cdot c \leq g_2[\sigma] + r_2$, and $\lambda x.N_2' \valbd^{A \otimes (\listty A \amp C) \loli C,c} \norm{N_2}[\Theta]_p$. We claim that 
+
+$$
+\begin{array}{l}
+N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_2'} {\save \infty 0 {(\lambda x.N_2')}}})] \bdby^{f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3}\\ \norm{N_2} \; (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}))
+\end{array}
+$$
+
+To prove this claim, we split into cases on the finitude of $g_2[\sigma] + r_2$.
+\begin{itemize}
+  \item Suppose $g_2[\sigma] + r_2$ is finite. Then $c = 0$, and $g_2[\sigma] + r_2 = 0$, and so by the list recursor lemma with $E_1 = \norm{N_1}[\Theta]_p$, $E_2 = \norm{N_2}[\Theta]_p$, and $E = E_2$, we have that $\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,d_2 + g_1[\sigma] + r_3} \lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}$. Since $v_2 \valbd^{\listty A,d_2} E_2$, we have that $v_2 \bdby^{\listty A,d_2} (0,E_2)$, and by credit weakening, since $g_1[\sigma] + r_3 \geq 0$, $v_2 \bdby^{\listty A,d_2 + g_1[\sigma] + r_3} (0,E_2)$. Thus:
+   $$
+   \begin{array}{l}
+   \amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}} \bdby^{\listty A \amp C,d_2 + g_1[\sigma] + r_3}\\ ((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*})   
+   \end{array}
+   $$
+    Next, since $v_1 \valbd^{A,d_1} E_1$, $d_1 + d_2 = f[\sigma] + r_1$, and $\lambda x.N_2' \valbd^{A \tensor (\listty A \amp C),0} \norm{N_2}[\Theta]_p$,
+  $$
+   \begin{array}{l}
+    N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] \bdby^{f[\sigma] + g_1[\sigma] + r_1 + r_3} \\\norm{N_2}[\Theta]_p \; (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}))     
+   \end{array}
+  $$
+  Which is exactly what we wanted to show, since $g_2[\sigma] + r_2 = 0$.
+  \item Suppose $g_2[\sigma] + r_2 = \infty$. Then, there is a $c \geq 0$ such that $\infty \cdot c \leq \infty$, and $\lambda x.N_2' \bdby^{A \otimes (\listty A \amp C) \loli C,c} \norm{N_2}[\Theta]_p$ By credit weakening, we may assume $c > 0$. By the list recursor lemma, $\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,d_2 + g_1[\sigma] + r_3 + \infty \cdot c} \lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}$. By the same reasoning as in the previous case, 
+  $$
+  \begin{array}{l}
+  (v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}}) \bdby^{A \tensor (\listty A \amp C),f[\sigma] + g_1[\sigma] + r_1 + r_3}\\ (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}))  
+  \end{array}
+  $$ 
+  Then, since $\infty \cdot c + c = \infty \cdot c$, 
+  $$
+  \begin{array}{l}
+  N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] \bdby^{C,f[\sigma] + g_1[\sigma] + r_1 + r_3 + \infty \cdot c}\\ \norm{N_2}[\Theta]_p \; (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}))  
+  \end{array}
+  $$
+  which, $\infty \cdot c \leq g_2[\sigma] + r_2$, gives us our goal by credit weakening.
+\end{itemize}
+
+From this result, we have by definition that
+\begin{itemize}
+  \item $n_4 \leq (\norm{N_2}[\Theta]_p \; (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*})))_c - r_4$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3 + r_4} (\norm{N_2}[\Theta]_p \; (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*})))_p$
+\end{itemize}
+Then we can compute:
+\begin{align*}
+\norm{N_2}[\Theta]_p \; (E_1,((0,E_2),\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*})) &\leq \norm{N_2}^* \; (E_1,(E_2,\lrec {E_2} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}))\\
+&\leq \lrec {\cons {E_1} {E_2}} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}\\
+&\leq \lrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}^*}
+\end{align*}
+
+and so we are done by weakening.
+
+\item[($\N$-E)] 
+
+Suppose $\Gamma \vdash_{f+g_1+g_2} \nrec M {N_1} {N_2} : C$. 
+By inversion, we have that $\Gamma \vdash_f M : \N$, $\Gamma \vdash_{g_1} N_1 : 1 \loli C$, and $\Gamma \vdash_{g_2} N_2 : !^\infty_0 (\N \otimes (1 \loli C) \loli C)$. 
+Let $\theta \subbd^{\Gamma,\sigma} \Theta$. For convenience, let $\norm{N_2}[\Theta]_p^* = \lambda p.\norm{N_2}[\Theta]_p(\pi_1 p,\lambda z. \pi_2 p)$.
+We must show: 
+$$
+\begin{array}{l}
+\nrec {M[\theta]} {N_1[\theta]} {N_2[\theta]} \bdby^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma]}\\
+(\norm{M}[\Theta]_c + \norm{N_1}[\Theta]_c + \norm{N_2}[\Theta]_c) +_c \nrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2} [\Theta]_p^*}
+\end{array}
+$$
+In order to show this, we have two evaluation cases to consider.
+Suppose 
+$$\nrec {M[\theta]} {N_1[\theta]} {N_2[\theta]} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3+r_4)} v$$
+by way of $M[\theta] \downarrow^{(n_1,r_1)} 0$, $N_1[\theta] \downarrow^{(n_2,r_2)} \lambda x.N_1'$, $N_2[\theta] \downarrow^{(n_3,r_3)} v'$, and $N_1'[()/x] \downarrow^{(n_4,r_4)} v$. 
+It suffices to show that:
+\begin{itemize}
+  \item $n_1+n_2+n_3+n_4 \leq b + \norm{M}[\Theta]_c + \norm{N_1}[\Theta]_c + \norm{N_2}[\Theta]_c + \nrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2} [\Theta]_p^*}_c - (r_1 + r_2 + r_3 + r_4)$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3 + r_4} \nrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2} [\Theta]_p^*}_p$
+\end{itemize}
+
+By IH, $M[\theta] \bdby^{\N,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $0 \valbd^{\N,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+since $0 \valbd^{\N,f[\sigma] + r_1} \norm{M}[\Theta]_p$, $0 \leq_\N \norm{M}[\Theta]_p$. 
+By IH, $N_1 [\theta] \bdby^{1 \loli C,g_1[\sigma]} \norm{N_1}[\Theta]$, so
+\begin{itemize}
+  \item $n_2 \leq \norm{N_1}[\Theta]_c - r_2$
+  \item $\lambda x.N_1' \valbd^{1 \loli C,g_1[\sigma] + r_2} \norm{N_1}[\Theta]_p$
+\end{itemize}
+By IH, $N_2[\theta] \bdby^{!^\infty_0(\cdots),g_2[\sigma]} \norm{N_2}[\Theta]$, and so
+\begin{itemize}
+  \item $n_3 \leq \norm{N_2}[\Theta]_c - r_3$
+\end{itemize}
+We omit the value bounding condition since it does not factor into the rest of the proof. Since $() \leq_1 ()$, $() \valbd^{1,f[\sigma] + r_1} ()$. So: $N_1'[()/x] \bdby^{C,f[\sigma] + g_1[\sigma] + r_1 + r_2} \norm{N_1}[\Theta] \; ()$. Thus,
+\begin{itemize}
+  \item $n_4 \leq (\norm{N_1}[\Theta] \; ())_c - r_4$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + r_1 + r_2 + r_4} (\norm{N_1}[\Theta] \; ())_p$
+\end{itemize}
+Since $g_2[\sigma] + r_3 \geq 0$, we know by credit weakening, $v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1 + r_2 + r_3 + r_4} (\norm{N_1}[\Theta] \; ())_p$.
+Since $0 \leq \norm{M}[\Theta]_p$, we compute: 
+\begin{align*}
+\norm{N_1}[\Theta] \; () &\leq_C \nrec 0 {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*}\\
+&\leq \nrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*}
+\end{align*}
+
+So we are done by weakening.\\
+
+% *** 2nd REC EVAL CASE ***
+Suppose $\nrec {M[\theta]} {N_1[\theta]} {N_2[\theta]} \downarrow^{(n_1+n_2+n_3+n_4,r_1+r_2+r_3+r_4)} v$ by way of 
+$M[\theta] \downarrow^{(n_1,r_1)} S(v_1)$, 
+$N_2[\theta] \downarrow^{(n_2,r_2)} \save \infty 0 {\lambda x.N_2'}$, 
+$N_1[\theta] \downarrow^{(n_3,r_3)} \lambda x.N_1'$, and 
+$$N_2'[(v_1,\nrec {v_1} {\lambda z. {(\nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {\lambda x.N_2'}})}})/x] \downarrow^{(n_4,r_4)} v$$
+\begin{itemize}
+  \item $n_1 + n_2 + n_3 + n_4 \leq b + \norm{M}[\Theta]_c + \norm{N_1}[\Theta]_c + \norm{N_2}[\Theta] + \nrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*}_c - (r_1+r_2+r_3+r_4)$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + g_2[\sigma] + r_1+r_2+r_3+r_4} \nrec {\norm{M}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*}_p$
+\end{itemize}
+
+%%c_1 = f[\sigma] + r_1
+By IH, $M[\theta] \bdby^{\N,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $S(v_1) \valbd^{\N,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+Since $S(v_1) \valbd^{\N,f[\sigma] + r_1} \norm{M}[\Theta]_p$, there is an $E$ such that $v_1 \valbd^{\N,f[\sigma] + r_1} E$, and $S(E) \leq \norm{M}[\Theta]_p$.
+
+%%c_3 = g_1[\sigma] + r_3
+By IH, $N_1[\theta] \bdby^{1 \loli C,g_1[\sigma]} \norm{N_1}[\Theta]$, and so
+\begin{itemize}
+  \item $n_3 \leq \norm{N_1}[\Theta]_c - r_3$
+  \item $\lambda x.N_1' \valbd^{1 \loli C,g_1[\sigma] + r_3} \norm{N_1[\Theta]}_p$
+\end{itemize}
+
+%% c_2 = g_2[\sigma] + r_2
+By IH, $N_2[\theta] \bdby^{!^\infty_0(\N \otimes (1 \loli C) \loli C),g_2[\sigma]}\norm{N_2}[\Theta]$, so by definition,
+\begin{itemize}
+  \item $n_2 \leq \norm{N_2}[\Theta]_c - r_2$
+  \item $\save \infty 0 {\lambda x.N_2'} \valbd^{!^\infty_0(\N\otimes (1 \loli C) \loli C),g_2[\sigma] + r_2}\norm{N_2}[\Theta]_p$
+\end{itemize}
+and so there is a $d \geq 0$ so that $\lambda x.N_2' \valbd^{\N \otimes (1 \loli C) \loli C,d} \norm{N_2}[\Theta]_p$, and $\infty \cdot d \leq g_2[\sigma] + r_3$. By the $\N$-recursor lemma, $\nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \bdby^{C,g_1[\sigma] + r_2 + \infty \cdot d} \nrec {E} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*}$.
+Let $E^* = (E,\nrec {E} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*})$. Note that $v_1 \valbd^{\N,f[\sigma] + r_1} \pi_1 E^*$ and $$\lambda z. \nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} \valbd^{1 \loli C,g_1[\sigma] + r_2 + \infty \cdot d} \lambda z. \pi_2 E^*$$, and so:
+$$
+(v_1,\lambda z. \nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}) \valbd^{\N \otimes (1 \loli C),f[\sigma] + g_1[\sigma] + \infty \cdot d + r_1 + r_2} (\pi_1  E^*,\lambda z.\pi_2 E^*)
+$$.
+
+Thus, because $\lambda z.N_2' \valbd^{\N \otimes (1 \loli C) \loli C,d} \norm{N_2}[\Theta]_p$, and $\infty \cdot d + d = \infty \cdot d$
+
+$$
+N_2'[(v_1,\lambda z. \nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}})] \bdby^{C,f[\sigma] + g_1[\sigma] + \infty \cdot d + r_1 + r_2} \norm{N_2}[\Theta]_p(\pi_1  E^*,\lambda z.\pi_2 E^*)
+$$
+and so:
+\begin{itemize}
+  \item $n_4 \leq (\norm{N_2}[\Theta]_p \; (\pi_1  E^*,\lambda z.\pi_2 E^*))_c - r_4$
+  \item $v \valbd^{C,f[\sigma] + g_1[\sigma] + \infty \cdot d + r_1 + r_2 + r_4}  (\norm{N_2}[\Theta]_p \; (\pi_1  E^*,\lambda z.\pi_2 E^*))_p$
+\end{itemize}
+but, $\infty \cdot d \leq g_2[\sigma] + r_3$, and
+\begin{align*}
+  \norm{N_2}[\Theta]_p \; (\pi_1  E^*,\lambda z.\pi_2 E^*) &\leq (\lambda p. \norm{N_2}[\Theta]_p (\pi_1 p,\lambda z.\pi_2 p))E^*\\
+  &\leq \norm{N_2}[\Theta]_p^* \; (E,\nrec {E} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p^*})\\
+  &\leq \nrec {S(E)} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p}\\
+  &\leq \nrec {\norm{N_1}[\Theta]_p} {\norm{N_1}[\Theta]_p} {\norm{N_2}[\Theta]_p}
+\end{align*}
+and so we are done by weakening and credit weakening.
+
+
+\item[($\amp$-I)] Suppose $\Gamma \vdash_f \amppair M N : A \amp B$, and let $\theta \subbd^{\Gamma,\sigma} \Theta$. We can invert to find that $\Gamma \vdash_f M : A$ and $\Gamma \vdash_f N : B$. Since $\amppair {M[\theta]} {N[\theta]} \downarrow^{(0,0)} \amppair  {M[\theta]} {N[\theta]} $, to show that $\amppair  {M[\theta]} {N[\theta]}  \bdby^{A \amp B,f[\sigma]} (0,(\norm{M}[\Theta],\norm{N}[\Theta]))$ we must show that $0\leq 0$ (done!) and that $\amppair {M[\theta]} {N[\theta]}  \valbd^{A \amp B,f[\sigma]} (\norm{M}[\Theta],\norm{N}[\Theta])$. For this, it suffices by weakening to show that $M[\theta] \bdby^{A,f[\sigma]} \norm{M}[\Theta]$ and $N[\theta] \bdby^{B,f[\sigma]} \norm{N}[\Theta]$, which are precisely the inductive hypotheses.
+
+\item[($\amp$-E)] By symmetry, it suffices to present the $pi_1$ case. Suppose $\Gamma \vdash_f \pi_1 M : A$. By inversion, $\Gamma \vdash_f M : A \amp B$. Let $\theta \subbd^{\Gamma,\sigma} \Theta$. To show that $\pi_1 M[\theta] \bdby^{A,f[\sigma]} \norm{M}[\Theta]_c +_c \pi_1(\norm{M}[\Theta]_p)$, assume $\pi_1 M[\theta] \downarrow^{(n_1+n_2,r_1+r_2)} v$. By inversion, it was by way of $M[\theta] \downarrow^{(n_1,r_1)} \amppair {N_1} {N_2}$ and $N_1 \downarrow^{(n_2,r_2)} v$. We must show that:
+\begin{itemize}
+   \item $n_1 + n_2 \leq \norm{M}[\Theta]_c + (\pi_1\norm{M}[\Theta]_p)_c - (r_1 + r_2)$
+   \item $v \valbd^{A,f[\sigma] + r_1 + r_2} (\pi_1\norm{M}[\Theta]_p)_p$
+\end{itemize}
+By IH, $M[\theta] \bdby^{A \amp B,f[\sigma]} \norm{M}[\Theta]$, so
+\begin{itemize}
+  \item $n_1 \leq \norm{M}[\Theta]_c - r_1$
+  \item $\amppair {N_1} {N_2} \valbd^{A \amp B,f[\sigma] + r_1} \norm{M}[\Theta]_p$
+\end{itemize}
+where the second condition means, in particular, that $N_1 \bdby^{A,f[\sigma] + r_1} \pi_1 \norm{M}[\Theta]_p$. So, since $N_1 \downarrow^{(n_2,r_2)} v$,
+\begin{itemize}
+  \item $n_2 \leq (\pi_1 \norm{M}[\Theta]_p)_c - r_2$
+  \item $v \valbd^{A,f[\sigma] + r_1 + r_2} (\pi_1 \norm{M}[\Theta]_p)_p$
+\end{itemize}
+as required.
+
+\item[(var)] Suppose $\Gamma, x : A \vdash_{x+f} x : A$. Let $(\theta,v/x) \subbd^{(\Gamma,x:A),(\sigma,x\mapsto a)}(\Theta,E/x)$. We know that $v \valbd^{A,a} E$.
+We must show that $v \bdby^{A,a+f[\sigma]} (0,E)$. We know that $v \downarrow^{(0,0)} v$. Of course, $0 \leq 0$. Since $f[\sigma] \geq 0$, we are done by credit weakening.
+
+\end{itemize}
+\end{proof}

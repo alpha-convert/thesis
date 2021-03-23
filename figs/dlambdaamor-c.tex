@@ -1,0 +1,22 @@
+\begin{mathpar}
+\inferrule[C-Top]{ }{\Theta;\Delta \vdash \top \texttt{ wf}}
+
+\inferrule[C-Bot]{ }{\Theta;\Delta \vdash \bot \texttt{ wf}}
+
+\inferrule[C-Conj]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2 \texttt{ wf}}
+
+\inferrule[C-Disj]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \vee \Phi_2 \texttt{ wf}}
+
+\inferrule[C-Impl]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta, \Phi_1 \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \to \Phi_2 \texttt{ wf}}
+
+
+\inferrule[C-Forall]{\Theta, i : S ; \Delta \vdash \Phi \texttt{ wf}}{\Theta ; \Delta \vdash \forall i : S. \Phi \texttt{ wf}}
+
+\inferrule[C-Exists]{\Theta, i : S ; \Delta, \Phi \vdash \Phi \texttt{ wf}}{\Theta ; \Delta \vdash \exists i : S. \Phi \texttt{ wf}}
+
+\inferrule[C-Leq]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I \leq J \texttt{ wf}}
+
+\inferrule[C-Lt]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I < J \texttt{ wf}}
+
+\inferrule[C-Eq]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I = J \texttt{ wf}}
+\end{mathpar}

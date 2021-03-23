@@ -1,0 +1,32 @@
+\begin{proof}
+We proceed by induction on $n$. For the base case, suppose that $\nrec 0 {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} \downarrow^{(n,r)} v$ by way of $N_1'[()/x] \downarrow^{(n,r)} v$, It suffices to show that
+\begin{itemize}
+  \item $n \leq \nrec E {E_1} {E_2}_c - r$
+  \item $v \valbd^{C,c_3 + \infty \cdot d + r} \nrec E {E_1} {E_2}_p$
+\end{itemize}
+Since $() \leq ()$, we know that $() \valbd^{1,0} ()$, so $N_1'[()/x] \bdby^{C,c_3} E_1 \; ()$. Hence,
+\begin{itemize}
+  \item $n \leq (E_1 \; ())_c - r$
+  \item $v \valbd^{C,c_3 + r} (E_1 \; ())_p$
+\end{itemize}
+Since $0 \valbd^{\N,0} E$, $0 \leq_\N E$. Thus: $E_1 \; () \leq_C \nrec 0 {E_1} {E_2} \leq_C \nrec E {E_1} {E_2}$. Further, $c_3 + r \leq c_3 + r + \infty \cdot d$ because $d \geq 0$.
+So, we are done by both weakening and credit weakening.
+
+For the inductive case, we know that $S(\inj n) \valbd^{\N,0} E$, so there is an $E'$ such that $S(E') \leq E$ and $\inj n \valbd^{\N,0} E'$.
+Suppose that $$\nrec {S(\inj n)} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')} \downarrow^{(n',r)} v$$ which, by inversion, was by $N_2'[(\inj n,\delay {(\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 (\lambda x.N_2')})})] \downarrow^{(n',r)} v$. It suffices to show
+\begin{itemize}
+  \item $n' \leq \nrec E {E_1} {E_2}_c - r$
+  \item $v \valbd^{C,c_3 + \infty \cdot d + r} \nrec E {E_1} {E_2}_p$
+\end{itemize}
+By IH, $\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 {\lambda x.N_2'}} \bdby^{C,c_3 + \infty \cdot d} \nrec {E'} {E_1} {E_2}$,
+and so, since $d + \infty \cdot d = \infty \cdot d$
+$$
+N_2'[(\inj n,\delay{(\nrec {\inj n} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} )})/x] \bdby^{C,c_3 + \infty \cdot d} E_2 \; (E',\nrec {E'} {E_1} {E_2})
+$$
+and therefore
+\begin{itemize}
+  \item $n' \leq (E_2 \; (E',\nrec {E'} {E_1} {E_2}))_c - r$
+  \item $v \valbd^{C,c_3 + \infty \cdot d + r} (E_2 \; (E',\nrec {E'} {E_1} {E_2}))_p$
+\end{itemize}
+But, since $S(E') \leq E$, we have $E_2 \; (E',\nrec {E'} {E_1} {E_2}) \leq_C \nrec {S(E')} {E_1} {E_2} \leq_C \nrec E {E_1} {E_2}$. So, we are done by weakening.
+\end{proof}

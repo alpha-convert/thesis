@@ -1,0 +1,28 @@
+\credwkn*
+\begin{proof}
+  We prove the two claims simultaneously.
+  \begin{enumerate}
+   \item[(1)] Suppose $M \bdby^{A,a_1} E$. To show $M \bdby^{A,a_2} E$, suppose $M \downarrow^{(n,r)} v$. We must show that
+   such that
+   \begin{itemize}
+     \item $n \leq E_c - r$
+     \item $v \valbd^{A,a_2+r} E_p$
+   \end{itemize}
+   But, since $M \bdby^{A,a_1} E$, we have
+   \begin{itemize}
+     \item $n \leq E_c - r$
+     \item $v \valbd^{A,a_1 + r} E_p$
+   \end{itemize}
+  Since $a_1 \leq a_2$, $a_1 + r \leq a_2+ r$, so we are done by (2).
+  \item[(2)] By lexicographic induction on first $A$ and then the size of $v$.
+  \begin{itemize}
+       \item[($!$)] Let $\save k l v \valbd^{!^k_l A,a_1} E$. Then, there is a $d \geq 0$ such that $kd + l \leq a_1$ and $v \valbd^{A,d} E$. But $kd+l\leq a_1 \leq a_2$, and so $\save k l v \valbd^{!^k_l A,a_2} E$
+       \item[($\loli$)] Let $\lambda x.M \valbd^{A \loli B,a_1} E$. Suppose $v \valbd^{A,b} E'$. Then, $M[v/x] \bdby^{B,a_1 + b} E \; E'$, and so by (1), $M[v/x] \bdby^{B,a_2 + b} E \; E'$. Since $v$ was chosen arbitrarily, $\lambda x.M \valbd^{A \loli B,a_2} E$, as required.
+    \item[($\tensor$)] Let $(v_1,v_2) \valbd^{A_1 \otimes A_2,a_1} E$. Then, there are $b_1,b_2$ with $b_1 + b_2$ such that $b_1 + b_2 = a_1$, and $v_i \valbd^{A_i,a_1} \pi_i E$ for $i \in \{1,2\}$. By the IH on $v_1$, we have that $v_1 \valbd^{A_1,b_1 + a_2 - a_1} \pi_1 E$, and so $(v_1,v_2) \valbd^{A_1 \otimes A_2,a_2} E$, as required.
+    \item[($\listty{A}$)] The empty case is immediate. Suppose $\cons {v_1} {v_2} \valbd^{\listty A, a_1} E$. Then, there are $E_1, E_2,b_1,b_2$ such that $b_1 + b_2 = a_1$, $\cons {E_1} {E_2} \leq E$, $v_1 \valbd^{A,b_1} E_1$, and $v_1 \valbd^{\listty A,b_2} E_2$. By IH, $v_1 \valbd^{A,b_1 + a_2 - a_1} E_1$, and so $\cons {v_1} {v_2} \valbd^{\listty A, a_2} E$.
+    \item[($\N$)] The zero case is immediate. Suppose $S(v) \valbd^{\N,a_1} E$. Then, there is $E'$ such that $S(E') \leq E$, and $v \valbd^{\N,a_1} E'$. Since $v$ is a smaller term than $S(v)$, we can apply the IH to see that $v \valbd^{\N,a_2} E'$, and so $S(v) \valbd^{\N,a_2} E$, as desired.
+    \item[($\oplus$)] The two cases are symmetric, so we present only one. Suppose $\inl v \valbd^{A \oplus B,a_1} E$. Then we have $E'$ such that $\inl E' \leq E$, and $v \valbd^{A,a_1} E'$, which, by IH, means that $v \valbd^{A,a_2} E'$, and so $\inl v \valbd^{A \oplus B,a_2} E$.
+    \item[($A \amp B$)] Immediate by IH.
+  \end{itemize}
+  \end{enumerate}
+\end{proof}

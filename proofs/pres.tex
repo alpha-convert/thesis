@@ -1,0 +1,77 @@
+\pres*
+\begin{proof}
+By induction on $M \downarrow v$.
+\begin{itemize}
+\item (Values): Suppose $\cdot \vdash_a v : A$ and $v \downarrow^{(0,0)} v$. Then, $a + 0 \geq 0$ (because $a \geq 0$), and $\cdot \vdash_{a+0 = a} v : A$.
+\item (Tick): Immediate by IH.
+
+\item ($!$-I):  Suppose $\cdot \vdash_b \save k l M : !^k_l A$, and $\save k l M \downarrow^{(\_,kr)} \save k l v$. We must show that $b + kr \geq 0$ and that $\cdot \vdash_{b+kr} \save k l v : !^k_l A$. Inverting the rules, we have that $\cdot \vdash_a M : A$ with $ka+l \leq b$, and that $M \downarrow^{(n,r)} v$. By IH, $\cdot \vdash_{a+r} v : A$ with $a + r \geq 0$. Since $k,l \geq 0$, $0 \leq k(a+r) + l = ka+l+kr$, which, since $ka+l \leq b$, is less than or equal to $b+kr$. So, $b+kr \geq 0$ and $\cdot \vdash_{b+kr} \save k l v : !^k_l A$, as required.
+
+\item ($!$-E): For this case, suppose $\cdot \vdash_{k'a+b} \tsfer {k'} k l x M N : C$, and  $\tsfer{k'} k l x M N \downarrow^{(\_,k'r_1+r_2)} v$. We want to show that: $k'a + b + k'r_1 + r_2 \geq 0$ and $\cdot \vdash_{k'a + b + k'r_1 + r_2} v : C$. By inversion, $\cdot \vdash_a M : !^k_l A$, and $x : A \vdash_{b+k'(kx+l)} N :C$, as well as $M \downarrow^{(\_,r_1)} \save k l {v_1}$ and $N[v_1/x] \downarrow^{(\_,r_2)} v$. By IH, we know that $\cdot \vdash_{a+r_1} \save k l {v_1} : !^k_l A$ and $a+r_1 \geq 0$, so by inversion, there is a $d$ such that $kd+l \leq a+r_1$, and $\cdot \vdash_d v_1 : A$, and so substitution gives that $\cdot \vdash_{b+k'(kd+l)} N[v_1/x] : C$. But $kd+l \leq a+r_1$, so by structural weakening we have $\cdot \vdash_{b+k'a+k'r_1} N[v_1/x] : C$. Again by IH, $\cdot \vdash_{b+r_2 + k'a+k'r_1} v : C$ and $b+r_2 + k'a+k'r_1 \geq 0$, as required.
+
+\item (\waitname): Suppose $\cdot \vdash_a \wait l M : A$ and $\wait l M \downarrow^{(n,r+l)} v$. Inverting, we have $\cdot \vdash_{a+l} M : A$, and $M \downarrow^{(n,r)} v$. By IH, we have that $a + l + r \geq 0$, and $\cdot \vdash_{a+r+l} v$. But, we wanted to show that $a + r + l \geq 0$ and that $\cdot \vdash_{a + r + l} v : A$, and so we are done.
+\item (\discname): Suppose $\cdot \vdash_{a+l} \disc l M : A$, and $\disc l M \downarrow^{(\_,r-l)} v$. We want to show that $a + l + r - l = a + r \geq 0$, and that $\cdot \vdash_{a+l+r-l=a+r} v$ Inverting, we have that $\cdot \vdash_a M : A$ and $M \downarrow^{(n,r)} v$. By IH, $a + r \geq 0$ and $\cdot \vdash_{a+r} v : A$, as required.
+
+\item($\otimes$-I): For this case, let $\cdot \vdash_{a+b}(M,N) : A \otimes B$, and $(M,N) \downarrow^{(\_,k_1+k_2)} (v_1,v_2)$. We must show that $a + b + k_1 + k_2 \geq 0$, and that $\cdot \vdash_{a + b + k_1 + k_2 }(v_1,v_2)$
+Inverting, we get the four premises $\cdot \vdash_a M : A$, $\cdot \vdash_b N : B$, and $M \downarrow^{(\_,k_1)}v_1$ and $N \downarrow^{(\_,k_2)} v_2$. Using the IH on these two pairs, we get that $a + k_1 \geq 0$, $b + k_2 \geq 0$, $\cdot \vdash_{a+k_1} v_1 : A$, and $\cdot \vdash_{b + k_2} v_2 : B$. Adding the two inequalities and applying $\otimes$-I to the judgments gives the desired result.
+
+
+\item($\oplus$-E): Suppose $\cdot \vdash_{a+b_1+b_2} \acase {k'} M x {N_1} y {N_2} : C$ and $\acase {k'} M x {N_1} y {N_2} \downarrow^{(\_,k'r_1 + r_2)} v$. 
+Inverting the typing judgment, $\cdot \vdash_a M : A \oplus B$, $x : A \vdash_{b_1 + k'x} N_1 : C$ and $y : B \vdash_{b_2 + k'} N_2 : C$. Inverting the evaluation judgment gives two symmetric cases, so suppose that $M \downarrow^{(\_,r_1)} \inl {v_1}$ and $N_1[v_1/x] \downarrow^{(\_,r_2)} v$. By IH, $\cdot \vdash_{a+r_1} \inl {v_1} : A \oplus B$ and $a + r_1 \geq 0$. So, $\cdot \vdash_{a+r_1} v_1 : A$. By substitution, $\cdot \vdash_{b_1 + k'(a+r_1)} N_1[v_1/x] : C$. By IH, $\cdot \vdash_{k'a + b_1 + k'r_1 +  r_2} v : C$ and $k'a + b_1 + k'r_1 +  r_2 \geq 0$. Since $b_2 \geq 0$, by structural weakening, $\cdot \vdash_{k'a + b_1 + b_2 + k'r_1 +  r_2} v : C$ and $k'a + b_1 + b_2 + k'r_1 +  r_2 \geq 0$, as required.
+
+\item ($\loli$-E):  Let $\cdot \vdash_{a+b} M \, N : B$, and $M \, N \downarrow^{(\_,k_1+k_2+k_3)} v$. We want to show that $a + b + k_1 + k_2 + k_3 \geq 0$, and that $\cdot \vdash_{a + b + k_1 + k_2 + k_3} v : B$. We invert both judgments to get $\cdot \vdash_a M : A \loli B$, and $\cdot \vdash_b N : A$, and $M\downarrow^{(\_,k_1)} \lambda x.M'$, and $N \downarrow^{(\_,k_2)} v_1$, and that $M'[v_1/x] \downarrow^{(\_,k_3)} v$. Applying the IH to the first evaluation, we have that $\cdot \vdash_{a+k_1} \lambda x.M' : A \loli B$. Inverting the proof of that judgment, we get that $x : A \vdash_{a+k_1+x} M' : B$. By IH again, $\cdot \vdash_{b+k_2} v_1 : A$, and by substitution, $\cdot \vdash_{a+b+k_1+k_2} M'[v_1/x]$. By IH once more, $a + b + k_1 + k_2 + k_3 \geq 0$, and $\cdot \vdash_{a + b + k_1 + k_2 + k_3} v : B$, as required.
+
+\item ($\N$-E) Suppose $\cdot \vdash_{a+b_1+b_2} \nrec {M} {N_1} {N_2} : C$. By inversion, $\cdot \vdash_a M : \N$, $\cdot \vdash_{b_1} N_1 : 1 \loli C$, and $\cdot \vdash_{b_2} N_2 : !^\infty_0(\N \tensor (1 \loli C) \loli C)$. We have two evaluation cases to consider.
+\begin{itemize}
+  \item Suppose $\nrec M {N_1} {N_2} \downarrow^{(\_,r_1+r_2+r_3+r_3)} v$ by way of $M \downarrow^{(\_,r_1)} 0 : \N$, $N_1 \downarrow^{(\_,r_2)} \lambda x.N_1'$, $N_2 \downarrow^{(\_,r_3)} \_$, and $N_1'[()/x] \downarrow^{(\_,r_4)} v$. Then, by IH, we have the following:
+  \begin{itemize}
+    \item $\cdot \vdash_{a+r_1} 0 : \N$, and $a + r_1 \geq 0$
+    \item $\cdot \vdash_{b_1+r_2} \lambda x.N_1' : 1 \loli C$, $b_1 + r_2 \geq 0$.
+    \item $b_2 + r_3 \geq 0$
+  \end{itemize}
+  Since $\cdot \vdash_0 () : 1$, $\cdot \vdash_{b_1 + r_1} N_1'[()/x] : C$. By IH, $\cdot \vdash_{b_1 + r_2 + r_4} v : C$. By structural weakening, $\cdot \vdash_{a+b_1+b_2 + r_1 + r_2 + r_3 + r_4} v : C$, as required.
+  \item Suppose $\nrec M {N_1} {N_2} \downarrow^{(\_,r_1+r_2+r_3+r_3)} v$ by way of $M \downarrow^{(\_,r_1)} S(v_1) : \N$, $N_1 \downarrow^{(\_,r_2)} \lambda x.N_1'$, $N_2 \downarrow^{(\_,r_3)} \save \infty 0 {(\lambda x.N_2')}$, and $N_2'[(v_1,\lambda z.\nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}})/x] \downarrow^{(\_,r_4)} v$. Then, by IH we have:
+  \begin{itemize}
+    \item $\cdot \vdash_{a+r_1} S(v_1) : \N$, $a + r_1 \geq 0$
+    \item $\cdot \vdash_{b_1 + r_2} \lambda x.N_1' : 1 \loli C$, $b_1 + r_2 \geq 0$
+    \item $\cdot \vdash_{b_2 + r_3} \save \infty 0 {(\lambda x.N_2')} : !^\infty_0(\N \otimes (1 \loli C) \loli C)$, and $b_2 + r_3 \geq 0$.
+  \end{itemize}
+  By $\N$-strengthening, $\cdot \vdash_0 S(v_1) : \N$, and so $\cdot \vdash_0 v_1 : \N$. Since $\cdot \vdash_{b_2 + r_3} \save \infty 0 {(\lambda x.N_2')} : !^\infty_0(\N \otimes (1 \loli C) \loli C)$, there is a $c \geq 0$ so that $\infty \cdot c \leq b_2 + r_3$ with $\cdot \vdash_c \lambda x.N_2' : \N \otimes (1 \loli C) \loli C$. Then, $\cdot \vdash_{b_1 + r_3 + \infty \cdot c} \nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} : C$, and so $\cdot \vdash_{a+b_1+r_1+r_2 + \infty \cdot c} (v_1,\lambda z.\nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}) : \N \otimes (1 \loli C)$. Thus, since $x : \N \otimes (1 \loli C) \vdash_{x + c} N_2' : C$,
+  $$
+  \cdot \vdash_{a+b_1+r_1+r_2 + \infty \cdot c} N_2'[(v_1,\lambda z.\nrec {v_1} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}})/x] : C  
+  $$
+  since $\infty \cdot c + c = \infty \cdot c$. So, by IH, $\cdot \vdash_{a+b_1 + r_1 + r_2 + \infty \cdot c + r_4} v : C$, and because $\infty \cdot c \leq b_2 + r_3$, we have by weakening that $\cdot \vdash_{a+b_1+b_2+r_1+r_2+r_3+r_4} v : C$ as required.
+\end{itemize}
+  
+\item ($[A]$-E) Suppose $\cdot \vdash_{a + b_1 + b_2} \lrec M {N_1} {N_2} : C$. Then, $\cdot \vdash_a M : A$,  $\cdot \vdash_{b_1} N_1 : 1 \to C$, and $\cdot \vdash_{b_2} : N_2 : !^\infty_0(A \otimes (\listty A \amp C) \loli C)$. We have two evaluation cases to consider. 
+
+Firstly, suppose $\lrec M {N_1} {N_2} \downarrow^{(\_,r_1+r_2+r_3+r_4)} v$ by way of $M \downarrow^{(\_,r_1)} v$, $N_1 \downarrow^{(\_,r_2)} \lambda x.N_1'$, $N_2 \downarrow^{(\_,r_3)} v'$, and $N_1'[()/x] \downarrow^{(\_,r_4)} v$. Then, by IH, $a + r_1 \geq 0$, which means that $\cdot \vdash_{a+r_1} () : 1$. By IH, $\cdot \vdash_{b_1 + r_2} \lambda x.N_1'$ and $b_1 + r_2 \geq 0$. So, by inversion and then substitution, $\cdot \vdash_{a+b_1+r_1+r_2} N_1'[()/x] : C$. By IH, $b_2 + r_3 \geq 0$, so by weakening, $\cdot \vdash_{a+b_1+b_2+r_1+r_2+r_3} N_1'[()/x]$. Finally, by IH, $a+b_1+b_2+r_1+r_2+r_3 + r_4 \geq 0$ and $\cdot \vdash_{a+b_1+b_2+r_1+r_2+r_3+r_4} v : C$.
+
+\sloppypar Now, suppose $\lrec M {N_1} {N_2} \downarrow^{(\_,r_1+r_2+r_3+r_4)} v$ by way of $M \downarrow^{(\_,r_1)} \cons{v_1} {v_2}$, $N_1 \downarrow^{(\_,r_2)} \lambda x.N_1'$, $N_2 \downarrow^{(\_,r_3)} \save \infty 0 {(\lambda x.N_2')}$, and $N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] \downarrow^{(\_,r_4)} v$. By IH, $\cdot \vdash_{a + r_1} \cons {v_1} {v_2} : \listty A$ and $a + r_1 \geq 0$. By inversion, there are $d_1,d_2 \geq 0$ so that $a+r_1 = d_1 + d_2$ and $\cdot \vdash_{d_1} v_1 : A$ and $\cdot \vdash_{d_2} v_2 : \listty A$. By two more applications of the IH, $\cdot \vdash_{b_1 + r_2} \lambda x.N_1' : 1 \loli C$, $\cdot \vdash_{b_2 + r_3} \save \infty 0 {(\lambda x.N_2')} : !^\infty_0(A\otimes(\listty A \amp C) \loli C)$, with $b_1 + r_2 \geq 0$ and $b_2 + r_3 \geq 0$. By inversion, there is some $c \geq 0$ with $\infty \cdot c \leq b_2 + r_3$ such that $\cdot \vdash_c \lambda x.N_2' : A \otimes (\listty A \amp C) \loli C$. Next,
+$$
+   \infer{
+     \cdot \vdash_{d_2 + b_1 + r_2 + \infty \cdot c} \lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}} : C
+   }{
+     \cdot \vdash_{d_2} v_2 : \listty A
+     &
+     \cdot \vdash_{b_1 + r_2} \lambda x.N_1' : 1 \loli C
+     &
+     \cdot \vdash_{\infty \cdot c} \save \infty 0 {(\lambda x.N_2')} : !^\infty_0 (A \otimes (\listty A \amp C) \loli C)
+   }
+$$
+then, with $\cdot \vdash_{d_2 + b_1 + r_2 + \infty \cdot c} v_2 : \listty A$,
+we have that
+$$
+\cdot \vdash_{d_2 + b_1 + r_2 + \infty \cdot c} \amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}} : \listty A \amp C
+$$
+and since $\cdot \vdash_{d_1} v_1 : A$,
+$$
+\cdot \vdash_{a + r_1 + b_1 + r_2 + \infty \cdot c} (v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}}) : A \otimes (\listty A \amp C)
+$$
+and so by substitution, and using the fact that $c + \infty \cdot c = \infty \cdot c$, $\cdot \vdash_{a + b_1 + r_1 + r_2 + \infty \cdot c} N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] : C$. By weakening, since $\infty \cdot c \leq b_2 + r_3$, 
+$\cdot \vdash_{a + b_1 + b_2 + r_1 + r_2 + r_3} N_2'[(v_1,\amppair {v_2} {\lrec {v_2} {\lambda x.N_1'} {\save \infty 0 {(\lambda x.N_2')}}})/x] : C$. Finally, by IH, $\cdot \vdash_{a+b_1+b_2+r_1+r_2+r_3+r_4} v : C$, and $a+b_1+b_2+r_1+r_2+r_3+r_4 \geq 0$, as required.
+
+\item ($\amp$-I): Immediate.
+\item ($\amp$-E): By symmetry, it suffices to only consider the $\pi_1$ case. Let $\cdot \vdash_a \pi_1 M : A$ and $\pi_1 M \downarrow^{(\_,r_1+r_2)} v$. By inversion, we have that $\cdot \vdash_a M : A \amp B$, and that $M \downarrow^{(\_,r_1)} \amppair {N_1} {N_2}$ and $N_1 \downarrow^{(\_,r_2)}$. We must show that $\cdot \vdash_{a+r_1+r_2} v : A$, and that $a+r_1+r_2 \geq 0$. By IH, $\cdot \vdash_{a+r_1} \amppair {N_1} {N_2} : A \amp B$. Inverting this, we get that $\cdot \vdash_{a+r_1} N_1 : A$, and so again by IH, $\cdot_{a+r_1+r_2} v : A$, and $a+r_1+r_2 \geq 0$, as required.
+\end{itemize}
+\end{proof}

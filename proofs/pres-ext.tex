@@ -1,0 +1,42 @@
+\presext*
+\begin{proof}
+The cases for all pre-existing rules are identical-- the only new cases are for \texttt{pack}, \texttt{unpack}, and \texttt{trec}. We present only the final case of \texttt{trec}, as it is the most illustritive.
+\begin{itemize}
+  \item (\texttt{pack}): Suppose that $\cdot | \cdot \vdash_a \pack \alpha \ell M : \exists \alpha$ and $\pack \alpha \ell M \downarrow^{(n,r)} \pack \alpha \ell v$ by way of $\cdot | \cdot \vdash_a M : A[\ell/\alpha]$ and $M \downarrow^{(n,r)} v$. By IH, $\cdot | \cdot \vdash_{a+r} v : A[\ell/\alpha]$ and $a + r \geq 0$. By the rule for $\texttt{pack}$, $\cdot | \cdot \vdash_{a + r} \pack \alpha \ell v : \exists \alpha. A$, as required.
+  \item (\texttt{unpack}): Suppose that $\cdot | \cdot \vdash_{a + b} \unpack \alpha x M N : C$ by way of $\cdot | \cdot \vdash_a M : \exists \alpha. A$ and $\alpha | x : A \vdash_{b+x} N : C$ with $\Delta \vdash C$, and that $\unpack \alpha x M N \downarrow^{(n_1+n_2,r_1+r_2)} v$ by way of $M \downarrow^{(n_1,r_1)} \pack \alpha \ell {v_1}$ and $N[\ell/\alpha,v_1/x] \downarrow^{(n_2,r_2)} v$. By IH, $\cdot | \cdot \vdash_{a+r_1} v_1 : A[\ell/\alpha]$. By credit variable substituion, $\cdot | x : A[\ell/\alpha] \vdash_{b+x} N[\ell/\alpha] :C$. By substitution, $\cdot | \cdot \vdash_{b + a + r_1} N[\ell/\alpha,v_1/x] L C$ By IH, $\cdot | \cdot \vdash_{a+b+r_1+r_2} v : C$ and $a + b + r_1 + r_2 \geq 0$ as required.
+  \item (\texttt{trec}): Suppose:
+  $$
+  \infer{\cdot | \cdot \vdash_{a + \sum b_i} \trec M {N_1} {N_2} {N_3} {N_4} {N_4}}
+  {
+   \begin{array}{l}
+  \cdot | \cdot \vdash_f M : \tree A\\
+  \cdot | \cdot \vdash_{b_1} N_1 : !^\infty_0(1 \loli C)\\
+  \cdot | \cdot \vdash_{b_2} N_2 : !^\infty_0(A \loli C)\\
+  \cdot | \cdot \vdash_{b_3} N_3 : !^\infty_0(A \otimes \N \otimes A \otimes N \otimes (\tree A \amp C)^2 \loli C)\\
+  \cdot | \cdot \vdash_{b_4} N_4 : !^\infty_0(A \otimes \N \otimes A \otimes N \otimes (\tree A \amp C)^2 \loli C)\\
+  \cdot | \cdot \vdash_{b_5} N_5 : !^\infty_0(A \otimes \N \otimes A \otimes N \otimes A \otimes N (\tree A \amp C)^4 \loli C)\\
+  \end{array}
+  }
+  $$
+  and
+  $$
+  \infer{\trec M {N_1} {N_2} {N_3} {N_4} {N_5} \downarrow^{(\sum n_i,\sum r_i)} v}
+  {
+  \begin{array}{l}
+  M \downarrow^{(n_0,r_0)} N(v_1,n_1,N(v_2,n_2,t_{00},t_{01}),N(v_3,n_7,t_{10},t_{11}))\\
+  N_i \downarrow^{(n_i,r_i)} \save \infty 0 {v_i'} \qquad (1 \leq i \leq 4)\\
+  N_5 \downarrow^{(n_5,r_5)} \save \infty 0 {(\lambda x.N_5')}\\
+  N_5'[(v_1,n_1,v_2,n_2,v_3,n_3,\amppair{t_{00},\texttt{trec}({t_{00}},{\save \infty 0 {v_1'}},{\dots},{\save \infty 0 {(\lambda x.N_5')}})},\dots)/x]
+  \end{array}
+  }  
+  $$
+  By IH, $\cdot | \cdot \vdash_{a+r_0} N(\dots)$. Hence, there are $d_1,\dots,d_n$, all non-negative, so that $\sum d_i = a + r_0$, and $\cdot | \cdot \vdash_{d_i} w_i: A_i$ where $w_i$ is the $i$th value in the value which $M$ evaluates to (in particular, $\cdot | \cdot \vdash_{d_1} v_1 : A$, and $\cdot | \cdot \vdash_{d_6} t_{00} : \tree A$).  Again by IH, there are $c_1,\dots,c_5$ so that $\infty c_i \leq b_i + r_i$, with $\cdot | \cdot \vdash_{c_i} v_i'$. Thus, $\cdot | \cdot \vdash_{d_6 + \sum c_i} \amppair{t_{00}} {\texttt{trec}(t_00,\save \infty 0 {v_1'},\dots)}$, and similarly for the rest of the subtrees. This immediately implies $$
+  \cdot | \cdot \vdash_{\sum {d_i} + 4\sum c_i} (v_1,n_1,v_2,n_2,v_3,n_3,\amppair{t_{00}} {\texttt{trec}(t_00,\save \infty 0 {v_1'},\dots)},\dots) : (A\otimes \N)^3 \otimes (\tree A \amp C)^4  
+  $$
+  then by substitution
+  $$
+  \cdot | \cdot \vdash_{\sum d_i + c_5 + 4\sum c_i} N_5'[ (v_1,n_1,v_2,n_2,v_3,n_3,\amppair{t_{00}} {\texttt{trec}(t_00,\save \infty 0 {v_1'},\dots)},\dots)/x] : C
+  $$
+  The result follows immediately by weakening ($\infty c_i \leq b_i + r_i$) and IH.
+\end{itemize}
+\end{proof}
