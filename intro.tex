@@ -1,15 +1,24 @@
+\red{(This intro is very tentative, and I'm holding off on fixing it until I know exactly what the rest of thesis looks like)}
 As the importance of ubiquity of modern software increases, so too does its complexity. The burden of this complexity blowup lands squarely on the shoulders of software developers, who are asked to create increasingly intricate systems, with little extra help. In response to this, many developers have turned to tooling and languages to help ease the burden: this is exemplified by the rise of Rust and safe systems languages \citehere which provide safety guarantees, along with the integration of static analysis tools into the standard development practices of many large software companies. While these practices go a long way to improve developer experience, they are limited in the domains of understanding that they improve. Notably, there are very few existing tools which help developers reason about the algorithmic complexity and performance of their software. The days when the performance and resource usage could be easily discerned from source code by eye are long gone, and yet very few techniques have stepped in to fill the void.
 
-The long-term goal of the field of language-based resource analysis is to create languages and tools which fill this gap by providing methods for statically determining a program's resource usage, and presenting this information to developers. Works (\textbf{??}) in this field usually come in one of two forms: techniques which which give resource guarantees to large classes of programs at once, and those which allow one to analyze a single program a time. The first category is typified by the creation of languages with resource-aware type systems which allow programmers to reason about their programs' resource usage as they write them. Some examples of projects of this type include Resource Aware ML \citehere, Granule \citehere, and Linear Haskell \citehere.
-
-The second category is exemplified by verification techniques such as program logics and static analyses-- given a program, these tools can be used to semi-automatically derive or prove resource usage properties. Some well known examples of this class include Infer \citehere, (\textbf{??})
+The long-term goal of the field of language-based resource analysis is to create languages and tools which fill this gap by providing methods for statically determining a program's resource usage, and presenting this information to developers. Works (\textbf{??}) in this field usually come in one of two forms: techniques which which give resource guarantees to large classes of programs at once, and those which allow one to analyze a single program a time. The first category is typified by the creation of languages with resource-aware type systems which allow programmers to reason about their programs' resource usage as they write them. Some examples of projects of this type include Resource Aware ML \citehere, Granule \citehere, and TiML \citehere. The second category is exemplified by verification techniques such as program logics and static analyses-- given a program, these tools can be used to semi-automatically derive or prove resource usage properties. Some great examples of this class include RelCost \citehere, Infer \citehere, and work in improvement theory \citehere.
 
 In this thesis, we will explore and extend one development in each of these two categories. More specifically, we will specialize our notion of resource to only consider algorithmic complexity or time cost, and examine two techniques which analyze it using amortized analysis.
 
-
-\textbf{\red{FINISH}}
-
 \subsection{Contributions}
+
+We begin in Chapter~\ref{chap:lambda-amor} by exploring a project of the first category: a resource-aware programming language. In particular, we consider \lambdaamor, a language for amortized cost analysis with an immensely expressive type system which subsumes multiple competing resource-aware type systems \cite{rajan-et-al:popl21}. The original creators of \lambdaamor considered it primarily for this purpose: as a unifying calculus for multiple resource-aware type systems. In this chapter, we consider it instead from a language designer's perspective and investigate what it takes to \textit{implement} the language so that we can write programs in practice. The expressiveness of \lambdaamor makes this implementation task no easy feat, and so we draw on a plethora of type system algorithmization techniques to eventually arrive at a calculus which is amenable to implementation. Finally, we present and evaluate an implementation of \lambdaamor in OCaml.
+
+Then, in Chapter~\ref{chap:rec-extr}, we move to considering a development in category two: a formal method for manually analyzing the amortized cost of functional programs. The method we present is based on \textit{recurrence extraction}, and closely mirrors the traditional algorithm analysis technique of the same name. In fact, the technique we present serves to formally justify the informal on-paper calculations already performed by practitioners of functional languages. The formal version of recurrence extraction was pioneered by \citet{danner-et-al:plpv13}, and has since been extended to increasingly complex functional languages. In this chapter, we extend it to handle amortized cost analysis.
+
+
+% Expressive
+% - Subsumes AARA
+% - Can encode complex examples not statically verifiable by other existing languages
+% Expressivity comes at the cost of ease of implementation
+% We consider 
+
+\red{Do I have to do attribution sentences here? This work was performed at ... with... funded by... presented at....}
 
 
 \section{Amortized Analysis Primer}
@@ -35,7 +44,7 @@ Given a counter of length $k$, \texttt{inc} performs at most $k + 1$ cons operat
   &\leq 2n + n\log_2 n
 \end{align*}
 
-While it may be useful for some applications, this bound is not tight. To see why, consider the case where the counter is set to the value of $15_{10}$, or $1111_2$. A  call to increment on this counter costs the full $5$ cons operations, leaving the counter at $10000_2$. However, a subsequent call to \texttt{inc} only costs $1$ to flip the first bit. Indeed, very few calls to \texttt{inc} traverse the whole list-- the vast majority only flip one or two bits (\red{do the math here for fun}). This example illustrates the tension of doing these naive analysis, and provides the primary insight for amortized analysis: while one data structure operation may be expensive, it may also restructure the data structure in such a way which makes \textit{subsequent} operations cheaper than the worst case\footnote{
+While it may be useful for some applications, this bound is not tight. To see why, consider the case where the counter is set to the value of $15_{10}$, or $1111_2$. A  call to increment on this counter costs the full $5$ cons operations, leaving the counter at $10000_2$. However, a subsequent call to \texttt{inc} only costs $1$ to flip the first bit. Indeed, very few calls to \texttt{inc} traverse the whole list-- the vast majority only flip one or two bits. This example illustrates the tension of doing these naive analysis, and provides the primary insight for amortized analysis: while one data structure operation may be expensive, it may also restructure the data structure in such a way which makes \textit{subsequent} operations cheaper than the worst case\footnote{
 This is the genesis of the name \textit{amortized} analysis: expensive function operations effectively pay for subsequent ones to be cheaper, evoking \textit{amortization} from accounting.
 }.
 
