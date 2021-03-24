@@ -36,8 +36,8 @@ To my parents.
 \end{acknowledgements}
 
 
-%\frontmatter
-%\maketitle
+\frontmatter
+\maketitle
 %\makeabstract
 %\makededication
 %\makeack
@@ -47,8 +47,7 @@ To my parents.
 
 
 \chapter{Introduction}
-%\include{intro}  
-\red{Explain modalities}
+\include{intro}
 
 \chapter{Amortized Analysis with Type Systems}
 \label{chap:lambda-amor}
@@ -57,11 +56,11 @@ To my parents.
 
 \chapter{Amortized Analysis by Recurrence Extraction}
 \label{chap:rec-extr}
-%\include{rec-extr}
+\include{rec-extr}
 
 \chapter{Conclusion and Related Work}
 \label{conc}
-%\include{conc}
+\include{conc}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -69,14 +68,15 @@ To my parents.
 \appendix
 \renewcommand\chaptername{Appendix}
 \counterwithin{theorem}{chapter}
+\counterwithin{figure}{chapter}
 
 \chapter{}
 \label{appendix:a}
-%\include{appendix-a}
+\include{appendix-a}
 
 \chapter{}
 \label{appendix:b}
-%\include{appendix-b}
+\include{appendix-b}
 
 
 
