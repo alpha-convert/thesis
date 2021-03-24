@@ -1,6 +1,550 @@
 \textbf{SOMETHING IS MESSED UP WITH APPENDIX THEOREM NUMBERING... FIX THIS}
 \section{Rules of \dlambdaamor}
 
+\subsection{Wellformedness Judgments}
+\begin{mathpar}
+\inferrule[WF-CCtxE]{ }{\Theta \vdash \cdot \; \texttt{wf}}
+
+\inferrule[WF-CCtxNe]{\Theta \vdash \Delta \; \texttt{wf}\\ \Theta ; \Delta \vdash \Phi \; \texttt{wf}}{\Theta \vdash \Delta,\Phi \; \texttt{wf}}
+
+\inferrule[WF-TCtxE]{ }{\Psi ; \Theta ; \Delta \vdash \cdot \; \texttt{wf}}
+
+\inferrule[WF-TCtxNE]{\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \Gamma, x : \tau \; \texttt{wf}}
+\end{mathpar}
+
+\subsection{Sort Assignment}
+
+\begin{mathpar}
+\inferrule[I-Var]{i : S \in \Theta}{\Theta ; \Delta \vdash i : S}
+
+\inferrule[I-Plus]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I + J : bS}
+
+\inferrule[I-Minus]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS\\ \Theta;\Delta \vDash I \geq J}{\Theta ; \Delta \vdash I - J : bS}\\
+
+\inferrule[I-Times-$\mathbb{R}$]{c \in \mathbb{R}^+ \\ \Theta ; \Delta \vdash I : \mathbb{R}^+}{\Theta ; \Delta \vdash c \cdot I : \mathbb{R}^+}
+
+\inferrule[I-Times-$\vec{\mathbb{R}}$]{c \in \mathbb{R}^+ \\ \Theta ; \Delta \vdash I : \vec{\mathbb{R}^+}}{\Theta ; \Delta \vdash c \cdot I : \vec{\mathbb{R}^+}}
+
+\inferrule[I-Times-$\mathbb{N}$]{c \in \mathbb{N} \\ \Theta ; \Delta \vdash I : \mathbb{N}}{\Theta ; \Delta \vdash c \cdot I : \mathbb{N}}\\
+
+\inferrule[I-Shift]{\Theta ; \Delta \vdash I : \vec{\mathbb{R}^+}}{\Theta ; \Delta \vdash \; \lhd I : \vec{\mathbb{R}^+}}
+
+\inferrule[I-Lam]{\Theta, i : bS ; \Delta \vdash I : S}{\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S}
+
+\inferrule[I-App]{\Theta ; \Delta \vdash I : bS \to S\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I \; J : S}\\
+
+\inferrule[I-Sum]{\Theta;\Delta \vdash I_0 : \mathbb{N}\\ \Theta;\Delta \vdash I_1 : \mathbb{N}\\ 
+                 \Theta,i : \N;\Delta, I_0 \leq i < I_1 \vdash J : bS}
+                 {\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS}
+\\
+                 
+\inferrule[I-ConstVec]{\Theta ; \Delta \vdash I : \mathbb{R}^+}{\Theta ; \Delta \vdash \texttt{const}(I) : \vec{\mathbb{R}^+}}
+
+\inferrule[I-Vec-Lit]{\cdot;\cdot \vDash \bigwedge_i c_i \geq 0}{\Theta ; \Delta \vdash (c_0,\dots,c_k) : \mathbb{R}^+}
+
+\inferrule[I-Nat-Lit]{\cdot;\cdot \vDash n \geq 0}{\Theta ; \Delta \vdash n : \mathbb{N}}
+
+\inferrule[I-PosReal-Lit]{\cdot;\cdot \vDash r \geq 0.0}{\Theta ; \Delta \vdash r : \mathbb{R}^+}
+\end{mathpar}
+
+\clearpage
+
+\subsection{Constraint Wellformedness}
+\begin{mathpar}
+\inferrule[C-Top]{ }{\Theta;\Delta \vdash \top \texttt{ wf}}
+
+\inferrule[C-Bot]{ }{\Theta;\Delta \vdash \bot \texttt{ wf}}
+
+\inferrule[C-Conj]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2 \texttt{ wf}}
+
+\inferrule[C-Disj]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \vee \Phi_2 \texttt{ wf}}
+
+\inferrule[C-Impl]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta, \Phi_1 \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \to \Phi_2 \texttt{ wf}}
+
+
+\inferrule[C-Forall]{\Theta, i : S ; \Delta \vdash \Phi \texttt{ wf}}{\Theta ; \Delta \vdash \forall i : S. \Phi \texttt{ wf}}
+
+\inferrule[C-Exists]{\Theta, i : S ; \Delta, \Phi \vdash \Phi \texttt{ wf}}{\Theta ; \Delta \vdash \exists i : S. \Phi \texttt{ wf}}
+
+\inferrule[C-Leq]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I \leq J \texttt{ wf}}
+
+\inferrule[C-Lt]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I < J \texttt{ wf}}
+
+\inferrule[C-Eq]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I = J \texttt{ wf}}
+\end{mathpar}
+
+\subsection{Kind Assignment}
+\begin{mathpar}
+\inferrule[K-Var]{\alpha : K \in \Psi}{\Psi ; \Theta ; \Delta \vdash \alpha : K}
+
+\inferrule[K-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 : \star}
+
+\inferrule[K-Arr]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star}
+
+\inferrule[K-Tensor]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star}
+
+\inferrule[K-With]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 : \star}
+
+\inferrule[K-Sum]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 : \star}
+
+\inferrule[K-Bang]{\Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash !\tau : \star}
+
+\inferrule[K-IForall]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star}
+
+\inferrule[K-IExists]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star}
+
+\inferrule[K-TForall]{\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau : \star}
+
+\inferrule[K-List]{\Theta ; \Delta \vdash I : \N \\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash L^I \tau : \star}
+
+\inferrule[K-Conj]{\Theta ; \Delta \vdash \Phi \texttt{ wf}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star}
+
+\inferrule[K-Impl]{\Theta ; \Delta \vdash \Phi \texttt{ wf}\\ \Psi ; \Theta ; \Delta, \Phi \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau : \star}
+
+\inferrule[K-Monad]{ \Theta ; \Delta \vdash I : \mathbb{N}\\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star}
+
+\inferrule[K-Pot]{\Theta ; \Delta \vdash I : \mathbb{N} \\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star}
+
+\inferrule[K-ConstPot]{\Theta ; \Delta \vdash I : \mathbb{R}^+\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash [I] \; \tau : \star}
+
+\inferrule[K-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : K}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K}
+
+\inferrule[K-FamApp]{\Psi ; \Theta ; \Delta \vdash \tau : S \to K\\ \Theta ; \Delta \vdash I : S}{\Psi ; \Theta ; \Delta \vdash \tau \; I : K}
+\end{mathpar}
+
+
+\subsection{Subtyping}
+%Presupposition: When $\Psi ; \Theta ; \Delta \vdash \tau_i : K$, we may judge $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$.
+
+\begin{mathpar}
+\inferrule[S-Refl]{ }{\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : K}
+
+\inferrule[S-Trans]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K\\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K}{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K}
+
+\inferrule[S-Arr]{\Psi ; \Theta ; \Delta \vdash \tau_1' \subty \tau_1 : \star \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 \subty \tau_1' \loli \tau_2' : \star}
+
+\inferrule[S-Tensor]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star }{\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 \subty \tau_1' \otimes \tau_2' : \star}
+
+\inferrule[S-With]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star\\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 \subty \tau_1' \amp \tau_2' : \star}
+
+\inferrule[S-Sum]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star\\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star}{\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 \subty \tau_1' \oplus \tau_2' : \star}
+
+\inferrule[S-Bang]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash !\tau_1 \subty !\tau_2 : \star}
+
+\inferrule[S-IForall]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau_1 \subty \forall i : S. \tau_2 : \star}
+
+\inferrule[S-IExists]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subty \exists i : S. \tau_2 : \star}
+
+\inferrule[S-TForall]{\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subty \forall \alpha : K. \tau_2 : \star}
+
+\inferrule[S-List]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J}{\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subty L^J \tau_2 : \star}
+
+\inferrule[S-Impl]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta;\Delta \vDash \Phi_2 \to \Phi_1}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star}
+
+\inferrule[S-Conj]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens\\ \Theta;\Delta \vDash \Phi_1 \to \Phi_2}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subty \Phi_2 \amp \tau_2 : \star}
+
+\inferrule[S-Monad]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J\\ \Theta ; \Delta \vDash \vec{q} \leq \vec{p}}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subty \M(J,\vec{p}) \tau_2 : \star}
+
+\inferrule[S-Pot]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J\\ \Theta ; \Delta \vDash \vec{p} \leq \vec{q}}{\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subty [J|\vec{p}] \tau_2 : \star}
+
+\inferrule[S-ConstPot]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta;\Delta \vDash J \leq I}{\Psi ; \Theta ; \Delta \vdash [I] \tau_1 \subty [J] \tau_2 : \star}
+
+\inferrule[S-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : K}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K}
+
+\inferrule[S-FamApp]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K\\ \Theta ; \Delta \vDash I = J}{\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K}
+\\
+\inferrule[S-Fam-Beta1]{ }{\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K}
+
+\inferrule[S-Fam-Beta2]{ }{\Psi ; \Theta ; \Delta \vdash\tau[J/i]\subty (\lambda i : S. \tau) \; J : K}
+
+\end{mathpar}
+
+
+\subsection{Context Subsumption}
+%Presupposition: $\Theta \vdash \Delta \; \texttt{wf}$, $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$, and $\Psi ; \Theta ; \Delta \vdash \Omega \; \texttt{wf}$
+\begin{mathpar}
+
+\inferrule[CS-Emp]
+{ }{\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \cdot}
+
+\inferrule[CS-Var]
+{x : \tau' \in \Gamma \\ \Psi ; \Theta ; \Delta \vdash \tau' \subty \tau\\ \Psi ; \Theta ; \Delta \vdash \Gamma \setminus \{x : \tau'\} \wknto \Gamma'}{\Psi ;\Theta ; \Delta \vdash \Gamma \wknto \Gamma', x : \tau}
+\end{mathpar}
+
+\subsection{Type Assignment}
+
+%Presupposition: when $\Psi ; \Theta ; \Delta \vdash \tau : \star$, we define $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e : \tau$
+
+\begin{mathpar}
+\inferrule[T-Var-1]
+{x : \tau \in \Gamma}{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x : \tau}
+
+\inferrule[T-Var-2]
+{x : \tau \in \Omega}{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x : \tau}
+
+\inferrule[T-Unit]
+{ }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash () : 1}
+\\
+
+\inferrule[T-Base]
+{ }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash c : b}
+
+\inferrule[T-Absurd]
+{\Theta ; \Delta \vDash \bot}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{absurd} : \tau
+}
+
+
+\inferrule[T-Nil]
+{ }
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{nil} : L^0 \tau}
+
+\inferrule[T-Cons]
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau\\
+\Psi ; \Theta ; \Omega ; \Gamma_2\vdash e_2 : L^{I} \tau
+}
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, \Gamma_2\vdash e_1 :: e_2 : L^{I + 1} \tau}
+
+\inferrule[T-Match]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e : L^I \tau\\
+\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2\vdash e_1 : \tau'\\
+\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2 : \tau'\\
+}
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{match}(e,e_1,h.t.e_2) : \tau'}
+
+
+\inferrule[T-ExistI]
+{
+\Theta ; \Delta \vdash I : S\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e : \tau[I/i]\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{pack}[I](e) : \exists i:S.\tau
+}
+
+\inferrule[T-ExistE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e : \exists i : S.\tau\\
+\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e' : \tau'\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{unpack } (i,x) = e \texttt{ in } e' : \tau'
+}
+
+\inferrule[T-Lam]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e : \tau_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e : \tau_1 \loli \tau_2
+}
+
+\inferrule[T-App]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1 \loli \tau_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\vdash e_2 : \tau_1
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash e_1 \, e_2 :  \tau_2
+}
+
+\inferrule[T-TensorI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\vdash e_2 : \tau_2\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \angles{e_1,e_2} ; \tau_1 \otimes \tau_2
+}
+
+\inferrule[T-TensorE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e : \tau_1 \otimes \tau_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2,x : \tau_1, y : \tau_2\vdash e' : \tau'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{let } \angles{x,y} = e \texttt{ in } e' : \tau'
+}
+
+\end{mathpar}
+
+\begin{mathpar}
+
+\inferrule[T-WithI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 : \tau_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_2 : \tau_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1,e_2) : \tau_1 \amp \tau_2
+}
+
+\inferrule[T-Fst]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_1 \amp \tau_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e) : \tau_1
+}
+
+\inferrule[T-Snd]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_1 \amp \tau_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{snd}(e) : \tau_2
+}
+
+\inferrule[T-Inl]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_1
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inl}(e) : \tau_1 \oplus \tau_2
+}
+
+\inferrule[T-Inr]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inr}(e) : \tau_1 \oplus \tau_2
+}
+
+\inferrule[T-Case]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e : \tau_1 \oplus \tau_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x: \tau_1 \vdash e_1 : \tau\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, y: \tau_2 \vdash e_2 : \tau\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{case}(e,x.e_1,y.e_2) : \tau
+}
+
+\inferrule[T-ExpI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \cdot \vdash e : \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash !e : !\tau
+}
+
+\inferrule[T-ExpE]{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e  : !\tau \\
+\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_2 \vdash e' : \tau'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{let } !x = e \texttt{ in } e' : \tau'
+}
+
+
+\inferrule[T-TAbs]
+{
+\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda \alpha. e : \forall \alpha : K.\tau
+}
+
+\inferrule[T-TApp]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \forall \alpha : K.\tau\\
+\Psi ; \Theta ; \Delta \vdash \tau' : K
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [\tau'] : \tau[\tau'/\alpha]
+}
+
+\inferrule[T-IAbs]
+{
+\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma \vdash e : \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda i. e : \forall i : S. \tau
+}
+
+\inferrule[T-IApp]
+{
+\Theta ; \Delta \vdash I : S\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \forall i : S.\tau\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [I] : \tau[I/i]
+}
+
+\inferrule[T-Fix]
+{
+\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e : \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fix } x.e : \tau
+}
+
+
+\inferrule[T-CImpI]
+{
+\Psi ; \Theta ; \Delta,\Phi' ; \Omega ; \Gamma \vdash e : \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda .e : (\Phi' \Rightarrow \tau)
+}
+
+\inferrule[T-CImpE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \Phi' \Rightarrow \tau\\
+\Theta ; \Delta \vDash \Phi'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \{\} : \tau
+}
+
+\inferrule[T-CAndI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau\\
+\Theta ; \Delta \vDash \Phi'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash <e> : \Phi' \amp \tau
+}
+
+\inferrule[T-CAndE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e : \Phi' \amp \tau\\
+\Psi ; \Theta ; \Delta, \Phi' ; \Omega ; \Gamma_2, x : \tau \vdash e' : \tau'\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{clet } x = e \texttt{ in } e' : \tau'
+}
+\end{mathpar}
+
+\begin{mathpar}
+\inferrule[T-Tick]
+{
+\Theta ; \Delta \vdash I : \mathbb{N}\\
+\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] : \M \, \phi(I,\vec{p})\, 1
+}
+
+\inferrule[T-Ret]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret}\; e : \M \, \phi(I,\vec{0}) \, \tau
+}
+
+\inferrule[T-Bind]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \M \, \phi(I,\vec{p})\, \tau_1\\
+\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2 : \M \, \phi(I,\vec{q})\, \tau_2\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 : \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2
+}
+
+\inferrule[T-Release]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [I | \vec{q}] \tau_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, \phi(I,\vec{p}) \, \tau_2
+}
+
+\inferrule[T-Store]
+{
+\Theta ; \Delta \vdash I : \mathbb{N}\\
+\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I|\vec{p}](e) : \M \, \phi(I,\vec{p}) \, ([I| \vec{p}] \, \tau)
+}
+
+\inferrule[T-StoreConst]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau\\
+\Theta ; \Delta \vdash I : \mathbb{N}\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e) : \M \, \phi(K,\texttt{const}(I)) \, ([I] \, \tau)
+}
+
+\inferrule[T-ReleaseConst]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [J] \tau_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, \phi(I,\vec{p}) \, \tau_2
+}
+
+\inferrule[T-Shift]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \M \, \phi(I - 1,\lhd \vec{p}) \, \tau\\
+\Theta ; \Delta \vDash I \geq 1
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) : \M \, \phi(I,\vec{p}) \, \tau
+}
+
+\inferrule[T-Sub]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau'\\
+\Psi;\Theta;\Delta \vdash \tau' \subty \tau
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau
+}
+
+\inferrule[T-Weaken]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau\\
+\Theta ; \Delta \vdash \Omega' \bdby \Omega\\
+\Theta ; \Delta \vdash \Gamma' \bdby \Gamma\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e : \tau
+}
+
+\end{mathpar}
+
+\subsection{Normal Forms and Normalization}
+\begin{mathpar}
+\inferrule[N-Var]{ }{\alpha \; \texttt{ne}}
+
+\inferrule[N-Unit]{ }{1 \; \texttt{nf}}
+
+\inferrule[N-Arr]{\tau_1 \; \texttt{nf} \\ \tau_2 \; \texttt{nf}}{\tau_1 \loli \tau_2 \; \texttt{nf}}
+
+\inferrule[N-Tensor]{\tau_1 \; \texttt{nf} \\ \tau_2 \; \texttt{nf}}{\tau_1 \otimes \tau_2 \; \texttt{nf}}
+
+\inferrule[N-With]{\tau_1 \; \texttt{nf} \\ \tau_2 \; \texttt{nf}}{\tau_1 \amp \tau_2 \; \texttt{nf}}
+
+\inferrule[N-Sum]{\tau_1 \; \texttt{nf} \\ \tau_2 \; \texttt{nf}}{\tau_1 \oplus \tau_2 \; \texttt{nf}}
+
+\inferrule[N-Bang]{\tau \; \texttt{nf}}{!\tau \; \texttt{nf}}
+
+\inferrule[N-IForall]{\tau \; \texttt{nf}}{\forall i : S. \tau \; \texttt{nf}}
+
+\inferrule[N-IExists]{\tau \; \texttt{nf}}{\exists i : S. \tau \; \texttt{nf}}
+
+\inferrule[N-TForall]{\tau \; \texttt{nf}}{\forall \alpha : K. \tau \; \texttt{nf}}
+
+\inferrule[N-List]{\tau \; \texttt{nf}}{L^I \tau \; \texttt{nf}}
+
+\inferrule[N-Conj]{\tau \;  \texttt{nf}}{\Phi\amp\tau \; \texttt{nf}}
+
+\inferrule[N-Impl]{\tau \;  \texttt{nf}}{\Phi\implies\tau \; \texttt{nf}}
+
+\inferrule[N-Monad]{\tau \;  \texttt{nf}}{\M(I,\vec{p}) \tau \; \texttt{nf}}
+
+\inferrule[N-Pot]{\tau \;  \texttt{nf}}{[I|\vec{p}] \tau \; \texttt{nf}}
+
+\inferrule[N-ConstPot]{\tau \;  \texttt{nf}}{[I] \tau \; \texttt{nf}}
+
+\inferrule[N-FamLam]{\tau \;  \texttt{nf}}{\lambda i : S. \tau \; \texttt{nf}}
+
+\inferrule[N-FamApp]{\tau \;  \texttt{ne}}{(\tau \; I) \; \texttt{ne}}
+
+\inferrule[N-NeNf]{\tau \; \texttt{ne}}{\tau \; \texttt{nf}}
+
+\end{mathpar}
+
+\begin{align*}
+\texttt{eval}(\alpha) &= \alpha\\
+\texttt{eval}(1) &= 1\\
+\texttt{eval}(\tau_1 \loli \tau_2) &= \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2)\\
+\texttt{eval}(\tau_1 \otimes \tau_2) &= \texttt{eval}(\tau_1) \otimes \texttt{eval}(\tau_2)\\
+\texttt{eval}(\tau_1 \amp \tau_2) &= \texttt{eval}(\tau_1) \amp \texttt{eval}(\tau_2)\\
+\texttt{eval}(\tau_1 \oplus \tau_2) &= \texttt{eval}(\tau_1) \oplus \texttt{eval}(\tau_2)\\
+\texttt{eval}(!\tau) &= !\texttt{eval}(\tau)\\
+\texttt{eval}(\forall i : S. \tau) &= \forall i : S. \texttt{eval}(\tau)\\
+\texttt{eval}(\exists i : S. \tau) &= \exists i : S. \texttt{eval}(\tau)\\
+\texttt{eval}(\forall \alpha : K. \tau) &= \forall \alpha : K. \texttt{eval}(\tau)\\
+\texttt{eval}(L^I\tau) &= L^I(\texttt{eval}(\tau))\\
+\texttt{eval}(\Phi \amp \tau) &= \Phi \amp \texttt{eval}(\tau)\\
+\texttt{eval}(\Phi \implies \tau) &= \Phi \implies \texttt{eval}(\tau)\\
+\texttt{eval}(\M(I,\vec{p})\tau) &= \M(I,\vec{p})(\texttt{eval}(\tau))\\
+\texttt{eval}([I|\vec{p}]\tau) &= [I|\vec{p}](\texttt{eval}(\tau))\\
+\texttt{eval}([I]\tau) &= [I](\texttt{eval}(\tau))\\
+\texttt{eval}(\lambda i : S. \tau) &= \lambda i : S. \texttt{eval}(\tau)\\
+\texttt{eval}(\tau \; I) &= \begin{cases}
+   \tau'[I/i], & \texttt{eval}(\tau) = \lambda i : S. \tau' \\
+   \texttt{eval}(\tau) \; I & \texttt{eval}(\tau) \; \texttt{ne}
+                              \end{cases}
+\end{align*}
+
 \section{\dlambdaamor Theorems and Proofs}
 
 \ctxwfstreng*
@@ -140,6 +684,484 @@ Simultaneous induction.
 \end{proof}
 
 \section{Rules of \bilambdaamor}
+
+\subsection{Algorithmic Wellformedness Judgments}
+\begin{mathpar}
+\inferrule[AWF-CCtxE]{ }{\Theta \vdash \cdot \; \texttt{wf} \gens \top}
+
+\inferrule[AWF-CCtxNe]{\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1\\ \Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_2}{\Theta \vdash \Delta,\Phi \; \texttt{wf} \gens \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)}
+
+\inferrule[AWF-TCtxE]{ }{\Psi ; \Theta ; \Delta \vdash \cdot \; \texttt{wf} \gens \top}
+
+\inferrule[AWF-TCtxNE]{\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \Gamma, x : \tau \; \texttt{wf} \gens \Phi_1 \wedge \Phi_2}
+\end{mathpar}
+
+\subsection{Algorithmic Sort Checking/Inference}
+
+\begin{mathpar}
+\inferrule[AI-Var]{i : S \in \Theta}{\Theta ; \Delta \vdash i : S \gens \top}
+
+\inferrule[AI-Plus]{\Theta ; \Delta \vdash I : bS \gens \Phi_1 \\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I + J : bS \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AI-Minus]{\Theta ; \Delta \vdash I : bS \gens \Phi_1 \\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I - J : bS \gens \Phi_1 \wedge \Phi_2 \wedge (I \geq J)}\\
+
+\inferrule[AI-Times-$\mathbb{R}$]{c \in \mathbb{R}^+ \\ \Theta ; \Delta \vdash I : \mathbb{R}^+ \gens \Phi}{\Theta ; \Delta \vdash c \cdot I : \mathbb{R}^+ \gens \Phi}
+
+\inferrule[AI-Times-$\vec{\mathbb{R}}$]{c \in \mathbb{R}^+ \\ \Theta ; \Delta \vdash I : \vec{\mathbb{R}^+} \gens \Phi}{\Theta ; \Delta \vdash c \cdot I : \vec{\mathbb{R}^+} \gens \Phi}
+
+\inferrule[AI-Times-$\mathbb{N}$]{c \in \mathbb{N} \\ \Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi}{\Theta ; \Delta \vdash c \cdot I : \mathbb{N} \gens \Phi}\\
+
+\inferrule[AI-Shift]{\Theta ; \Delta \vdash I : \vec{\mathbb{R}^+} \gens \Phi}{\Theta ; \Delta \vdash \; \lhd I : \vec{\mathbb{R}^+} \gens \Phi}
+
+\inferrule[AI-Lam]{\Theta, i : bS ; \Delta \vdash I : S \gens \Phi}{\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S \gens \forall i : S. \Phi}
+
+\inferrule[AI-App]{\Theta ; \Delta \vdash I : bS \to S \gens \Phi_1\\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I \; J : S \gens \Phi_1 \wedge \Phi_2}\\
+
+\inferrule[AI-Sum]{\Theta;\Delta \vdash I_0 : \mathbb{N} \gens \Phi_1\\ \Theta;\Delta \vdash I_1 : \mathbb{N} \gens \Phi_2\\ 
+                 \Theta,i : \N;\Delta, I_0 \leq i < I_1 \vdash J : bS \gens \Phi_3}
+                 {\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS \gens \Phi_1 \wedge \Phi_2 \wedge \forall i : \N.(I_0 \leq i < I_1 \to \Phi_3)}
+                 
+\inferrule[AI-ConstVec]{\Theta ; \Delta \vdash I : \mathbb{R}^+ \gens \Phi}{\Theta ; \Delta \vdash \texttt{const}(I) : \vec{\mathbb{R}^+} \gens \Phi}
+
+\inferrule[AI-Vec-Lit]{\Phi = \bigwedge_i c_i \geq 0}{\Theta ; \Delta \vdash (c_0,\dots,c_k) : \mathbb{R}^+ \gens \Phi}
+
+\inferrule[AI-Nat-Lit]{ }{\Theta ; \Delta \vdash n : \mathbb{N} \gens n \geq 0}
+
+\inferrule[AI-PosReal-Lit]{ }{\Theta ; \Delta \vdash r : \mathbb{R}^+ \gens r \geq 0}
+\end{mathpar}
+
+\subsection{Algorithmic Constraint Wellformedness}
+
+\begin{mathpar}
+\inferrule[AC-Top]{ }{\Theta;\Delta \vdash \top \; \texttt{wf}\gens \top}
+
+\inferrule[AC-Bot]{ }{\Theta;\Delta \vdash \bot \; \texttt{wf}\gens \top}
+
+\inferrule[AC-Conj]{\Theta ; \Delta \vdash \Phi_1\; \texttt{wf} \gens \Phi_1' \\ \Theta ; \Delta \vdash \Phi_2\; \texttt{wf} \gens \Phi_2'}{\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2\; \texttt{wf} \gens \Phi_1' \wedge \Phi_2'}
+
+\inferrule[AC-Disj]{\Theta ; \Delta \vdash \Phi_1\; \texttt{wf} \gens \Phi_1' \\ \Theta ; \Delta \vdash \Phi_2\; \texttt{wf} \gens \Phi_2'}{\Theta;\Delta \vdash \Phi_1 \vee \Phi_2\; \texttt{wf} \gens \Phi_1' \wedge \Phi_2'}
+
+\inferrule[AC-Impl]{\Theta ; \Delta \vdash \Phi_1\; \texttt{wf} \gens \Phi_1' \\ \Theta ; \Delta \vdash \Phi_2\; \texttt{wf} \gens \Phi_2'}{\Theta;\Delta,\Phi_1 \vdash \Phi_1 \to \Phi_2\; \texttt{wf} \gens \Phi_1' \wedge (\Phi_1 \to \Phi_2')}
+
+\inferrule[AC-Forall]{\Theta, i : S ; \Delta \vdash \Phi\; \texttt{wf} \gens \Phi'}{\Theta ; \Delta \vdash \forall i : S. \Phi\; \texttt{wf} \gens \forall i : S. \Phi'}
+
+\inferrule[AC-Exists]{\Theta, i : S ; \Delta, \Phi \vdash \Phi\; \texttt{wf} \gens \Phi'}{\Theta ; \Delta \vdash \exists i : S. \Phi\; \texttt{wf} \gens \forall i : S. (\Phi \to \Phi')}
+
+\inferrule[AC-Leq]{\Theta ; \Delta \vdash I : bS \gens \Phi_1\\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I \leq J \; \texttt{wf} \gens \Phi_1 \wedge \Phi_2}
+\inferrule[AC-Lt]{\Theta ; \Delta \vdash I : bS \gens \Phi_1\\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I < J\; \texttt{wf} \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AC-Eq]{\Theta ; \Delta \vdash I : bS \gens \Phi_1\\ \Theta ; \Delta \vdash J : bS \gens \Phi_2}{\Theta ; \Delta \vdash I = J\; \texttt{wf} \gens \Phi_1 \wedge \Phi_2}
+\end{mathpar}
+
+\subsection{Algorithmic Kind Checking/Inference}
+
+\begin{mathpar}
+\inferrule[AK-Var]{\alpha : K \in \Psi}{\Psi ; \Theta ; \Delta \vdash \alpha : K \gens \top}
+
+\inferrule[AK-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 : \star \gens \top}
+
+\inferrule[AK-Arr]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-Tensor]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-With]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-Sum]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-Bang]{\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash !\tau : \star \gens \Phi}
+
+\inferrule[AK-IForall]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau : \star \gens \forall i :S.\Phi}
+
+\inferrule[AK-IExists]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau : \star \gens \forall i : S. \Phi}
+
+\inferrule[AK-TForall]{\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau : \star \gens \Phi}
+
+\inferrule[AK-List]{\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash L^I \tau : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-Conj]{\Theta ; \Delta \vdash \Phi\; \texttt{wf} \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-Impl]{\Theta ; \Delta \vdash \Phi\; \texttt{wf} \gens \Phi_1 \\ \Psi ; \Theta ; \Delta, \Phi \vdash \tau : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \Phi \implies \tau : \star \gens \Phi_1 \wedge (\Phi \to \Phi_2)}
+
+\inferrule[AK-Monad]{ \Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1\\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_2\\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_3}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3}
+
+\inferrule[AK-Pot]{\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1 \\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_2\\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_3}{\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3}
+
+\end{mathpar}
+
+\begin{mathpar}
+
+
+\inferrule[AK-ConstPot]{\Theta ; \Delta \vdash I : \mathbb{R}^+ \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash [I] \; \tau : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AK-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K \gens \forall i : S. \Phi}
+
+\inferrule[AK-FamApp]{\Theta ; \Delta \vdash I : S \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau : S \to K \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau \; I : K \gens \Phi_1 \wedge \Phi_2}
+\end{mathpar}
+
+\subsection{Algorithmic Subtyping}
+%Presupposition: when $\Psi ; \Theta ; \Delta \vdash \tau_i : K \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$, we may judge $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi$ and 
+%$\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi$
+
+\begin{mathpar}
+\inferrule[AS-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 \subtynf 1 : \star \gens \top}
+
+\inferrule[AS-Var]{ }{\Psi ; \Theta ; \Delta \vdash \alpha \subtynf \alpha : \star \gens \top}
+
+\inferrule[AS-Arr]{\Psi ; \Theta ; \Delta \vdash \tau_1' \subtynf \tau_1 : \star \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 \subtynf \tau_1' \loli \tau_2' : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AS-Tensor]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star  \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 \subtynf \tau_1' \otimes \tau_2' : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AS-With]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 \subtynf \tau_1' \amp \tau_2' \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AS-Sum]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_1' : \star \gens \Phi_1 \\ \Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_2' : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 \subtynf \tau_1' \oplus \tau_2' : \star \gens \Phi_1 \wedge \Phi_2}
+
+\inferrule[AS-Bang]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash !\tau_1 \subtynf !\tau_2 : \star \gens \Phi}
+
+\inferrule[AS-IForall]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau_1 \subtynf \forall i : S. \tau_2 : \star \gens \forall i : S. \Phi}
+
+\inferrule[AS-IExists]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subtynf \exists i : S. \tau_2 : \star \gens \forall i : S. \Phi}
+
+\inferrule[AS-TForall]{\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subtynf \forall \alpha : K. \tau_2 : \star \gens \Phi}
+
+\inferrule[AS-List]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subtynf L^J \tau_2 : \star \gens I = J \wedge \Phi}
+
+\inferrule[AS-Impl]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)}
+
+\inferrule[AS-Conj]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subtynf \Phi_2 \amp \tau_2 : \star \gens \Phi \wedge (\Phi_1 \to \Phi_2)}
+
+\end{mathpar}
+
+\begin{mathpar}
+
+\inferrule[AS-Monad]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subtynf \M(J,\vec{p}) \tau_2 : \star \gens (I = J) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi}
+
+\inferrule[AS-Pot]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subtynf [J|\vec{p}] \tau_2 : \star \gens (I = J) \wedge (\vec{p} \leq \vec{q}) \wedge \Phi}
+
+\inferrule[AS-ConstPot]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash [I] \tau_1 \subtynf [J] \tau_2 : \star \gens \Phi \wedge (J \leq I)}
+
+\inferrule[AS-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subtynf \lambda i : S. \tau_2 : S \to K \gens \forall i : S. \Phi}
+
+\inferrule[AS-FamApp]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : S \to K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subtynf \tau_2 \; J : K \gens (I = J) \wedge \Phi}
+
+\inferrule[AS-Normalize]{\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K\gens \Phi}
+
+\end{mathpar}
+
+\subsection{Algorithmic Type Checking/Inference}
+
+%Presupposition: when $\Psi ; \Theta ; \Delta \vdash \tau : \star \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$, we define $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \infers\checks \tau \gens \Phi, \Gamma'$
+
+\begin{mathpar}
+\inferrule[AT-Var-1]
+{x : \tau \in \Gamma}{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x \infers \tau \gens \top, \Gamma \setminus \{x : \tau\}}
+
+\inferrule[AT-Var-2]
+{x : \tau \in \Omega}{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x \infers \tau \gens \top, \Gamma}
+
+\inferrule[AT-Unit]
+{ }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash () \infers 1 \gens \top, \Gamma}
+\\
+
+\inferrule[AT-Base]
+{ }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash c \infers b \gens \top, \Gamma}
+
+\inferrule[AT-Absurd]
+{ }{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{absurd} \checks \tau \gens \bot,\Gamma
+}
+
+\inferrule[AT-Nil]
+{\text{}}
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{nil} \checks L^I \tau \gens I = 0, \Gamma}
+
+\inferrule[AT-Cons]
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \checks \tau \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks L^{I-1} \tau \gens \Phi_2, \Gamma_2
+}
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 :: e_2 \checks L^I \tau \gens (I \geq 1) \wedge \Phi_1 \wedge \Phi_2, \Gamma_2}
+
+\inferrule[AT-Match]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \infers L^I \tau \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_1\vdash e_1 \checks \tau' \gens \Phi_2,\Gamma_2\\
+\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_1, h : \tau, t : L^{I-1} \tau \vdash e_2 \checks \tau' \gens \Phi_3,\Gamma_3\\
+\Phi_\texttt{body} = (I = 0 \to \Phi_2) \wedge (I \geq 1 \to \Phi_3 )\\
+\Gamma' = \Gamma_2 \cap (\Gamma_3 \setminus \{h,t\})
+}
+{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{match}(e,e_1,h.t.e_2) \checks \tau' \gens \Phi_1 \wedge \Phi_\texttt{body}, \Gamma'}
+
+
+\inferrule[AT-ExistI]
+{
+\Theta ; \Delta \vdash I : S \gens \Phi_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \checks \tau[I/i] \gens \Phi_2,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{pack}[I](e) \checks \exists i:S.\tau \gens \Phi_1 \wedge \Phi_2, \Gamma'
+}
+
+\inferrule[AT-ExistE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \infers \exists i : S.\tau \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e' \checks \tau' \gens \Phi_2, \Gamma_2\\
+\Phi = \Phi_1 \wedge (\forall i : S. \Phi_2)
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{unpack } (i,x) = e \texttt{ in } e' \checks \tau' \gens \Phi , \Gamma_2 \setminus \{x : \tau\}
+}
+
+\inferrule[AT-Lam]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e \checks \tau_2, \gens \Phi, \Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e \checks \tau_1 \loli \tau_2 \gens \Phi, \Gamma' \setminus \{x : \tau_1\}
+}
+\end{mathpar}
+
+\begin{mathpar}
+
+\inferrule[AT-App]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \infers \tau_1 \loli \tau_2 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks \tau_1 \gens \Phi_2, \Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \, e_2 \infers  \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2
+}
+
+\inferrule[AT-TensorI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \checks \tau_1 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_2 \checks \tau_2 \gens \Phi_2, \Gamma_2\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \angles{e_1,e_2} \checks \tau_1 \otimes \tau_2 \gens \Phi_1 \wedge \Phi_2,\Gamma_2
+}
+
+\inferrule[AT-TensorE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e \infers \tau_1 \otimes \tau_2 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,x : \tau_1, y : \tau_2\vdash e' \checks \tau' \gens \Phi_2,\Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{let } \angles{x,y} = e \texttt{ in } e' \checks \tau' \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x,y\}
+}
+
+\inferrule[AT-WithI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \checks \tau_1 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_2 \checks \tau_2 \gens \Phi_2, \Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1,e_2) \checks \tau_1 \amp \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_1 \cap \Gamma_2
+}
+
+\inferrule[AT-Fst]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau_1 \amp \tau_2 \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e) \infers \tau_1 \gens \Phi,\Gamma'
+}
+
+\inferrule[AT-Snd]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau_1 \amp \tau_2 \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{snd}(e) \infers \tau_2 \gens \Phi,\Gamma'
+}
+
+\inferrule[AT-Inl]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau_1 \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inl}(e) \checks \tau_1 \oplus \tau_2 \gens \Phi,\Gamma'
+}
+
+\inferrule[AT-Inr]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau_2 \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inr}(e) \checks \tau_1 \oplus \tau_2 \gens \Phi,\Gamma'
+}
+
+\inferrule[AT-Case]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau_1 \oplus \tau_2 \gens \Phi_1, \Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x: \tau_1 \vdash e_1 \checks \tau \gens \Phi_2,\Gamma_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, y: \tau_2 \vdash e_2 \checks \tau \gens \Phi_3,\Gamma_3\\
+\Gamma' = (\Gamma_2 \setminus \{x : \tau_1\}) \cap (\Gamma_3 \setminus \{y : \tau_2\})
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{case}(e,x.e_1,y.e_2) \checks \tau \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3, \Gamma'
+}
+
+\inferrule[AT-ExpI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \cdot \vdash e \checks \tau \gens \Phi, \Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash !e \checks !\tau \gens \Phi, \Gamma
+}
+
+\inferrule[AT-ExpE]{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers !\tau \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_1 \vdash e' \checks \tau' \gens \Phi_2,\Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{let } !x = e \texttt{ in } e' \checks \tau' \gens \Phi_1 \wedge \Phi_2, \Gamma_2
+}
+
+\end{mathpar}
+
+\begin{mathpar}
+
+\inferrule[AT-TAbs]
+{
+\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi, \Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda \alpha. e \checks \forall \alpha : K.\tau \gens \Phi,\Gamma'
+}
+
+\inferrule[AT-TApp]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \forall \alpha : K.\tau \gens \Phi_1, \Gamma'\\
+\Psi ; \Theta ; \Delta \vdash \tau' : K \gens \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [\tau'] \infers \tau[\tau'/\alpha] \gens \Phi_1 \wedge \Phi_2, \Gamma'
+}
+
+\inferrule[AT-IAbs]
+{
+\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi, \Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda i. e \checks \forall i : S. \tau \gens \forall i : S. \Phi, \Gamma'
+}
+
+\inferrule[AT-IApp]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \forall i : S.\tau \gens \Phi_1,\Gamma'\\
+\Theta ; \Delta \vdash I : S \gens \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [I] \infers \tau[I/i] \gens \Phi_1 \wedge \Phi_2,\Gamma'
+}
+
+\inferrule[AT-Fix]
+{
+\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fix } x.e \checks \tau \gens \Phi,\Gamma
+} 
+
+\inferrule[AT-CImpI]
+{
+\Psi ; \Theta ; \Delta, \Phi'; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda .e \checks (\Phi' \Rightarrow \tau) \gens (\Phi' \to \Phi),\Gamma'
+}
+
+\inferrule[AT-CImpE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers (\Phi' \Rightarrow \tau) \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \{\} \infers \tau \gens \Phi \wedge \Phi',\Gamma'
+}
+
+\inferrule[AT-CAndI]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash <e> \checks \Phi' \amp \tau \gens \Phi \wedge \Phi',\Gamma'
+}
+
+\inferrule[AT-CAndE]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \Phi' \amp \tau \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta ; \Delta, \Phi' ; \Omega ; \Gamma_1, x : \tau \vdash e' \checks \tau' \gens \Phi_2, \Gamma_2\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{clet } x = e \texttt{ in } e' \checks \tau' \gens \Phi_1 \wedge (\Phi' \to \Phi_2),\Gamma_2 \setminus \{x : \tau\}
+}
+
+\inferrule[AT-Ret]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret } e \checks \M \, \phi(I,\vec{p}) \, \tau \gens \Phi, \Gamma'
+}
+
+\inferrule[AT-Bind]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers \M \, \phi(J,\vec{p})\, \tau_1 \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta; \Delta ; \Omega ; \Gamma_1, x:\tau_1 \vdash e_2 \checks \M \, \phi(I,\vec{q} - \vec{p})\, \tau_2 \gens \Phi_2,\Gamma_2\\
+\Phi = (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1 \wedge \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens \Phi, \Gamma_2 \setminus \{x : \tau_1\}
+}
+
+\end{mathpar}
+
+\begin{mathpar}
+
+\inferrule[AT-Tick]
+{
+\Theta ; \Delta \vdash I : \N \gens \Phi_1\\
+\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_1\\
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] \infers \M \, \phi(I,\vec{p})\, 1 \gens \Phi_1 \wedge \Phi_2,\Gamma
+}
+
+\inferrule[AT-Release]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J | \vec{q}] \tau_1 \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2, \Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens (I = J \wedge \Phi_1 \wedge \Phi_2), \Gamma_2 \setminus \{x\}
+}
+
+
+
+\inferrule[AT-Store]
+{
+\Theta ; \Delta \vdash K : \N \gens \Phi_1\\
+\Theta ; \Delta \vdash \vec{w} : \vec{\mathbb{R}^+} \gens \Phi_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_3,\Gamma'\\
+\Phi =  \Phi_1 \wedge \Phi_2 \wedge\Phi_3 \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K)
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[K|\vec{w}](e) \checks \M \, \phi(I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi, \Gamma'
+}
+
+\inferrule[AT-StoreConst]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1,\Gamma'\\
+\Theta ; \Delta \vdash J : \mathbb{R} \gens \Phi_2\\
+\Phi = (\texttt{const}(I) \leq \texttt{const}(J) \leq \vec{p}) \wedge \Phi_1 \wedge \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[J](e) \checks \M \, \phi(K,\vec{p}) \, ([I] \, \tau) \gens \Phi, \Gamma'
+}
+
+\inferrule[AT-ReleaseConst]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J] \tau_1 \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau_1 \vdash e_2 \checks \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2, \Gamma_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x\}
+}
+
+\inferrule[AT-Shift]
+{
+\Psi ; \Theta ; \Delta  ; \Omega ; \Gamma \vdash e \checks \M \, \phi(I - 1,\lhd \vec{q}) \, \tau \gens \Phi, \Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) \checks \M \, \phi(I,\vec{q}) \, \tau \gens (I \geq 1) \wedge \Phi, \Gamma'
+}
+
+
+
+\inferrule[AT-Sub]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau' \gens \Phi_1,\Gamma'\\
+\Psi;\Theta;\Delta \vdash \tau' \subty \tau : \star \gens \Phi_2
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma'
+}
+
+\inferrule[AT-Anno]
+{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
+}{
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e : \tau) \infers \tau \gens \Phi,\Gamma'
+}
+\end{mathpar}
+
 
 \section{Soundness and Completeness}
 
