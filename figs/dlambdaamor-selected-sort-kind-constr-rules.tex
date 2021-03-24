@@ -1,0 +1,37 @@
+\begin{mathpar}
+\inferrule[I-Var]{i : S \in \Theta}{\Theta ; \Delta \vdash i : S}
+
+\inferrule[I-Plus]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I + J : bS}
+
+\inferrule[I-Minus]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS\\ \Theta;\Delta \vDash I \geq J}{\Theta ; \Delta \vdash I - J : bS}
+
+\inferrule[I-Shift]{\Theta ; \Delta \vdash I : \vec{\mathbb{R}^+}}{\Theta ; \Delta \vdash \; \lhd I : \vec{\mathbb{R}^+}}
+
+\inferrule[I-Lam]{\Theta, i : bS ; \Delta \vdash I : S}{\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S}
+
+\inferrule[I-App]{\Theta ; \Delta \vdash I : bS \to S\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I \; J : S}\\
+
+\inferrule[I-Sum]{\Theta;\Delta \vdash I_0 : \mathbb{N}\\ \Theta;\Delta \vdash I_1 : \mathbb{N}\\ 
+                 \Theta,i : \N;\Delta, I_0 \leq i < I_1 \vdash J : bS}
+                 {\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\inferrule[K-Var]{\alpha : K \in \Psi}{\Psi ; \Theta ; \Delta \vdash \alpha : K}
+
+\inferrule[K-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 : \star}
+
+\inferrule[K-Monad]{ \Theta ; \Delta \vdash I : \mathbb{N}\\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{p}) \tau : \star}
+
+\inferrule[K-Pot]{\Theta ; \Delta \vdash I : \mathbb{N} \\ \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash [I|\vec{p}] \tau : \star}
+
+\inferrule[K-FamLam]{\Psi ; \Theta, i : S ; \Delta \vdash \tau : K}{\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau : S \to K}
+
+\inferrule[K-FamApp]{\Psi ; \Theta ; \Delta \vdash \tau : S \to K\\ \Theta ; \Delta \vdash I : S}{\Psi ; \Theta ; \Delta \vdash \tau \; I : K}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\inferrule[C-Conj]{\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}\\ \Theta ; \Delta \vdash \Phi_2 \texttt{ wf}}{\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2 \texttt{ wf}}
+
+\inferrule[C-Eq]{\Theta ; \Delta \vdash I : bS\\ \Theta ; \Delta \vdash J : bS}{\Theta ; \Delta \vdash I = J \texttt{ wf}}
+\end{mathpar}
