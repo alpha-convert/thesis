@@ -15,7 +15,7 @@ In reality, the language we end up with is a variant of \lambdaamorminus, a very
 
 %Foundational account of univariate RAML, more powerful.
 
-By and large, the original creators of \lambdaamor were interested in it as a unifying framework in which one could embed \textit{other} cost analysis languages. There are many axes along which one may design a type system, and \lambdaamor serves as a calculus in which all sorts can be be emulated. In this work, however, we will primarily interest ourselves in \lambdaamor's usefulness as a programming language. To this end, the primary goal of this work is to design a version of \lambdaamor called \dlambdaamor which is amenable to implementation. We do this by cutting out a fragment of \lambdaamor, and restricting its syntax somewhat.
+By and large, the original creators of \lambdaamor were interested in it as a unifying framework in which one could embed \textit{other} cost analysis languages: there are many axes along which one may design a type system for resource analysis, and \lambdaamor serves as a calculus in which all sorts can be be emulated. In this work, however, we will primarily interest ourselves in \lambdaamor's usefulness as a programming language. To this end, the primary goal of this work is to design a version of \lambdaamor called \dlambdaamor which is amenable to implementation. We do this by cutting out a fragment of \lambdaamor, and restricting its syntax somewhat.
 In the end, our changes will have been minor. \dlambdaamor bears all of the same major features as \lambdaamor: a pair of modalities for cost and potential, an affine substructural type system for soundly tracking the potential (values with potential must not be duplicated), and refinement types for encoding potential functions which vary in the sizes of data structures. The major change is the introduction of a construct to selectively restrict the forms of potential functions, borrowed from Automated Amortized Resource Analysis (AARA) \cite{hoffmann-et-al:esop10}. However, despite this work in cutting out an implementable fragment, \dlambdaamor does not admit a direct implementation, as its typing rules (just like \lambdaamor's) are written in declarative style, from which we cannot immediately construct an algorithm for type-checking or type inference. 
 
 The traditional solution to this is to create yet another type system-- an \textit{algorithmic} one, from which a type-checker can be easily implemented. For this purpose, we will introduce \bilambdaamor, a type system which encodes the same typing relations as \dlambdaamor, but is presented in a manner that is trivial to implement. \bilambdaamor leverages several techniques from the type systems and type theory literature to algorithmize the \dlambdaamor type system. Most notably, \bilambdaamor makes use of bidirectional type inference \cite{pierce-and-turner:lti}: a technique which allows for the implementation of highly expressive type systems such as that of \dlambdaamor, while minimizing the amount of annotation required of the programmer. Additionally, \bilambdaamor harnesses normalization, syntax-directedness through admissible rules, and constraint generation to pave the way for an implementation.
@@ -25,64 +25,64 @@ Designing \bilambdaamor is a nontrivial task, and proving it correct even moreso
 The outline of the rest of the chapter is as follows.
 
 \begin{itemize}
- \item We will begin in Section~\ref{sec:dlambdaamor-overview} by giving an overview of the concepts \lambdaamor's type system draws on. As mentinoed previously \lambdaamor includes two modalities for tracking cost and potential. To soundly manage this potential, \lambdaamor is based on an affine logic in which every variable may be used at most once so that values with potential cannot be duplicated. To make complex potential functions, \lambdaamor uses refinement types in the style of Dependent ML (DML) \cite{xi:jfp07}, which we review. Next, we discuss the main obstacle the original type system presents to implementation: constraint solving. Our solution to this problem is based on univariate polynomial potential functions in the style of AARA, which we introduce.
+ \item We will begin in \autoref{sec:dlambdaamor-overview} by giving an overview of the concepts \lambdaamor's type system draws on. As mentinoed previously \lambdaamor includes two modalities for tracking cost and potential. To soundly manage this potential, \lambdaamor is based on an affine logic in which every variable may be used at most once so that values with potential cannot be duplicated. To make complex potential functions, \lambdaamor uses refinement types in the style of Dependent ML (DML) \cite{xi:jfp07}, which we review. Next, we discuss the main obstacle the original type system presents to implementation: constraint solving. Our solution to this problem is based on univariate polynomial potential functions in the style of AARA, which we introduce.
  
- \item Next, in Section~\ref{sec:dlambdaamor-examples}, we explore some programs written in \dlambdaamor. These programs (and others) show off different facets of \dlambdaamor's type system, and serve to provide a comprehensive test suite against which we can evaluate our eventual implementation.
+ \item Next, in \autoref{sec:dlambdaamor-examples}, we explore some programs written in \dlambdaamor. These programs (and others) show off different facets of \dlambdaamor's type system, and serve to provide a comprehensive test suite against which we can evaluate our eventual implementation.
  
- \item Then, in Section~\ref{sec:bilambdaamor-overview}, we give an overview of \bilambdaamor, the algorithmic version of \dlambdaamor. In order to help motivate \bilambdaamor's creation, we begin by describing the pitfalls which make it impossible to directly implement \dlambdaamor. We then move to presenting a high-level overview of the techniques we use to avoid these implementation obstacles.
+ \item Then, in \autoref{sec:bilambdaamor-overview}, we give an overview of \bilambdaamor, the algorithmic version of \dlambdaamor. In order to help motivate \bilambdaamor's creation, we begin by describing the pitfalls which make it impossible to directly implement \dlambdaamor. We then move to presenting a high-level overview of the techniques we use to avoid these implementation obstacles.
  
  
- \item In Section~\ref{sec:dlambdaamor-syntax-and-types}, we discuss the syntax and type system of \dlambdaamor in depth, providing intuition for the each of the judgments, and discussing selected rules from the type system. \dlambdaamor's type system is many-layered, with judgments for type formation, term formation, and a smaller type system for the sub-language which governs the refinement types. We pay special attention to the rules which govern the cost analysis-specific language features, and describe them in detail.
+ \item In \autoref{sec:dlambdaamor-syntax-and-types}, we discuss the syntax and type system of \dlambdaamor in depth, providing intuition for the each of the judgments, and discussing selected rules from the type system. \dlambdaamor's type system is many-layered, with judgments for type formation, term formation, and a smaller type system for the sub-language which governs the refinement types. We pay special attention to the rules which govern the cost analysis-specific language features, and describe them in detail.
  
-  \item In Section~\ref{sec:dlambdaamor-sound}, we sketch the soundness proof for \dlambdaamor, by showing that it may be embedded in \lambdaamor, and appealing to its soundness theorem featured in \citet{rajani-et-al:popl21}.
+  \item In \autoref{sec:dlambdaamor-sound}, we sketch the soundness proof for \dlambdaamor, by showing that it may be embedded in \lambdaamor, and appealing to its soundness theorem featured in \citet{rajani-et-al:popl21}.
  
- \item In Section~\ref{sec:bilambdaamor-syntax-and-types}, we introduce the formalism for \bilambdaamor. While the majority of the syntax is carried over from \dlambdaamor, this formalism of course differs drastically from that of \dlambdaamor, and so we take time to explore the ways that the algorithmization features discussed previously in Section~\ref{sec:bilambdaamor-overview} are actually applied.
+ \item In \autoref{sec:bilambdaamor-syntax-and-types}, we introduce the formalism for \bilambdaamor. While the majority of the syntax is carried over from \dlambdaamor, this formalism of course differs drastically from that of \dlambdaamor, and so we take time to explore the ways that the algorithmization features discussed previously in \autoref{sec:bilambdaamor-overview} are actually applied.
  
- \item In Section~\ref{sec:metatheory}, we prove that \bilambdaamor and \dlambdaamor are in fact (essentially) the same type system. This fact is a requirement for a good implementation, as it guarantees that our typechecker accurately and soundly types terms. The proof is broken into two parts. A proof of soundness tells us that when a typechecker derived from the algorithmic rules of \bilambdaamor confirms that an expression has a given type, our ``ground truth" declarative \dlambdaamor agrees. Dually, the proof of completeness ensures that every declaratively-derivable typing relationship in \dlambdaamor will be found by a typechecker which implements \bilambdaamor's algorithm.
+ \item In \autoref{sec:metatheory}, we prove that \bilambdaamor and \dlambdaamor are in fact (essentially) the same type system. This fact is a requirement for a good implementation, as it guarantees that our typechecker accurately and soundly types terms. The proof is broken into two parts. A proof of soundness tells us that when a typechecker derived from the algorithmic rules of \bilambdaamor confirms that an expression has a given type, our ``ground truth" declarative \dlambdaamor agrees. Dually, the proof of completeness ensures that every declaratively-derivable typing relationship in \dlambdaamor will be found by a typechecker which implements \bilambdaamor's algorithm.
  
- \item Finally, in Section~\ref{sec:lambdaamor-impl}, we discuss \lambdaamorimpl, our OCaml implementation of the \dlambdaamor. In order to be a useful programming language, \lambdaamorimpl sports a top-level environment with multiple declaration types, on top of the simple typechecking prescribed by \bilambdaamor. We discuss these additions to the language, as well as the specific design choices made while building the artifact. We finish the section by writing the examples from Section~\textbf{??} in \lambdaamorimpl, and benchmarking our implementation.
+ \item Finally, in \autoref{sec:lambdaamor-impl}, we discuss \lambdaamorimpl, our OCaml implementation of the \dlambdaamor. In order to be a useful programming language, \lambdaamorimpl sports a top-level environment with multiple declaration types, on top of the simple typechecking prescribed by \bilambdaamor. We discuss these additions to the language, as well as the specific design choices made while building the artifact. We finish the section by writing the examples from Section~\textbf{??} in \lambdaamorimpl, and benchmarking our implementation.
 \end{itemize}
 
 
 \section{Overview of \dlambdaamor} 
 \label{sec:dlambdaamor-overview}
-In this section, we will begin by presenting the overarching ideas which make \lambdaamor a useful language for resource analysis, and subsequently discuss its variant \dlambdaamor, which we will focus on for the rest of the chapter.
+In this section, we will begin by presenting the overarching ideas which make \lambdaamor a useful language for resource analysis. Subsequently, we move to discussing its variant, \dlambdaamor, which we will focus on for the rest of the chapter.
 
 One of the most basic insights that \lambdaamor takes advantage of in its design is that costly computation can be thought of an effect\footnote{
 In fact, cost can also be thought of as a \textit{coeffect} \cite{girard-et-al:tcs92:bll}, and one of the major breakthroughs of \lambdaamor is the unification
 of both styles of resource tracking in a single calculus.
-}. When a program does work, it has an effect on the world, namely the effect of taking time. In this sense, nearly all ``pure" programming languages are impure, as they allow pervasive use of the effect of cost. Unlike most languages, \lambdaamor encapsulates this effect by forcing all costly computation to happen in a monad \cite{moggi91}.
+}. When a program does work, it has an effect on the world, namely the effect of taking time. In this sense, nearly all ``pure" programming languages are impure, as they allow pervasive use of the effect of cost. In contrast to most languages, \lambdaamor enforces strict requirements on the use of this effect in particular. While many solutions to controlling effects have been explored in the literature \citehere, \lambdaamor takes the approach of enforcing a monadic \cite{moggi91} discipline on the effect of cost.
 
 \subsubsection{Cost Monad}
- However, a simple monad is not enough. We care not only that a term may incur cost, but how much cost it can incur! For this purpose, \lambdaamor uses a \textit{graded} monad $\M \; I \; \tau$ to encapsulate the effect of cost \cite{gaboardi-et-al:icfp16}. A computation of this type returns a value of type $\tau$, and may incur up to $I$ cost, where $I$ is drawn from the sort of positive real numbers. As a graded modality, this monad's operations interact with the grade in nontrivial ways: for instance, the ``pure" computation $\texttt{ret}(e)$ has type $\M \; 0 \; \tau$ when $e : \tau$. This allows any pure term to be lifted to a monadic computation which incurs no cost. Most importantly, given a costly computation $e_1 : \M \; I_1 \; \tau_1$ and a continuation $x : \tau_2 \vdash e_2 : \M \; I_2 \; \tau_2$, the two can be sequenced into a computation $\texttt{bind}\, x = e_1\, \texttt{in}\, e_2 : \M \; (I_1 + I_2) \; \tau_2$. Note that the costs add-- a computation which may take up to $I_1$ units of time followed by a computation which takes up to $I_2$ units of course takes at most $I_1 + I_2$ units. However, neither \texttt{ret} nor \texttt{bind} incurs any nontrivial cost: any program written using only \texttt{ret}s and \texttt{tick}s will have type $\M \, 0 \, \tau$. For this, \lambdaamor includes a term $\texttt{tick}[I]$ of type $M \, I \, 1$, which incurs cost $I$ (and $1$ is the unit type). This is the only construct in \lambdaamor which incurs any ``extra cost": the idea is that programmers insert \texttt{tick}s in front of the operations their specific cost model dictates are costly. This technique is widely used in the cost analysis literature \cite{danielsson:popl08}, and so \lambdaamor also adopts it for simplicity.
+However, a simple monad is not enough. We care not only that a term may incur cost, but how much cost it can incur! For this purpose, \lambdaamor employs a \textit{graded} monad $\M \; I \; \tau$ to encapsulate the effect of cost \cite{gaboardi-et-al:icfp16}. A computation of this type returns a value of type $\tau$, and may incur up to $I$ cost, where $I$ is drawn from the sort of positive real numbers. As a graded modality, this monad's operations interact with the grade in nontrivial ways: for instance, the ``pure" computation $\texttt{ret}(e)$ has type $\M \; 0 \; \tau$ when $e : \tau$. This allows any pure term to be lifted to a monadic computation which incurs no cost. Most importantly, given a costly computation $e_1 : \M \; I_1 \; \tau_1$ and a continuation $x : \tau_2 \vdash e_2 : \M \; I_2 \; \tau_2$, the two can be sequenced into a computation $\texttt{bind}\, x = e_1\, \texttt{in}\, e_2 : \M \; (I_1 + I_2) \; \tau_2$. Note that the costs add-- a computation which may take up to $I_1$ units of time followed by a computation which takes up to $I_2$ units of course takes at most $I_1 + I_2$ units. However, neither \texttt{ret} nor \texttt{bind} incurs any nontrivial cost: any program written using only \texttt{ret}s and \texttt{bind}s will have type $\M \, 0 \, \tau$. For this, \lambdaamor includes a term $\texttt{tick}[I]$ of type $M \, I \, 1$, which incurs cost $I$ (and $1$ is the unit type). This is the only construct in \lambdaamor which incurs any ``extra cost": the idea is that programmers insert \texttt{tick}s in front of the operations their specific cost model dictates are costly. This technique is widely used in the cost analysis literature \cite{danielsson:popl08}, and so \lambdaamor also adopts it for simplicity.
  
 But of course, this cost monad can only be half the story. In a language which seeks to provide types for amortized analysis, a mechanism for handling potential is required.
  
 \subsubsection{Potential Modality and Affine Types}
 In addition to the cost monad, \lambdaamor includes another graded modality for tracking potential. A term of type $[I] \; \tau$ can be thought of a term of type $\tau$ which stores $I$ potential\footnote{
-In some senses, potential in \lambdaamor behaves more like the credits of the banker's method discussed in Section~\ref{sec:amortized-primer}-- it can be created and attached to specific values. To avoid confusion, we follow \citet{rajani-et-al:popl21} with the terminology of ``potential"
+In some senses, potential in \lambdaamor behaves more like the credits of the banker's method discussed in \autoref{sec:amortized-primer}-- it can be created and attached to specific values. To avoid confusion, we follow \citet{rajani-et-al:popl21} with the terminology of ``potential"
 }, where $I$ is again drawn from a sort of positive real numbers.
 The most important operation associated with the potential modality is the ability to use potential to offset the cost of a computation. Concretely, given a term $e_1 : [I] \; \tau_1$ and a monadic continuation $x : \tau_1 \vdash e_2 : \M \; (I + J) \; \tau_2$, we can form the computation $\texttt{release}\, x = e_1 \, \texttt{in}\, e_2 : \M \; J \; \tau_2$. The crucial aspect of this construction is the fact that the resulting computation requires at most $J$ units of time to run, while the initial computation $e_2$ required $I + J$. Intuitively, we think of this as the $I$ units of potential ``paying for" $I$ steps of computation. 
 
-Potential may also be created, and attached to values. In \lambdaamor, these two functions are handled by the same construct. For terms $e : \tau$, we may form $\texttt{store}[I](e) : \M \; I \; ([I] \; \tau)$, which is a computation which runs for at most $I$ units of time, and returns a $\tau$ with $I$ potential attached. The fact that \texttt{store} incurs this cost is what justifies the term \texttt{release}-- the program has paid an ``extra" cost of $I$ to create $[I] \; \tau$, and thus can exercise this option to reduce the cost of a subsequent computation with \texttt{release}.
+Potential may also be created, and attached to values. In \lambdaamor, these two operations are handled by the same construct. For terms $e : \tau$, we may form $\texttt{store}[I](e) : \M \; I \; ([I] \; \tau)$, which is a computation which runs for at most $I$ units of time, and returns a $\tau$ with $I$ potential attached. The fact that \texttt{store} incurs this cost is what justifies the term \texttt{release}-- the program has paid an ``extra" cost of $I$ to create $[I] \; \tau$, and thus can exercise this option to reduce the cost of a subsequent computation with \texttt{release}.
 
-This dynamic between \texttt{store} and \texttt{release} forces a restriction on the type system-- variables can only be used at most once. Our argument for the soundness of \texttt{release} relies on an the assumption that the potential we are releasing has not already been released elsewhere, and so duplication of variables must be disallowed. Of course, this kind of restriction is very common, as discussed in Section~\ref{sec:modal-and-substructural}. We simply require that \lambdaamor be \textit{affine}.
+This dynamic between \texttt{store} and \texttt{release} forces a restriction on the type system-- variables can only be used at most once. Our argument for the soundness of \texttt{release} relies on an the assumption that the potential we are releasing has not already been released elsewhere, and so duplication of variables must be disallowed. Of course, this kind of restriction is very common, as discussed in \autoref{sec:modal-and-substructural}: we simply require that \lambdaamor be \textit{affine}.
 
 
 \subsubsection{Refinement Types and Index Terms}
 \label{sec:lambdaamor-overview-refty}
-So far, the situation we've described would only allow types with \textit{constant} amounts of potential. For nontrivial analyses, this is wholly insufficient: the potential of a data structure must be able to depend on the size or other numerical parameters of that data structure. For this purpose, \lambdaamor includes \textit{refinement types} in the style of DML Concretely, \lambdaamor includes length-refined lists: a value of type $L^I \tau$ is a list of length $I$, where $I$ is an \textit{index term}-- an term in a small language of arithmetic expressions over a set of variables. Further, these index terms which appear in refinements may also appear in potentials. For instance, $\left[I^2\right] \; (L^I \tau)$ is the type of lists of length $I$ with potential $I^2$. 
+So far, the situation we've described would only allow types with \textit{constant} amounts of potential. For nontrivial analyses, this is wholly insufficient: the potential of a data structure must be able to depend on the size or other numerical parameters of that data structure. For this purpose, \lambdaamor includes \textit{refinement types} in the style of Dependent ML \cite{xi:jfp07}. Concretely, \lambdaamor includes length-refined lists: a value of type $L^I \tau$ is a list of length $I$, where $I$ is an \textit{index term}-- a term in a small language of arithmetic expressions over a set of variables. Further, these index terms which appear in refinements may also appear in potentials. For instance, $\left[I^2\right] \; (L^I \tau)$ is the type of lists of length $I$ with potential $I^2$. 
 
 \subsubsection{Index Term Quantifiers, Indexed Types, and Constraint Types}
 To make good use of these refinements, \lambdaamor supports more refinement-related types. While not strictly part of the resource-analysis ``core" of \lambdaamor, these are required for practical use of the language. First and foremost is the inclusion of universal and existential quantifiers over index terms: the type $(\tau \loli \sigma) \loli \forall n : \N. \left(L^n \,\tau \loli L^{n} \, \sigma\right)$ is a possible type for a map function which can operate on lists of any length. \lambdaamor also includes a syntax for constraints over index terms, which take the form $I = J$, $I \leq J$, $I < J$ along with conjunctions, disjunctions, and implications thereof. These constraints are used in \textit{constraint types}. For instance, the conjunction constraint type $(n \geq 1) \amp \tau$ classifies values of type $\tau$ with an attached (irrelevant) proof of $n \geq 1$, while terms of the implication constraint type $(m + n = 1) \implies \sigma$ have type $\sigma$ when $m + n = 1$ is true. Finally, \lambdaamor sports indexed types, which can be thought of as type-level functions from sorts to types: $\lambda i : \N. L^i \tau$ is a function which, given a natural number $i$, produces the type $L^i \tau$. Note that this is not the same as $\forall i: \N. L^i \tau$, as they have different ``kinds": the first has kind $\N \to \star$ (a function which returns types), while the second has kind $\star$, where $\star$ is the kind of types of terms.
 
 \subsection{Potential Vectors and AARA}
-The story we've just told about \lambdaamor's type system is loyal to the original presentation in \citep{rajani-et-al:popl21}, but somewhat inadequate for implementation purposes. As we will discuss in Section~\ref{sec:bilambdaamor-overview}, efficient subtyping is necessary for implementation of \lambdaamor. However,
+The story we've just told about \lambdaamor's type system is loyal to the original presentation in \citep{rajani-et-al:popl21}, but somewhat inadequate for implementation purposes. As we will discuss in \autoref{sec:bilambdaamor-overview}, efficient subtyping is necessary for implementation of \lambdaamor. However,
 the inclusion of the potential and cost modalities presents a challenge. In order for $[I] \; \tau_1$ to be a subtype of $[J] \; \tau_2$, it must be that $\tau_1 \subty \tau_2$, and that $J \leq I$. But as discussed above, $I$ and $J$ are index terms, and may be polynomials in a set of index variables. Ideally, we would like to discharge these inequalities generated by subtyping by constraint solver, but even modern SMT solvers struggle to handle polynomial inequalities.
 
 To solve this problem, we borrow a key idea from AARA \cite{hoffmann-et-al:esop10} which will allow us to generate only linear constraints over index variables, while still allowing univariate polynomial potentials and cost. The main idea is to fix a clever ``basis" for the space of polynomials, and then represent polynomials as a vector of their coefficients with respect to that basis. The basis in question is chosen to satisfy one key property: if a real polynomial $f(n)$ is written in terms of the basis, then the coefficients of $f(n-1)$ may be efficiently determined from those of $f(n)$. This property gives rise to the ability to easily analyze list algorithms in \lambdaamor: when writing a function $([f(n)] \, (L^n \, \tau)) \loli \sigma$, it is simple to pattern match on the argument and determine the type of the tail $[f(n-1)] \, (L^{n-1} \, \tau)$ to pass to a recursive call.
 
-In \dlambdaamor, we will syntactically restrict potential functions to be of this form, with some exception. We show in Section \textbf{??} that this language may be trivially elaborated into the original \lambdaamor, while the examples in Section~\ref{sec:dlambdaamor-examples} shows that the restricted set of allowable potential functions are still expressive enough for practical purposes.
+In \dlambdaamor, we will syntactically restrict potential functions to be of this form, with some exception. We show in Section \textbf{??} that this language may be trivially elaborated into the original \lambdaamor, while the examples in \autoref{sec:dlambdaamor-examples} shows that the restricted set of allowable potential functions are still expressive enough for practical purposes.
 
 The reader accustomed to the literature surrounding AARA or Resource-Aware ML is likely to be familiar with the following presentation of AARA-style polynomial potential. The less familiar reader is encouraged to consult Hoffmann's Thesis \cite{hoffmann:thesis} for a more in-depth exposition of the technique.
 
@@ -150,14 +150,14 @@ Under this framing, all of the operations on costs and potentials in \dlambdaamo
 $$
 P^{\phi(I,\vec{p})} \otimes \tau \loli (\tau \loli P^{\phi(I,\vec{p} + \vec{q})} \loli \sigma) \loli P^{\phi(I,\vec{q})} \loli \sigma
 $$
-which operates by using Theorem~\ref{thm:phi-linear} to equate the types $P^{\phi(I,\vec{p})} \otimes P^{\phi(I,\vec{q})} = P^{\phi(I,\vec{p} + \vec{q})} = P^{\phi(I,\vec{p} + \vec{q})}$.
+which operates by using \autoref{thm:phi-linear} to equate the types $P^{\phi(I,\vec{p})} \otimes P^{\phi(I,\vec{q})} = P^{\phi(I,\vec{p} + \vec{q})} = P^{\phi(I,\vec{p} + \vec{q})}$.
 
 This presentation also serves to motivate two of the fundamental strictures of programming in \dlambdaamor. Since we have provided no introduction or elimination forms for the (imagined) type $P$, it is impossible to construct a closed term of that type. This is in line with the intended mental model of potentials in \dlambdaamor and amortized analysis more generally: potentials are unobservable, and thus should never ``escape" a program. The first consequence of this fact is that there are no closed terms of type $[I] \, \tau$: potential can only occur under a monadic computation. Second, given a function $P \loli \tau$, one should not be able to recover a $\tau$ in a closed context. Correspondingly, a programmer in \dlambdaamor can never internally ``run" a monadic computation of type $M \, (I,\vec{p}) \, \tau$ to get at the underlying $\tau$. This stricture is similar in spirit to Haskell's IO monad \citehere, whose terms cannot be evaluated except at the interactive top level. 
 
-Finally, considering the two modalities in this fashion makes plain their potentially confusing subtyping rules. First, for $[I|\vec{p}] \, \tau$ to be a subtype of $[I|\vec{q}] \, \sigma$, we require that $\vec{p} \geq \vec{q}$ and $\tau \subty \sigma$. The first condition is sufficient for $\phi(I,\vec{p}) \geq \phi(I,\vec{q})$ by Theorem~\ref{thm:phi-linear}, and so the rule simply for allows potential to be thrown away under during subtyping. Importantly, this subtyping rule agrees with the one implied by the encoding. $P^{\phi(I,\vec{p})} \otimes \tau \subty P^{\phi(I,\vec{p})} \otimes \sigma$ when $\tau \subty \sigma$ and $P^{\phi(I,\vec{p})} \subty P^{\phi(I,\vec{q})}$ by the usual subtyping rule for $\otimes$, and the subtyping between potentials is thought holds when $\phi(I,\vec{p}) \geq \phi(I,\vec{q})$, by restriction. The analysis of subtyping for the cost monad is slightly different, but follows the same structure.
+Finally, considering the two modalities in this fashion makes plain their potentially confusing subtyping rules. First, for $[I|\vec{p}] \, \tau$ to be a subtype of $[I|\vec{q}] \, \sigma$, we require that $\vec{p} \geq \vec{q}$ and $\tau \subty \sigma$. The first condition is sufficient for $\phi(I,\vec{p}) \geq \phi(I,\vec{q})$ by \autoref{thm:phi-linear}, and so the rule simply for allows potential to be thrown away under during subtyping. Importantly, this subtyping rule agrees with the one implied by the encoding. $P^{\phi(I,\vec{p})} \otimes \tau \subty P^{\phi(I,\vec{p})} \otimes \sigma$ when $\tau \subty \sigma$ and $P^{\phi(I,\vec{p})} \subty P^{\phi(I,\vec{q})}$ by the usual subtyping rule for $\otimes$, and the subtyping between potentials is thought holds when $\phi(I,\vec{p}) \geq \phi(I,\vec{q})$, by restriction. The analysis of subtyping for the cost monad is slightly different, but follows the same structure.
 
 The subtyping rule for costs is a common source of confusion in \dlambdaamor, since the cost monad behaves like a reader monad ($P \loli \cdot$), instead of a writer ($P \times \cdot$)\footnote{
-This is also a potential sense of confusion between this chapter and Chapter~\ref{chap:rec-extr}, where the costs in question are captured with a writer monad.
+This is also a potential sense of confusion between this chapter and \autoref{chap:rec-extr}, where the costs in question are captured with a writer monad.
 }. To show $\M \, (I,\vec{p}) \, \tau$ is a subtype of $\M \, (I,\vec{q}) \, \sigma$, it suffices to show that $\tau \subty \sigma$ and $\vec{p} \leq \vec{q}$. Intuitively, this is clear: a computation incurring no more than $\phi(I,\vec{p})$ cost can be used in place of one that incurs no more than $\phi(I,\vec{q})$, a larger amount of cost. However, the unintuitiveness of $\loli$ rule for sub-typing reveals the confusion. For $P^{\phi(I,\vec{p})} \loli \tau$ to be a subtype of $P^{\phi(I,\vec{q})} \loli \sigma$, the $\loli$ rule requires that $P^{\phi(I,\vec{q})} \subty P^{\phi(I,\vec{p})}$ and $\tau \loli \sigma$, but the first condition is the same as $\phi(I,\vec{p}) \leq \phi(I,\vec{q})$, again by restriction.
 
 \section{Examples of Programs in \dlambdaamor}
@@ -165,12 +165,12 @@ This is also a potential sense of confusion between this chapter and Chapter~\re
 In this section, we will present a number of examples of programs written in \dlambdaamor, each of which exemplifies a different component of its cost analysis capabilities. These examples will loosely follow the presentation of Section 3 of \citet{rajani-et-al:popl21}, where more in-depth discussion can be found.
 
 \subsubsection{Add One}
-We begin with a (very) simple example to demonstrate the utility of \dlambdaamor's AARA-style costs. Consider writing a function $\texttt{addOne}$, which adds one to each integer in a list. If we assume the cost model that natural number addition costs one unit of time, the function would have type $\forall n : \N. \, L^n(\texttt{nat}) \loli \M \, (n,\langle 0,1 \rangle) \, \left(L^n(\texttt{nat})\right)$. Recalling the intended meaning of the AARA-style cost functions, this means that \texttt{addOne} costs $\phi(n,\langle 0,1 \rangle) = n$ in total, where $n$ is the length of the input list (and also the output). Of course, this makes sense, as each entry in the list incurs a single cost, to add one to it. Pseudocode of the term for this type can be found in Figure~\ref{fig:example-dlambdaamor-addone}. The operational aspects of the program are exactly what one expects from an instance of map. More interesting are the cost-related aspects of the code. In the cons branch, we immediately \texttt{shift}. This allows us to provide a term of type  $\M \, (n-1,\langle 1,1 \rangle) \, \left(L^n(\texttt{nat})\right)$ in place of the expected type $\M \, (n,\langle 0,1 \rangle) \, \left(L^n(\texttt{nat})\right)$. This shift is required to perform the recursive call on the tail: $\texttt{addOne} \, [n-1] \, ys$ has type $\M \, (n-1,\langle 0,1 \rangle) \, \left(L^{n-1} (\texttt{nat})\right)$, which can only be bound into a continuation which results in something of type $\M \, (n-1, \_) \, \_$. Further, the shift ``exposes" the one constant cost, which is incurred by the tick (which we attribute to the addition). This raises a crucial point: a ``hole" in a program expecting $\M \, (n,\langle 0,1 \rangle) \, \tau$ cannot accept a term of type $\M \, (n, \langle 1,0 \rangle) \, \tau$, despite this being semantically sound.
+We begin with a (very) simple example to demonstrate the utility of \dlambdaamor's AARA-style costs. Consider writing a function $\texttt{addOne}$, which adds one to each integer in a list. If we assume the cost model that natural number addition costs one unit of time, the function would have type $\forall n : \N. \, L^n(\texttt{nat}) \loli \M \, (n,\langle 0,1 \rangle) \, \left(L^n(\texttt{nat})\right)$. Recalling the intended meaning of the AARA-style cost functions, this means that \texttt{addOne} costs $\phi(n,\langle 0,1 \rangle) = n$ in total, where $n$ is the length of the input list (and also the output). Of course, this makes sense, as each entry in the list incurs a single cost, to add one to it. Pseudocode of the term for this type can be found in \autoref{fig:example-dlambdaamor-addone}. The operational aspects of the program are exactly what one expects from an instance of map. More interesting are the cost-related aspects of the code. In the cons branch, we immediately \texttt{shift}. This allows us to provide a term of type  $\M \, (n-1,\langle 1,1 \rangle) \, \left(L^n(\texttt{nat})\right)$ in place of the expected type $\M \, (n,\langle 0,1 \rangle) \, \left(L^n(\texttt{nat})\right)$. This shift is required to perform the recursive call on the tail: $\texttt{addOne} \, [n-1] \, ys$ has type $\M \, (n-1,\langle 0,1 \rangle) \, \left(L^{n-1} (\texttt{nat})\right)$, which can only be bound into a continuation which results in something of type $\M \, (n-1, \_) \, \_$. Further, the shift ``exposes" the one constant cost, which is incurred by the tick (which we attribute to the addition). This raises a crucial point: a ``hole" in a program expecting $\M \, (n,\langle 0,1 \rangle) \, \tau$ cannot accept a term of type $\M \, (n, \langle 1,0 \rangle) \, \tau$, despite this being semantically sound.
 
 \begin{figure}
-\label{fig:example-dlambdaamor-addone}
 \input{figs/example-dlambdaamor-addone}
 \caption{\texttt{addOne} function in \dlambdaamor}
+\label{fig:example-dlambdaamor-addone}
 \end{figure}
 
 
@@ -178,13 +178,13 @@ This example can also be performed using potentials, rather than costs. Instead 
 $$\forall n : \N .\, [n|\langle 0,1 \rangle] \, 1 \loli L^n(\texttt{nat}) \loli \M \, (n,\langle 0,0 \rangle) \, \left(L^n(\texttt{nat})\right)$$
 This style is indicative of ``gas-cost" analyses, as we expect $n$ gas up front to run, and spend it all towards performing the additions. For technical reasons relating to expressivity\footnote{
 In short, coeffect-style analyses require the use of potentials.
-}, we often use this style (preferring the type $[I] \, \tau \loli \M \, 0 \, \sigma$ over the type $\tau \loli \M \, I \, \sigma$) even in cost analyses which are not amortized. Note that this pattern is indicative of the ``gas-tank" analyses discussed in Chapter~\ref{chap:intro}/
+}, we often use this style (preferring the type $[I] \, \tau \loli \M \, 0 \, \sigma$ over the type $\tau \loli \M \, I \, \sigma$) even in cost analyses which are not amortized. Note that this pattern is indicative of the ``gas-tank" analyses discussed in \autoref{chap:intro}/
 
 Another option is a type which attaches a single potential to each element of the input list, in a style indicative of the Banker's method:
 $$
 \forall n : \N .\, L^n\left([1] \, \texttt{nat}\right) \loli \M \, (n,\langle 0,0 \rangle) \, \left(L^n(\texttt{nat})\right)
 $$
-The terms corresponding to both of these types can be found in Appendix~\ref{appendix:a}. Of course, this cost analysis is tight and fairly uninteresting: it requires no ``real" amortized analysis.
+The terms corresponding to both of these types can be found in \autoref{appendix:a}. Of course, this cost analysis is tight and fairly uninteresting: it requires no ``real" amortized analysis.
 
 To illustrate the utility of \dlambdaamor as a platform for actual amortized analysis, we show how a few classic examples of amortized analysis can be performed by writing the programs in \dlambdaamor.
 
@@ -207,13 +207,13 @@ $$
 $$
 
 We can compute that $\phi(n,\langle 0,0,1\rangle) = \binom{n}{2} = \frac{1}{2}n^2 - \frac{1}{2}n$, which gives \texttt{ins_sort} the requisite quadratic cost bound.
-Of course, this cost analysis is fairly elementary, but the critical aspect of doing this in \dlambdaamor is that checking the proper terms (found in Appendix~\ref{appendix:a}) against these types requires solving only linear constraints over $\R^+$, despite the cost bound being quadratic. Moreover, the terms themselves are reached by inserting the \texttt{ret}s, \texttt{bind}s, and \texttt{shift}s into the proper locations in the term one would already expect to have to write when writing this function.
+Of course, this cost analysis is fairly elementary, but the critical aspect of doing this in \dlambdaamor is that checking the proper terms (found in \autoref{appendix:a}) against these types requires solving only linear constraints over $\R^+$, despite the cost bound being quadratic. Moreover, the terms themselves are reached by inserting the \texttt{ret}s, \texttt{bind}s, and \texttt{shift}s into the proper locations in the term one would already expect to have to write when writing this function.
 
 
 \subsubsection{Functional Queue}
 The first example of amortized analysis is the traditional functional queue \cite{okasaki:purely-functional-data-structures}. Here, a queue is represented as a pair of lists, $l_f$ and $l_r$, which we refer to as the front and rear lists, respectively. To enqueue an element, we cons it to the head of the front list, and to dequeue, an element is removed from the head of the rear list. If the rear list is empty when a dequeue operation is issued, the front list is reversed into the rear.
 
-If we assume that cons operations are the only costly operation, and that they each incur one cost, this dequeue operation has worst-case complexity $O(n)$ where $n$ is the size of the queue (the sum of the sizes of $l_f$ and $l_r$), since it sometimes needs to reverse the entire front list. However, by employing the banker's method, we may enforce the invariant that each element of the front list carries two credits to be used to pay for its eventual reversal. Under this scheme, both enqueue and dequeue are constant time.
+If we assume that cons operations are the only costly operation, and that they each incur one cost, this dequeue operation has worst-case complexity $O(n)$ where $n$ is the size of the queue (the sum of the sizes of $l_f$ and $l_r$), since it sometimes needs to reverse the entire front list. However, by employing the banker's method, we may enforce the invariant that each element of the front list carries two credits to be used to pay for its eventual reversal. Under this scheme, both enqueue and dequeue are constant amortized time.
 
 This entire informal analysis is captured formally by the types of the enqueue and dequeue operations in \dlambdaamor. To encode this analysis, we define a queue to be of type $ L^n([2] \, \tau) \otimes L^m \, \tau$: a pair of $\tau$-lists, where the front has $2$ potential on each of its $n$ elements.
 
@@ -223,13 +223,13 @@ $$
 \texttt{enq} \; : \; \forall n,m : \N. \, [3] \, 1 \loli \tau \loli L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \, \langle 0 \rangle \, \left(L^{n+1}([2] \, \tau) \otimes L^m \, \tau\right)
 $$
 
-From a queue and three extra potential, we may enqueue a single element, resulting in queue with one more element on its front list, for no cost. The term implementing \texttt{enc} can be found in Figure~\ref{fig:example-dlambdaamor-enc}. The type of dequeue is somewhat more involved, since the sizes of the output lists are not a simple function of this inputs. In addition, the function has a precondition: the queue cannot be empty. These two numerical restrictions provide a nice illustration of \dlambdaamor's refinement types.
+From a queue and three extra potential, we may enqueue a single element, resulting in queue with one more element on its front list, for no cost. The term implementing \texttt{enc} can be found in \autoref{fig:example-dlambdaamor-enc}. The type of dequeue is somewhat more involved, since the sizes of the output lists are not a simple function of this inputs. In addition, the function has a precondition: the queue cannot be empty. These two numerical restrictions provide a nice illustration of \dlambdaamor's refinement types.
 
 $$
 \texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^n([2] \, \tau) \otimes L^m \, \tau\right)\right)
 $$
 
-\texttt{deq} takes a nonempty queue, and produces another queue which has one element removed. The implementation of \texttt{deq} relies on a function \texttt{move}, which reverses the rear list into the front. The terms for all functions involved can be found in Appendix~\ref{appendix:a}.
+\texttt{deq} takes a nonempty queue, and produces another queue which has one element removed. The implementation of \texttt{deq} relies on a function \texttt{move}, which reverses the rear list into the front. The terms for all functions involved can be found in \autoref{appendix:a}.
 
 
 %\begin{figure}
@@ -255,7 +255,7 @@ Most importantly, the mapping function has type $!\left(\forall i : \N. [C \, i]
 This is simply an alias for $L^i \, 1$.
 }. Finally, the mapping function requires $C \, i$ potential to run, and incurs no amortized cost, which ensures that its actual cost is bounded by $C \, i$.
 
-Given the mapping function, the function \texttt{map} then transforms an $L^n \, \alpha$ into a monadic computation of an $L^n \, \beta$, incurring $\sum_{0 \leq i < n} C(i)$ amortized cost. As usual, the term implementing map can be found in Appendix~\ref{appendix:a}
+Given the mapping function, the function \texttt{map} then transforms an $L^n \, \alpha$ into a monadic computation of an $L^n \, \beta$, incurring $\sum_{0 \leq i < n} C(i)$ amortized cost. As usual, the term implementing map can be found in \autoref{appendix:a}
 
 
 %\subsection{Church Numerals}
@@ -274,14 +274,14 @@ Given the mapping function, the function \texttt{map} then transforms an $L^n \,
 %$$
 
 %More interesting however, are the church numeral operations! Most basic among them is the successor function, of type $\forall n : \N. [2] \, 1 \loli \texttt{Nat} \, n \loli \M \, \langle 0 \rangle \, \left(\texttt{Nat} \, (n+1)\right)$. The basic idea is simple: given a church numeral $N$, we produce a new one by iterating from $0$
-%to $n$ by $N$, and then applying one last transition function. The full term, however, is fairly involved, and it can be found (along with church numeral addition) in Appendix~\ref{appendix:a}
+%to $n$ by $N$, and then applying one last transition function. The full term, however, is fairly involved, and it can be found (along with church numeral addition) in \autoref{appendix:a}
 
 
 \section{Overview of \bilambdaamor}
 \label{sec:bilambdaamor-overview}
-In order for \dlambdaamor to be useful as a programming language, it must be implementable! While a declarative type system on paper is useful for modeling and proving purposes, it has limited utility from a language engineering standpoint. While \dlambdaamor is far more implementation-ready than its predecessor \lambdaamor, the rules of its type system do not provide us with an obvious implementation method. Traditionally, one hopes to implement a type system in a manner similar to implementing a definitional interpreter \cite{reynolds:acm72}. For each judgment of the type system, the programmer writes a function which essentially runs a proof search for that judgment, with the type position as an input or output depending on if the function is type checking or inference.
+For \dlambdaamor to be useful as a programming language, it must be implementable! While a declarative type system on paper is useful for modeling and proving purposes, it has limited utility from a language engineering standpoint. \dlambdaamor is far more implementation-ready than its predecessor \lambdaamor, but the rules of its type system do not provide us with an obvious implementation method. Traditionally, one hopes to implement a type system in a manner similar to implementing a definitional interpreter \cite{reynolds:acm72}. For each judgment of the type system, the programmer writes a function which essentially runs a proof search for that judgment, with the type position as an input or output depending on if the function is type checking or inference.
 
-Unfortunately, many of the judgments of \dlambdaamor -- which we will see when the formalism is presented in Section~\ref{sec:dlambdaamor-syntax-and-types}-- do not have straightforwardly implementations. The difficulties of coming up with implementations stems from five critical challenges which must be overcome before we can implement \dlambdaamor. Our eventual solutions to these five challenges form the basis of \bilambdaamor, the \textit{algorithmic} version of \dlambdaamor which we will subsequently implement.
+Unfortunately, many of the judgments of \dlambdaamor -- which we will see when the formalism is presented in \autoref{sec:dlambdaamor-syntax-and-types}-- do not have straightforward implementations. The difficulties of coming up with implementations stems from five critical challenges which must be overcome before we can implement \dlambdaamor. Our eventual solutions to these five challenges form the basis of \bilambdaamor, the \textit{algorithmic} version of \dlambdaamor which we will subsequently implement.
 
 \begin{enumerate}
   \item The main type-assignment judgment of \dlambdaamor yields an ambiguous proof search method. It is not at all clear which rule to apply at any given step of building a derivation, since there are some rules (subtyping, weakening) that can always be tried at each stage. Indeed, one could always implement proof search for \dlambdaamor using backtracking, but it is preferable to avoid this if possible. Instead, we would like our implementation-ready calculus \bilambdaamor to be \textit{syntax-directed} in the sense that the outermost syntax of the current term informs us which typing rule must be applied next to build a successful derivation. 
@@ -299,7 +299,7 @@ As \citet{pierce:lics03} notes: ``The more interesting your types get, the less 
 
 \end{enumerate}
 
-In the rest of the section, we present the solutions to these five problems that we choose to adopt. All five solutions are well-known techniques, but to our knowledge \bilambdaamor is the language to show that they may all be simultaneously integrated into a single system. Since the five techniques are orthogonal, we present each feature of \bilambdaamor in isolation for a significantly simpler language. In Section~\ref{sec:bilambdaamor}, we will present the formalism for \bilambdaamor, which applies the below-presented techniques to the declarative calculus \dlambdaamor.
+In the rest of the section, we present the solutions to these five problems that we choose to adopt. All five solutions are well-known techniques, but to our knowledge \bilambdaamor is the language to show that they may all be simultaneously integrated into a single system. Since the five techniques are orthogonal, we present each feature of \bilambdaamor in isolation for a significantly simpler language. In \autoref{sec:bilambdaamor}, we will present the formalism for \bilambdaamor, which applies the below-presented techniques to the declarative calculus \dlambdaamor.
 
 \subsubsection{Bidirectional Type Systems}
 \label{sec:bilambdaamor-overview-bidir}
@@ -338,7 +338,7 @@ If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' 
 \label{thm:bidir-compl-example}
 \end{theorem}
 
-When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When Theorem~\ref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??} by proving an equivalent statement whose constructive proof inserts fewer annotations than the standard theorem.
+When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When \autoref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??} by proving an equivalent statement whose constructive proof inserts fewer annotations than the standard theorem.
 
 \subsubsection{Algorithmic Subtyping and Normalization}
 To implement the subsumption rule mentioned above, a decision procedure for the subtyping relation $\tau \subty \tau'$ is required. However, \dlambdaamor's subtyping is not immediately implementable for two important reasons.
@@ -431,7 +431,7 @@ We will begin by presenting its syntax, which differs from \lambdaamor only in i
 \label{fig:dlambdaamor-syntax}
 \end{figure}
 
-In preparation to discuss \dlambdaamor's type system, we present its syntax in Figure~\ref{fig:dlambdaamor-syntax}.
+In preparation to discuss \dlambdaamor's type system, we present its syntax in \autoref{fig:dlambdaamor-syntax}.
 
 \subsubsection{Index Terms, Sorts, Kinds, and Constraints}
 \dlambdaamor's refinement types are modeled in the style of DML, which takes the form of a two-level type system. As discussed in Section \textbf{??}, these refinements allow the user to assign types potential which depend on the sizes of data structures, such as the length of lists. These numerical values are denoted by \textit{index terms} ($I,J$) which decorate some of the types and surface syntax of \dlambdaamor. Index terms may be of three possible numerical \textit{base sorts}: natural numbers $\N$, positive real numbers $\R^+$, and potential vectors of some fixed length $k$, $\vec{\R^+}$. Additionally, \dlambdaamor also includes first-order sort-level functions.
@@ -470,11 +470,11 @@ The syntax associated to the amortized analysis constructs is likely less famili
 \subsection{Type System of \dlambdaamor}
 \begin{figure}
 \input{figs/dlambdaamor-typing-judgments}
-\label{fig:dlambdaamor-typing-judgments}
 \caption{Judgment Forms of the \dlambdaamor Type System}
+\label{fig:dlambdaamor-typing-judgments}
 \end{figure}
 
-In Figure~\ref{fig:dlambdaamor-typing-judgments}, we provide a listing of the judgments which make up \dlambdaamor's type system. Selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-typing-rules}, and a listing of all rules can be found in Appendix~\ref{appendix:a}.
+In \autoref{fig:dlambdaamor-typing-judgments}, we provide a listing of the judgments which make up \dlambdaamor's type system. Selected rules are presented in \autoref{fig:dlambdaamor-selected-typing-rules}, and a listing of all rules can be found in \autoref{appendix:a}.
 
 \subsubsection{Contexts}
 Judgments in \dlambdaamor have as many as five contexts.
@@ -488,8 +488,8 @@ To avoid questions of exchange, we consider all of the contexts except for $\Del
 \subsubsection{Index Terms and their Sorts}
 \begin{figure}
 \input{figs/dlambdaamor-selected-sort-kind-constr-rules}
-\label{fig:dlambdaamor-selected-sort-kind-constr-rules}
 \caption{Selected Sort, Kind, and Constraint Rules}
+\label{fig:dlambdaamor-selected-sort-kind-constr-rules}
 \end{figure}
 
 The rules that make up the sort system for index terms (prefixed I-) are mostly self-explanatory: we ensure that arguments to arithmetic operators have the same sorts.
@@ -501,8 +501,8 @@ The type formation rules (prefixed K-) for \dlambdaamor are very straightforward
 \subsubsection{Subtyping}
 \begin{figure}
 \input{figs/dlambdaamor-selected-subty-rules}
-\label{fig:dlambdaamor-selected-subty-rules}
 \caption{Selected Subtyping rules}
+\label{fig:dlambdaamor-selected-subty-rules}
 \end{figure}
 The majority of the rules for subtyping in \dlambdaamor (prefixed by S-) are the standard congruences for logical connectives. The rules for the types involved in cost analysis for refinements, however, warrant some discussion.
 
@@ -515,8 +515,8 @@ Finally, the rules S-FamBeta-$1$ and S-FamBeta-$2$ serve to include $\beta$-equa
 \subsubsection{Context Well-Formedness Judgments and Context Subsumption}
 \begin{figure}
 \input{figs/dlambdaamor-ctx-wf-rules}
-\label{fig:dlambdaamor-ctx-wf-rules}
 \caption{Context Well-formedness rules and Context Subsumption}
+\label{fig:dlambdaamor-ctx-wf-rules}
 \end{figure}
 The judgment $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$ ensures that $\Phi$ is a well-formed context: all index terms mentioned in it are sort-correct, and relations are only judged between index terms of the same sort.
 
@@ -528,8 +528,8 @@ Finally, The judgment $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$ dete
 \subsubsection{Terms and their Types}
 \begin{figure}
 \input{figs/dlambdaamor-selected-typing-rules}
-\label{fig:dlambdaamor-selected-typing-rules}
 \caption{Selected \dlambdaamor rules}
+\label{fig:dlambdaamor-selected-typing-rules}
 \end{figure}
 
 The typing rules for all of the logical connectives have the standard caveats for an affine type system: affine arrow introduction T-ArrI binds variable $x : A$ in the affine context $\Gamma$. Multi-premise rules like tensor introduction (T-TensorI) and sum elimination (T-Case) require splitting the affine context to type the premises. As usual, ``parallel" premises such as the two arms of a case may share affine resources, as only one branch will be taken at runtime. The exponential modality $!\tau$ also has the standard rules: T-ExpI ensures that one may only introduce a value of type $!\tau$ when the affine context is empty, and T-ExpE destructs a value of type $!\tau$ by binding an exponential variable of type $\tau$ for use in the continuation.
@@ -590,7 +590,7 @@ We say that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau$ when
 \end{definition}
 
 \subsection{Proof Theory of \dlambdaamor}
-Any type system as complex as \dlambdaamor's has heaps of syntactic structure to exploit. This structure comes, as is traditional for type theories and type systems, in the form of admissible rules. Each of \dlambdaamor's five principal judgments have their own set of admissible rules, corresponding to the structuralities of each context and other judgmental structure. Because of this, the proof theory of \dlambdaamor is incredibly rich. We will make no attempt to cover it all here, and instead pick and choose the theorems which will be useful down the line when it comes time to design and prove things about our algorithmic calculus. Below, we present the admissible rules which are used repeatedly in further metatheoretic developments: the rest can be found in Appendix~\ref{appendix:a}.
+Any type system as complex as \dlambdaamor's has heaps of syntactic structure to exploit. This structure comes, as is traditional for type theories and type systems, in the form of admissible rules. Each of \dlambdaamor's five principal judgments have their own set of admissible rules, corresponding to the structuralities of each context and other judgmental structure. Because of this, the proof theory of \dlambdaamor is incredibly rich. We will make no attempt to cover it all here, and instead pick and choose the theorems which will be useful down the line when it comes time to design and prove things about our algorithmic calculus. Below, we present the admissible rules which are used repeatedly in further metatheoretic developments: the rest can be found in \autoref{appendix:a}.
 
 First, we prove two statements about the context well-formedness judgments that should be intuitively clear: subsets of well-formed contexts are themselves well-formed.
 
@@ -610,7 +610,7 @@ $\Psi' ; \Theta' ; \Delta' \pvdash \Gamma \wknto \Gamma'$
 \label{thm:ctx-sub-wkn}
 \end{restatable}
 
-Substitution is admissible for all contexts in all judgments-- this is essentially a requirement of a type system! However, we will primarily be concerned with substitution for types, as it will become critical once we discuss normalization for types in Section~\ref{sec:bilambdaamor}.
+Substitution is admissible for all contexts in all judgments-- this is essentially a requirement of a type system! However, we will primarily be concerned with substitution for types, as it will become critical once we discuss normalization for types in \autoref{sec:bilambdaamor}.
 
 \begin{restatable}{theorem}{typeidxsubst}
 If $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$ and $\Theta ; \Delta \pvdash I : S$ then $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$
@@ -632,7 +632,7 @@ $\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \Gamma'$ if and only if for all $x 
 \label{thm:ctx-sub-subset2}
 \end{restatable}
 
-Finally, we prove a compatability lemma about context subsumption that is similar in flavor to Theorem~\ref{thm:subty-streng}, which allows us to strengthen the assumptions of the judgment in a specific (but common) situation.
+Finally, we prove a compatability lemma about context subsumption that is similar in flavor to \autoref{thm:subty-streng}, which allows us to strengthen the assumptions of the judgment in a specific (but common) situation.
 
 \begin{restatable}{theorem}{ctxsubswap}
 Suppose that
@@ -657,7 +657,7 @@ Then, in Section~\textbf{??}, we sketch the embedding of \dlambdaamor into \lamb
 \subsection{Operational Semantics of \dlambdaamor}
 To pin down the exact cost of programs written in \dlambdaamor, we provide a \textit{cost semantics} for the language: a big-step operational semantics which is indexed by the cost of evaluation.
 
-Operationally, \dlambdaamor behaves like a call-by-name monadic version of PCF. The cost semantics, for which selected rules are presented in Figure~\ref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$. The pure evaluation judgment is an entirely standard big-step semantics, but selected rules from the forcing judgment can be found in Figure~\ref{fig:selected-sem-rules}.
+Operationally, \dlambdaamor behaves like a call-by-name monadic version of PCF. The cost semantics, for which selected rules are presented in \autoref{fig:dlambdaamor-selected-operational-rules}, consists of two separate judgments. First is a \textit{pure} evaluation relation: $e \Downarrow v$, which evaluates an expression of type $\tau$ to a value of the same type. Evaluations in this relation are not thought to incur any cost: in fact, the set of values includes all of the monadic computations, which must be \textit{forced}. This is accomplished with the \textit{forcing} evaluation relation $e \Downarrow^\kappa v'$, which relates monadic values of type $\M \, I \, \tau$ to values of type $\tau$. The pure evaluation judgment is an entirely standard big-step semantics, but selected rules from the forcing judgment can be found in \autoref{fig:selected-sem-rules}.
 
 The rules for the pure evaluation relation are straightforward- as all monadic terms are values, the pure relation simply behaves like a big-step evaluation relation for by-name PCF. The rules for the refinement syntax at term level behave as if the syntax for refinements has been erased at runtime- they contribute nothing meaningful to the operational semantics.
 
@@ -668,13 +668,13 @@ Most importantly, the $\texttt{tick}[I|\vec{p}]$ term evaluates with cost $\phi(
 Finally, the two potential-related operations incur no semantic cost. This may come as a surprise-- the statically predicted cost for the \texttt{store} operation (for example) is the amount of potential to be allocated. However, this cost is entirely for bookeeping purposes to ensure that potentially is used soundly: it is not truly incurred when the program runs. Similarly, the \texttt{release} operation runs identically to \texttt{bind}: it is simply a monadic sequencing. This ``ghost" nature of potential at runtime is congruent with the way we think about amortized analysis. Recalling the notation of Section~\textbf{??}, the operational semantics give the costs $C(f)$, while the static types encode the amortized cost $A(f) + \Delta\Phi$.
 
 \begin{figure}
-\label{fig:selected-sem-rules}
 \input{figs/selected-sem-rules}
 \caption{Selected Rules of \dlambdaamor's Cost Semantics}
+\label{fig:selected-sem-rules}
 \end{figure}
 
 \subsection{Embedding of \dlambdaamor in \lambdaamor}
-The translation of \dlambdaamor into \lambdaamor requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation on types consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamor $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$. These translations respect rules of the two type systems: the monotonicity and additivity of the $\phi$ function from Theorem~\textbf{??} justify the translations of the \texttt{bind} and \texttt{release} operations, as well as the subtyping rule for costs and potentials. The rest of the translation is primarily an erasure. \lambdaamor's syntax includes no explicit index terms or types at the term level, and so these are all erased. In particular, the shift operation is erased, a move which is justified by Theorem~\ref{thm:raml-shift}.
+The translation of \dlambdaamor into \lambdaamor requires little insight: we simply compile the costs and potentials written abstractly as a base and potential vector to the $\phi$ function applied to a pair. Concretely, the meat of the translation on types consists of two rules: the \dlambdaamor cost type $\M(I,\vec{p}) \, \tau$ is translated to the \lambdaamor $\M \left(\phi(I,\vec{p})\right)\, \tau'$, and the potential type $[I|\vec{p}] \, \tau$ is translated to $\left[\phi(I,\vec{p})\right] \, \tau'$, where $\tau'$ is the translation of $\tau$. These translations respect rules of the two type systems: the monotonicity and additivity of the $\phi$ function from Theorem~\textbf{??} justify the translations of the \texttt{bind} and \texttt{release} operations, as well as the subtyping rule for costs and potentials. The rest of the translation is primarily an erasure. \lambdaamor's syntax includes no explicit index terms or types at the term level, and so these are all erased. In particular, the shift operation is erased, a move which is justified by \autoref{thm:raml-shift}.
 
 For the remainder of the section, we will write the embedding on all syntactic forms as $(\cdot)^\circ$. Further, the typing judgments of \lambdaamor will be distinguished from those of \dlambdaamor by using a $\Vdash$ for their turnstile, while the evaluation relation of \lambdaamor will be written with a single arrow $\downarrow$.
 
@@ -699,35 +699,37 @@ From this, the soundness theorem for \dlambdaamor follows immediately: the actua
 If $\cdot \pvdash e : \M \, (I,\vec{p}) \, \tau$ and $e \Downarrow^\kappa v$, then $\kappa \leq \phi(I,\vec{p})$.
 \end{theorem}
 \begin{proof}
-By Theorem~\ref{thm:dla-trans-sound} and Theorem~\ref{thm:dla-trans-sem-sound}, we have that $\cdot \Vdash e^\circ  : \M \, \phi(I,\vec{p}) \, \tau^\circ$, and $e^\circ \downarrow^\kappa v^\circ$. Then, by Theorem 1 of \citet{rajani-et-al:popl21}, we have that $\kappa \leq \phi(I,\vec{p})$, as required.
+By \autoref{thm:dla-trans-sound} and \autoref{thm:dla-trans-sem-sound}, we have that $\cdot \Vdash e^\circ  : \M \, \phi(I,\vec{p}) \, \tau^\circ$, and $e^\circ \downarrow^\kappa v^\circ$. Then, by Theorem 1 of \citet{rajani-et-al:popl21}, we have that $\kappa \leq \phi(I,\vec{p})$, as required.
 \end{proof}
 
 
 
 \section{Algorithmic Type System of \bilambdaamor}
 \label{sec:bilambdaamor-syntax-and-types}
+
 \begin{figure}
-\label{fig:bilambdaamor-typing-judgments}
+\input{figs/bilambdaamor-typing-judgments}
 \caption{Judgment Forms of the \bilambdaamor Type System}
+\label{fig:bilambdaamor-typing-judgments}
 \end{figure}
 
 
 
-The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is of course by design, as \bilambdaamor is intended to be an implementable version of \dlambdaamor. The only difference is the addition of the type annotation syntax $(e : \tau)$ described in Section~\textbf{??}. The main change between the two type systems is in the forms of the judgments. Some judgments change in only minor ways: the sort-checking, kind-checking, and constraint well-formedness judgments are all the same as in \dlambdaamor, with the exception of the added constraint outputs as described in Section~\textbf{??}. The subtyping judgment also sports a constraint output, but is also is split into two, with first a ``normal form subtyping" relation which judges one type to be a subtype of another when both are in normal form, and then the general algorithmic subtyping relation which relates two types by normalizing them and then relating them via the normal form subtyping relation. Finally, the typing judgment changes the most: it splits into a checking ($\downarrow$) and inferring/synthesis ($\uparrow$) judgment to support bidirectional type inference, with added constraint outputs for solving and unused variable context output for the I/O method. These judgment forms are all shown in Figure~\ref{fig:bilambdaamor-typing-judgments}.
+The syntax of \bilambdaamor is nearly identical to that of \dlambdaamor: this is of course by design, as \bilambdaamor is intended to be an implementable version of \dlambdaamor. The only difference is the addition of the type annotation syntax $(e : \tau)$ described in Section~\textbf{??}. The main change between the two type systems is in the forms of the judgments. Some judgments change in only minor ways: the sort-checking, kind-checking, and constraint well-formedness judgments are all the same as in \dlambdaamor, with the exception of the added constraint outputs as described in Section~\textbf{??}. The subtyping judgment also sports a constraint output, but is also is split into two, with first a ``normal form subtyping" relation which judges one type to be a subtype of another when both are in normal form, and then the general algorithmic subtyping relation which relates two types by normalizing them and then relating them via the normal form subtyping relation. Finally, the typing judgment changes the most: it splits into a checking ($\downarrow$) and inferring/synthesis ($\uparrow$) judgment to support bidirectional type inference, with added constraint outputs for solving and unused variable context output for the I/O method. These judgment forms are all shown in \autoref{fig:bilambdaamor-typing-judgments}.
 
 
 \subsubsection{Sorts, Kinds, and Well-Formed Constraints}
 \begin{figure}
 \input{figs/bilambdaamor-selected-sort-kind-constr-rules}
-\label{fig:bilambdaamor-selected-sort-kind-constr-rules}
 \caption{Selected Algorithmic Sort, Kind, and Constraint Rules}
+\label{fig:bilambdaamor-selected-sort-kind-constr-rules}
 \end{figure}
 
 As we will see is true for the majority of the judgments of \bilambdaamor, the majority of the rules from \dlambdaamor carry over with only minor modification. Although they do form the typing rules for a (small) language embedded in \bilambdaamor, the sort-assignment, kind-assignment and well-formedness judgments for index terms, types, and constraints respectively, do not require a bidirectional treatment. This is because all binders in these three syntactic categories are fully annotated, and so we can easily implement sort/kind inference and checking without any difficulty. Similarly, since the index and type variable contexts are fully structural, there is no need for the I/O method. Hence, the only modification to these three judgments is the addition of the constraint output.
 
 Intuitively, the three judgments all have very simple meanings: for instance, $\Theta ; \Delta \vdash I : S \gens \Phi$ is intended to mean that when $\Phi$ is valid, $\Theta ; \Delta \vdash I$ holds declaratively, and similarly for the other two judgment forms. This intuition is made formal by the soundness proofs in Section~\textbf{??}.
 
-We present a few selected rules from these judgments in Figure~\ref{fig:bilambdaamor-selected-sort-kind-constr-rules}. As mentioned earlier, the vast majority of rules are carried over from \dlambdaamor: two good examples are AI-Plus and AC-Conj, which follow an identical structure to their declarative counterparts, and simply conjoin the output contexts from the premises in the conclusion.
+We present a few selected rules from these judgments in \autoref{fig:bilambdaamor-selected-sort-kind-constr-rules}. As mentioned earlier, the vast majority of rules are carried over from \dlambdaamor: two good examples are AI-Plus and AC-Conj, which follow an identical structure to their declarative counterparts, and simply conjoin the output contexts from the premises in the conclusion.
 
 Some declarative rules have an instance of the constraint validity relation as a premise: for example, the rule I-Minus requires $\Theta ; \Delta \vDash I \geq J$ to judge $\Theta ; \Delta \vdash I - J : bS$. In the algorithmic judgments of \bilambdaamor, these constraints are conjoined onto the output constraint of the conclusion. The algorithmic rule corresponding to I-Minus, AI-Minus, exemplifies this pattern. It has two premises to check that the two subterms $I$ and $J$ are of the proper sort, which emit constraints $\Phi_1$ and $\Phi_2$, respectively. The output constraint is then $\Phi_1 \wedge \Phi_2 \wedge (I \geq J)$. This is constructed in such a way that our eventual soundness theorem will be simple, if the output constraint is valid, then so is $I \geq J$, and we can thus use $\Theta ; \Delta \vDash I \geq J$ to construct a declarative proof that $I - J$ is sort-correct.
 
@@ -741,19 +743,19 @@ The output constraint $\Phi'$ does not encode the truth of $\Phi$. The soundness
 \subsubsection{Algorithmic Context-Wellformedness}
 \begin{figure}
 \input{figs/bilambdaamor-ctx-wf-rules}
-\label{fig:bilambdaamor-ctx-wf-rules}
 \caption{Algorithmic Context Wellformedness Rules}
+\label{fig:bilambdaamor-ctx-wf-rules}
 \end{figure}
 
 While these judgments are not a part of the typechecking algorithm we will eventually implement, \bilambdaamor includes algorithmic versions of the two context-wellformedness judgments from \dlambdaamor to be used in the presuppositions for the rest of the algorithmic judgments. The two judgments, constraint context well-formedness ($\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$) and term variable context well-formedness ($\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi$) have the expected intended meaning: when the output constraint is valid, the declarative version is thought to hold.
 
-These judgments will not need to be implemented since typechecking will begin from empty contexts, where both judgments hold vacuously. Finally, we note that \bilambdaamor does not have an algorithmic version of the declarative context subsumption judgment, since it only exists in the declarative theory to be used in the weakening rule, which \bilambdaamor does not have. Indeed- weakening of the term context in \bilambdaamor is admissible, a fact which will be proven in Section~\ref{sec:metatheory}.
+These judgments will not need to be implemented since typechecking will begin from empty contexts, where both judgments hold vacuously. Finally, we note that \bilambdaamor does not have an algorithmic version of the declarative context subsumption judgment, since it only exists in the declarative theory to be used in the weakening rule, which \bilambdaamor does not have. Indeed- weakening of the term context in \bilambdaamor is admissible, a fact which will be proven in \autoref{sec:metatheory}.
 
 
 \subsection{Normalization of Types}
 To circumvent the issue of deciding $\beta$-equality of types as a part of \bilambdaamor's subtyping routine, we employ a normalization (or evaluation) procedure to eliminate all $\beta$-redexes from a type. Once these $\beta$-redexes have been eliminated, subtyping only requires congruence rules. The normalization proof that we describe in this section is a normalization relative to the equational theory induced by \dlambdaamor's subtyping relation, that is to say: we will eventually prove that a type and its normal form are mutual subtypes of each other \textit{with the subtyping relation of \dlambdaamor}. This may seem strange-- after all, the normalization is required for \bilambdaamor's subtyping relation. However, we will see in Section~\textbf{??} that to prove the completeness of \bilambdaamor's algorithmic subtyping (Theorem~\textbf{??}), a normalization proof for \dlambdaamor's subtyping is exactly what's required. Moreover, the eventual soundness and completeness theorems for algorithmic subtyping will allow us to transport this normalization result to \bilambdaamor's type system when required.
 
-This normalization procedure computes \textit{normal forms} for types, which should be thought of as canonical representatives of the $\beta$-equivalence classes of types. These normal forms can characterized syntactically: we present a pair of relations $\tau \, \texttt{ne}$ and $\tau \, \texttt{nf}$, which judge a type to be neutral or normal, respectively. Neutral types are those which can be of arrow kind, but will not induce any $\beta$-redexes when applied to, while normal types are types which include no $\beta$-redexes. The former are required to define the latter: the type $\tau \, I$ is only in normal form when $\tau$ is not of the form $\lambda i : S.\tau'$. The rules generating these two relations can be found in Appendix~\ref{appendix:a}.
+This normalization procedure computes \textit{normal forms} for types, which should be thought of as canonical representatives of the $\beta$-equivalence classes of types. These normal forms can characterized syntactically: we present a pair of relations $\tau \, \texttt{ne}$ and $\tau \, \texttt{nf}$, which judge a type to be neutral or normal, respectively. Neutral types are those which can be of arrow kind, but will not induce any $\beta$-redexes when applied to, while normal types are types which include no $\beta$-redexes. The former are required to define the latter: the type $\tau \, I$ is only in normal form when $\tau$ is not of the form $\lambda i : S.\tau'$. The rules generating these two relations can be found in \autoref{appendix:a}.
 
 Before we present the normalization function, let us briefly take a moment to discuss why the solution we are about to present is incredibly simple. Proofs of normalization for most calculi require fairly high-powered proof techniques such as logical relations or categorical arguments. The inherent complexity of normalization proofs stems from the fact that straightforward induction on terms rarely works, since one would need to induct on substitution instances of lambda terms which are not subterms of the original term. However, \dlambdaamor's type-level lambdas do not range over types, they range over terms. Because of this, a substitution instance $\tau[I/i] : K$ of an open type $i : S \vdash \tau : K$ has the exact same number of type connectives as the open term. Further, substituting an index term into a type cannot introduce any new redexes, and so any substitution instance of an open type in normal form is also normal. These observations are codified in the following theorems.
 
@@ -777,18 +779,18 @@ $\#\texttt{eval}(\tau) \leq \#\tau$, where $\#(\cdot)$ denotes the number of con
 %\end{proof}
 
 Because of these simplifying factors, we can define an evaluation function \texttt{eval} defined inductively on the structure of types which computes normal forms.
-The most important clauses of the definition can be found in Figure~\ref{fig:selected-eval-rules}. For all of the logical connectives, the definition proceeds compositionally-- the remaining rules can be found in Figure~\textbf{??}
+The most important clauses of the definition can be found in \autoref{fig:selected-eval-rules}. For all of the logical connectives, the definition proceeds compositionally-- the remaining rules can be found in Figure~\textbf{??}
 
 \begin{figure}
 \input{figs/selected-eval-rules}
-\label{fig:selected-eval-rules}
 \caption{Selected Clauses of the \texttt{eval} Function}
+\label{fig:selected-eval-rules}
 \end{figure}
 
 The most important (and only nontrivial) clause of the definition is the application case. To evaluate $\tau \; I$, we begin by evaluating $\tau$. If its normal form
-is a lambda, we simply perform the $\beta$-reduction. Note that we do not need to evaluate this substitution instance, as it must already be in normal form by Theorem~\ref{thm:idx-subst-nf}, assuming the correctness of the \texttt{eval} function. Otherwise, we simply re-apply the index term $I$.
+is a lambda, we simply perform the $\beta$-reduction. Note that we do not need to evaluate this substitution instance, as it must already be in normal form by \autoref{thm:idx-subst-nf}, assuming the correctness of the \texttt{eval} function. Otherwise, we simply re-apply the index term $I$.
 
-Of course, it is not immediately clear that this function in fact computes what we want! In order for \texttt{eval} function to be a normalization procedure, its image must consist only of types in normal form, and every type must be equivalent to its evaluation. Note that we do not prove the stronger property that equivalence is completely characterized by syntactic equality of normal forms (up to equality of index terms). While almost certainly true, this property requires a bit more work to prove and is not required for the discussion in Section~\textbf{??}, and so we omit it. Finally, we must also prove that the \texttt{eval} function preserves kinds-- this proof follows the same inductive structure as the proof of normalization, and so we bundle them together. We present the case for evaluation below, and the remainder of the cases can be found in Appendix~\ref{appendix:a}. The Normalization Theorem does depend on a small canonical forms lemma: types of arrow kind in normal form must either be lambdas or neutral.
+Of course, it is not immediately clear that this function in fact computes what we want! In order for \texttt{eval} function to be a normalization procedure, its image must consist only of types in normal form, and every type must be equivalent to its evaluation. Note that we do not prove the stronger property that equivalence is completely characterized by syntactic equality of normal forms (up to equality of index terms). While almost certainly true, this property requires a bit more work to prove and is not required for the discussion in Section~\textbf{??}, and so we omit it. Finally, we must also prove that the \texttt{eval} function preserves kinds-- this proof follows the same inductive structure as the proof of normalization, and so we bundle them together. We present the case for evaluation below, and the remainder of the cases can be found in \autoref{appendix:a}. The Normalization Theorem does depend on a small canonical forms lemma: types of arrow kind in normal form must either be lambdas or neutral.
 
 \begin{restatable}[Canonical Forms for $S \to K$]{theorem}{canonforms}
 If $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ and $\tau \; \texttt{nf}$, then either:
@@ -819,8 +821,8 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, then:
 
 \begin{figure}
 \input{figs/bilambdaamor-selected-subty-rules}
-\label{fig:bilambdaamor-selected-subty-rules}
 \caption{Selected Algorithmic Subtyping Rules}
+\label{fig:bilambdaamor-selected-subty-rules}
 \end{figure}
 
 In \bilambdaamor, there is not one subtyping judgment, but two. The first, which we will refer to as ``normal form" subtyping (denoted $\subtynf$),  judges one type to be a subtype of another when both are in normal form. This relation contains all of the congruence rules from \dlambdaamor's subtyping relation-- these are simply transcriptions of their declarative counterparts. Just like with sort/kind-checking, constraint-validity premises are shuffled to the constraint output of the conclusion, and variables bound in premises are quantified over. Deciding a subtyping relation which only includes congruences is of course trivial, and so this relation is certainly algorithmic.
@@ -843,7 +845,7 @@ Two distinct phases and normalization aside, the remaining way that \bilambdaamo
 
 As expected, the typing judgments of \bilambdaamor change the most. For one, we pass to a bidirectional type system. As discussed in Section~\textbf{??}, this process is fairly standardized, and so the reader who has seen bidirectional type systems in the past will find no surprises in \bilambdaamor. The typing judgment is split in two, yielding a mutually recursive pair of checking and inference judgments. Secondly, typing judgment sports a constraint output in a manner identical to all of the other algorithmic judgments discussed so far. Finally, to handle the affine context $\Gamma$ in an algorithmic way, we employ the I/O method from Section~\textbf{??}, adding an output context of unused variables $\Gamma'$, which are threaded through rules in a state-passing manner.
 
-While all of these algorithmization techniques were described in the abstract in Section~\textbf{??}, understanding how they work in the context of a type system as feature-rich as \bilambdaamor is another matter entirely. To this end, we take some time to describe the selected rules presented in Figure~\ref{fig:bilambdaamor-selected-typing-rules}.
+While all of these algorithmization techniques were described in the abstract in Section~\textbf{??}, understanding how they work in the context of a type system as feature-rich as \bilambdaamor is another matter entirely. To this end, we take some time to describe the selected rules presented in \autoref{fig:bilambdaamor-selected-typing-rules}.
 
 We begin with AT-Var-1, which allows us to use variables from the affine context. When $x : \tau \in \Gamma$, the term $x$ infers the type $\tau$. Using this rule in a derivation counts as a use of $x$, and so $x$ must be removed from the output context, as it is no longer unused.
 
@@ -883,7 +885,7 @@ $$
 
 Unfortunately, this rule is insufficient for potentially subtle reasons. When we implement \bilambdaamor, the checking judgment is implemented as a function (essentially) of type \texttt{ctx -> tm -> ty -> bool}, which proceeds by a (very large) case analysis on the term and type arguments. The algorithmic bind rule corresponds to the case where the term is the constructor for bind, and the type is the cost monad. However, we hope to not match further into the type, to match the index term $\vec{p} + \vec{q}$. Indeed, the second component of the cost need not be syntactically a sum of potential vectors! To fix this, we take a slightly different approach. Instead of typing the conclusion at type $\M \, (I,\vec{p} + \vec{q})\, \tau_2$, we will instead have it check against the type $\M \, (I, \vec{q})\, \tau_2$, so long as the continuation checks against $\M \, (I,\vec{q} - \vec{p}) \, \tau_2$ (when $\vec{q} \geq \vec{p}$). Intuitively, this new rule encodes the same logic: the total amortized cost of the composite is the sum of the costs of $e_1$ and $e_2$ 
 
-A similar situation plays out if we consider the first component of the cost pair. The rule above indicates that the first components in the three monadic types need to be \textit{identical}. Just like requiring that the second component be \textit{literally} a sum, this is far too strong a condition: we only need require that they are provably equal. This leads us to the completed AT-Bind rule, as shown in Figure~\ref{fig:bilambdaamor-selected-typing-rules}. A nearly identical game is played with the rule for the potential elimination form, AT-Release: we generalize the potentials to have syntactically but provably equal bases.
+A similar situation plays out if we consider the first component of the cost pair. The rule above indicates that the first components in the three monadic types need to be \textit{identical}. Just like requiring that the second component be \textit{literally} a sum, this is far too strong a condition: we only need require that they are provably equal. This leads us to the completed AT-Bind rule, as shown in \autoref{fig:bilambdaamor-selected-typing-rules}. A nearly identical game is played with the rule for the potential elimination form, AT-Release: we generalize the potentials to have syntactically but provably equal bases.
 
 The introduction rules for monads and potentials also require some tweaking. To illustrate, we consider the declarative store rule, T-Store.
 $$
@@ -964,7 +966,7 @@ Dually, the completeness theorems have the ``opposite" shape: if $\mathcal{J}$ h
 The four most basic algorithmic judgments of \bilambdaamor mirror their declarative counterparts rule-for-rule: the only ``real" modification is the addition of constraint output. This uniformity means that the soundness proofs are fairly trivial single-pass inductions on derivations. Each of these proofs comes in two parts. First, we prove that the soundness holds as a a statement about ``raw" judgments by omitting the presuppositions. These theorems are garbage in, garbage out: malformed judgments in \bilambdaamor are sent to malformed judgments in \dlambdaamor. Afterwards, we prove that the presuppositions are preserved, and so well-formed judgments in \bilambdaamor are sent to well-formed judgments in \dlambdaamor. This two-step process is only necessary because the presuppositions have a mutually inductive structure: to untangle the knot, we must first prove the raw statements, and then repackage them with the required presuppositions afterwards.
 
 
-Below, we will only present the versions of the theorems with presuppositions included: the gory details can be found in Appendix~\ref{appendix:a}. All of the proofs proceed by elementary inductions on derivations, occasionally using easy properties about constraint validity.
+Below, we will only present the versions of the theorems with presuppositions included: the gory details can be found in \autoref{appendix:a}. All of the proofs proceed by elementary inductions on derivations, occasionally using easy properties about constraint validity.
 
 \begin{restatable}[Soundness of Index Context Well-Formedness]{theorem}{idxctxwfsound}
 If $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$ and $\Theta ; \cdot \vDash \Phi$, then $\Theta \vdash \Delta \; \texttt{wf}$
@@ -999,14 +1001,14 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty\tau_2 : K \gens \Phi$ and $\The
 \label{thm:subty-sound}
 \end{restatable}
 \begin{proof}
-There is only one case: $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By Theorem~\ref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By Theorem~\ref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
+There is only one case: $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By \autoref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By \autoref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
 \end{proof}
 
 \subsubsection{Soundness of Typechecking}
 
 As is to be expected, the soundness of the bidirectional type-checking judgment is the most involved. Before we can prove it, a few small lemmata are required.
 First, we prove (as was noted before) that the output contexts of the I/O method in both typing judgments have a strong regularity condition: the output context is always a subset\footnote{
-This containment is almost always strict: in fact, a corollary of Theorem~\ref{thm:tycheck-sound}, is that the containment is strict unless the term is closed.
+This containment is almost always strict: in fact, a corollary of \autoref{thm:tycheck-sound}, is that the containment is strict unless the term is closed.
 }
 of the input context.
 
@@ -1015,7 +1017,7 @@ If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \updownarrow \tau \gens \P
 \label{thm:lsc}
 \end{restatable}
 
-The next lemma is required for cases of Theorem~\ref{thm:tycheck-sound} where variables are bound in premises and subsequently removed in the conclusion. In essence, it proves compatibility between the set difference operator which removes variables from the output, and context extension.
+The next lemma is required for cases of \autoref{thm:tycheck-sound} where variables are bound in premises and subsequently removed in the conclusion. In essence, it proves compatibility between the set difference operator which removes variables from the output, and context extension.
 
 \begin{restatable}{theorem}{tychecksoundlemma}
 If $\Gamma' \subseteq \Gamma$, then
@@ -1032,7 +1034,7 @@ Then $\Psi ; \Theta ; \Delta \pvdash \Gamma \setminus (\Gamma' \setminus \{x : \
 The first part follows by an elementary set-theoretic containment proof, and the second is immediate by applying the presuppositions.
 \end{proof}
 
-Because the two judgments (checking and inference) are mutually inductively defined, we must prove each judgment's corresponding soundness theorem simultaneously. The theorem must also handle two as-of-yet untreated differences of \bilambdaamor and \dlambdaamor. First, the syntax of algorithmic terms is different from the declarative ones. To translate an algorithmic term to a declarative one, we rely on the erasure transformation from Section~\ref{sec:bilambdaamor-overview-bidir} to remove all type annotations from a term. Second, the use of the I/O method means we must incorporate the ``context-strengthening"-style completeness theorem from Section~\ref{sec:bilambdaamor-overview-io}. All together, we arrive at the following theorem.
+Because the two judgments (checking and inference) are mutually inductively defined, we must prove each judgment's corresponding soundness theorem simultaneously. The theorem must also handle two as-of-yet untreated differences of \bilambdaamor and \dlambdaamor. First, the syntax of algorithmic terms is different from the declarative ones. To translate an algorithmic term to a declarative one, we rely on the erasure transformation from \autoref{sec:bilambdaamor-overview-bidir} to remove all type annotations from a term. Second, the use of the I/O method means we must incorporate the ``context-strengthening"-style completeness theorem from \autoref{sec:bilambdaamor-overview-io}. All together, we arrive at the following theorem.
 
 \begin{restatable}[Soundness of Type Checking/Inference]{theorem}{tychecksound}
 ~\begin{enumerate}
@@ -1042,7 +1044,7 @@ Because the two judgments (checking and inference) are mutually inductively defi
 \label{thm:tycheck-sound}
 \end{restatable}
 
-The proof of Theorem~\ref{thm:tycheck-sound} is not particularly enlightening: we prove both claims simultaneously by induction on the judgment premises, liberally applying Theorem~\ref{thm:tycheck-sound-lemma} when binders are used.
+The proof of \autoref{thm:tycheck-sound} is not particularly enlightening: we prove both claims simultaneously by induction on the judgment premises, liberally applying \autoref{thm:tycheck-sound-lemma} when binders are used.
 
 
 \subsubsection{Completeness of Sorts, Constraints, Contexts, and Kinds}
@@ -1091,7 +1093,7 @@ If $\Psi ; \Theta ;  \Delta \pvdash \tau : K$ then $\Psi ; \Theta ;  \Delta \pvd
 \label{thm:subty-refl}
 \end{restatable}
 \begin{proof}
-By AS-Normalize, it suffices to show that $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$. By Theorem~\ref{thm:norm-thm}, we have that $\texttt{eval}(\tau) \; \texttt{nf}$, and $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau) : K$, By Theorem~\ref{thm:subtynf-refl}, we have $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required. 
+By AS-Normalize, it suffices to show that $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$. By \autoref{thm:norm-thm}, we have that $\texttt{eval}(\tau) \; \texttt{nf}$, and $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau) : K$, By \autoref{thm:subtynf-refl}, we have $\Psi ; \Theta ;  \Delta \vdash \texttt{eval}(\tau) \subtynf \texttt{eval}(\tau) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required. 
 \end{proof}
 
 \begin{restatable}[Transitivity of Algorithmic Subtyping for Normal Forms]{theorem}{subtynftrans}
@@ -1105,12 +1107,12 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi_1$ and $\
 \end{restatable}
 %\textbf{Rewrite in new style}
 \begin{proof}
-By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_3) : K \gens \Phi_1$ By Theorem~\ref{thm:norm-thm} and Theorem~\ref{thm:subtynf-trans}, 
+By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_3) : K \gens \Phi_1$ By \autoref{thm:norm-thm} and \autoref{thm:subtynf-trans}, 
 $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_3) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Then, by AS-Normalize,
 $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K \gens \Phi$, as required.
 \end{proof}
 
-The following theorem is essentially a subtyping version of Theorem~\ref{thm:idx-subst-nf}: not only does index term substitution preserve the property that types are in normal form, it also preserves all subtyping relations. This theorem depends on a series of theorems that index-term substitution is admissible for all of the preceeding judgments. These are all proved (in Appendix~\ref{appendix:a}) by appealing to the corresponding substitution theorem in \dlambdaamor, and taking a round trip through soundness and completeness for the judgment in question.
+The following theorem is essentially a subtyping version of \autoref{thm:idx-subst-nf}: not only does index term substitution preserve the property that types are in normal form, it also preserves all subtyping relations. This theorem depends on a series of theorems that index-term substitution is admissible for all of the preceeding judgments. These are all proved (in \autoref{appendix:a}) by appealing to the corresponding substitution theorem in \dlambdaamor, and taking a round trip through soundness and completeness for the judgment in question.
 
 \begin{restatable}[Admissibility of Normal Form Subtyping Substitution]{theorem}{subtynfidxsubst}
 \label{thm:subtynf-idx-subst}
@@ -1124,7 +1126,7 @@ The following theorem is essentially a subtyping version of Theorem~\ref{thm:idx
  Then, $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : K \gens \Phi'$ for some $\Phi'$ with $\Theta ; \Delta \vDash \Phi'$.
 \end{restatable}
 
-A corollary for the above admissibility theorem is that type evaluation essentially commutes with type family application. This theorem is pivotal for proving the AS-FamApp case of Theorem~\ref{thm:subty-compl} below.
+A corollary for the above admissibility theorem is that type evaluation essentially commutes with type family application. This theorem is pivotal for proving the AS-FamApp case of \autoref{thm:subty-compl} below.
 
 \begin{restatable}[Type Family Application Commutes with Evaluation]{theorem}{evalapplemma}
 If $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi \wedge I = J$ with $\Theta ; \Delta \pvdash I : S$ and $\Theta ; \Delta \pvdash J : S$ then 
@@ -1135,14 +1137,14 @@ $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1 \; I) \subtynf \texttt{eval
 By inversion on $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$.
 \begin{itemize}
   \item For the first case, suppose the derivation was $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1' \subtynf \tau_2' : S \to K \gens \Phi$
-  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1' \subtynf \tau_2' : K \gens \Phi'$. By Theorem~\ref{thm:subtynf-idx-subst},
+  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1' \subtynf \tau_2' : K \gens \Phi'$. By \autoref{thm:subtynf-idx-subst},
   $\Psi ; \Theta ; \Delta \pvdash \tau_1'[I/i] \subtynf \tau_2'[J/i] : K \gens \Phi'$, for some $\Theta ; \Delta \vDash \Phi'$. But $\texttt{eval}(\tau_1 \; I) = \tau_1'[I/i]$ and $\texttt{eval}(\tau_2 \; J) = \tau_2'[J/i]$.
   \item Now, suppose the derivation was $\Psi ; \Theta ; \Delta \vdash \tau_1' \; L_1 \subtynf \tau_2' \; L_2 : S \to K \gens \Phi \wedge (L_1 = L_2)$, where $\texttt{eval}(\tau_1) = \tau_1' \; L_1$ and $\texttt{eval}(\tau_2) = \tau_2 \; L_2$. These must both be $\texttt{ne}$, since they are both applications, and therefore
   $\texttt{eval}(\tau_1) \; I = \texttt{eval}(\tau_1 \; I)$ and $\texttt{eval}(\tau_2) \; J = \texttt{eval}(\tau_2 \; J)$, as required.
 \end{itemize}
 \end{proof}
 
-Finally, we prove the full completeness of algorithmic subtyping. The proof proceeds by a single induction on the hypothesis. The reflexivity and transitivity cases are handled by Theorems \ref{thm:subty-refl} and \ref{thm:subty-trans}. We present the most interesting case (for S-Fam-Beta1) below, and leave the remaining cases for Appendix~\ref{appendix:a}.
+Finally, we prove the full completeness of algorithmic subtyping. The proof proceeds by a single induction on the hypothesis. The reflexivity and transitivity cases are handled by Theorems \ref{thm:subty-refl} and \ref{thm:subty-trans}. We present the most interesting case (for S-Fam-Beta1) below, and leave the remaining cases for \autoref{appendix:a}.
 
 \begin{restatable}[Completeness of Algorithmic Subtyping]{theorem}{subtycompl}
 If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$ then  $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
@@ -1152,13 +1154,13 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$ then  $\Psi ; \Thet
 %~\begin{itemize}
 %   \item[(S-Fam-Beta1)] Suppose $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$. By AS-Normalize, it suffices to show that
 %   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
-%   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by Theorem~\ref{thm:idx-subst-eval}. By Theorem~\ref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by Theorem~\ref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
+%   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by \autoref{thm:idx-subst-eval}. By \autoref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by \autoref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
 % \end{itemize}
 %\end{proof}
 
 \subsubsection{Completeness of Typechecking}
 
-Finally, we arrive at the completeness of \bilambdaamor's typechecking algorithm. To begin, we must prove the admissibility of \dlambdaamor's weakening rule (T-Weaken) in \bilambdaamor. This requires a fairly sizable and involved simultaneous induction on the checking and inference judgments, which must account for all of the bells and whistles of the bidirectional typechecking with constraints and I/O contexts. The theorem is best understood as a \bilambdaamor -specific version of the mock I/O weakening theorem from Section~\ref{sec:bilambdaamor-overview-io}. When we weaken the affine context, the added variables flow through, and remain unused.
+Finally, we arrive at the completeness of \bilambdaamor's typechecking algorithm. To begin, we must prove the admissibility of \dlambdaamor's weakening rule (T-Weaken) in \bilambdaamor. This requires a fairly sizable and involved simultaneous induction on the checking and inference judgments, which must account for all of the bells and whistles of the bidirectional typechecking with constraints and I/O contexts. The theorem is best understood as a \bilambdaamor -specific version of the mock I/O weakening theorem from \autoref{sec:bilambdaamor-overview-io}. When we weaken the affine context, the added variables flow through, and remain unused.
 
 \red{(How the hell do I make this readable??)}
 
@@ -1201,7 +1203,7 @@ We begin the section by discussing the format of programs in \lambdaamorimpl. In
 \label{fig:lambdaamorimmpl-decls}
 \end{figure}
 
-Programs in \lambdaamorimpl are lists of \textit{declarations}, which can be any of four forms: let-bound definitions, type and index term aliases, and \texttt{do}-declarations. The syntax for each can be seen in Figure~\ref{fig:lambdaamorimmpl-decls}. These four declaration types are allow programmers to ergonomically write interesting programs by composing them from smaller ones, and building up abstractions. All four declarations should be understood as simply exposing existing judgmental structure from \dlambdaamor to the programmer, and as such they do not add or subtract from the expressive power of the language.
+Programs in \lambdaamorimpl are lists of \textit{declarations}, which can be any of four forms: let-bound definitions, type and index term aliases, and \texttt{do}-declarations. The syntax for each can be seen in \autoref{fig:lambdaamorimmpl-decls}. These four declaration types are allow programmers to ergonomically write interesting programs by composing them from smaller ones, and building up abstractions. All four declarations should be understood as simply exposing existing judgmental structure from \dlambdaamor to the programmer, and as such they do not add or subtract from the expressive power of the language.
 
 Index term and type aliases are somewhat self-explanatory: a programmer may give names to types and index terms they wish to use later. Since types in \lambdaamorimpl can get quite complex, liberal use of type aliases is often very helpful. Importantly, both index term and type aliases may be of higher sort and kind, respectively, and so a user can give names to type families and index functions, too.
 
@@ -1218,7 +1220,7 @@ Let-bindings in \lambdaamorimpl behave just like top-level bindings in any other
 \end{figure}
 A program to be run by \lambdaamorimpl follows a straightforward path. It is first lexed and parsed from its textual form into an abstract syntax representation. This abstract syntax is then passed to the typechecker, which closely follows the algorithmic approach prescribed by \bilambdaamor. This typechecking emits constraints, which are then passed to an SMT solver using the Why3 prover frontend \cite{boogie11why3}. If the constraints come back valid, the program can then be passed to the built-in definitional interpreter \cite{reynolds:acm72}, which runs the program according to the cost semantics of \citet{rajani-et-al:popl21}.
 
-For the remainder of this section, we will take a tour through the implementation and design choices of each of the phases of the language's execution. Each of these roughly corresponds to a single module in the \lambdaamorimpl source, so a table of files along with their descriptions can be found in Figure~\ref{fig:lambdaamorimpl-file-structure}. Finally, some of the structure of the implementation is borrowed and inspired from previous developments in resource-aware and bidirectional type systems, and so we are careful to flag our predecessors for each pass.
+For the remainder of this section, we will take a tour through the implementation and design choices of each of the phases of the language's execution. Each of these roughly corresponds to a single module in the \lambdaamorimpl source, so a table of files along with their descriptions can be found in \autoref{fig:lambdaamorimpl-file-structure}. Finally, some of the structure of the implementation is borrowed and inspired from previous developments in resource-aware and bidirectional type systems, and so we are careful to flag our predecessors for each pass.
 
 
 \subsubsection{Lexing and Parsing}
@@ -1236,7 +1238,7 @@ Since this development includes no mechanized metatheory, all variables in \lamb
 Thanks to the theoretical simplicity of \lambdaamor's type normalization algorithm, \lambdaamorimpl's implementation of it is similarly simple: the code (in \texttt{src/normalize.ml}) is only $\approx 150$ lines. The procedure works in two passes, first by evaluating object-language types into a meta-language type of types \textit{in normal form}, and then quoting back. In practice, most types in \lambdaamor programs are in normal form. To avoid unnecessarily normalizing types, we tag type with a status bit which signals if it's already in normal form.
 
 \subsubsection{Bidirectional Type Checking}
-The core typechecking algorithm of \lambdaamorimpl is very faithful to the core algorithmic calculus presented in Section~\ref{sec:bilambdaamor-syntax-and-types}. Search functions for each of the four user-facing judgments (sort-checking, kind-checking, subtyping, typechecking) are implemented in the file \texttt{src/tycheck.ml}. The sort-checking and kind-checking judgments both operate on fully annotated terms. For this reason, we implement full inference and checking for both: with sort/kind as output and input, respectively. Subtyping is implemented as expected: both types are normalized, and then passed to a helper function which decides the normal form subtyping relation of \bilambdaamor. Finally, the main pair of type checking and inference judgments are implemented in the usual bidirectional style as a pair of mutually recursive functions. All of these functions, in addition to their usual return types (unit for checking functions, sort/kind/type for inference functions) also return the constraints output by their corresponding judgments, to be passed to the solver.
+The core typechecking algorithm of \lambdaamorimpl is very faithful to the core algorithmic calculus presented in \autoref{sec:bilambdaamor-syntax-and-types}. Search functions for each of the four user-facing judgments (sort-checking, kind-checking, subtyping, typechecking) are implemented in the file \texttt{src/tycheck.ml}. The sort-checking and kind-checking judgments both operate on fully annotated terms. For this reason, we implement full inference and checking for both: with sort/kind as output and input, respectively. Subtyping is implemented as expected: both types are normalized, and then passed to a helper function which decides the normal form subtyping relation of \bilambdaamor. Finally, the main pair of type checking and inference judgments are implemented in the usual bidirectional style as a pair of mutually recursive functions. All of these functions, in addition to their usual return types (unit for checking functions, sort/kind/type for inference functions) also return the constraints output by their corresponding judgments, to be passed to the solver.
 
 In order to simplify the lives of programmers, we do deviate slightly from the core calculus in a few places. First, the type checking and inference judgments include a few ``parallel rules": instances where the bidirectional rule has a checking or inference conclusion, but we also include a case for the other mode. While not strictly required for completeness, these extra rules can make programming more ergonomic. Next, we always normalize the output of the type inference function: this is helpful in cases where the type of a term inferred in an elimination position has a $\beta$-redex as its head, and not the expected connective. This is also clearly still sound and complete, as this behavior can be emulated by adding an annotation in the requisite elimination position. Finally, we note the behavior of typed holes in \lambdaamorimpl. This feature is a practical necessity in languages with type systems as complex as ours. Fortunately, the bidirectional framework makes them simple to implement: when the type checking or inference judgments hit the hole, checking is halted, and the expected type of the hole (in the case of a checking judgment) as well as the current context is printed for the user.
 
@@ -1258,14 +1260,14 @@ The actual constraint solving of \lambdaamorimpl is handled by the Why3 platform
 Finally, a type-correct program can be interpreted. The interpreter included with \lambdaamorimpl is a straightforward definitional implementaion of the big-step cost-indexed operational semantics of \dlambdaamor: nothing too fancy. When the interpreter is invoked, all of the \texttt{do} declarations are run. The cost semantics tallies up the total actual cost of running a single declaration, and presents it, along with the statically predictied cost to the user. By the soundness theorem of \dlambdaamor, the predicted cost will always be an upper bound on the actual cost.
 
 \subsection{Examples and Experimental Evaluation}
-We now return to the examples presented in Section~\ref{sec:dlambdaamor-examples}. All of these programs (and more) have been implemented in \lambdaamorimpl: the source code for each can be found in the \texttt{.la} files in the \texttt{examples/} directory of the artifact repository. Below, we discuss each of the \textbf{??} examples presented previously, as well as some new ones included with \lambdaamorimpl. The examples were chosen to test a variety of \lambdaamorimpl's features, and show a breadth of the kinds of analyses that can be performed using \lambdaamorimpl.
+We now return to the examples presented in \autoref{sec:dlambdaamor-examples}. All of these programs (and more) have been implemented in \lambdaamorimpl: the source code for each can be found in the \texttt{.la} files in the \texttt{examples/} directory of the artifact repository. Below, we discuss each of the \textbf{??} examples presented previously, as well as some new ones included with \lambdaamorimpl. The examples were chosen to test a variety of \lambdaamorimpl's features, and show a breadth of the kinds of analyses that can be performed using \lambdaamorimpl.
 
 \begin{itemize}
-  \item \texttt{examples/addone.la}: As presented in Section~\ref{sec:dlambdaamor-examples}. This program is quite simple, only making use of the RAML-style potentials and a single shift. We include this in the test suite purely as a coherence check.
-  \item \texttt{examples/ins_sort.la}: As presented in Section~\ref{sec:dlambdaamor-examples}. Insertion sort has quadratic complexity, so the inclusion of this example demonstrates how \lambdaamorimpl can pass linear constraints to a solver when analyzing functions with degree-2 or higher cost behavior. The file also includes an example of a \texttt{do}-declaration, where the \texttt{ins_sort} function is run to sort a list.
-  \item \texttt{examples/queue.la}: As presented in Section~\ref{sec:dlambdaamor-examples}. The functional queue is the first example of amortized analysis, which makes nontrivial use of potentials combined with costs.
-  \item \texttt{examples/binary.la}: The analysis of a binary counter is a classic example of an amortized analysis, and the running example of Chapter~\ref{chap:rec-extr}. This uses similar techniques to the functional queue (RAML-style potentials, refinements)
-  \item \texttt{examples/map.la}: As presented in Section~\ref{sec:dlambdaamor-examples}. The cost-polymorphic map is an example of a function which cannot be typed in RAML \citehere, the best-established resource-aware language, due to its complex use of higher order quantifiers over cost families. These quantifiers are reflected in the constraints which are emitted, which provide the first nontrivial goal for the solver backend.
+  \item \texttt{examples/addone.la}: As presented in \autoref{sec:dlambdaamor-examples}. This program is quite simple, only making use of the RAML-style potentials and a single shift. We include this in the test suite purely as a coherence check.
+  \item \texttt{examples/ins_sort.la}: As presented in \autoref{sec:dlambdaamor-examples}. Insertion sort has quadratic complexity, so the inclusion of this example demonstrates how \lambdaamorimpl can pass linear constraints to a solver when analyzing functions with degree-2 or higher cost behavior. The file also includes an example of a \texttt{do}-declaration, where the \texttt{ins_sort} function is run to sort a list.
+  \item \texttt{examples/queue.la}: As presented in \autoref{sec:dlambdaamor-examples}. The functional queue is the first example of amortized analysis, which makes nontrivial use of potentials combined with costs.
+  \item \texttt{examples/binary.la}: The analysis of a binary counter is a classic example of an amortized analysis, and the running example of \autoref{chap:rec-extr}. This uses similar techniques to the functional queue (RAML-style potentials, refinements)
+  \item \texttt{examples/map.la}: As presented in \autoref{sec:dlambdaamor-examples}. The cost-polymorphic map is an example of a function which cannot be typed in RAML \citehere, the best-established resource-aware language, due to its complex use of higher order quantifiers over cost families. These quantifiers are reflected in the constraints which are emitted, which provide the first nontrivial goal for the solver backend.
   \item \texttt{examples/foldr.la}: The analysis and type of \texttt{foldr} can be expressed in a similar manner to that of \texttt{map}. We include this example primarily because it is discussed in depth in the original \lambdaamor paper \cite{rajani-et-al:popl21}
   \item \texttt{examples/church.la}: Our final example is the assignment of a \textit{very} complex type to church numerals. In short, we generalize the type of the ``iterate" function $!(\tau \loli \tau) \loli \N \loli \tau \loli \tau$ to operate over a type family $\alpha : \N \to \star$ and a cost family $C : \N \to \R^+$ to get the much more precise type:
   $$
@@ -1274,7 +1276,7 @@ We now return to the examples presented in Section~\ref{sec:dlambdaamor-examples
   Further details can be found in \citet{rajani-et-al:popl21}. The file includes two operations defined on these church numerals, namely successor and addition.
 \end{itemize}
 
-The type-checking times for all of these examples can be found in Figure~\ref{fig:lambdaamorimpl-eval}. Total time denotes the end-to-end running time, from parsing the input file all the way through running the program (when applicable). Solving time refers to the amount of time spent by the prover in solving the constraints, while checking time refers to the time taken by the type checker itself, as well as the constraint elaboration phase. Each statistic is an average over ten runs. In all cases, the execution time not spent constraint solving is negligible-- the SMT solver is by far the largest bottleneck. However, the total time remains low, even for programs like \texttt{church} which emit very large high-order constraints. Finally, the total time not accounted for by checking and solving can be atributed to Why3 initialization and file IO. 
+The type-checking times for all of these examples can be found in \autoref{fig:lambdaamorimpl-eval}. Total time denotes the end-to-end running time, from parsing the input file all the way through running the program (when applicable). Solving time refers to the amount of time spent by the prover in solving the constraints, while checking time refers to the time taken by the type checker itself, as well as the constraint elaboration phase. Each statistic is an average over ten runs. In all cases, the execution time not spent constraint solving is negligible-- the SMT solver is by far the largest bottleneck. However, the total time remains low, even for programs like \texttt{church} which emit very large high-order constraints. Finally, the total time not accounted for by checking and solving can be atributed to Why3 initialization and file IO. 
 
 The evaluation was performed on a 2018 MacBook Pro running OSX 10.13.6 with a 2.3GHz Intel Core i5 processor and 8GB of memory. The artifact itself is written in OCaml, and was compiled using OCaml v4.09.1, along with its included versions of OCamllex and OCamlyacc. Library dependencies can be found in the \texttt{dune} file. Constraints emitted from the typechecker were solved by Why3 v1.3.1 \citehere, using Z3 v4.8.5 \citehere as a prover.
 
