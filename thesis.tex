@@ -1,13 +1,11 @@
 \def\fileversion{1.0}
 \def\filedate{April 2021}
 
-\documentclass[draft]{westhesis}
+\documentclass[final]{westhesis}
 \makeatletter
 \newcommand{\@chapapp}{\relax}%
 \makeatother
 \input{packages}
-
-
 
 \title{Recurrence Extraction and Type Systems Approaches to\\ Language-Based Amortized Analysis}
 \author{Joseph W. Cutler}
@@ -16,10 +14,19 @@
 \advisor{Daniel R. Licata}
 
 
+
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[section]
 \newtheorem{lemma}{Lemma}[section]
 \newtheorem{definition}{Definition}[section]
+
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\theoremautorefname}{Theorem}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+\renewcommand{\figureautorefname}{Figure}
+\newcommand*{\Appendixautorefname}{Appendix}
 
 
 \input{macros}
@@ -45,6 +52,7 @@ To my parents.
 \tableofcontents
 \mainmatter
 
+\hypersetup{allcolors = {blue}}
 
 \chapter{Introduction}
 \include{intro}
@@ -56,11 +64,11 @@ To my parents.
 
 \chapter{Amortized Analysis by Recurrence Extraction}
 \label{chap:rec-extr}
-\include{rec-extr}
+%\include{rec-extr}
 
 \chapter{Conclusion and Related Work}
 \label{conc}
-\include{conc}
+%\include{conc}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -76,8 +84,7 @@ To my parents.
 
 \chapter{}
 \label{appendix:b}
-\include{appendix-b}
-
+%\include{appendix-b}
 
 
 \end{document}
