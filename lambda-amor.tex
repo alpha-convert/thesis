@@ -101,12 +101,12 @@ where $\binom{n}{r}$ is the binomial coefficient. We refer to the first argument
 With $\phi$ in hand, we redefine the cost and potential modalities. In \dlambdaamor, the cost modality is written as $M \, (I,\vec{p}) \, \tau$ and the potential modality is $[I|\vec{p}] \,  \tau$. These two types classify values of type $\tau$ which cost up to $\phi(I,\vec{p})$ units of time and posess $\phi(I,\vec{p})$ potential, respectively.
 
 \begin{theorem}[Monotonicity and Additivity of $\Phi$]
+\label{thm:phi-linear}
 Let $\vec{p}$ and $\vec{q}$ be potential vectors.
 \begin{enumerate}
   \item If $\vec{p} \leq \vec{q}$ componentwise, then $\phi(n,\vec{p}) \leq \phi(n,\vec{q})$.
   \item $\phi(n,\vec{p} + \vec{q}) = \phi(n,\vec{p}) + \phi(n,\vec{q})$
 \end{enumerate}
-\label{thm:phi-linear}
 \end{theorem}
 
 The fact that $\phi$ is monotone in its second argument allows us to reduce the problematic subtyping rule for potentials (and costs) to generating linear inequalities and equalities\footnote{
@@ -122,8 +122,8 @@ For $\vec{p} = (a_0,\dots,a_{k-1},a_k)$ a potential vector, we define $\lhd \vec
 \end{definition}
 
 \begin{theorem}
-For $n \geq 1$ and $\vec{p}$ a potential vector, $\phi(n,\vec{p}) = \phi(n-1,\lhd \vec{p})$
 \label{thm:raml-shift}
+For $n \geq 1$ and $\vec{p}$ a potential vector, $\phi(n,\vec{p}) = \phi(n-1,\lhd \vec{p})$
 \end{theorem}
 \begin{proof}
 It is straightforward to prove (either by combinatorial argument or direct computation) that $\binom{n-1}{i} + \binom{n-1}{i+1} = \binom{n}{i+1}$. Using this fact,
@@ -334,8 +334,8 @@ In other words, running $\texttt{check}(\Gamma,e,\tau)$ and getting \texttt{true
 
 Conversely, completeness is also desirable, but not strictly necessary for bidirectional type systems. However, the most obvious statement of completeness ($\Gamma \vdash e : \tau$ implies $\Gamma \vdash e \checks \tau$) does not hold! This is because of the annotation requirement: the term $e$ may contain un-annotated explicit $\beta$-redexes. For this reason, the following slightly weaker theorem is used as the completeness result for bidirectional type systems.
 \begin{theorem}[Bidirectional Completeness]
-If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' \checks \tau$, and $|e'| = e$, where $|e'|$ is the annotation-erasure of $e'$.
 \label{thm:bidir-compl-example}
+If $\Gamma \vdash e : \tau$, then there exists $e'$ such that $\Gamma \vdash e' \checks \tau$, and $|e'| = e$, where $|e'|$ is the annotation-erasure of $e'$.
 \end{theorem}
 
 When proven constructively, this completeness result encodes an algorithm which inserts annotations into the term $e$ so that the resulting term checks against $\tau$. When \autoref{thm:bidir-compl-example} is proven directly by induction, the algorithm it encodes introduces far more annotations than is often strictly necessary: we improve on this with our completeness proof of \bilambdaamor in Section~\textbf{??} by proving an equivalent statement whose constructive proof inserts fewer annotations than the standard theorem.
@@ -605,36 +605,37 @@ If $\Theta \vdash \Delta, \Phi \; \texttt{wf}$ then $\Theta \vdash \Delta \; \te
 Since the type and index variable contexts are fully structural, every judgment that uses them admits weakening and contraction. In practice, we will only ever need to explicitly use the weakening theorem for context subsumption, which in fact depends on the rest of the weakening theorems.
 
 \begin{restatable}[]{theorem}{ctxsubwkn}
+\label{thm:ctx-sub-wkn}
 If $\Psi ; \Theta ; \Delta \pvdash \Gamma \wknto \Gamma'$ and $\Psi' \supseteq \Psi$, $\Theta' \supseteq \Theta$, and $\Delta' \supseteq \Delta$, then
 $\Psi' ; \Theta' ; \Delta' \pvdash \Gamma \wknto \Gamma'$
-\label{thm:ctx-sub-wkn}
 \end{restatable}
 
 Substitution is admissible for all contexts in all judgments-- this is essentially a requirement of a type system! However, we will primarily be concerned with substitution for types, as it will become critical once we discuss normalization for types in \autoref{sec:bilambdaamor}.
 
 \begin{restatable}{theorem}{typeidxsubst}
-If $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$ and $\Theta ; \Delta \pvdash I : S$ then $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$
 \label{thm:type-idx-subst}
+If $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$ and $\Theta ; \Delta \pvdash I : S$ then $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$
 \end{restatable}
 
 The following theorem is perhaps nonstandard in the type systems literature-- indeed, it only becomes relevant when passing back and forth between \dlambdaamor and our eventual algorithmic system. Intuitively, the concept is clear: if a subtyping relation holds between two types which share a common set of free variables, the subtyping can be derived while mentioning only those variables.
 
 \begin{restatable}{theorem}{subtystreng}
+\label{thm:subty-streng}
 Suppose $\Psi ; \Theta ; \Delta \vdash \tau : K$ and $\Psi ; \Theta ; \Delta \vdash \tau' : K$.
 If $\Psi' ; \Theta' ; \Delta \pvdash \tau \subty \tau' : K$ with $\Theta' \supseteq \Theta$ and $\Psi' \supseteq \Psi$, then $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K$
-\label{thm:subty-streng}
 \end{restatable}
 
 The next theorem is a convenient equivalent characterization of the context subsumption judgment, which formalizes our intuition of this judgment as being essentially record subtyping: the inclusion of $\Gamma'$ into $\Gamma$ acts as record width subtyping, while pointwise subtyping on the intersection of the two contexts allows for record depth subtyping.
 
 \begin{restatable}{theorem}{ctxsubsubset}
-$\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \Gamma'$ if and only if for all $x : \tau' \in \Gamma'$, there is some $\tau$ so that $x : \tau \in \Gamma$ and $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau' : \star$.
 \label{thm:ctx-sub-subset2}
+$\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \Gamma'$ if and only if for all $x : \tau' \in \Gamma'$, there is some $\tau$ so that $x : \tau \in \Gamma$ and $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau' : \star$.
 \end{restatable}
 
 Finally, we prove a compatability lemma about context subsumption that is similar in flavor to \autoref{thm:subty-streng}, which allows us to strengthen the assumptions of the judgment in a specific (but common) situation.
 
 \begin{restatable}{theorem}{ctxsubswap}
+\label{thm:ctx-sub-swap}
 Suppose that
 \begin{enumerate}
   \item $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma_1'$
@@ -642,7 +643,6 @@ Suppose that
   \item $\Gamma_1 \supseteq \Gamma_2$ and $\Gamma_1' \supseteq \Gamma_2'$
 \end{enumerate}
 Then, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma_2'$.
-\label{thm:ctx-sub-swap}
 \end{restatable}
 
 
@@ -768,11 +768,11 @@ $\#\texttt{eval}(\tau) \leq \#\tau$, where $\#(\cdot)$ denotes the number of con
 
 
 \begin{restatable}{theorem}{idxsubstnf}
+\label{thm:idx-subst-nf}
 ~\begin{enumerate}
   \item If $\tau \; \texttt{ne}$ then $\tau[I/i] \; \texttt{ne}$
   \item If $\tau \; \texttt{nf}$ then $\tau[I/i] \; \texttt{nf}$
 \end{enumerate}
-\label{thm:idx-subst-nf}
 \end{restatable}
 %\begin{proof}
 %We prove the two claims simultaneously by induction on the derivations of $\tau \; \texttt{ne}$ and $\tau \; \texttt{nf}$.
@@ -802,13 +802,13 @@ If $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ and $\tau \; \texttt{nf}$, the
 
 
 \begin{restatable}[Normalization Theorem]{theorem}{normthm}
+\label{thm:norm-thm}
 If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, then:
 \begin{enumerate}
   \item $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau) : K$
   \item $\Psi ; \Theta ; \Delta \pvdash \tau \equiv \texttt{eval}(\tau) : K$
   \item $\texttt{eval}(\tau) \; \texttt{nf}$
 \end{enumerate}
-\label{thm:norm-thm}
 \end{restatable}
 
 
@@ -1020,6 +1020,7 @@ If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \updownarrow \tau \gens \P
 The next lemma is required for cases of \autoref{thm:tycheck-sound} where variables are bound in premises and subsequently removed in the conclusion. In essence, it proves compatibility between the set difference operator which removes variables from the output, and context extension.
 
 \begin{restatable}{theorem}{tychecksoundlemma}
+\label{thm:tycheck-sound-lemma}
 If $\Gamma' \subseteq \Gamma$, then
 $(\Gamma, x : \tau) \setminus \Gamma' \subseteq \Gamma \setminus (\Gamma' \setminus \{x : \tau\}), x : \tau$. Moreover, if:
 ~\begin{itemize}
@@ -1028,7 +1029,6 @@ $(\Gamma, x : \tau) \setminus \Gamma' \subseteq \Gamma \setminus (\Gamma' \setmi
   \item $\Psi ; \Theta ; \Delta \vdash \tau : \star$
 \end{itemize}
 Then $\Psi ; \Theta ; \Delta \pvdash \Gamma \setminus (\Gamma' \setminus \{x : \tau\}), x : \tau \wknto (\Gamma, x : \tau) \setminus \Gamma'$.
-\label{thm:tycheck-sound-lemma}
 \end{restatable}
 \begin{proof}
 The first part follows by an elementary set-theoretic containment proof, and the second is immediate by applying the presuppositions.
@@ -1037,11 +1037,11 @@ The first part follows by an elementary set-theoretic containment proof, and the
 Because the two judgments (checking and inference) are mutually inductively defined, we must prove each judgment's corresponding soundness theorem simultaneously. The theorem must also handle two as-of-yet untreated differences of \bilambdaamor and \dlambdaamor. First, the syntax of algorithmic terms is different from the declarative ones. To translate an algorithmic term to a declarative one, we rely on the erasure transformation from \autoref{sec:bilambdaamor-overview-bidir} to remove all type annotations from a term. Second, the use of the I/O method means we must incorporate the ``context-strengthening"-style completeness theorem from \autoref{sec:bilambdaamor-overview-io}. All together, we arrive at the following theorem.
 
 \begin{restatable}[Soundness of Type Checking/Inference]{theorem}{tychecksound}
+\label{thm:tycheck-sound}
 ~\begin{enumerate}
  \item If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e \checks \tau \gens \Phi, \Gamma'$ and $\Theta;\Delta \vDash \Phi$ then $\Psi;\Theta;\Delta;\Omega;\Gamma \setminus \Gamma' \pvdash |e| : \tau$
  \item If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e \infers \tau \gens \Phi, \Gamma'$ and $\Theta;\Delta \vDash \Phi$ then $\Psi;\Theta;\Delta;\Omega;\Gamma \setminus \Gamma' \pvdash |e| : \tau$
 \end{enumerate}
-\label{thm:tycheck-sound}
 \end{restatable}
 
 The proof of \autoref{thm:tycheck-sound} is not particularly enlightening: we prove both claims simultaneously by induction on the judgment premises, liberally applying \autoref{thm:tycheck-sound-lemma} when binders are used.
@@ -1165,22 +1165,22 @@ Finally, we arrive at the completeness of \bilambdaamor's typechecking algorithm
 \red{(How the hell do I make this readable??)}
 
 \begin{restatable}[Admissibility of Algorithmic Weakening]{theorem}{admitsweaken}
+\label{thm:admits-weaken}
 ~\begin{enumerate}
   \item If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \checks \tau \gens \Phi,\Gamma''$ with $\Theta ; \Delta \vDash \Phi$, then whenever $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$ and $\Psi ; \Theta ; \Delta \pvdash \Omega' \wknto \Omega$, there are $\Phi_1$, $e_1$, $\Gamma_1$ so that $|e_1| = |e|$, $\Theta ; \Delta \vDash \Phi_1$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma' \setminus \Gamma$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_1 \wknto \Gamma''$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \pvdash e_1 \checks \tau \gens \Phi_1,\Gamma_1$.
   \item If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \infers \tau \gens \Phi,\Gamma''$ with $\Theta ; \Delta \vDash \Phi$, then whenever $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$ and $\Psi ; \Theta ; \Delta \pvdash \Omega' \wknto \Omega$, there are $\Phi_2$, $e_2$, $\Gamma_2$ so that $|e_2| = |e|$, $\Theta ; \Delta \vDash \Phi_2$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma' \setminus \Gamma$, $\Psi ; \Theta ; \Delta \pvdash \Gamma_2 \wknto \Gamma''$ and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \pvdash e_2 \infers \tau \gens \Phi_2,\Gamma_2$.
 \end{enumerate}
-\label{thm:admits-weaken}
 \end{restatable}
 
 The actual statement of completeness is easily understandable. For any declarative type assignment, we can always annotate the term with types so that it can either check or infer, while outputting a valid constraint. We note that it is not strictly necessary to prove the theorem in this form-- the careful reader may have noticed that (2) is implied by (1) and a single use of AT-Anno. This method is in fact the traditional way of proving bidirectional completeness. However, the algorithm its proof encodes inserts many unnecessary annotations: any term in inference position will be annotated, even if the term is already a syntactic form whose rule has inferring conclusion. However, by providing an inductive hypothesis for an inference judgment at every stage, we give terms which may infer their own types the opportunity to do so. For this reason, the algorithm which the proof of completeness encodes inserts far fewer annotations than the traditional one.
 
 \begin{restatable}[Completeness of Type Checking/Inference]{theorem}{tycheckcompl}
+\label{thm:tycheck-compl}
 If $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e : \tau$, then:
 \begin{enumerate}
   \item There are $e'$, $\Phi'$, $\Gamma'$ such that $|e'| = e$, $\Theta ; \Delta \vDash \Phi'$, and $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e' \checks \tau \gens \Phi', \Gamma'$.
   \item There are $e''$, $\Phi''$, $\Gamma''$ such that $|e''| = e$, $\Theta ; \Delta \vDash \Phi''$, and $\Psi;\Theta;\Delta;\Omega;\Gamma \pvdash e'' \infers \tau \gens \Phi'',\Gamma''$
 \end{enumerate}
-\label{thm:tycheck-compl}
 \end{restatable}
 
 
