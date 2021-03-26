@@ -215,7 +215,7 @@ By induction on $\Psi ; \Theta ; \Delta \vdash \tau : K$.
    \item $\texttt{eval}(\tau) \; \texttt{nf}$
    %\item $\#\texttt{eval}(\tau) \leq \# \tau$
   \end{enumerate}
-  By Theorem~\ref{thm:canon-forms}, we have two possibilities for $\texttt{eval}(\tau)$. First, suppose that  $\texttt{eval}(\tau) \; \texttt{ne}$. Then, $\texttt{eval}(\tau \; I) = \texttt{eval}(\tau) \; I$, and so we can easily prove the claims:
+  By \autoref{thm:canon-forms}, we have two possibilities for $\texttt{eval}(\tau)$. First, suppose that  $\texttt{eval}(\tau) \; \texttt{ne}$. Then, $\texttt{eval}(\tau \; I) = \texttt{eval}(\tau) \; I$, and so we can easily prove the claims:
   \begin{enumerate}[1.]
    \item By K-FamApp, since $\Theta ; \Delta \vdash I : S$, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau) \; I : K$.
    \item By S-FamApp in both directions, we have that $\Psi ; \Theta ; \Delta \vdash \tau \; I \equiv \texttt{eval}(\tau) \; I : S \to K$
@@ -227,7 +227,7 @@ By induction on $\Psi ; \Theta ; \Delta \vdash \tau : K$.
    \item By \textbf{Substitution} with $\Theta ; \Delta \vdash I : S$, we have that $\Psi ; \Theta ; \Delta \vdash \tau'[I/i] : K$.
    \item We already know that $\Psi ; \Theta ; \Delta \vdash \tau \equiv \texttt{eval}(\tau) : S \to K$, but $\texttt{eval}(\tau) = \lambda i : S. \tau'$, and so
    $\Psi ; \Theta ; \Delta \vdash \tau \equiv \lambda i : S.\tau' : S \to K$. By S-FamApp, $\Psi ; \Theta ; \Delta \vdash \tau \; I \equiv (\lambda i : S.\tau') \; I : K$. Postcomposing with both directions of S-Fam-Beta-\{1,2\}, we have that $\Psi ; \Theta ; \Delta \vdash \tau \; I \equiv \tau'[I/i] : K$, as required.
-   \item Since $\tau'\; \texttt{nf}$, we have by Theorem~\ref{thm:idx-subst-nf} that $\tau'[I/i] \; \texttt{nf}$.
+   \item Since $\tau'\; \texttt{nf}$, we have by \autoref{thm:idx-subst-nf} that $\tau'[I/i] \; \texttt{nf}$.
   \end{enumerate}
   
 \end{enumerate}

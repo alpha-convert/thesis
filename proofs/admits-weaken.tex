@@ -1,14 +1,14 @@
 \begin{proof}
 By a mutual induction on the premises of both cases. We will write this as a case analysis over the AT-* rules.
-We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
+We will use \autoref{thm:ctx-sub-subset2} liberally, sometimes silently.
 \begin{itemize}
   \item[(AT-Var-1)] Suppose $\Psi ; \Theta ; \Delta; \Omega ; \Gamma \vdash x \infers \tau \gens \top, \Gamma \setminus \{x : \tau\}$ from $x : \tau \in \Gamma$.
-  By Theorem~\ref{thm:ctx-sub-subset2}, there is some $\tau'$ so that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, and $x : \tau' \in \Gamma'$.
+  By \autoref{thm:ctx-sub-subset2}, there is some $\tau'$ so that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, and $x : \tau' \in \Gamma'$.
   By AT-Var-1, $\Psi ; \Theta ; \Delta; \Omega' ; \Gamma' \vdash x \infers \tau' \gens \top, \Gamma' \setminus \{x : \tau'\}$.
-  By Theorem~\ref{thm:subty-compl},  $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$, and so by AT-Sub,
+  By \autoref{thm:subty-compl},  $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$, and so by AT-Sub,
   $\Psi ; \Theta ; \Delta; \Omega' ; \Gamma' \vdash x \checks \tau \gens \top \wedge \Phi, \Gamma' \setminus \{x : \tau'\}$. Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma' \setminus \{x : \tau'\} \wknto \Gamma' \setminus \Gamma$ and $\Psi ; \Theta ; \Delta \vdash \Gamma' \setminus \{x : \tau'\} \wknto \Gamma \setminus \{x : \tau\}$ since $x : \tau \in \Gamma$, and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, which proves (1). For (2), one use of AT-Anno gives $\Psi ; \Theta ; \Delta; \Omega' ; \Gamma' \vdash (x : \tau) \infers \tau \gens \top \wedge \Phi, \Gamma' \setminus \{x : \tau'\}$. But, $|(x : \tau)| = x$, and so we are done.
   
-  \item[(AT-Var-2)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x \infers \tau \gens \top, \Gamma$ from $x : \tau \in \Omega$, with $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$ with $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$. By Theorem~\ref{thm:ctx-sub-subset2}, there is some $\tau'$ so that $x : \tau' \in \Omega'$ and $\Phi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. By Theorem~\ref{thm:subty-compl}, $\Phi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. 
+  \item[(AT-Var-2)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash x \infers \tau \gens \top, \Gamma$ from $x : \tau \in \Omega$, with $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$ with $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$. By \autoref{thm:ctx-sub-subset2}, there is some $\tau'$ so that $x : \tau' \in \Omega'$ and $\Phi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. By \autoref{thm:subty-compl}, $\Phi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. 
   By AT-Var-2, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash x \infers \tau' \gens \top, \Gamma'$. By AT-Sub, 
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash x \checks \tau \gens \top \wedge \Phi, \Gamma'$, which proves (2). For (1), we apply AT-Anno and note that $|(x : \tau)| = x$.
   
@@ -35,7 +35,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
        $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2',\Gamma_2'$.
        By AT-Cons,
        $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' :: e_2' \checks L^I \tau \gens (I \geq 1) \wedge \Phi_1' \wedge \Phi_2',\Gamma_2'$.
-       Since $\Theta ; \Delta \vDash I \geq 1$, we have that $\Theta ; \Delta \vDash (I \geq 1) \wedge \Phi_1' \wedge \Phi_2'$. Further, $|e_1' :: e_2'| = |e_1'| :: |e_2'| = |e_1| :: |e_2| = |e_1 :: e_2|$. Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ by the second IH, and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ by $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$ using Theorem~\ref{thm:ctx-sub-subset2}, which completes (1). For (2), AT-Anno gives
+       Since $\Theta ; \Delta \vDash I \geq 1$, we have that $\Theta ; \Delta \vDash (I \geq 1) \wedge \Phi_1' \wedge \Phi_2'$. Further, $|e_1' :: e_2'| = |e_1'| :: |e_2'| = |e_1| :: |e_2| = |e_1 :: e_2|$. Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ by the second IH, and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ by $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$ using \autoref{thm:ctx-sub-subset2}, which completes (1). For (2), AT-Anno gives
        $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e_1' :: e_2' : L^I) \infers L^I \tau \gens (I \geq 1) \wedge \Phi_1' \wedge \Phi_2',\Gamma_2'$, as required.
   
   \item[(AT-Match)] Suppose 
@@ -67,7 +67,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
    Firstly, we note that $|\texttt{match}(e',e1',h.t.e_2')| = \texttt{match}(|e'|,|e_1'|,h.t.|e_2'|) = \texttt{match}(|e|,|e_1|,h.t.|e_2|) = \texttt{match}(e,e_1,h.t.e_2)$. Then, since $\Theta ; \Delta \vDash I = 0 \to \Phi_2'$ and $\Theta ; \Delta \vDash I \geq 1 \to \Phi_3'$, we have $\Theta ; \Delta \vDash \Phi_1' \wedge (I = 0 \to \Phi_2') \wedge (I \geq 1 \to \Phi_3')$.
    Then, 
    $\Phi ; \Theta ; \Delta \vdash \Gamma_2' \cap (\Gamma_3' \setminus \{h,t\}) \wknto \Gamma' \setminus \Gamma$
-   because of $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$, and $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_3' \wknto \Gamma_1' \setminus \Gamma_1$, making heavy use of Theorem~\ref{thm:ctx-sub-subset2}.
+   because of $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$, and $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_3' \wknto \Gamma_1' \setminus \Gamma_1$, making heavy use of \autoref{thm:ctx-sub-subset2}.
    Finally, we have   
    $\Phi ; \Theta ; \Delta \vdash \Gamma_2' \cap (\Gamma_3' \setminus \{h,t\}) \wknto \Gamma_2 \cap (\Gamma_3 \setminus \{h,t\}$
    since $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_3' \wknto \Gamma_3$. We may strengthen away the assumptions in $\Delta$ because of the presuppositions of well-formedness all contexts involved. This completes (1). For (2), we apply AT-Anno to get
@@ -113,7 +113,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
    By AT-ExistE, 
    $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{unpack } (i,x) = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge (\forall i : S. \Phi_2'), \Gamma_2'$.
    Since $\Theta ; \Delta \vDash \Phi_1'$ and $\Theta, i : S; \Delta \vDash \Phi_2'$, we have $\Theta ; \Delta \vDash \Phi_1' \wedge (\forall i : S. \Phi_2')$.
-   Next, we note that $|\texttt{unpack } (i,x) = e_1' \texttt{ in } e_2'| = \texttt{unpack } (i,x) = |e_1'| \texttt{ in } |e_2'| = \texttt{unpack } (i,x) = |e_1| \texttt{ in } |e_2| = |\texttt{unpack } (i,x) = e_1 \texttt{ in } e_2|$. $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ is immediate from the second IH, and the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows from Theorem~\ref{thm:ctx-sub-subset2}. This completes (1), and (2) follows immediately from AT-Anno.
+   Next, we note that $|\texttt{unpack } (i,x) = e_1' \texttt{ in } e_2'| = \texttt{unpack } (i,x) = |e_1'| \texttt{ in } |e_2'| = \texttt{unpack } (i,x) = |e_1| \texttt{ in } |e_2| = |\texttt{unpack } (i,x) = e_1 \texttt{ in } e_2|$. $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ is immediate from the second IH, and the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows from \autoref{thm:ctx-sub-subset2}. This completes (1), and (2) follows immediately from AT-Anno.
    
    \item[(AT-Lam)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e \checks \tau_1 \loli \tau_2 \gens \Phi, \Gamma'' \setminus \{x : \tau_1\}$
   from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e \checks \tau_2, \gens \Phi, \Gamma''$, with $\Theta ; \Delta \vDash \Phi$, $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$. Since $\Psi ; \Theta ; \Delta \vdash \Gamma',x:\tau_1 \wknto \Gamma, x: \tau_1$, by IH there are $\Phi'$, $e'$, $\Gamma'''$ so that
@@ -143,7 +143,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_2' \checks \tau_1 \gens \Phi_2',\Gamma_2'$.
   By AT-App, we have
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \; e_2' \infers \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2'$.
-  This completes (2). For (1), we invoke Theorem~\ref{thm:subty-refl} to get that $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi'$ with
+  This completes (2). For (1), we invoke \autoref{thm:subty-refl} to get that $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi'$ with
   $\Theta ; \Delta \vDash \Phi'$. By AT-Sub, we have $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \; e_2' \infers \tau_2 \gens \Phi_1' \wedge \Phi_2' \wedge \Phi', \Gamma_2'$, completing (1).
   
   
@@ -163,7 +163,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $$\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1' \vdash e_2' : \tau_2 \gens \Phi_2',\Gamma_2'$$.
   By AT-TensorI, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \angles{e_1',e_2'} : \tau_1 \otimes \tau_2 \gens (\Phi_1' \wedge \Phi_2'), \Gamma_2'$.
   We have that $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$ and $|\angles{e_1',e_2'}| = \angles{|e_1'|,|e_2'|} = \angles{|e_1|,|e_2|} = |\angles{e_1,e_2}|$.
-  Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ since $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$ by Theorem~\ref{thm:ctx-sub-subset2}, completing (1). For (2), a single use of
+  Finally, $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ since $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_1' \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$ by \autoref{thm:ctx-sub-subset2}, completing (1). For (2), a single use of
   AT-Anno gives  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (\angles{e_1',e_2'} : \tau_1 \otimes \tau_2) : \tau_1 \otimes \tau_2 \infers (\Phi_1' \wedge \Phi_2'), \Gamma_2'$, as required.
   
   \item[(AT-TensorE)]
@@ -188,7 +188,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma_1', x : \tau_1, y : \tau_2 \vdash e_2' \checks \tau_2 \gens \Phi_2',\Gamma_2'$.
   By AT-TensorE,
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma'\vdash \texttt{let } \angles{x,y} = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge \Phi_2', \Gamma_2' \setminus \{x,y\}$.
-  Of course, $|\texttt{let } \angles{x,y} = e_1' \texttt{ in } e_2'| = |\texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2|$ and $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$ as usual, and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ is immediate by IH. The fact that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows from considering the weakening judgments from both IHs, and liberally applying Theorem~\ref{thm:ctx-sub-subset2}. This completes (1). For (2), we simply apply AT-Anno, and are done.
+  Of course, $|\texttt{let } \angles{x,y} = e_1' \texttt{ in } e_2'| = |\texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2|$ and $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$ as usual, and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ is immediate by IH. The fact that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows from considering the weakening judgments from both IHs, and liberally applying \autoref{thm:ctx-sub-subset2}. This completes (1). For (2), we simply apply AT-Anno, and are done.
   
  
  \item[(AT-WithI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1,e_2) \checks \tau_1 \amp \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_1 \cap \Gamma_2$
@@ -211,7 +211,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_2' \checks \tau_2 \gens \Phi_2', \Gamma_2'$.
  Then, by AT-WithI, 
  $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e_1',e_2') \checks \tau_1 \amp \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_1' \cap \Gamma_2'$.
- Then, by Theorem~\ref{thm:ctx-sub-subset2}, we have that $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \cap \Gamma_2' \wknto \Gamma_1 \cap \Gamma_2$,
+ Then, by \autoref{thm:ctx-sub-subset2}, we have that $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \cap \Gamma_2' \wknto \Gamma_1 \cap \Gamma_2$,
  and that $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \cap \Gamma_2' \wknto \Gamma' \setminus \Gamma$. This completes (1), and (2) follows by AT-Anno.
   
   
@@ -228,7 +228,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers \tau_1 \amp \tau_2 \gens \Phi',\Gamma'''$.
   By AT-Fst, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fst}(e') \infers \tau_1 \gens \Phi',\Gamma'''$,
   which completes (2), since $|\texttt{fst}(e')| = \texttt{fst}(|e'|) = \texttt{fst}(|e|) = |\texttt{fst}(e)|$. For (1),
-  by Theorem~\ref{thm:subty-refl}, there is $\Phi''$ such that $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1 : \star \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$. By AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fst}(e') \checks \tau_1 \gens \Phi',\Gamma'''$, completing (1).
+  by \autoref{thm:subty-refl}, there is $\Phi''$ such that $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1 : \star \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$. By AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fst}(e') \checks \tau_1 \gens \Phi',\Gamma'''$, completing (1).
 
   \item[(AT-Snd)] Identical to AT-Fst.
   
@@ -286,7 +286,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta \vdash (\Gamma_2' \setminus \{x : \tau_1\}) \cap (\Gamma_3' \setminus \{y : \tau_2\}) \wknto (\Gamma_2 \setminus \{x : \tau_1\}) \cap (\Gamma_3 \setminus \{y : \tau_2\})$
   and
   $\Psi ; \Theta ; \Delta \vdash (\Gamma_2' \setminus \{x : \tau_1\}) \cap (\Gamma_3' \setminus \{y : \tau_2\}) \wknto \Gamma' \setminus \Gamma$,
-  but both follow from the six weakening judgments and a few applications of Theorem~\ref{thm:ctx-sub-subset2}.
+  but both follow from the six weakening judgments and a few applications of \autoref{thm:ctx-sub-subset2}.
   This completes (1), and (2) follows immediately by AT-Anno.
   
   \item[(AT-Sub)] Suppose 
@@ -318,7 +318,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash !e' \checks \tau \gens \Phi',\Gamma'$.
   This completes (1), since $|!e'| = |!e|$, $\Theta ; \Delta \vDash \Phi'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma'$ and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma' \setminus \Gamma$
-  as consequences of Theorem~\ref{thm:ctx-sub-subset2}.
+  as consequences of \autoref{thm:ctx-sub-subset2}.
   
   \item[(AT-ExpE)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{let } !x = e_1 \texttt{ in } e_2 \checks \tau' \gens \Phi_1 \wedge \Phi_2, \Gamma_2$
   from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers !\tau \gens \Phi_1,\Gamma_1$
@@ -341,7 +341,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega', x : \tau ; \Gamma_1' \vdash e_2' \checks \tau' \gens \Phi_2',\Gamma_2'$.
   By AT-ExpE,
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{let } !x = e_1' \texttt{ in } e_2' \checks \tau' \gens \Phi_1' \wedge \Phi_2', \Gamma_2'$.
-  Applying Theorem~\ref{thm:ctx-sub-subset2} to the inductive hypotheses gives us that
+  Applying \autoref{thm:ctx-sub-subset2} to the inductive hypotheses gives us that
   $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$, completing (1).
   For (2), one application of AT-Anno suffices.
   
@@ -357,7 +357,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi, \alpha : K ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
   $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
   By AT-TAbs, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \forall \alpha : K. \tau \gens \Phi',\Gamma'''$.
-  By Theorem~\ref{thm:ctx-sub-streng}, we have that $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$
+  By \autoref{thm:ctx-sub-streng}, we have that $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$
   and $\Psi  ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, which completes (1).
   For (2), one use of AT-Anno suffices.
   
@@ -383,7 +383,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Theta ; \Delta \vDash \Phi$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$, and
   $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
-  By Theorem~\ref{thm:ctx-sub-wkn},
+  By \autoref{thm:ctx-sub-wkn},
   $\Psi ; \Theta, i : S ; \Delta \vdash \Gamma' \wknto \Gamma$ and
   $\Psi ; \Theta, i : S ; \Delta \vdash \Omega' \wknto \Omega$.
   By IH, there are $e'$, $\Phi'$, $\Gamma'''$ such that
@@ -394,7 +394,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta, i : S ; \Delta ; \Omega' ; \Gamma' \vdash e' : \tau \gens \Phi', \Gamma'''$.
   By AT-IAbs,
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \Lambda i. e' : \tau \gens \forall i : S. \Phi', \Gamma'''$.
-  By Theorem~\ref{thm:ctx-sub-streng},
+  By \autoref{thm:ctx-sub-streng},
   $\Psi ; \Theta ; \Delta \vdash \Gamma'' \wknto \Gamma' \setminus \Gamma$ and
   $\Psi ; \Theta ; \Delta \vdash \Gamma'' \wknto \Gamma''$.
   Finally, the fact that $\Theta ; \Delta \vDash \forall i : S. \Phi'$
@@ -416,7 +416,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   By AT-IApp,
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e [I] \infers \tau[I/i] \gens \Phi_1' \wedge \Phi_2,\Gamma'''$.
   Since $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2$ and $|e[I]| = |e|[I] = |e'|[I] = |e'[I]|$, this completes (2).
-  For (1), we have by Theorem~\ref{thm:subty-refl} some $\Phi_3$ such that $\Psi ; \Theta ; \Delta \vdash \tau[I/i] \subty \tau[I/i] : \star \gens \Phi_3$
+  For (1), we have by \autoref{thm:subty-refl} some $\Phi_3$ such that $\Psi ; \Theta ; \Delta \vdash \tau[I/i] \subty \tau[I/i] : \star \gens \Phi_3$
   and $\Theta ; \Delta \vDash \Phi_3$.
   By AT-Sub, we  have that $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e [I] \checks \tau[I/i] \gens \Phi_1' \wedge \Phi_2 \wedge \Phi_3,\Gamma'''$,
   as required for (1).
@@ -435,7 +435,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \texttt{fix } x.e' \checks \tau \gens \Phi',\Gamma'$.
   Of course, $|\texttt{fix }x.e'| = \texttt{fix }x.|e'| = \texttt{fix }x.|e| = |\texttt{fix }x.e|$.
   Further, $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma' \setminus \Gamma$
-  by Theorem~\ref{thm:ctx-sub-subset2}, and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$ by one of the premises.
+  by \autoref{thm:ctx-sub-subset2}, and $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$ by one of the premises.
   This completes (1), and (2) follows by AT-Anno.
   
   \item[(AT-Ret)] Suppose
@@ -480,7 +480,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   Of course, $|\texttt{bind } x = e_1 \texttt{ in } e_2| = |\texttt{bind } x = e_1' \texttt{ in } e_2'|$.
   Since $\Theta ; \Delta \vDash (\vec{q} \geq \vec{p}) \wedge (I=J)$, we also have that $\Theta ; \Delta \vDash (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1' \wedge \Phi_2'$.
   We have $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$  by IH, and
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x : \tau_1\} \wknto \Gamma' \setminus \Gamma$ follows by applying Theorem~\ref{thm:ctx-sub-subset2} to the rest of the weakening premises. This completes (1), and (2) follows by AT-Anno.
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x : \tau_1\} \wknto \Gamma' \setminus \Gamma$ follows by applying \autoref{thm:ctx-sub-subset2} to the rest of the weakening premises. This completes (1), and (2) follows by AT-Anno.
   
   \item[(AT-Tick)] Immediate.
   
@@ -509,7 +509,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   Of course, $|\texttt{release } x = e_1' \texttt{ in }e_2'| = |\texttt{release } x = e_1 \texttt{ in }e_2|$.
   Since $\Theta ; \Delta \vDash I = J$, we have $\Theta ; \Delta \vDash (I = J) \wedge \Phi_1' \wedge \Phi_2'$.
   $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma_2 \{x\}$ is implied by $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$,
-  and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma' \setminus \Gamma$ follows from Theorem~\ref{thm:ctx-sub-subset2}. This completes (1), and (2) follows from AT-Anno.
+  and $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma' \setminus \Gamma$ follows from \autoref{thm:ctx-sub-subset2}. This completes (1), and (2) follows from AT-Anno.
   
   \item[(AT-Store)] Suppose
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[K|\vec{w}](e) \checks \M \, \phi(I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi_1 \wedge \Phi_2 \wedge\Phi_3 \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K), \Gamma''$ by way of
@@ -571,7 +571,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   Also, $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$.
   $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \wknto \Gamma_2$ holds by IH.
   It remains to show that $\Psi ; \Theta ; \Delta \vdash \Gamma_2' \setminus \{x\} \wknto \Gamma' \setminus \Gamma$.
-  This follows by considering the remaining weakening judgments from the IHs with Theorem~\ref{thm:ctx-sub-subset2}.
+  This follows by considering the remaining weakening judgments from the IHs with \autoref{thm:ctx-sub-subset2}.
   This completes (1). For (2), as usual, we apply AT-Anno.
   
   \item[(AT-Shift)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) \checks \M \, \phi(I,\vec{q}) \, \tau \gens (I \geq 1) \wedge \Phi, \Gamma''$ from
@@ -594,7 +594,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Theta ; \Delta \vDash \Phi$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma' \wknto \Gamma$,
   $\Psi ; \Theta ; \Delta \vdash \Omega' \wknto \Omega$.
-  Using Theorem~\ref{thm:cxt-sub-wkn}, we have by IH that there are $e'$, $\Phi''$, $\Gamma'''$,
+  Using \autoref{thm:cxt-sub-wkn}, we have by IH that there are $e'$, $\Phi''$, $\Gamma'''$,
   $|e'| = |e|$,
   $\Theta ; \Delta, \Phi' \vDash \Phi''$,
   $\Psi ; \Theta ; \Delta, \Phi' \vdash \Gamma''' \wknto \Gamma' \setminus \Gamma$,
@@ -604,7 +604,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash \Lambda .e' \checks (\Phi' \Rightarrow \tau) \gens (\Phi' \to \Phi''),\Gamma'''$.
   By definition, $|\Lambda .e'| = \Lambda.|e'| = \Lambda.|e| = |\Lambda.e|$.
   Next, since $\Theta ; \Delta, \Phi' \vDash \Phi''$, we have $\Theta ; \Delta \vDash \Phi' \to \Phi''$.
-  The two weakenings again follow by Theorem~\ref{thm:ctx-sub-subset2}.
+  The two weakenings again follow by \autoref{thm:ctx-sub-subset2}.
   This completes (1), and (2) follows by AT-Anno.
   
   \item[(AT-CImpE)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \{\} \infers \tau \gens \Phi \wedge \Phi',\Gamma''$ from
@@ -620,7 +620,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \infers (\Phi' \Rightarrow \tau) \gens \Phi'',\Gamma'''$.
   By AT-CImpE,
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \{\} \infers \tau \gens \Phi'' \wedge \Phi',\Gamma'''$,
-  which completes the proof of (2). For (1), we use Theorem~\ref{thm:subty-refl} to get some $\Phi_1$ with $\Theta ; \Delta \vDash \Phi_1$
+  which completes the proof of (2). For (1), we use \autoref{thm:subty-refl} to get some $\Phi_1$ with $\Theta ; \Delta \vDash \Phi_1$
   such that $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star \gens \Phi_1$.
   Then, by AT-Sub,
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \{\} \checks \tau \gens \Phi'' \wedge \Phi' \wedge \Phi_3,\Gamma'''$, as required.
@@ -653,7 +653,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma' \setminus \Gamma$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1' \infers \Phi \amp \tau \gens \Phi_1',\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, we also have by Theorem~\ref{thm:ctx-sub-wkn}
+  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1' \wknto \Gamma_1$, we also have by \autoref{thm:ctx-sub-wkn}
   $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_1', x : \tau \wknto \Gamma_1, x : \tau$,
   and so by IH, there are $e_2'$, $\Phi_2'$, $\Gamma_2'$ such that
   $|e_2'| = |e_2|$,
@@ -667,7 +667,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   Combining the satisfactions from the premises, we have that $\Theta ; \Delta \vDash \Phi_1' \wedge (\Phi \to \Phi_2')$.
   The fact that $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_2' \wknto \Gamma_2$ is immediate from IH, 
   and $\Psi ; \Theta ; \Delta, \Phi \vdash \Gamma_2' \wknto \Gamma' \setminus \Gamma$ follows as usual by considering the rest
-  of the weakening judgments with Theorem~\ref{thm:ctx-sub-subset2}. This completes (1). For (2), we apply AT-Anno.
+  of the weakening judgments with \autoref{thm:ctx-sub-subset2}. This completes (1). For (2), we apply AT-Anno.
    
   \item[(AT-Sub)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma''$ from
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \infers \tau' \gens \Phi_1,\Gamma''$ and
@@ -696,7 +696,7 @@ We will use Theorem~\ref{thm:ctx-sub-subset2} liberally, sometimes silently.
   $\Psi ; \Theta ; \Delta \vdash \Gamma''' \wknto \Gamma''$, and
   $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e' \checks \tau \gens \Phi',\Gamma'''$.
   By AT-Anno, $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e' : \tau) \infers \tau \gens \Phi',\Gamma'''$, which completes (2)
-  since $|(e' : \tau)| = |e'| = |e| = |(e : \tau)|$. For (1), we use Theorem~\ref{thm:subty-refl} to get that $\Psi ; \Theta ; \Delta \vdash \tau \subty  \tau : \star \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$, and so by AT-Sub, we have that $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e' : \tau) \checks \tau \gens \Phi' \wedge \Phi'',\Gamma'''$, completing (1).
+  since $|(e' : \tau)| = |e'| = |e| = |(e : \tau)|$. For (1), we use \autoref{thm:subty-refl} to get that $\Psi ; \Theta ; \Delta \vdash \tau \subty  \tau : \star \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$, and so by AT-Sub, we have that $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash (e' : \tau) \checks \tau \gens \Phi' \wedge \Phi'',\Gamma'''$, completing (1).
  
   
   

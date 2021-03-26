@@ -1,4 +1,4 @@
-\jtheorem{Proof of Theorem~\ref{thm:subtynf-refl}}{
+\jtheorem{Proof of \autoref{thm:subtynf-refl}}{
 
   \jgivengoal{
     \caseFact{1} $\Psi ; \Theta ;  \Delta \pvdash \tau : K$
@@ -9,9 +9,9 @@
   }
   \caseText{By induction on (1), followed by inversion on (2)}
   
-  \jcase{1}{K-Var}{Immediate by Theorem~\ref{thm:subtyne-refl}}
+  \jcase{1}{K-Var}{Immediate by \autoref{thm:subtyne-refl}}
   
-  \jcase{2}{K-Unit}{Immediate by Theorem~\ref{thm:subtyne-refl}}
+  \jcase{2}{K-Unit}{Immediate by \autoref{thm:subtyne-refl}}
   
   \jcase{3}{K-Arr}{
     \jgivengoal{
@@ -245,7 +245,7 @@
     
     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash L^I \tau \subtynf L^I \tau : \star \gens \Phi \wedge (I = I)$
     
-    \caseText{By Theorem~\ref{thm:sound-compl} applied to (4), we may re-establish the presupposition for (7)}
+    \caseText{By \autoref{thm:sound-compl} applied to (4), we may re-establish the presupposition for (7)}
     
     \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash L^I \tau \subtynf L^I \tau : \star \gens \Phi \wedge (I = I)$
     
@@ -275,7 +275,7 @@
     
     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \Phi' \amp \tau \subtynf \Phi' \amp \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
     
-    \caseText{By Theorem~\ref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
+    \caseText{By \autoref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
     
     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi' \amp \tau \subtynf \Phi' \amp \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
     
@@ -305,7 +305,7 @@
     
     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
     
-    \caseText{By Theorem~\ref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
+    \caseText{By \autoref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
     
     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
     
@@ -333,7 +333,7 @@
     
     \caseFact{7} $\Theta ; \Delta \vDash \Phi$
     
-    \caseText{By AS-Monad on (6), followed by Theorem~\ref{thm:sound-compl} on (4) and (5) to establish the presuppositions}
+    \caseText{By AS-Monad on (6), followed by \autoref{thm:sound-compl} on (4) and (5) to establish the presuppositions}
     
     \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{p}) \tau \subtynf \M(I,\vec{p}) \tau : \star \gens \Phi \wedge (I = I) \wedge (\vec{p} \leq \vec{p})$
     
@@ -361,7 +361,7 @@
     
     \caseFact{7} $\Theta ; \Delta \vDash \Phi$
     
-    \caseText{By AS-Pot on (6), followed by Theorem~\ref{thm:sound-compl} on (4) and (5) to establish the presuppositions}
+    \caseText{By AS-Pot on (6), followed by \autoref{thm:sound-compl} on (4) and (5) to establish the presuppositions}
     
     \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash [I|\vec{p}] \tau \subtynf [I|\vec{p}] \tau : \star \gens \Phi \wedge (I = I) \wedge (\vec{p} \leq \vec{p})$
     
@@ -387,7 +387,7 @@
     
     \caseFact{6} $\Theta ; \Delta \vDash \Phi$
     
-    \caseText{By AS-ConstPot on (5) followed by Theorem~\ref{thm:sort-compl} on (4) to re-establish the presupposition}
+    \caseText{By AS-ConstPot on (5) followed by \autoref{thm:sort-compl} on (4) to re-establish the presupposition}
     
     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash [I] \; \tau \subtynf [I] \; \tau : \star \gens \Phi \wedge (I \leq I)$
     
@@ -422,7 +422,7 @@
     
   }
   
-  \jcase{17}{K-FamApp}{Immediate by Theorem~\ref{thm:subtyne-refl}}
+  \jcase{17}{K-FamApp}{Immediate by \autoref{thm:subtyne-refl}}
   
 }
 
@@ -431,5 +431,5 @@
   
   \item[(K-FamLam)] Suppose  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$. By IH,
   $\Psi ; \Theta, i : S ; \Delta \vdash \tau \subtynf \tau : K \gens \Phi$ with $\Theta, i : S ; \Delta \vDash \Phi$. By AS-FamLam, $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau \subtynf \tau : S \to K \gens \forall i : S. \Phi$. But $\Theta, i : S ; \Delta \vDash \Phi$ and so $\Theta ; \Delta \vDash \forall i : S. \Phi$, as required.
-  \item[(K-FamApp)] Done by Theorem~\ref{thm:subtyne-refl}
+  \item[(K-FamApp)] Done by \autoref{thm:subtyne-refl}
 \fi

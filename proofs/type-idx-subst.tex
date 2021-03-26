@@ -60,7 +60,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   \item[(K-List)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash L^J \tau : \star$ by way of
   $\Theta, i : S ; \Delta \vdash J : \N$ and
   $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By Theorem~\ref{thm:idx-idx-subst},
+  By \autoref{thm:idx-idx-subst},
   $\Theta ; \Delta \pvdash J[I/i] : \N$.
   By IH,
   $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
@@ -73,7 +73,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$.
   By IH,
   $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By Theorem~\ref{thm:constr-idx-subst},
+  By \autoref{thm:constr-idx-subst},
   $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
   Then, by K-Conj,
   $\Psi ; \Theta ; \Delta \vdash \Phi[I/i] \amp \tau[I/i] : \star$
@@ -83,7 +83,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$.
   By IH,
   $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By Theorem~\ref{thm:constr-idx-subst},
+  By \autoref{thm:constr-idx-subst},
   $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
   Then, by K-Implies,
   $\Psi ; \Theta ; \Delta \pvdash \Phi[I/i] \implies \tau[I/i] : \star$
@@ -95,7 +95,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   $\Theta, i : S ; \Delta \vdash J : \mathbb{N}$,
   $\Theta, i : S ; \Delta \vdash \vec{p} : \potvec$, and
   $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By Theorem~\ref{thm:idx-idx-subst}.
+  By \autoref{thm:idx-idx-subst}.
   $\Theta ; \Delta \pvdash J[I/i] : \mathbb{N}$ and
   $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$.
   By IH,
@@ -109,7 +109,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   $\Theta, i : S ; \Delta \vdash J : \mathbb{N}$,
   $\Theta, i : S ; \Delta \vdash \vec{p} : \potvec$, and
   $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By Theorem~\ref{thm:idx-idx-subst}.
+  By \autoref{thm:idx-idx-subst}.
   $\Theta ; \Delta \pvdash J[I/i] : \mathbb{N}$ and
   $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$.
   By IH,
@@ -124,7 +124,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   $\Theta, i : S ; \Delta \vdash J : \potvec$.
   By IH,
   $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By Theorem~\ref{thm:idx-idx-subst},
+  By \autoref{thm:idx-idx-subst},
   $\Theta ; \Delta \pvdash J[I/i] : \potvec$.
   By K-ConstPot,
   $\Psi ; \Theta ; \Delta \pvdash \left[J[I/i]\right] \; \left(\tau[I/i]\right) : \star$
@@ -144,7 +144,7 @@ By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K
   $\Psi ; \Theta, i : S ; \Delta \vdash \tau \; J : K$ by way of
   $\Theta, i : S ; \Delta \vdash J : S$ and
   $\Psi ; \Theta, i : S ; \Delta \vdash \tau : S \to K$.
-  By Theorem~\ref{thm:idx-idx-subst},
+  By \autoref{thm:idx-idx-subst},
   $\Theta ; \Delta \pvdash J[I/i] : S$.
   By IH,
   $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : S \to K$.

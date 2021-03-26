@@ -2,7 +2,7 @@
 By induction on the derivation of $\Psi;\Theta;\Delta;\Omega;\Gamma \vdash e : \tau$, we prove both claims simultaneously.
 In all cases, the erasure property is immediate from the inductive hypotheses-- we will elide this bit of the proof.
 \begin{itemize}
-  \item[(T-Var-1)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x : \tau$ from $x : \tau \in \Gamma$. By AT-Var-1, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x \infers \tau \gens \top,\Gamma \setminus \{x : \tau\}$. Of course, $\Theta ; \Delta \vDash \top$, and $|x| = x$, so (1) is complete. By Theorem~\ref{thm:subty-refl}, $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By AT-Sub,  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x \checks \tau \gens \top,\Gamma \setminus \{x : \tau\}$, as required for (2).
+  \item[(T-Var-1)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x : \tau$ from $x : \tau \in \Gamma$. By AT-Var-1, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x \infers \tau \gens \top,\Gamma \setminus \{x : \tau\}$. Of course, $\Theta ; \Delta \vDash \top$, and $|x| = x$, so (1) is complete. By \autoref{thm:subty-refl}, $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By AT-Sub,  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x \checks \tau \gens \top,\Gamma \setminus \{x : \tau\}$, as required for (2).
   
   \item[(T-Var-2)] Immediate.
   \item[(T-Unit)] Immediate.
@@ -14,7 +14,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   \item[(T-Nil)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{nil} : L^I \tau$ by way of
   $\Theta ; \Delta \vdash I : \mathbb{N}$ and
   $\Theta;\Delta \vDash I = 0$.
-  By Theorem~\ref{thm:sort-compl}, there is a $\Phi$ such that
+  By \autoref{thm:sort-compl}, there is a $\Phi$ such that
   $\Theta ; \Delta \vDash \Phi$, and
   $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi$.
   By AT-Nil, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{nil} \checks L^I \tau \gens \Phi \wedge (I = 0),\Gamma$.
@@ -31,7 +31,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi_1'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau \gens \Phi_1,\Gamma_1'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  by Theorem~\ref{thm:admits-weaken} we have $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  by \autoref{thm:admits-weaken} we have $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
@@ -43,7 +43,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2,\Gamma_2'$.
-  But again by Theorem~\ref{thm:admits-weaken}, we have $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
+  But again by \autoref{thm:admits-weaken}, we have $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2',\Gamma_2''$.
@@ -62,7 +62,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e' \infers L^I \tau \gens \Phi, \Gamma_1'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e''$, $\Phi'$, $\Gamma_1''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e''$, $\Phi'$, $\Gamma_1''$ such that
   $|e''| = |e'|$,
   $\Theta ; \Delta \vDash \Phi'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, and
@@ -71,9 +71,9 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_1'| = e_1$,
   $\Theta ; \Delta, I = 0 \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2 \vdash e_1' \checks \tau' \gens \Phi_1,\Gamma_2'$.
-  By Theorem~\ref{thm:ctx-sub-wkn},
+  By \autoref{thm:ctx-sub-wkn},
   $\Psi ; \Theta ; \Delta, I = 0 \vdash \Gamma_1'' \wknto \Gamma_2$.
-  Then, by Theorem~\ref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that
+  Then, by \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta, I = 0 \vDash \Phi_1'$, and
   $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_1'' \vdash e_2'' \checks \tau' \gens \Phi_1',\Gamma_2''$.
@@ -81,9 +81,9 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta, I \geq 1 \vdash \Phi_2$, and
   $\Psi ; \Theta ; \Delta, I \geq 1 ; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_3'$.
-  By Theorem~\ref{thm:ctx-sub-wkn} and Theorem~\ref{thm:ctx-sub-subset2},
+  By \autoref{thm:ctx-sub-wkn} and \autoref{thm:ctx-sub-subset2},
   $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_1'', h : \tau, t : L^I \tau \wknto \Gamma_2, h : \tau, t : L^I \tau$.
-  Then, by Theorem~\ref{admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that
+  Then, by \autoref{admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta, I \geq 1 \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_1'', h : \tau, t : L^I \tau \vdash e_2' \checks \tau' \gens \Phi_2',\Gamma_3''$.
@@ -95,7 +95,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   \item[(T-ExistI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{pack}[I](e) : \exists i:S.\tau$ from
   $\Theta ; \Delta \vdash I : S$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e : \tau[I/i]$.
-  By Theorem~\ref{thm:idx-compl}, there is some $\Phi_1$ such that
+  By \autoref{thm:idx-compl}, there is some $\Phi_1$ such that
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Theta ; \Delta \vdash I : S \gens \Phi_1$.
   By IH, there are $e'$, $\Phi_2$, $\Gamma'$ such that
@@ -114,7 +114,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \exists i : S. \tau \gens \Phi_1,\Gamma_1'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, and
@@ -124,7 +124,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta, i : S ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_2,x : \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1'',x : \tau \wknto \Gamma_2, x : \tau$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta, i : S ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_1'', x: \tau \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_2''$.
@@ -142,7 +142,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \tau_1 \loli \tau_2 \gens \Phi_1,\Gamma_1'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, and
@@ -151,22 +151,22 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta \vDash \Phi_2$,
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_1 \gens \Phi_2,\Gamma_2'$.
-  But then by Theorem~\ref{thm:admits-weaken}, there are $e_2''$, $\Gamma_2''$, and $\Phi_2'$ such that
+  But then by \autoref{thm:admits-weaken}, there are $e_2''$, $\Gamma_2''$, and $\Phi_2'$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega; \Gamma_1'' \vdash e_2'' \checks \tau_1 \gens \Phi_2',\Gamma_2''$.
   Then, by AT-App, we have that
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \, e_2'' \infers \tau_2 \gens \Phi_1' \wedge \Phi_2',\Gamma_2''$.
   This completes (2). For (1), 
-  we apply Theorem~\ref{thm:subty-refl} to find that there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$, and
+  we apply \autoref{thm:subty-refl} to find that there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$, and
   $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi_3$.
   Then, by AT-Sub, we have
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \, e_2'' \checks \tau_2 \gens \Phi_1' \wedge \Phi_2' \wedge \Phi_3,\Gamma_2''$
   as required for (2).
   
   \item[(T-TensorI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \angles{e_1,e_2} ; \tau_1 \otimes \tau_2$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1$ and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\vdash e_2 : \tau_2$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that $|e_1'| = e_1$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau_1 \gens \Phi_1,\Gamma_1'$. By Theorem~\ref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that $|e_1''| = |e_1'|$, $\Theta ; \Delta \vDash \Phi_1'$, $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta ;\Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \tau_2 \gens \Phi_1',\Gamma_1''$. But, $(\Gamma_1,\Gamma_2) \setminus \Gamma_1 = \Gamma_2$, since $\Gamma_1$ and $\Gamma_2$ are disjoint, and so we have that $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$.
-  By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that $|e_2'| = e_2$, $\Theta ; \Delta \vDash \Phi_2$,  and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_2 \gens \Phi_2,\Gamma_2'$. But by Theorem~\ref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that $|e_2''| = |e_2'|$, $\Theta ; \Delta \vDash \Phi_2'$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2'' \checks \tau_2 \gens \Phi_2', \Gamma_2''$. By AT-TensorI,
+  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that $|e_1'| = e_1$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau_1 \gens \Phi_1,\Gamma_1'$. By \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that $|e_1''| = |e_1'|$, $\Theta ; \Delta \vDash \Phi_1'$, $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta ;\Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \tau_2 \gens \Phi_1',\Gamma_1''$. But, $(\Gamma_1,\Gamma_2) \setminus \Gamma_1 = \Gamma_2$, since $\Gamma_1$ and $\Gamma_2$ are disjoint, and so we have that $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$.
+  By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that $|e_2'| = e_2$, $\Theta ; \Delta \vDash \Phi_2$,  and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_2 \gens \Phi_2,\Gamma_2'$. But by \autoref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that $|e_2''| = |e_2'|$, $\Theta ; \Delta \vDash \Phi_2'$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2'' \checks \tau_2 \gens \Phi_2', \Gamma_2''$. By AT-TensorI,
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \angles{e_1'',e_2''} \checks \tau_1 \otimes \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2''$.
   We then verify the conditions: $|\angles{e_1'',e_2''}| = \angles{|e_1''|,|e_2''|} = \angles{|e_1'|,|e_2'|} = \angles{e_1,e_2}$, and also $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$, completing (1). For (2), AT-Anno gives that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash (\angles{e_1'',e_2''} : \tau_1 \otimes \tau_2) \infers \tau_1 \otimes \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2''$, as required.
   
@@ -178,7 +178,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \tau_1 \otimes \tau_2 \gens \Phi_1,\Gamma_1'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2 \setminus \Gamma_1)$, and
@@ -187,7 +187,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2,x : \tau_1, y : \tau_2 \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
-  Again by Theorem~\ref{admits-weaken}, since
+  Again by \autoref{admits-weaken}, since
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'',x : \tau_1, y : \tau_2 \wknto \Gamma_2,x : \tau_1, y : \tau_2$,
   there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2'|$,
@@ -218,7 +218,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \tau_1 \amp \tau_2 \gens \Phi,\Gamma'$.
   By AT-Fst,
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e') \infers \tau_1 \gens \Phi,\Gamma'$.
-  This completes (2). For (1), we invoke Theorem~\ref{thm:subty-refl} to get some $\Phi'$ such that
+  This completes (2). For (1), we invoke \autoref{thm:subty-refl} to get some $\Phi'$ such that
   $\Theta ; \Delta \vDash \Phi'$ and $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1 : \star \gens \Phi'$.
   Then, by AT-Sub,
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e') \checks \tau_1 \gens \Phi \wedge \Phi',\Gamma'$,
@@ -247,7 +247,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e'| = e$,
   $\Theta ; \Delta \vDash \Phi$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e' \infers \tau_1 \oplus \tau_2 \gens \Phi,\Gamma_1'$.
-  But since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by Theorem~\ref{thm:admits-weaken}
+  But since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by \autoref{thm:admits-weaken}
   that there are $e''$, $\Phi'$, $\Gamma_1''$ such that
   $|e''| = |e'|$,
   $\Theta ; \Delta \vDash \Phi'$,
@@ -259,7 +259,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau_1 \vdash e_1' \checks \tau \gens \Phi_1,\Gamma_2'$.
   But since
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'', x : \tau_1 \wknto \Gamma_2, x : \tau_1$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_1'' \checks \tau \gens \Phi_1',\Gamma_2''$.
@@ -267,7 +267,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, y : \tau_2 \vdash e_2' \checks \tau \gens \Phi_2,\Gamma_3'$.
-  But, once more by Theorem~\ref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that
+  But, once more by \autoref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', y : \tau_2 \vdash e_2'' \checks \tau \gens \Phi_2',\Gamma_3''$.
@@ -294,7 +294,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_1'| = e_1$,
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers !\tau \gens \Phi_1,\Gamma_1'$.
-  By Theorem~\ref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  By \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
@@ -305,7 +305,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Psi ; \Theta ; \Delta ; \Omega, x: \tau ; \Gamma_2 \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
   Then, since
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$,
-  we have by Theorem~\ref{admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
+  we have by \autoref{admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_1'' \vdash e_2'' \checks \tau' \gens \Phi_2', \Gamma_2''$.
@@ -332,13 +332,13 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e'| = e$,
   $\Theta ; \Delta \vDash \Phi$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \forall \alpha : K.\tau \gens \Phi,\Gamma'$.
-  By Theorem~\ref{thm:kind-compl}, there is some $\Phi'$ such that
+  By \autoref{thm:kind-compl}, there is some $\Phi'$ such that
   $\Theta ; \Delta \vDash \Phi'$, and
   $\Psi ; \Theta ; \Delta \vdash \tau' : K \gens \Phi'$.
   Then, by AT-TApp,
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' [\tau'] \infers \tau[\tau'/\alpha] \gens \Phi \wedge \Phi',\Gamma'$.
   This completes (2). For (1), we have
-  by Theorem~\ref{thm:subty-refl}, there is some $\Phi''$ with
+  by \autoref{thm:subty-refl}, there is some $\Phi''$ with
   $\Theta ; \Delta \vDash \Phi''$ and
   $\Psi ; \Theta ; \Delta \vdash \tau[\tau'/\alpha] \subty \tau[\tau'/\alpha] : \star \gens \Phi''$.
   Then, by AT-Sub,
@@ -365,7 +365,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e'| = e$,
   $\Theta ; \Delta \vDash \Phi$, and
   $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash e \infers \forall i : S. \tau \gens \Phi,\Gamma'$.
-  By Theorem~\ref{thm:sort-compl}, there is some $\Phi'$ with
+  By \autoref{thm:sort-compl}, there is some $\Phi'$ with
   $\Theta ; \Delta \vDash \Phi'$ and
   $\Theta ; \Delta \vdash I : S \gens \Phi'$.
   By AT-IApp,
@@ -404,7 +404,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi  ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \M \, \phi(I,\vec{p}) \, \tau_1 \gens \Phi_1,\Gamma_1'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by Theorem~\ref{thm:admits-weaken} $e_1''$, $\Gamma_1''$, $\Phi_1'$ such that
+  we have by \autoref{thm:admits-weaken} $e_1''$, $\Gamma_1''$, $\Phi_1'$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
@@ -415,11 +415,11 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2' \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens \Phi_2,\Gamma_2'$.
-  But then by Theorem~\ref{thm:admits-weaken}, there are $e_2''$, $\Gamma_2''$, $\Phi_2'$ such that
+  But then by \autoref{thm:admits-weaken}, there are $e_2''$, $\Gamma_2''$, $\Phi_2'$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_2'' \infers \M \, \phi(I,\vec{q}) \, \tau_2 \gens \Phi_2',\Gamma_2''$.
-  By Theorem~\ref{thm:subty-refl}, there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$, and
+  By \autoref{thm:subty-refl}, there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$, and
   $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi_3$.
   Then, by AS-Monad, $\Psi ; \Theta ; \Delta \vdash \M \, \phi(I,\vec{q}) \, \tau_2 \subty \M \, \phi(I,(\vec{p} + \vec{q}) - \vec{p}) \, \tau_2 : \star \gens \Phi_3 \wedge (I = I) \wedge (\vec{q} \leq (\vec{p} + \vec{q}) - \vec{p})$.
   Then, by AT-Sub,
@@ -431,10 +431,10 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   \item[(T-Tick)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] : \M \, \phi(I,\vec{p})\, 1$ by way of
   $\Theta ; \Delta \vdash I : \mathbb{N}$ and
   $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$.
-  By Theorem~\ref{thm:sort-compl}, there is some $\Phi_1$ such that
+  By \autoref{thm:sort-compl}, there is some $\Phi_1$ such that
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$.
-  Again by Theorem~\ref{thm:sort-compl}, there is a $\Phi_2$ such that
+  Again by \autoref{thm:sort-compl}, there is a $\Phi_2$ such that
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$.
   By AT-Tick,
@@ -452,7 +452,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_1'| = e_1$,
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers [I|\vec{q}] \tau_1 \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ;\Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by Theorem~\ref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  Since $\Psi ; \Theta ;\Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
@@ -462,7 +462,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2,\Gamma_2'$.
   Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$,
-  we have by Theorem~\ref{thm:admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
+  we have by \autoref{thm:admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau \vdash e_2'' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau \gens \Phi_2',\Gamma_2''$.
@@ -477,7 +477,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta \vdash I : \mathbb{N}$,
   $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By Theorem~\ref{thm:sort-compl}, there are $\Phi_1$, $\Phi_2$ such that
+  By \autoref{thm:sort-compl}, there are $\Phi_1$, $\Phi_2$ such that
   $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$ and
   $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_2$
   with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$.
@@ -495,7 +495,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e) : \M \, \phi(K,\texttt{const}(I)) \, ([I] \, \tau)$ by way of
   $\Theta ; \Delta \vdash I : \mathbb{N}$ and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By Theorem~\ref{thm:sort-compl}, there is some $\Phi_1$ such that
+  By \autoref{thm:sort-compl}, there is some $\Phi_1$ such that
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$.
   By IH, there are $e'$, $\Phi_2$, and $\Gamma'$ such that
@@ -515,7 +515,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_1'| = e_1$,
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers [J] \tau_1 \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by Theorem~\ref{thm:admits-weaken}
+  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by \autoref{thm:admits-weaken}
   that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
@@ -525,7 +525,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_2'| = e_2$,
   $\Theta ; \Delta \vDash \Phi_2$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2' \checks \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2,\Gamma_2'$.
-  But, by Theorem~\ref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
+  But, by \autoref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta \vDash \Phi_2'$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x: \tau \vdash e_2'' \checks  \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2',\Gamma_2''$.
@@ -567,7 +567,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \{\} \infers \tau \gens \Phi \wedge \Phi',\Gamma'$.
   Since $\Theta ; \Delta \vDash \Phi'$ and $\Theta ; \Delta \vDash \Phi$, we have $\Theta ; \Delta \vDash \Phi \wedge \Phi'$.
   This completes (2). For (2),
-  by Theorem~\ref{thm:subty-refl}, there is some $\Phi''$ with
+  by \autoref{thm:subty-refl}, there is some $\Phi''$ with
   $\Theta ; \Delta \vDash \Phi''$, and
   $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star \gens \Phi''$.
   Then, by AT-Sub,
@@ -595,7 +595,7 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $|e_1'| = e_1$,
   $\Theta ; \Delta \vDash \Phi_1$, and
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \Phi' \amp \tau \gens \Phi_1,\Gamma_1'$.
-  By Theorem~\ref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
+  By \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
   $|e_1''| = |e_1'|$,
   $\Theta ; \Delta \vDash \Phi_1'$,
   $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
@@ -605,10 +605,10 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   $\Theta ; \Delta,\Phi' \vDash \Phi_2$, and
   $\Psi ; \Theta ; \Delta,\Phi' ; \Omega ; \Gamma_2,x : \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
   Since
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, we have by Theorem~\ref{thm:ctx-sub-wkn} and Theorem~\ref{thm:ctx-sub-subset2}
+  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, we have by \autoref{thm:ctx-sub-wkn} and \autoref{thm:ctx-sub-subset2}
   that
   $\Psi ; \Theta ; \Delta,\Phi' \vdash \Gamma_1'',x : \tau \wknto \Gamma_2,x : \tau$,
-  and so by Theorem~\ref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
+  and so by \autoref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
   $|e_2''| = |e_2'|$,
   $\Theta ; \Delta, \Phi' \vDash \Phi_2'$,
   $\Psi ; \Theta ; \Delta, \Phi' ; \Omega ;\Gamma_1'',x:\tau \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_2''$.
@@ -618,9 +618,9 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
   we have $\Theta ; \Delta \vDash \Phi_1' \wedge (\Phi' \to \Phi_2')$
   This completes (1), and (2) follows by AT-Anno.
   
-  \item[(T-Sub)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau'$ and $\Psi;\Theta;\Delta \vdash \tau' \subty \tau : \star$. By IH, there are $e',\Phi_1,\Gamma'$ so that $|e'| = e$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \tau' \gens \Phi_1,\Gamma'$. By Theorem~\ref{thm:subty-compl}, there is $\Phi_2$ such that $\Theta ; \Delta \vDash \Phi_2$, and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi_2$. By AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma'$, which completes (1). For (2), we apply AT-Anno to get $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e' : \tau) \infers \tau \gens \Phi_1 \wedge \Phi_2,\Gamma'$, and are done.
+  \item[(T-Sub)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau'$ and $\Psi;\Theta;\Delta \vdash \tau' \subty \tau : \star$. By IH, there are $e',\Phi_1,\Gamma'$ so that $|e'| = e$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \tau' \gens \Phi_1,\Gamma'$. By \autoref{thm:subty-compl}, there is $\Phi_2$ such that $\Theta ; \Delta \vDash \Phi_2$, and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star \gens \Phi_2$. By AT-Sub, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau \gens \Phi_1 \wedge \Phi_2,\Gamma'$, which completes (1). For (2), we apply AT-Anno to get $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e' : \tau) \infers \tau \gens \Phi_1 \wedge \Phi_2,\Gamma'$, and are done.
   
-  \item[(T-Weaken)] Suppose $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e : \tau$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$, $\Theta ; \Delta \vdash \Omega' \bdby \Omega$, and $\Theta ; \Delta \vdash \Gamma' \bdby \Gamma$. By IH, there are $e'$, $\Phi$, $\Gamma''$ so that $|e'| = e$, $\Theta ; \Delta \vDash \Phi$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau \gens \Phi, \Gamma''$. By Theorem~\ref{thm:admits-weaken}, there are $e_1$, $\Phi_1$, $\Gamma_1$ so that $|e_1| = |e'|$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1 \checks \tau \gens \Phi_1,\Gamma_1$, and also that there are $e_2$, $\Phi_2$, $\Gamma_2$ so that $|e_2| = |e'|$, $\Theta ; \Delta \vDash \Phi_2$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_2 \infers \tau \gens \Phi_2,\Gamma_2$, which proves (1) and (2).
+  \item[(T-Weaken)] Suppose $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e : \tau$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$, $\Theta ; \Delta \vdash \Omega' \bdby \Omega$, and $\Theta ; \Delta \vdash \Gamma' \bdby \Gamma$. By IH, there are $e'$, $\Phi$, $\Gamma''$ so that $|e'| = e$, $\Theta ; \Delta \vDash \Phi$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau \gens \Phi, \Gamma''$. By \autoref{thm:admits-weaken}, there are $e_1$, $\Phi_1$, $\Gamma_1$ so that $|e_1| = |e'|$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_1 \checks \tau \gens \Phi_1,\Gamma_1$, and also that there are $e_2$, $\Phi_2$, $\Gamma_2$ so that $|e_2| = |e'|$, $\Theta ; \Delta \vDash \Phi_2$, and $\Psi ; \Theta ; \Delta ; \Omega' ; \Gamma' \vdash e_2 \infers \tau \gens \Phi_2,\Gamma_2$, which proves (1) and (2).
  
 \end{itemize}
 

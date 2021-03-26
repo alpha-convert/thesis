@@ -1,4 +1,4 @@
-\jtheorem{Proof of Theorem~\ref{thm:subtynf-idx-subst}}{
+\jtheorem{Proof of \autoref{thm:subtynf-idx-subst}}{
 
   \jgivengoal{
     \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subtynf \tau_2 : K \gens \Phi$
@@ -17,8 +17,8 @@
   }
   
   \caseText{In most cases, it suffices to show that $\Psi ; \Theta ; \Delta \vdash \tau_1[I/i] \subtynf \tau_2[J/i] : K \gens \Phi'$ for some solvable $\Phi'$
-    since Theorem~\ref{thm:idx-ctx-wf-compl} on (3), Theorem~\ref{thm:idx-subst-nf} along with the presuppositions for (1) give the presuppositions for the conclusion,
-    using Theorem~\ref{thm:type-idx-algo-subst}. When this is not immediate, we manually reconstruct the presuppositions required.
+    since \autoref{thm:idx-ctx-wf-compl} on (3), \autoref{thm:idx-subst-nf} along with the presuppositions for (1) give the presuppositions for the conclusion,
+    using \autoref{thm:type-idx-algo-subst}. When this is not immediate, we manually reconstruct the presuppositions required.
   }
   
   \jcase{1}{AS-Unit}{Immediate.}
@@ -265,7 +265,7 @@
     
     \caseFact{14} $\Theta, i : S ; \Delta \vdash N : \N \gens \Phi_2$ with $\Theta, i : S ; \Delta \vDash \Phi_2$
 
-    \caseText{By Theorem~\ref{thm:idx-idx-algo-subst} and Theorem~\ref{thm:idx-compl} on (13) (14) (4) (5)}
+    \caseText{By \autoref{thm:idx-idx-algo-subst} and \autoref{thm:idx-compl} on (13) (14) (4) (5)}
     
     \caseFact{15} $\Theta ; \Delta \vdash M[I/i] : \N \gens \Phi_1'$ with $\Theta;\Delta \vDash \Phi_1'$
     
@@ -303,7 +303,7 @@
     
     \caseFact{12} $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$ with $\Theta, i : S ; \Delta \vDash \Phi_2'$
     
-    \caseText{By Theorem~\ref{thm:constr-idx-algo-subst}}
+    \caseText{By \autoref{thm:constr-idx-algo-subst}}
     
     \caseFact{13} $\Theta ; \Delta \vDash \Phi_1[I/i] \; \texttt{wf} \gens \Phi_1''$ with $\Theta ; \Delta \vDash \Phi_1''$
     
@@ -349,7 +349,7 @@
     
     \caseFact{12} $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$ with $\Theta, i : S ; \Delta \vDash \Phi_2'$
     
-    \caseText{By Theorem~\ref{thm:constr-idx-algo-subst}}
+    \caseText{By \autoref{thm:constr-idx-algo-subst}}
     
     \caseFact{13} $\Theta ; \Delta \vDash \Phi_1[I/i] \; \texttt{wf} \gens \Phi_1''$ with $\Theta ; \Delta \vDash \Phi_1''$
     
@@ -397,7 +397,7 @@
    
    \caseFact{12} $\Theta ; \Delta \vDash \Phi'$
    
-   \caseText{By AS-Monad on (11) and Theorem~\ref{thm:idx-idx-subst} on the presuppositions of (1) for $M,N,\vec{q},\vec{p}$}
+   \caseText{By AS-Monad on (11) and \autoref{thm:idx-idx-subst} on the presuppositions of (1) for $M,N,\vec{q},\vec{p}$}
    
    \caseFact{13} $\Psi ; \Theta ; \Delta \pvdash \M(M[I/i],\vec{q}[I/i]) \; (\tau_1[I/i]) \subtynf \M(N[J/i],\vec{q}[J/i]) \;(\tau_2[J/i]) : \star \gens (M[I/i] = N[J/i]) \wedge (\vec{q}[I/i] \leq \vec{p}[J/i]) \wedge \Phi'$
    
@@ -432,7 +432,7 @@
    
    \caseFact{12} $\Theta ; \Delta \vDash \Phi'$
    
-   \caseText{By AS-Pot on (11) and Theorem~\ref{thm:idx-idx-subst} on the presuppositions of (1) for $M,N,\vec{q},\vec{p}$}
+   \caseText{By AS-Pot on (11) and \autoref{thm:idx-idx-subst} on the presuppositions of (1) for $M,N,\vec{q},\vec{p}$}
    
    \caseFact{13} $\Psi ; \Theta ; \Delta \pvdash [M[I/i]|\vec{q}[I/i]] \; (\tau_1[I/i]) \subtynf [N[J/i]|\vec{q}[J/i]] \;(\tau_2[J/i]) : \star \gens (M[I/i] = N[J/i]) \wedge (\vec{q}[I/i] \geq \vec{p}[J/i]) \wedge \Phi'$
    
@@ -464,7 +464,7 @@
     
     \caseFact{11} $\Theta ; \Delta \vDash \Phi'$
     
-    \caseText{By AS-ConstPot and Theorem~\ref{thm:idx-idx-subst} for $M,N$}
+    \caseText{By AS-ConstPot and \autoref{thm:idx-idx-subst} for $M,N$}
     
     \caseFact{12} $\Psi ; \Theta ; \Delta \pvdash \left[M[I/i]\right] \; (\tau_1[I/i]) \subtynf \left[N[I/i]\right] \; (\tau_2[J/i]) : \star \gens \Phi' \wedge (N[J/i] \leq M[I/i])$
     
@@ -521,7 +521,7 @@
     
     \caseFact{12} $\Theta ; \Delta \vDash \Phi'$
     
-    \caseText{By AS-FamApp on (11) and Theorem~\ref{thm:idx-idx-algo-subst} on the proofs that $M,N : S'$ in (7)}
+    \caseText{By AS-FamApp on (11) and \autoref{thm:idx-idx-algo-subst} on the proofs that $M,N : S'$ in (7)}
     
     \caseFact{13} $\Psi ; \Theta ; \Delta \pvdash \left(\tau_1[I/i]\right) \; M[I/i] \subtynf \left(\tau_2[J/i]\right) \; N[J/i] : K \gens \Phi' \wedge (M[I/i] = N[J/i])$
     

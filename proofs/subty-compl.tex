@@ -1,8 +1,8 @@
 \begin{proof}
 By induction on $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$.
  \begin{itemize}
-   \item[(S-Refl)] Immediate by Theorem~\ref{thm:subty-refl}.
-   \item[(S-Trans)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K$ by way of $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. But by Theorem~\ref{thm:subty-trans}, we have
+   \item[(S-Refl)] Immediate by \autoref{thm:subty-refl}.
+   \item[(S-Trans)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K$ by way of $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. But by \autoref{thm:subty-trans}, we have
    $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required.
    \item[(S-Arr)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 \subty \tau_1' \loli \tau_2' : \star$
    from $\Psi ; \Theta ; \Delta \vdash \tau_1' \subty \tau_1 : \star$ and
@@ -61,13 +61,13 @@ By induction on $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$.
    \item[(S-FamLam)] Suppose $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K$
    from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : K$. By IH, $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi$ with $\Theta, i : S; \Delta \vDash \Phi$, or $\Theta ; \Delta \vDash \forall i : S. \Phi$. By inversion, $\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$. By AS-FamLam, $\Psi ; \Theta ; \Delta \vdash \lambda i : S . \texttt{eval}(\tau_1) \subtynf \lambda i : S.\texttt{eval}(\tau_2) : S \to K \gens \forall i : S. \Phi$. But, $\texttt{eval}(\lambda i : S. \tau) = \lambda i : S. \texttt{eval}(\tau)$, and so by AS-Normalize,
    $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K \gens \forall i : S. \Phi$, as required.
-   \item[(S-FamApp)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K$ and$\Theta ; \Delta \vDash I = J$. By IH,  $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$. By Theorem~\ref{thm:eval-app-lemma},
+   \item[(S-FamApp)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K$ and$\Theta ; \Delta \vDash I = J$. By IH,  $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$. By \autoref{thm:eval-app-lemma},
    $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1 \; I) \subtynf \texttt{eval}(\tau_2 \; J) : K \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$.
    By AS-Normalize, $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K \gens \Phi'$, as required.
    
    \item[(S-Fam-Beta1)] Suppose $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$. By AS-Normalize, it suffices to show that
    $\Psi ; \Theta ; \Delta \vdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
-   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by Theorem~\ref{thm:idx-subst-eval}. By Theorem~\ref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by Theorem~\ref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
+   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by \autoref{thm:idx-subst-eval}. By \autoref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by \autoref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
    \item[(S-Fam-Beta2)] Identical to S-FamBeta1.
  \end{itemize}
 \end{proof}
