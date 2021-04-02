@@ -3,7 +3,7 @@ $$
 \texttt{fix}(\texttt{addOne}.\Lambda n.\lambda xs.\texttt{match}(xs,\texttt{ret}([]),y.ys.\\[-2mm]
   \hspace{2em} \texttt{shift}(\\[-2mm]
   \hspace{3em} \texttt{bind} \, zs \, = \, \texttt{addOne} \, [n-1] \, ys \, \texttt{in}\\[-2mm]
-  \hspace{3em} \texttt{bind} \, \_ \, =  \texttt{tick}[n-1|\langle 1 \rangle] \, \texttt{in}\\[-2mm]
+  \hspace{3em} \texttt{bind} \, \_ \, =  \texttt{tick}[n-1|\langle 1,0 \rangle] \, \texttt{in}\\[-2mm]
   \hspace{3em} \texttt{ret}((y+1)::zs)\\[-2mm]
   \hspace{2em})\\[-2mm]
 ))
