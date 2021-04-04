@@ -77,7 +77,7 @@ is a function into a pair, but here we
 sugar that into a pair of functions, which may be mutually recursive.  We
 denote the cost and value components by $(\cdot)_c$ and $(\cdot)_p$,
 respectively (this notation is explained in
-Section~\ref{sec:monadic-translation}), and charge one unit of cost for each
+\autoref{sec:monadic-translation}), and charge one unit of cost for each
 $::$ operation:
 \begin{small}
 \[
@@ -227,7 +227,7 @@ flipping a bit from 0 to 1, to be spent when flipping a bit from 1 to 0)
 to be automatically inferable in the general case---these policies are the part
 of an amortized analysis that requires the most cleverness.  To notate
 these policies, we use an \emph{intermediate language} $\lambda^A$
-(Section~\ref{sec:la}), which has ``effectful'' operations for
+(\autoref{sec:la}), which has ``effectful'' operations for
 generating and spending credits ($\waitname$ and $\discname$), as well
 as a modal type operator $!_\ell$ for associating credits with values
 (e.g.\ storing a credit with each 1 in a bit list).  The type~$!_\ell A$
@@ -267,14 +267,14 @@ corollary, we obtain that the amortized cost of running a program from
 $\lambda^A$ is bounded by the cost component of its translation into
 $\lambda^{\bbbc}$; for programs that use no external credits, this gives
 a bound on its actual cost as well.  The recurrence language, recurrence
-extraction and bounding theorem are described in Section~\ref{sec:cl}.
+extraction and bounding theorem are described in \autoref{sec:cl}.
 Next, we use a denotational semantics of the recurrence language in
 preorders, similar to~\cite{danner-et-al:icfp15}, to justify the
 consistency of the recurrence language $\le$ judgment, and to simplify
-and solve extracted recurrences (Section~\ref{sec:preorder}).
+and solve extracted recurrences (\autoref{sec:preorder}).
 
 The version of $\lambda^A$ and the recurrence extraction presented
-through Section~\ref{sec:preorder} allows a statically fixed number of
+through \autoref{sec:preorder} allows a statically fixed number of
 credits to be stored with each element of a data structure (e.g. 1
 credit on element of a list, so $n$ credits overall).  For some
 analyses, it is necessary to choose the number of credits stored with an
@@ -284,7 +284,7 @@ credits stored at each node in the tree is a function of the size of the
 subtree rooted at that node, which varies for different tree nodes.  To
 support such analyses, we extend $\lambda^A$
 with existential quantifiers over credit variables
-in Section~\ref{sec:ex}, and use them to code
+in \autoref{sec:ex}, and use them to code
 a portion of \citet{okasaki:purely-functional-data-structures}'s
 analysis of splay trees in our system.  
 
@@ -297,7 +297,7 @@ analysis of splay trees in our system.
 % extracted recurrence must be simplified and solved.  
 % We diagram the
 The process of extracting and solving a recurrence in diagrammed in
-Figure~\ref{fig:pipeline}.
+\autoref{fig:pipeline}.
 % , where the first and last steps are manual and
 % the middle two are automatic.  
 %% %: the manual annotation of a program in
@@ -307,7 +307,7 @@ Figure~\ref{fig:pipeline}.
 %% and solving, as illustrated
 While automation of the annotation and solving steps
 is a worthwhile goal (something we discuss in
-Section~\ref{sec:future-work}),
+\autoref{sec:future-work}),
 % , and there are interesting
 % questions about how to automate the annotation and solution steps, 
 our
@@ -325,7 +325,7 @@ sophisticated techniques.  Moreover, though this technique is less
 automated than others, it can handle at least some examples that
 existing techniques cannot---to our knowledge, splay trees cannot be
 analyzed by the existing automatic techniques.
-We give a detailed comparison with related work in Section~\ref{sec:related-work}.
+We give a detailed comparison with related work in \autoref{sec:related-work}.
 %% Relative to the previous work on both linear type systems for amortized
 %% analysis and formal recurrence extraction, the main contribution of this
 %% paper is the combination of these two ingredients: the design of a
@@ -602,7 +602,7 @@ transfer to further duplicate the $M : !^k_\ell A$ --- this is required to
 prove a fusion law below, for example.  To support this,
 we parameterize the $\texttt{transfer}$ term
 by another number, $k'$, arriving at the version of the rule
-presented in Figure~\ref{fig:la-ty-rules}, which should be thought of as
+presented in \autoref{fig:la-ty-rules}, which should be thought of as
 eliminating $k'$ copies of a $!^k_\ell A$ at once.
 The rules for other positive types ($\oplus,\otimes$) similarly permit elimination of multiple copies at
 once.
@@ -697,7 +697,7 @@ generally interested in programs that use finitely many credits.
 %% resource terms with $a,b$. The introduction rule for $!^\infty_0$ says
 %% that $\cdot \vdash_{\infty \cdot a} \save \infty 0 M : !^\infty_0 A$
 %% when $\cdot \vdash_a M : A$. If $a \neq 0$, then $\infty \cdot a =
-%% \infty$, which as we will see in Section~\ref{sec:cl}, will make the
+%% \infty$, which as we will see in \autoref{sec:cl}, will make the
 %% recurrence we extract trivial. However, if $a = 0$, then $\infty \cdot
 %% a = 0$, and so $\cdot \vdash_0 \save \infty 0 M : !^\infty_0 A$, and
 %% hence the term uses no credit. \textbf{This section could be cleaned
@@ -752,7 +752,7 @@ to further thunk the recursive result $C$ here.
 intermediate language}} \label{ssec:la-sem}
 
 We present a call-by-value big-step operational semantics for
-$\lambda^A$ in Figure~\ref{fig:la-sem-rules}, whose primary judgment
+$\lambda^A$ in \autoref{fig:la-sem-rules}, whose primary judgment
 form is $M \downarrow^{(n,r)} v$, which means that $M$ evaluates to the
 value $v$ with cost $(n,r)$.  The first component of the cost, $n$ (a
 non-negative number) indicates the \textit{real cost} of evaluating $M$,
@@ -787,7 +787,7 @@ under erasure, while $\texttt{create}$ increase the amortized cost only.
 \end{figure}
 
 As discussed in
-Section~\ref{ssec:wdt}, $\wait \ell M$ creates $\ell$ credits for $M$ to
+\autoref{ssec:wdt}, $\wait \ell M$ creates $\ell$ credits for $M$ to
 use for the price of $\ell$ units of time cost, whereas
     %% When $M \downarrow^{(n,r)} v$, then $\wait \ell M \downarrow^{(n,r +
     %%   \ell)} v$. If $M$ evaluates with an amortized cost of $n + r$,
@@ -836,7 +836,7 @@ $M$ $k'$ times in the conclusion.  The other positive elimination forms are simi
 % %% The other nonstandard aspect of
 % %% \texttt{nrec} is the fact that the base case is suspended
 % %% (\textbf{better way to say this?}). This is due to technical details of
-% %% how the bounding theorem (Theorem~\ref{thm:bounding}) is proved.
+% %% how the bounding theorem (\autoref{thm:bounding}) is proved.
 % The only other non-standard aspect is that recursive call in the
 % successor case is delayed (the $\lambda \_. \ldots$), which is designed
 % so that a case analysis that does not use the recursive call will have
@@ -862,7 +862,7 @@ $M$ $k'$ times in the conclusion.  The other positive elimination forms are simi
 %% ``negative pair" of the tail of the list, and the recursive call on the
 %% tail-- this allows the step function to use either the tail or the
 %% recursive call, sidestepping the credit multi-use issue discussed in
-%% Section~\ref{sec:ns-rules}. The result of this function evaluation is
+%% \autoref{sec:ns-rules}. The result of this function evaluation is
 %% then returned as the final value.
 
 \subsection{Syntactic Properties}
@@ -904,7 +904,7 @@ asserting that $\cdot \vdash_{a+r} v : A$).  The proofs of the following are
 relatively straightforward and may be found
 %\begin{icfp2020}in the full version of this
 %paper~\citep{cutler-et-al:icfp2020-full}.\end{icfp2020}
-Appendix~\ref{appendix:b}.%\end{arxiv}
+\autoref{appendix:b}.%\end{arxiv}
 
 
 \begin{restatable}[Preservation Bound]{theorem}{pres}
@@ -934,9 +934,9 @@ If $\cdot \vdash_a v : \N$, then $\cdot \vdash_0 v : \N$
 \end{figure}
 
 As an example, we translate the binary counter program from
-Section~\ref{sec:intro} to $\lambda^A$, decorating the program with
+\autoref{sec:intro} to $\lambda^A$, decorating the program with
 \createname, \spendname, \savename, and \xfername\/ in order to emulate the
-analysis described in Section~\ref{sec:intro}.  Since the analysis
+analysis described in \autoref{sec:intro}.  Since the analysis
 stores credits on 1 bits, the type of bits is $\texttt{bit} = 1 \oplus
 !^1_1 1$; a value $\inl {(\,)}$ represents a $0$ bit, and a value $\inr
 {(\save 1 1 {(\, )})}$ represents a $1$~bit, with a credit attached. A
@@ -948,7 +948,7 @@ $0$ to $1$ or vice versa. Next, to handle the credits, we
 $\createname$ and subsequently $\texttt{save}$ a credit when we
 flip a bit from $0$ to $1$, and $\xfername$ then $\spendname$
 when flipping bits from $0$ to $1$.
-This annotation is shown in Figure~\ref{fig:bc-term} -- for simplicity, we use \texttt{inc} as a meta-level name for the term
+This annotation is shown in \autoref{fig:bc-term} -- for simplicity, we use \texttt{inc} as a meta-level name for the term
 implementing the function, so its occurrence in \texttt{set} really means
 a copy of that entire term (to do this at the object level, we could
 alternatively think of a top-level definition of \texttt{inc} as binding
@@ -969,7 +969,7 @@ an infinite-use variable).
 %% to evaluate, and so substituting it into $\texttt{set}$ with a mediating
 %% \texttt{transfer} in between incurs no extra cost. The annotated
 %% $\lambda^A$ terms for the binary counter are presented in
-%% Figure~\ref{fig:bc-term}.  
+%% \autoref{fig:bc-term}.  
 
 \section{Recurrence Language \texorpdfstring{$\lambda^\bbbc$}{}, Amortized Recurrence Extraction, and Bounding Theorem} \label{sec:cl}
 
@@ -987,7 +987,7 @@ take to be integers).  Formally, $\bbbc$ can be any commutative ring
 with an $\infty$ element, the typical example being the (``tropical'')
 max-plus ring on the integers, i.e. integers with addition and binary
 maxes.  Some of the typing rules for $\lambda^\bbbc$ are presented in
-Figure~\ref{fig:lc-rules}.
+\autoref{fig:lc-rules}.
 
 Relative to our previous work, the main conceptual change for supporting
 amortized analysis is that, instead of extracting recurrences for the
@@ -1031,17 +1031,17 @@ the cost of e.g.\ a function application depends on the size of the argument
 itself, not just its cost.  A recurrence extraction of this form can be
 packaged as a monadic translation into the writer monad $\bbbc \times A$.  
 
-As discussed in Section~\ref{sec:intro}, the proper notion of size for a
+As discussed in \autoref{sec:intro}, the proper notion of size for a
 specific datatype may vary from analysis to analysis. To this end, we
 follow~\cite{danner-et-al:icfp15} in deferring the
 abstraction of values as sizes to denotational semantics of
-$\lambda^\bbbc$ defined in Section~\ref{sec:preorder}, which allows the
+$\lambda^\bbbc$ defined in \autoref{sec:preorder}, which allows the
 same recurrence extraction and bounding theorem to be reused for
 multiple models with different notions of size.
 
 We call the pair of a cost and a potential a \textit{complexity}.  The
 translation consists of three separate functions, the definitions of
-which are shown in Figure~\ref{fig:rec-extr}. Firstly, $\angles{\cdot}$
+which are shown in \autoref{fig:rec-extr}. Firstly, $\angles{\cdot}$
 takes a type $A$ in $\lambda^A$ and maps it to the type $\angles{A}$
 whose elements are the potentials of type $A$. We extend this to contexts pointwise:
 $\angles{\Gamma,x : A} = \angles{\Gamma},x:\angles{A}$.
@@ -1146,7 +1146,7 @@ We comment on some of the less obvious aspects of this translation:
 \subsection{Recurrence Language Inequality Judgment}\label{sec:so}
 
 $\lambda^\bbbc$ has a syntactic inequality judgment $\Gamma
-\vdash E_1 \leq_T E_2$ (Figure~\ref{fig:syn-ord}), which intuitively means
+\vdash E_1 \leq_T E_2$ (\autoref{fig:syn-ord}), which intuitively means
 that the recurrence $E_1$ is bounded above by $E_2$.  For now, we
 include only those inequalities that are necessary to prove the
 bounding theorem; this allows for the most models of the
@@ -1256,12 +1256,12 @@ theorems can be found
 %\begin{icfp2020}in the full version of this
 %paper~\citep{cutler-et-al:icfp2020-full}.\end{icfp2020}
 %\begin{arxiv}
-in Appendix~\ref{appendix:b}.%\end{arxiv}
-% \processifversion{arxiv}{in Appendix~\ref{sec:appendix}.}
+in \autoref{appendix:b}.%\end{arxiv}
+% \processifversion{arxiv}{in \autoref{sec:appendix}.}
 % \processifversion{icfp2020}{in the full version of this
 % paper~\citep{cutler-et-al:icfp2020-full}.}
 
-First, we have an analogue of Theorem~\ref{thm:nat-strengthening}:
+First, we have an analogue of \autoref{thm:nat-strengthening}:
 
 \begin{theorem}[$\N$-strengthening]
 For all $\cdot \vdash_a v : \N$, if $v \valbd^{\N,a} E$, then $v \valbd^{\N,0} E$.
@@ -1280,7 +1280,7 @@ Second, we can weaken a bound by recurrence language inequality:
 %% \input{proofs/weakening}
 
 Next, we have an analogue of resource weakening in
-Theorem~\ref{thm:la-structural}:
+\autoref{thm:la-structural}:
 
 \begin{restatable}[Credit Weakening]{theorem}{credwkn}
 If $a_1 \leq a_2$, then:
@@ -1325,8 +1325,8 @@ If $\cdot \vdash_0 M : A$ and $M \downarrow^{(n,r)} v$ then $n \le
 \norm{M}_c$.
 \end{corollary}
 \begin{proof}
-By Theorem~\ref{thm:bounding}, we have $n \le \norm{M}_c - r$, but by
-preservation~(Theorem~\ref{thm:pres}), we have that $0 + r \ge 0$, so
+By \autoref{thm:bounding}, we have $n \le \norm{M}_c - r$, but by
+preservation~(\autoref{thm:pres}), we have that $0 + r \ge 0$, so
 $n \le \norm{M}_c$.  
 \end{proof}
 
@@ -1340,8 +1340,8 @@ $n \le \norm{M}_c$.
 \end{figure}
 
 As an example, the binary counter program in $\lambda^A$
-(Figure~\ref{fig:bc-term}) is translated by the recurrence extraction
-translation to the terms in Figure~\ref{fig:bc-rec}.
+(\autoref{fig:bc-term}) is translated by the recurrence extraction
+translation to the terms in \autoref{fig:bc-rec}.
 Next, we will use a denotational semantics of the recurrence language to
 simplify these recurrences to the desired closed form.
 
@@ -1364,7 +1364,7 @@ here, and highlight the differences from \cite{hudson}, which gives a
 similar presentation with mechanized proofs.
 
 The semantics of types and terms is given in
-Figure~\ref{fig:sem-interp}, omitting function and product types, which are interpreted using the standard cartesian product and exponential objects of preorders.  For each type $A$ of $\lambda^\bbbc$, we
+\autoref{fig:sem-interp}, omitting function and product types, which are interpreted using the standard cartesian product and exponential objects of preorders.  For each type $A$ of $\lambda^\bbbc$, we
 associate a partially ordered set $\scott{A}$ equipped with a top
 element ($\infty$) and binary maximums ($\vee$) for which the top
 element is an annihilator.
@@ -1403,7 +1403,7 @@ set of monotone maps between posets $A$ and $B$.
   \label{fig:sem-interp}
 \end{figure}
 
-In Figure~\ref{fig:sem-interp}, we show some representative cases of the
+In \autoref{fig:sem-interp}, we show some representative cases of the
 interpretation of terms for sums, natural numbers and lists.  For costs,
 the interpretation of cost constants and addition uses the elements and
 addition of $\mathbb{Z} \cup \infty$.
@@ -1451,7 +1451,7 @@ proofs of which
 %\begin{icfp2020}can be found in the full version of this
 %paper~\citep{cutler-et-al:icfp2020-full}.\end{icfp2020}
 %\begin{arxiv}
-are in Appendix~\ref{appendix:b}.%\end{arxiv}
+are in \autoref{appendix:b}.%\end{arxiv}
 
 %% The majority of the cases for the following theorems are formally
 %% verified in Hudson (\cite{hudson}), and so we omit all but the new
@@ -1476,10 +1476,10 @@ If $\Gamma \vdash E \leq E'$, then for all $\gamma \in \scott{\Gamma}$, $\scott{
 
 \subsection{Binary Counter Conclusion}
 
-We interpret the binary counter recurrences from Figure~\ref{fig:bc-rec}
+We interpret the binary counter recurrences from \autoref{fig:bc-rec}
 in preorders by unfolding the definitions in
-Figure~\ref{fig:sem-interp}; the result is shown in
-Figure~\ref{fig:bc-poset}.  For the function \texttt{inc}, this yields a
+\autoref{fig:sem-interp}; the result is shown in
+\autoref{fig:bc-poset}.  For the function \texttt{inc}, this yields a
 monotone map $\scott{\norm{\texttt{inc}}_p} \in \Hom(1,\N \to \Z \times
 \N)$, which is (essentially) a function from an input list size to the
 cost of evaluation and the length of the output.  For the function
@@ -1491,7 +1491,7 @@ evaluation and the length of the output.
 % This discussion is dep'd, since we inline \scott{\norm{inc}_p} into the defn of set in all 3 figures.
 %For \texttt{set}, we are left with a map $\scott{\norm{\texttt{set}}} \in \Hom(1 \times (\N \to \N \times N),\N \times (\N \to \N \times \N))$ which takes an increment function as an argument and returns a function from numbers to a costs and lengths of output. 
 % Dep'd Because of inlining 
-%The terms in Figure~\ref{fig:bc-poset} are slightly different from this- we substitute $\norm{\texttt{inc}}_p$ into the body of $\norm{\texttt{set}}$ and then apply Theorem~\ref{thm:sem-subst} in order to make the simplification a bit easier. 
+%The terms in \autoref{fig:bc-poset} are slightly different from this- we substitute $\norm{\texttt{inc}}_p$ into the body of $\norm{\texttt{set}}$ and then apply \autoref{thm:sem-subst} in order to make the simplification a bit easier. 
 %Overall, we are left with $\scott{\norm{\texttt{inc}}_p} \in \Hom(1,\N \to \N \times \N)$ and $\scott{\norm{\texttt{set}}\left[\norm{\texttt{inc}}_p/inc\right]} \in \Hom(1,\N \times (\N \to \N \times \N))$
 
 \begin{figure}
@@ -1531,7 +1531,7 @@ for the true operational cost $m$ of evaluating $\texttt{set}(n)
 \downarrow^{(m,r)} v$, we have $m \le_\bbbc {\norm{\texttt{set}}_p}(n)_c$
 in terms of the syntactic preorder judgment in $\lambda^\bbbc$.  By the
 soundness of the interpretation in preorders
-(Theorem~\ref{thm:soundness-inequality}), we have that $m
+(\autoref{thm:soundness-inequality}), we have that $m
 \le_{\mathbb{Z} \sqcup \infty} \scott{\norm{\texttt{set}}_p}()(n)_c$ in
 the preorder model.  Therefore, by transitivity, we have $m \le 2n$ in
 the preorder model, so our technique proves that the true operational
@@ -1575,7 +1575,7 @@ The proofs of the results in this section
 %\begin{icfp2020}can be found in the full version of this
 %paper~\citep{cutler-et-al:icfp2020-full}.\end{icfp2020}
 %\begin{arxiv}
-are in Appendix~\ref{appendix:b}.%\end{arxiv}
+are in \autoref{appendix:b}.%\end{arxiv}
 
 %% This type of credit policy lends itself to a dependently-typed intermediate language, with judgments of the form $n : \N \vdash_{n + \texttt{valOf}(n)\cdot \ell} M : !^1_{n \cdot \ell} A$, where the amount of credit stored in a $!A$ could depend on some function of term variables. In order to simplify the presentation and focus on specifics of cost analysis rather than dependent types, we will take a simpler approach, which suffices to encode the examples that we are interested in.
 
@@ -1594,7 +1594,7 @@ The operational semantics is defined for terms with no free credit variables, so
   \label{fig:la-ex-rules}
 \end{figure}
 
-The typing rules and operational semantics for existential types are presented in Figure~\ref{fig:la-ex-rules}.
+The typing rules and operational semantics for existential types are presented in \autoref{fig:la-ex-rules}.
 The terms for existentials are standard $\texttt{pack}$/$\texttt{unpack}$ terms.
 The operational semantics of \texttt{pack} and \texttt{unpack} are also standard; because we only evaluate closed terms, the credit term being packed/unpacked with the value will always be a (closed) natural number $\ell$.
 
@@ -1604,7 +1604,7 @@ The operational semantics of \texttt{pack} and \texttt{unpack} are also standard
 
 %% We can subsequently use the \texttt{unpack} rule to take a package $M : \exists \alpha . A$, and allow for it to be used in a continuation term $\alpha|x : A \vdash N : C$. Crucially to the behavior as an existential, the $\alpha$ is not reified as $c$ when the package is unpacked, and the $\alpha$ cannot appear free in the motive type $C$.
 
-The rest of the rules for $\lambda^A$ are mostly unchanged, so we do not repeat them: they are obtained from the rules in Figure~\ref{fig:la-ty-rules} by carrying the credit variable context $\Delta$ through all of the rules, and,
+The rest of the rules for $\lambda^A$ are mostly unchanged, so we do not repeat them: they are obtained from the rules in \autoref{fig:la-ty-rules} by carrying the credit variable context $\Delta$ through all of the rules, and,
 in the $!^k_c$ modality and the \texttt{save}, \texttt{transfer},
 \texttt{create}, and \texttt{spend} terms, the natural number constants
 $\ell$ are generalized to credit terms $c$ constructed from these variables.
@@ -1634,17 +1634,17 @@ If $\cdot | \cdot \vdash_a M : A$ and $M \downarrow^{(n,r)} v$, then $a + r \geq
   \label{fig:la-ex}
 \end{figure}
 
-Recall that the recurrence extraction in Figure~\ref{fig:rec-extr}
+Recall that the recurrence extraction in \autoref{fig:rec-extr}
 erases the $!^k_\ell A$ modalities and translates $\wait \ell M$ and $\disc \ell M$ by adding/subtracting $\ell$ to/from the amortized cost.
 Since we now allow credit variables $\alpha$, such as those coming from unpacking an existential type, in the credit position of $\waitname$/$\discname$, the recurrence extraction will need to refer to the values chosen for $\alpha$ in order to know how much to add/subtract to/from the amortized cost.
 Thus, we add a type $\$$ to the recurrence language, the values of which are numbers of credits, represented by natural numbers.  The credit context $\Delta$ is translated to recurrence language variables of type $\$$
 (i.e. $\angles{\Delta,\alpha} = \angles{\Delta},\alpha : \$$), while existential types $\exists \alpha.A$ are translated to pairs  $\$ \times \angles{A}$.  A simple pair suffices because the $!$ modality is erased by $\angles{\cdot}$, and this is the only place where credit terms can occur in the syntax of types, so all occurrences of $\alpha$ under the binder are removed, and $\angles{A}$ is a closed type.
 
-We show the new and changed cases of recurrence extraction in Figure~\ref{fig:la-ex}.  The introduction and elimination rules for $\exists \alpha . A$ translate to the corresponding introduction and elimination forms for $\$ \times \angles{A}$.
+We show the new and changed cases of recurrence extraction in \autoref{fig:la-ex}.  The introduction and elimination rules for $\exists \alpha . A$ translate to the corresponding introduction and elimination forms for $\$ \times \angles{A}$.
 For \texttt{create} and \texttt{spend}, in principle, we would like the cost component of $\wait c M$ to be $c + \norm{M}_c$, but this will not type check, given that $c : \$$ but $\norm{M}_c : \bbbc$.
 Recalling that costs $\bbbc$, though axiomatized as a monoid with some operations, are morally integers, we add a coerction $\texttt{to}\mathbb{C} : \$ \to \bbbc$, which is morally the inclusion of natural numbers into integers.
 
-%% Most notably, this extraction, as shown in Figure~\ref{fig:lc-ex} necessitates that credit variables appear in recurrences. For example, the term $\alpha | \cdot \vdash_3 \pack \beta {\alpha + 2} M : \exists \alpha. A$ extracts to the recurrence $(\norm{M}_c,(\alpha + 2,\norm{M}_p))$.
+%% Most notably, this extraction, as shown in \autoref{fig:lc-ex} necessitates that credit variables appear in recurrences. For example, the term $\alpha | \cdot \vdash_3 \pack \beta {\alpha + 2} M : \exists \alpha. A$ extracts to the recurrence $(\norm{M}_c,(\alpha + 2,\norm{M}_p))$.
 %% For these recurrences to be well-typed, the the type-level context $\Delta$ must be demoted in the recurrence extraction to be included in the $\lambda^\bbbc$ term variable context. Once this is established, the extraction for \texttt{pack} and \texttt{unpack} is straightforwardly defined.
 
 \begin{restatable}[Extraction Preserves Types]{theorem}{extrsoundex}\label{thm:extr-sound-ex}
@@ -1672,7 +1672,7 @@ Using this notation, the bounding theorem is
 \label{thm:bounding-ex}
 If $\Delta | \Gamma \vdash_f M : A$, then $M \bdby^A \norm{M}$
 \end{restatable}
-\noindent and the cases which differ from the original Theorem~\ref{thm:bounding} are proved in the supplementary materials.
+\noindent and the cases which differ from the original \autoref{thm:bounding} are proved in the supplementary materials.
 
 
 \subsection{Splay Tree Analysis}
@@ -1681,7 +1681,7 @@ analyze splay trees; the complete formalism is given
 %\begin{icfp2020}in the full version of this
 %paper~\citep{cutler-et-al:icfp2020-full}.\end{icfp2020}
 %\begin{arxiv}
-in Appendix~\ref{appendix:b} (Figure~\ref{fig:trec-rules}).%\end{arxiv}
+in \autoref{appendix:b} (\autoref{fig:trec-rules}).%\end{arxiv}
 Following 
 Okasaki's presentation~\cite{okasaki:purely-functional-data-structures},
 the key operation is
@@ -1714,11 +1714,11 @@ However, we can write a recursive loop that spawns a number of credits
 dependent on a run-time value, and package this as a function
 $\texttt{spawn} : \N \loli \exists \alpha . !^1_\alpha 1$
 such that the $\alpha$ packed in the result of $\texttt{spawn}(n)$ is (the credit term representing) $n$.
-The implementation of \texttt{spawn}\/ is shown in Figure~\ref{fig:ghost-loop}---at a high level,
+The implementation of \texttt{spawn}\/ is shown in \autoref{fig:ghost-loop}---at a high level,
 the term loops $\texttt{create}_1$ in a $\N$-recursor, using a credit existential as a counter variable.
 In this example, and throughout this section, we use pattern-matching notation as syntactic sugar for the elimination rules for positive types like $\exists,!,\otimes$, with the convention that matching on the result of a thunked recursive call implicitly forces it.
 
-In Section~\ref{ssec:la-sem}, we argued that
+In \autoref{sec:la-sem}, we argued that
 the $n$ component in the operational cost semantics $M \downarrow^{n,r} v$ captures the actual operational cost of an erasure to simply-typed $\lambda$-calculus, as long as $\texttt{tick}$s in $\lambda^A$ are inserted for each STLC $\beta$-redex.  Because we do not include any \texttt{tick} terms in \texttt{spawn}, its abstract operational cost $n$ is zero.  Thus, to realize this cost semantics, $\texttt{spawn}$ must be erased before actually running the program.  Fortunately, a simple program optimization suffices to do this: translate $\lambda^A$ to simply-typed $\lambda$-calclus by dropping both the $\exists$ and $!$ types and the associated terms, at which point \texttt{spawn} has type $\N \to 1$; then replace all terms of type $1$ with the trivial value.
 That is, we think of \texttt{spawn} as a \emph{ghost loop} --- code that is meant for the extracted recurrence, but not intended to actually be run.  
 
@@ -1730,7 +1730,7 @@ The $\N$ argument caches the size of the tree, making the function $\texttt{size
 To support coding the \texttt{split} function described above, we directly add a recursor that performs a two-level pattern match,
 with cases for the empty tree, for a node with one child or the other empty and the other is another node, and for a node with two nodes as children; in the latter case, the recursor provides recursive calls on
 all four subtrees.  
-% The details are in the supplementary materials--- see Figure~\ref{fig:trec-rules}.  
+% The details are in the supplementary materials--- see \autoref{fig:trec-rules}.  
 
 % The details of this recursor along with its corresponding recurrence and proofs can be found in the Appendix-- but it is precisely what is required to write the \texttt{split} function in $\lambda^A$. Of course, the same can be accomplished with general recursion as handled in prior work~\cite{popl20}, but we instead opt for the ad hoc solution, rather than develop the theory of amortized analysis with general recursion.
 
@@ -1756,8 +1756,8 @@ The elements bigger than the pivot are $bigger$ and everything else from
 the original tree; we combine these together into a new tree, performing
 a rotation to put $y$ at the root.
 
-The $\lambda^A$ version of this term, presented in Figure~\ref{fig:split}, annotates the above code with some additional information about the sizes of trees, and with some code for manipulating credits.  The variables $x,y,z$ are the values of type $A$ at the root and its immediate children; these come with existentially-quantified numbers of credits $\alpha,\beta,\gamma$ ($\alpha$ credits are stored with $x$, $\beta$ with $y$, and $\gamma$ with $z$), and also with natural numbers caching the sizes of the subtrees that they are the roots of ($n_1,n_2,n_3$ respectively).
-The variables $a_{ij}$ stand for the four subtrees with their (suspended) recursive call outputs; we write $\texttt{split}(p,a_{11})$ for projecting and forcing the recursive call, and write $a_{ij}$ for projecting the other subtrees.  The credit manipulation involves spending the credits $\alpha$ and $\beta$ stored with $x$ and $y$ in the input tree (we do not spend $z$, because the $z$ node is left unchanged in the output), calculating the sizes of the new nodes $t'$ and $s'$ that will be part of the output, and \texttt{spawn}ing credits corresponding to $\varphi$ of these sizes. The term presented in Figure~\ref{fig:split} is one branch of one of the step functions passed to the $\texttt{treerec}$ which forms the outermost structure of \texttt{split}.
+The $\lambda^A$ version of this term, presented in \autoref{fig:split}, annotates the above code with some additional information about the sizes of trees, and with some code for manipulating credits.  The variables $x,y,z$ are the values of type $A$ at the root and its immediate children; these come with existentially-quantified numbers of credits $\alpha,\beta,\gamma$ ($\alpha$ credits are stored with $x$, $\beta$ with $y$, and $\gamma$ with $z$), and also with natural numbers caching the sizes of the subtrees that they are the roots of ($n_1,n_2,n_3$ respectively).
+The variables $a_{ij}$ stand for the four subtrees with their (suspended) recursive call outputs; we write $\texttt{split}(p,a_{11})$ for projecting and forcing the recursive call, and write $a_{ij}$ for projecting the other subtrees.  The credit manipulation involves spending the credits $\alpha$ and $\beta$ stored with $x$ and $y$ in the input tree (we do not spend $z$, because the $z$ node is left unchanged in the output), calculating the sizes of the new nodes $t'$ and $s'$ that will be part of the output, and \texttt{spawn}ing credits corresponding to $\varphi$ of these sizes. The term presented in \autoref{fig:split} is one branch of one of the step functions passed to the $\texttt{treerec}$ which forms the outermost structure of \texttt{split}.
 
 \begin{figure}
   \vspace{-0.1in}
@@ -1773,7 +1773,7 @@ To analyze splay trees, we pass this $\lambda^A$ term through recurrence extract
 If $t : \tree {\exists \alpha . !^\infty_\alpha A}$ is a splay tree with $\texttt{size}(t) = n$, then for any $v : A$, $\scott{\norm{\texttt{split}(t,v)}_c} \leq 1 + 2\varphi(\scott{\norm{\texttt{size}}_p(t)}) \in O(\lg n)$.
 \end{theorem}
 \begin{proof}
-As an example, we show the case for the code in Figure~\ref{fig:split}. The cost component of the extracted recurrence is
+As an example, we show the case for the code in \autoref{fig:split}. The cost component of the extracted recurrence is
 \[
 1-\alpha - \beta + \scott{\norm{\texttt{split}(p,a_{11})}} + \varphi(1 + n_{12} + n_3) + \varphi(2 + n_{big} + n_{12} + n_3)
 \]
