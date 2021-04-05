@@ -227,7 +227,9 @@ flipping a bit from 0 to 1, to be spent when flipping a bit from 1 to 0)
 to be automatically inferable in the general case---these policies are the part
 of an amortized analysis that requires the most cleverness.  To notate
 these policies, we use an \emph{intermediate language} $\lambda^A$
-(\autoref{sec:la}), which has ``effectful'' operations for
+(\autoref{sec:la}) \footnote{
+In an unfortunate coincidence, the recurrence extraction project including $\lambda^A$ was developed concurrently with the \lambdaamor project by disjoint sets of authors. This led to a name collision that we hope will not cause the reader too much grief.
+}, which has ``effectful'' operations for
 generating and spending credits ($\waitname$ and $\discname$), as well
 as a modal type operator $!_\ell$ for associating credits with values
 (e.g.\ storing a credit with each 1 in a bit list).  The type~$!_\ell A$
