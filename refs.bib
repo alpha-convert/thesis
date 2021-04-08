@@ -218,7 +218,7 @@ articleno = {Article 15},
 	year = {1975}
 }
 
-@inproceedings{rosendahl:auto_complexity_analysis,
+@inproceedings{rosendahl:auto-complexity-analysis,
 	author = {Rosendahl, Mads},
 	crossref = {proc:fpca89},
 	date-added = {2012-05-23 16:34:27 -0400},
@@ -990,3 +990,60 @@ edition = {ACM Programming Language Design and Implementation (PLDI) 2013},
       archivePrefix={arXiv},
       primaryClass={cs.PL}
 }
+
+@article{koth-et-al:icfp20,
+author = {Knoth, Tristan and Wang, Di and Reynolds, Adam and Hoffmann, Jan and Polikarpova, Nadia},
+title = {Liquid Resource Types},
+year = {2020},
+issue_date = {August 2020},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {4},
+number = {ICFP},
+url = {https://doi.org/10.1145/3408988},
+doi = {10.1145/3408988},
+abstract = {This article presents liquid resource types, a technique for automatically verifying the resource consumption of functional programs. Existing resource analysis techniques trade automation for flexibility – automated techniques are restricted to relatively constrained families of resource bounds, while more expressive proof techniques admitting value-dependent bounds rely on handwritten proofs. Liquid resource types combine the best of these approaches, using logical refinements to automatically prove precise bounds on a program’s resource consumption. The type system augments refinement types with potential annotations to conduct an amortized resource analysis. Importantly, users can annotate data structure declarations to indicate how potential is allocated within the type, allowing the system to express bounds with polynomials and exponentials, as well as more precise expressions depending on program values. We prove the soundness of the type system, provide a library of flexible and reusable data structures for conducting resource analysis, and use our prototype implementation to automatically verify resource bounds that previously required a manual proof.},
+journal = {Proc. ACM Program. Lang.},
+month = aug,
+articleno = {106},
+numpages = {29},
+keywords = {Automated amortized resource analysis, Refinement types}
+}
+
+@article{handley-et-al:popl20,
+author = {Handley, Martin A. T. and Vazou, Niki and Hutton, Graham},
+title = {Liquidate Your Assets: Reasoning about Resource Usage in Liquid Haskell},
+year = {2019},
+issue_date = {January 2020},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {4},
+number = {POPL},
+url = {https://doi.org/10.1145/3371092},
+doi = {10.1145/3371092},
+abstract = {Liquid Haskell is an extension to the type system of Haskell that supports formal reasoning about program correctness by encoding logical properties as refinement types. In this article, we show how Liquid Haskell can also be used to reason about program efficiency in the same setting. We use the system's existing verification machinery to ensure that the results of our cost analysis are valid, together with custom invariants for particular program contexts to ensure that the results of our analysis are precise. To illustrate our approach, we analyse the efficiency of a wide range of popular data structures and algorithms, and in doing so, explore various notions of resource usage. Our experience is that reasoning about efficiency in Liquid Haskell is often just as simple as reasoning about correctness, and that the two can naturally be combined.},
+journal = {Proc. ACM Program. Lang.},
+month = dec,
+articleno = {24},
+numpages = {27},
+keywords = {refinement types, static verification, resource analysis}
+}
+
+@InProceedings{mccarthy-et-al:flops16,
+author="McCarthy, Jay
+and Fetscher, Burke
+and New, Max
+and Feltey, Daniel
+and Findler, Robert Bruce",
+editor="Kiselyov, Oleg
+and King, Andy",
+title="A Coq Library for Internal Verification of Running-Times",
+booktitle="Functional and Logic Programming",
+year="2016",
+publisher="Springer International Publishing",
+address="Cham",
+pages="144--162",
+abstract="This paper presents a Coq library that lifts an abstract yet precise notion of running-time into the type of a function. Our library is based on a monad that counts abstract steps, controlled by one of the monadic operations. The monad's computational content, however, is simply that of the identity monad so programs written in our monad (that recur on the natural structure of their arguments) extract into idiomatic OCaml code. We evaluated the expressiveness of the library by proving that red-black tree insertion and search, merge sort, insertion sort, Fibonacci, iterated list insertion, BigNum addition, and Okasaki's Braun Tree algorithms all have their expected running times.",
+isbn="978-3-319-29604-3"
+}
+

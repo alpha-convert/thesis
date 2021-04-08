@@ -5,11 +5,19 @@ One particularly promising verification method based in interactive theorem prov
 
 In this work, we apply the approach of intrinsic verification to proving cost bounds of functional programs. Unfortunately, the settings in which intrinsic verification of extensional properties is traditionally performed--- dependently-typed proof assistants such as Coq \cite{coq}, Agda \cite{norell:afp08}, or F* \cite{swamy-et-al:pldi13}, to name a few--- are not good settings for verifying cost bounds of programs, since cost is not a first-class notion in their logics\footnote{
 Some dependent type theories such as Cost-Aware Type Theory (CATT) \cite{niu-harper:catt}, \textit{do} have first-class notions of cost, but there are no proof assistants built on top of them.
-}. Instead, the primary goal of this work is the development of \lambdaamorimpl, a domain-specific functional language which combines a first class notion of with a rich refinement type system to statically verify cost bounds of the programs written in it. By analogy to the behavioral invariants in the types of of traditional intrinsic analyses, programs written in \lambdaamor have types which enforce cost invariants. For instance, a function in \lambdaamorimpl could have a type like ``function from \texttt{nat} to \texttt{nat} which runs in no more than five steps". Crucially, these cost invariants are statically enforced by the type system: a certificate that a program in \lambdaamorimpl is type-correct is also a certificate that it is cost-correct. In this sense, programs written in \lambdaamorimpl \textit{are} cost analyses of themselves. This justifies an occasional reference to \lambdaamorimpl (or its core calculus) as allowing programmers to ``perform a cost analysis" of a program, ostensibly written elsewhere--- this amounts to simply re-writing the program in \lambdaamorimpl, with types that mirror the corresponding ``on-paper" analysis that would have been performed in \lambdaamorimpl's absence.
+}.
 
-To expand the class of possible cost analyses, \lambdaamorimpl supports (as the name implies) amortized analysis. This is enabled by adding types which classify values carrying certain amounts of potential. These cost types and potential types can be combined in nontrivial ways to express nontrivial amortized analyses, which is often required when deriving tight bounds involves breaking data structure abstraction boundaries.
+Instead, the primary goal of this work is the development of \lambdaamorimpl, a domain-specific functional language for cost verification which combines a first class notion of cost with a rich refinement type system to statically verify time bounds of the programs written in it. By analogy to the behavioral invariants in the types of of traditional intrinsic analyses, programs written in \lambdaamor have types which enforce cost invariants. For instance, a function in \lambdaamorimpl could have a type like ``function from \texttt{nat} to \texttt{nat} which runs in no more than five steps". To expand the class of possible cost analyses, \lambdaamorimpl supports (as the name implies) amortized analysis. This is enabled by adding types which classify values carrying certain amounts of potential. These cost types and potential types can be combined in nontrivial ways to express nontrivial amortized analyses, which is often required when deriving tight bounds involves breaking data structure abstraction boundaries. Crucially, these cost and potential invariants are statically enforced by the type system: a certificate that a program in \lambdaamorimpl is type-correct is also a certificate that it is cost-correct. In this sense, programs written in \lambdaamorimpl \textit{are} cost analyses of themselves. This justifies an occasional reference to \lambdaamorimpl (or its core calculus) as allowing programmers to ``perform a cost analysis" of a program, ostensibly written elsewhere--- this amounts to simply re-writing the program in \lambdaamorimpl, with types that mirror the corresponding ``on-paper" analysis that would have been performed in \lambdaamorimpl's absence.
 
-The core of \lambdaamorimpl derives from a type system called \lambdaamor \cite{rajani-et-al:popl21}. By and large, the creators of \lambdaamor were interested in it as a unifying foundational framework in which one could embed \textit{other} cost analysis languages: there are many axes along which one may design a type system for resource analysis, and \lambdaamor serves as a calculus in which all sorts can be be emulated. In this work, however, we primarily interest ourselves in \lambdaamor's usefulness as a core calculus of a programming language which allows its users to prove cost bounds on the programs they write in it. \lambdaamor on paper is expressive enough to assign amortized cost bounds for a wide class of functional programs, from the traditional examples of amortized analysis such as functional queues and binary counters, to fully general cost-polymorphic higher-order functions like \texttt{map} and \texttt{fold}, which aren't well handled by existing resource-analysis languages like Resource Aware ML \cite{hoffmann-et-al:cav12}. This power and flexibility makes \lambdaamor a perfect starting point to develop the core calculus of \lambdaamorimpl. Because of the unique unifying nature of \lambdaamor, \lambdaamorimpl sits at a minimally-explored point in the design space of full-fledged resource-aware languages by trading off some automation for a degree of control and expressiveness not found elsewhere in the literature. This allows \lambdaamorimpl to fufil its goal of being used in place of traditional pencil-and-paper resource analysis techniques. 
+
+While other functional languages with amortized cost analysis capabilities (and resource analysis more generally) do exist, \lambdaamorimpl sits at a minimally-explored point in the design space. Some languages like Resource Aware ML \cite{hoffmann-et-al:cav12} aim for full automation, at the cost of struggling to handle some common language features. Other languages like TiML \cite{wang-et-al:oopsla17:timl} or LRT \cite{koth-et-al:icfp20} attempt to strike a balance by giving up on a degree of automation and requiring annotations from the programmer in order to make gains in expressiveness. In contrast to these languages\footnote{
+A further comparison between \lambdaamorimpl and these languages along with others can be found in \autoref{sec:lambdaamor-related-work}
+}, \lambdaamorimpl emphasizes expressiveness above all else. While this comes at the cost of some automation, \lambdaamorimpl is still backed by SMT, and so all of the \textit{quantative} proof obligations are handled automatically. 
+
+The core of \lambdaamorimpl derives from a type system called \lambdaamor \cite{rajani-et-al:popl21}. By and large, the creators of \lambdaamor were interested in it as a unifying foundational framework in which one could embed \textit{other} cost analysis languages: there are many axes along which one may design a type system for resource analysis, and \lambdaamor serves as a calculus in which all sorts can be be emulated. In this work, however, we primarily interest ourselves in \lambdaamor's usefulness as a core calculus of a programming language which allows its users to prove cost bounds on the programs they write in it. \lambdaamor on paper is expressive enough to assign amortized cost bounds for a wide class of functional programs, from the traditional examples of amortized analysis such as functional queues and binary counters, to fully general cost-polymorphic higher-order functions like \texttt{map} and \texttt{fold}, which aren't well handled by existing resource-analysis languages like Resource Aware ML \cite{hoffmann-et-al:cav12}. This power and flexibility makes \lambdaamor a perfect starting point to develop the core calculus of \lambdaamorimpl.
+
+%\red{FIXME}
+%Because of the unique unifying nature of \lambdaamor, \lambdaamorimpl sits at a minimally-explored point in the design space of full-fledged resource-aware languages by trading off some automation for a degree of control and expressiveness not found elsewhere in the literature. This allows \lambdaamorimpl to fufil its goal of being used in place of traditional pencil-and-paper resource analysis techniques. 
 
 The main contribution of this work is the design and theory of a version of \lambdaamor called \dlambdaamor which is amenable to implementation. This is accomplished by cutting out a fragment of \lambdaamor, and restricting its syntax somewhat. In the end, our changes will have been minor. \dlambdaamor bears all of the same major features as \lambdaamor: a pair of modalities for cost and potential, an affine substructural type system for soundly tracking the potential (values with potential must not be duplicated), and refinement types for encoding potential functions which vary in the sizes of data structures. The major change is the introduction of a construct to selectively restrict the forms of potential functions, borrowed from Automated Amortized Resource Analysis (AARA) \cite{hoffmann-et-al:esop10}. However, despite this work in cutting out an implementable fragment, \dlambdaamor does not admit a direct implementation, as its typing rules (just like \lambdaamor's) are written in declarative style, from which we cannot immediately construct an algorithm for type-checking or type inference. 
 
@@ -1299,3 +1307,30 @@ The evaluation was performed on a 2018 MacBook Pro running OSX 10.13.6 with a 2.
 \caption{Benchmarks of \lambdaamorimpl}
 \label{fig:lambdaamorimpl-eval}
 \end{figure}
+
+\section{Related Work}
+\label{sec:lambdaamor-related-work}
+
+%Theorem proving cost analysis:
+% - mccarthy-et-al:flops16
+%  - Coq monad for cost analysis (not first class)
+% - Garden of forking paths
+%  - Another shallow embedding in coq with a similar cost monad, not first-class
+% - Danielsson
+%  - Another library
+% - (Bi)RelCost
+% - CATT
+%  - Could lead to a proof assistant
+% - Lazy scala??
+%  - https://dl.acm.org/doi/pdf/10.1145/3093333.3009874
+% - TiML
+%  - Ad-hoc, based on recurrence extraction.
+%  - Terminating, no GR
+% - RAML
+%  - Fully automated, but can't handle half the shit we can
+% - 
+% - Liquid resource types
+%   - No first-class potential types, attached to inductives like RAML
+%   - They do have value-dependence though.
+% - Granule, Idris 2 (QTT)
+% - LYA
