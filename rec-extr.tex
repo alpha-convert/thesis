@@ -1786,3 +1786,141 @@ By definition, $1 + n_{12} + n_3 = \scott{\norm{\texttt{size}}_p(t')}$ and $2 + 
 which Okasaki~\cite[Theorem 5.2]{okasaki:purely-functional-data-structures} proves is bounded by $1 + 2\varphi(\texttt{size}(t))$, as required.
 \end{proof}
 
+\section{Related Work}
+Techniques for extracting (asymptotic)
+cost information from high-level program source
+code is a project that is almost as old as studying programming languages.
+% (and here we will not even broach the subject of worst-case execution time
+% (WCET) analysis, which focuses on low-level timing analysis on specific
+% hardware).  
+For non-amortized analysis of
+functional languages, we have examples from the 1970s and
+1980s by \citet{wegbreit:cacm75}, \citet{lematayer:toplas88}, and
+Rosendahl~\cite{rosendahl:auto-complexity-analysis}.  The idea of
+simultaneously extracting information about cost and size, and defining the
+size of a function to be a function itself (leading to higher-order
+recurrences) has its roots in \citet{danner-royer:ats-lmcs},
+which in turn draws from ideas in \citet{shultis:complexity},
+\citet{sands:thesis}, and Van Stone~\cite{vanstone:thesis}.  Using
+bounded modal operators to describe resource usage goes back at least to
+\citet{girard-et-al:tcs92:bll}, and Orchard et~al.\ have
+recently incorporated these ideas into the Granule
+language~\cite{orchard-et-al:icfp19:graded-modal-types}.  Perhaps the
+work that is closest in spirit to ours is Benzinger's ACA system for
+analyzing call-by-name \textsc{Nuprl} programs~\cite{benzinger:tcs04}.  From
+a cost-annotated operational semantics, he extracts a ``symbolic semantics''
+that is similar in flavor to our recurrence language and extracted
+recurrences, although without amortization.  The symbolic semantics yields
+higher-order recurrences, which he reduces to first-order recurrences that
+can be analyzed with a computer algebra system.  
+% All of this work focuses on
+% upper bounds for worst-case cost and does not address settings in which
+% tight bounds for a composition of functions are not obtained by composing
+% the corresponding bounds.
+
+There is also extensive work on recurrence extraction from first-order
+imperative languages.  The COSTA project
+\citep{albert-et-al:jar11,albert-et-al:tcs12:cost-analysis,albert-et-al:tocl13:inference}
+takes Java bytecode as its source language, extracts cost relations
+(essentially, non-deterministic cost recurrences), and solves them for upper
+bounds.  In this line of work, \citet{alonso-blas-genaim:sas12} and
+\citet{flores-montoya:fm16} investigate the failure to derive tight upper
+bounds in settings where amortized analysis is typically deployed.  They
+trace the issue to the fact that typically cost relations do not depend on
+the results of the analyzed functions.
+% , and hence the computation of bounds
+% cannot make use of such information.  
+Making this possible allows more
+precise constraints which, when solved, yield tighter bounds.  The
+dependency on output corresponds roughly to total accumulated savings,
+% (in
+% the nomenclature of the physicist's approach to amortized analysis, the
+% potential of a value), 
+and they infer an appropriate potential function (in the terminology of the
+physicist's method),
+modulo a choice of templates.
+% that are used to guide the inference process.
+To analogize with our work, they delay the determination of the credit
+policy until solving for upper bounds of extracted recurrences, whereas we
+specify the credit policy as part of the source program, which directly
+yields a recurrence for cost that takes the policy into account.
+
+% I think this discussion of Alonso-Blas & Genaim is correct, but I'm not
+% entirely sure.
+
+Two recent approaches that handle amortized analysis for functional programs
+are Timed~ML (TiML, \cite{wang-et-al:oopsla17:timl}) and automatic amortized
+resource analysis (AARA,
+\cite{hoffmann-et-al:toplas12:multivariate-amortized,hoffmann-shao:esop15:parallel,hoffmann-et-al:popl17,niu-hoffmann:lpar18}).
+In TiML, ML type and function definitions are annotated with indices that
+convey size information.  The notion of size is left unspecified and
+the indices are very flexible, and can
+include constraints such as those required to define red-black trees.  Type
+inference generates verification conditions.  Depending on the details of
+the annotations, solving the verification conditions provides exact or
+asymptotic bounds on the cost of the original program.  The focus is on
+worst-case analysis, but the annotation language is sufficiently rich to
+encode the physicist's method of amortized analysis.  Although it is not
+part of their focus, the formalism does not appear to enable analysis of
+higher-order functions whose cost depends on the complexity behavior of the
+function arguments.
+
+AARA provides a type inference system for resource bound analysis of
+higher-order functional programs that incorporates amortization.  Credit
+allocation is built into the type system itself.
+% in such a way that unused
+% credits can be used in other parts of the typing.  
+Soundness says that the
+net credit change during evaluation is bounded by the net credit change
+described by the typing.  AARA focuses primarily on strict languages, but
+\citet{jost-et-al:jar17} use similar ideas to analyze programs
+under lazy evaluation.
+% , where amortization seems necessary for almost any
+% analysis (see, e.g.,
+% Okasaki~\cite{okasaki:purely-functional-data-structures}).  
+% To summarize the
+% technical difference between our approach and that of AARA, 
+% Whereas for us a typing
+% judgment $\Gamma\vdash_f\cdot  : A$ identifies credit usage and the term
+% determines credit allocation (via $\texttt{save}$, $\waitname$, $\discname$,
+% etc.), 
+In AARA, the credit allocation and usage is described
+in the type judgment.
+Type inference generates constraints, and the solution of these constraints
+is essentially a credit allocation strategy.  
+% A type can be inferred if a
+% bound can be defined in terms of a set of base functions for describing the
+% strategy.  
+Our approach describes usage in the type judgment, but
+requires the strategy to be explicit in the program (via 
+$\texttt{save}$, $\waitname$, $\discname$, etc.), which
+places a greater burden on the programmer.  However, reasoning about that
+strategy (e.g., establishing a credit invariant) in the semantics may
+provide more flexibility, though that requires more investigation.
+% One place this difference in detail plays out is where and how automation
+% may play a role.  For AARA, automation arises via a constraint-based type
+% inference algorithm, which determines the credit allocation strategy, and as
+% implemented, finds bounds if they can be defined in terms of a set of base
+% functions for describing the strategy.  For the approach described here,
+% automation could arise in the solution of the extracted recurrences, which
+% does not \emph{a priori} depend on a pre-defined set of base functions.
+% Solving these recurrences is a project that requires future work.  It could
+% also be that defining the strategy in the intermediate language, and then
+% reasoning about that strategy (e.g., establishing a credit invariant) in the
+% semantics may provide more flexibility, though again that requires more
+% investigation.
+
+We note that the technical differences between TiML and AARA and our
+approach arise from a difference in what we might consider the
+philosophical underpinnings.  TiML and AARA introduce novel type systems
+with a goal of inferring cost bounds to the greatest extent possible.  Those
+bounds are extracted as part of the type inference procedure.  This is not
+how most programmers conceptualize a cost analysis, and our
+interest is in staying as close to typical informal analyses as we can.
+While $\lambda^A$ is a novel type system, the novelty exists solely in order
+to make the programmer be explicit about how credits are allocated and used.
+This task is part of a banker's-method analysis, though it is usually stated
+informally (``put one credit on each~$1$ in the bit list'').  After that, it
+is extraction of ordinary (semantic) recurrences which one hopes to be able
+to bound using whatever methods are at the programmer's disposal.
+
