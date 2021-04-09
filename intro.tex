@@ -8,7 +8,9 @@
 
 As the importance of ubiquity of modern software increases, so too does its complexity. The burden of this complexity blowup lands squarely on the shoulders of software developers, who are asked to create increasingly intricate systems, with little extra help. In response to this, many developers have turned to languages and tooling to help ease the burden: this is exemplified by the rise of Rust and safe systems languages \citehere which provide safety guarantees, along with the explosion of interest in formally-verified software by way of theorem proving or other formal methods techniques \cite{ringer-et-al:qed}. While these practices go a long way to improve developer experience and confidence, they are limited in the domains of understanding that they improve. Notably, there are very few existing tools which help developers reason about the resource usage, algorithmic complexity, or performance of their software. The days when resource usage could be easily discerned from source code by eye are long gone, and yet very few techniques have stepped in to fill the void. Moreover, the techniques that software developers use to analyze algorithmic complexity in the absence of formal procedures, languages, or tooling are informal, fragile, and ad-hoc.
 
-The long-term goal of the field of language-based resource analysis is to create languages, tools, and methods which fill this gap by providing programmers with the capability to statically reason about the resource cost of the programs they write. In this thesis, we will restrict our focus along two axes. First, we will only consider a particular resource: run-time cost. While other well-known resources such as memory or energy are of interest, program cost is, in the opinion of the author, primary among all resources in terms of importance. Second, we will only consider typed functional programs: the compositional nature of functional programs and the structure provided by types lend themselves greatly to the approaches to cost analysis we consider. Additionally, the techniques will all have the flavor of \textit{amortized} analysis \cite{tarjan:amortized-complexity}, a technique which we discuss in depth in \autoref{sec:amortized-primer} below.
+The long-term goal of the field of language-based resource analysis is to create languages, tools, and methods which fill this gap by providing programmers with the capability to statically reason about the resource cost of the programs they write. In this thesis, we will restrict our focus along two axes. First, we will only consider a particular resource: run-time cost.
+% While other well-known resources such as memory or energy are of interest, program cost is, in the opinion of the author, primary among all resources in terms of importance. 
+Second, we will only consider typed functional programs: the compositional nature of functional programs and the structure provided by types lend themselves greatly to the approaches to cost analysis we consider. Additionally, the techniques will all have the flavor of \textit{amortized} analysis \cite{tarjan:amortized-complexity}, a technique which we discuss in depth in \autoref{sec:amortized-primer} below.
 
 
 %\subsection{Contributions}
@@ -21,6 +23,7 @@ Then, in \autoref{ch:rec-extr}, we move to considering a technique that function
 
 \red{Do I have to do attribution sentences here? This work was performed at ... with... funded by... presented at....}
 
+\red{W/ grant thanks}
 
 \section{Amortized Analysis Primer}
 \label{sec:amortized-primer}

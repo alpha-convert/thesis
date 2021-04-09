@@ -6,4 +6,12 @@
 \inferrule[WF-TCtxE]{ }{\Psi ; \Theta ; \Delta \vdash \cdot \; \texttt{wf}}
 
 \inferrule[WF-TCtxNE]{\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \Gamma, x : \tau \; \texttt{wf}}
+
+\\
+
+\inferrule[CS-Emp]
+{ }{\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \cdot}
+
+\inferrule[CS-Var]
+{x : \tau' \in \Gamma \\ \Psi ; \Theta ; \Delta \vdash \tau' \subty \tau\\ \Psi ; \Theta ; \Delta \vdash \Gamma \setminus \{x : \tau'\} \wknto \Gamma'}{\Psi ;\Theta ; \Delta \vdash \Gamma \wknto \Gamma', x : \tau}
 \end{mathpar}
