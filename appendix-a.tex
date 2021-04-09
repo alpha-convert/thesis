@@ -401,30 +401,30 @@
 \Theta ; \Delta \vdash I : \mathbb{N}\\
 \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] : \M \, \phi(I,\vec{p})\, 1
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] : \M \, (I,\vec{p})\, 1
 }
 
 \inferrule[T-Ret]
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret}\; e : \M \, \phi(I,\vec{0}) \, \tau
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret}\; e : \M \, (I,\vec{0}) \, \tau
 }
 
 \inferrule[T-Bind]
 {
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \M \, \phi(I,\vec{p})\, \tau_1\\
-\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2 : \M \, \phi(I,\vec{q})\, \tau_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \M \, (I,\vec{p})\, \tau_1\\
+\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2 : \M \, (I,\vec{q})\, \tau_2\\
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 : \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 : \M \, (I,\vec{p} + \vec{q})\, \tau_2
 }
 
 \inferrule[T-Release]
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [I | \vec{q}] \tau_1\\
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, (I,\vec{p} + \vec{q}) \, \tau_2\\
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, \phi(I,\vec{p}) \, \tau_2
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, (I,\vec{p}) \, \tau_2
 }
 
 \inferrule[T-Store]
@@ -433,7 +433,7 @@
 \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}\\
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau\\
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I|\vec{p}](e) : \M \, \phi(I,\vec{p}) \, ([I| \vec{p}] \, \tau)
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I|\vec{p}](e) : \M \, (I,\vec{p}) \, ([I| \vec{p}] \, \tau)
 }
 
 \inferrule[T-StoreConst]
@@ -441,23 +441,23 @@
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau\\
 \Theta ; \Delta \vdash I : \mathbb{N}\\
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e) : \M \, \phi(K,\texttt{const}(I)) \, ([I] \, \tau)
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e) : \M \, (K,\texttt{const}(I)) \, ([I] \, \tau)
 }
 
 \inferrule[T-ReleaseConst]
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [J] \tau_1\\
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, (I,\vec{p} + \texttt{const}(J)) \, \tau_2
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, \phi(I,\vec{p}) \, \tau_2
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, (I,\vec{p}) \, \tau_2
 }
 
 \inferrule[T-Shift]
 {
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \M \, \phi(I - 1,\lhd \vec{p}) \, \tau\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \M \, (I - 1,\lhd \vec{p}) \, \tau\\
 \Theta ; \Delta \vDash I \geq 1
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) : \M \, \phi(I,\vec{p}) \, \tau
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) : \M \, (I,\vec{p}) \, \tau
 }
 
 \inferrule[T-Sub]
