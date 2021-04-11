@@ -957,6 +957,39 @@ abstract = {Girard and Reynolds independently invented System F (a.k.a. the seco
   urldate = {2021-04-04}
 }
 
+@online{rust,
+  author = {{The Rust Core Team}},
+  title = {{Rust}},
+  year={2010 - 2021},
+  url = {http://rust-lang.org/},
+  urldate = {2021-04-08}
+}
+
+@online{d-lang,
+  author = {{The D Language Foundation}},
+  title = {{D}},
+  year={2007 - 2021},
+  url = {http://dlang.org/},
+  urldate = {2021-04-08}
+}
+
+@online{typescript,
+  author = {{Microsoft}},
+  title = {{TypeScript}},
+  year={2012 - 2021},
+  url = {http://typescriptlang.org/},
+  urldate = {2021-04-08}
+}
+
+@online{haskell,
+  author = {{The Coq Development Team}},
+  title = {{The Coq Proof Assistant}},
+  year={1989 - 2021},
+  url = {http://coq.inria.fr/},
+  urldate = {2021-04-04}
+}
+
+
 @inproceedings{norell:afp08,
 author = {Norell, Ulf},
 title = {Dependently Typed Programming in Agda},
@@ -1047,3 +1080,225 @@ abstract="This paper presents a Coq library that lifts an abstract yet precise n
 isbn="978-3-319-29604-3"
 }
 
+@inproceedings{cicek-et-al:pldi19,
+author = {\c{C}i\c{c}ek, Ezgi and Qu, Weihao and Barthe, Gilles and Gaboardi, Marco and Garg, Deepak},
+title = {Bidirectional Type Checking for Relational Properties},
+year = {2019},
+isbn = {9781450367127},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3314221.3314603},
+doi = {10.1145/3314221.3314603},
+abstract = {Relational type systems have been designed for several applications including information flow, differential privacy, and cost analysis. In order to achieve the best results, these systems often use relational refinements and relational effects to maximally exploit the similarity in the structure of the two programs being compared. Relational type systems are appealing for relational properties because they deliver simpler and more precise verification than what could be derived from typing the two programs separately. However, relational type systems do not yet achieve the practical appeal of their non-relational counterpart, in part because of the lack of a general foundation for implementing them.  In this paper, we take a step in this direction by developing bidirectional relational type checking for systems with relational refinements and effects. Our approach achieves the benefits of bidirectional type checking, in a relational setting. In particular, it significantly reduces the need for typing annotations through the combination of type checking and type inference. In order to highlight the foundational nature of our approach, we develop bidirectional versions of several relational type systems which incrementally combine many different components needed for expressive relational analysis.},
+booktitle = {Proceedings of the 40th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+pages = {533–547},
+numpages = {15},
+keywords = {relational type systems, type-and-effect systems, Bidirectional type-checking, refinement types},
+location = {Phoenix, AZ, USA},
+series = {PLDI 2019}
+}
+
+@inproceedings{de2008z3,
+  title={Z3: An efficient SMT solver},
+  author={De Moura, Leonardo and Bj{\o}rner, Nikolaj},
+  booktitle={International conference on Tools and Algorithms for the Construction and Analysis of Systems},
+  pages={337--340},
+  year={2008},
+  organization={Springer}
+}
+
+@inproceedings{lucassen1988polymorphic,
+  title={Polymorphic effect systems},
+  author={Lucassen, John M and Gifford, David K},
+  booktitle={Proceedings of the 15th ACM SIGPLAN-SIGACT symposium on Principles of programming languages},
+  pages={47--57},
+  year={1988}
+}
+
+@article{plotkin2002computational,
+  title={Computational effects and operations: An overview},
+  author={Plotkin, Gordon and Power, John},
+  year={2002}
+}
+
+@article{brady:jfp13,
+  title={Idris, a general-purpose dependently typed programming language: Design and implementation},
+  author={BRADY, EDWIN},
+  journal={Journal of Functional Programming},
+  volume={23},
+  number={5},
+  pages={552--593},
+  year={2013},
+  publisher={Cambridge University Press}
+}
+
+@misc{danner2021denotational,
+      title={Denotational semantics as a foundation for cost recurrence extraction for functional languages}, 
+      author={Norman Danner and Daniel R. Licata},
+      year={2021},
+      eprint={2002.07262},
+      archivePrefix={arXiv},
+      primaryClass={cs.PL}
+}
+
+@inproceedings{10.1145/2628136.2628161,
+author = {Vazou, Niki and Seidel, Eric L. and Jhala, Ranjit and Vytiniotis, Dimitrios and Peyton-Jones, Simon},
+title = {Refinement Types for Haskell},
+year = {2014},
+isbn = {9781450328739},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2628136.2628161},
+doi = {10.1145/2628136.2628161},
+abstract = {SMT-based checking of refinement types for call-by-value languages is a well-studied subject. Unfortunately, the classical translation of refinement types to verification conditions is unsound under lazy evaluation. When checking an expression, such systems implicitly assume that all the free variables in the expression are bound to values. This property is trivially guaranteed by eager, but does not hold under lazy, evaluation. Thus, to be sound and precise, a refinement type system for Haskell and the corresponding verification conditions must take into account which subset of binders actually reduces to values. We present a stratified type system that labels binders as potentially diverging or not, and that (circularly) uses refinement types to verify the labeling. We have implemented our system in LIQUIDHASKELL and present an experimental evaluation of our approach on more than 10,000 lines of widely used Haskell libraries. We show that LIQUIDHASKELL is able to prove 96% of all recursive functions terminating, while requiring a modest 1.7 lines of termination-annotations per 100 lines of code.},
+booktitle = {Proceedings of the 19th ACM SIGPLAN International Conference on Functional Programming},
+pages = {269–282},
+numpages = {14},
+location = {Gothenburg, Sweden},
+series = {ICFP '14}
+}
+
+@article{vazou-et-al:icfp14,
+author = {Vazou, Niki and Seidel, Eric L. and Jhala, Ranjit and Vytiniotis, Dimitrios and Peyton-Jones, Simon},
+title = {Refinement Types for Haskell},
+year = {2014},
+issue_date = {September 2014},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {49},
+number = {9},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2692915.2628161},
+doi = {10.1145/2692915.2628161},
+abstract = {SMT-based checking of refinement types for call-by-value languages is a well-studied subject. Unfortunately, the classical translation of refinement types to verification conditions is unsound under lazy evaluation. When checking an expression, such systems implicitly assume that all the free variables in the expression are bound to values. This property is trivially guaranteed by eager, but does not hold under lazy, evaluation. Thus, to be sound and precise, a refinement type system for Haskell and the corresponding verification conditions must take into account which subset of binders actually reduces to values. We present a stratified type system that labels binders as potentially diverging or not, and that (circularly) uses refinement types to verify the labeling. We have implemented our system in LIQUIDHASKELL and present an experimental evaluation of our approach on more than 10,000 lines of widely used Haskell libraries. We show that LIQUIDHASKELL is able to prove 96% of all recursive functions terminating, while requiring a modest 1.7 lines of termination-annotations per 100 lines of code.},
+journal = {SIGPLAN Not.},
+month = aug,
+pages = {269–282},
+numpages = {14}
+}
+
+
+@inproceedings{10.1145/2737924.2737955,
+author = {Carbonneaux, Quentin and Hoffmann, Jan and Shao, Zhong},
+title = {Compositional Certified Resource Bounds},
+year = {2015},
+isbn = {9781450334686},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2737924.2737955},
+doi = {10.1145/2737924.2737955},
+abstract = { This paper presents a new approach for automatically deriving worst-case resource bounds for C programs. The described technique combines ideas from amortized analysis and abstract interpretation in a unified framework to address four challenges for state-of-the-art techniques: compositionality, user interaction, generation of proof certificates, and scalability. Compositionality is achieved by incorporating the potential method of amortized analysis. It enables the derivation of global whole-program bounds with local derivation rules by naturally tracking size changes of variables in sequenced loops and function calls. The resource consumption of functions is described abstractly and a function call can be analyzed without access to the function body. User interaction is supported with a new mechanism that clearly separates qualitative and quantitative verification. A user can guide the analysis to derive complex non-linear bounds by using auxiliary variables and assertions. The assertions are separately proved using established qualitative techniques such as abstract interpretation or Hoare logic. Proof certificates are automatically generated from the local derivation rules. A soundness proof of the derivation system with respect to a formal cost semantics guarantees the validity of the certificates. Scalability is attained by an efficient reduction of bound inference to a linear optimization problem that can be solved by off-the-shelf LP solvers. The analysis framework is implemented in the publicly-available tool C4B. An experimental evaluation demonstrates the advantages of the new technique with a comparison of C4B with existing tools on challenging micro benchmarks and the analysis of more than 2900 lines of C code from the cBench benchmark suite. },
+booktitle = {Proceedings of the 36th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+pages = {467–478},
+numpages = {12},
+keywords = {Amortized Analysis, Resource Bound Analysis, Program Logic, Static Analysis, Quantitative Verification, LP Solving},
+location = {Portland, OR, USA},
+series = {PLDI '15}
+}
+
+@article{carbonneaux-et-al:pldi15,
+author = {Carbonneaux, Quentin and Hoffmann, Jan and Shao, Zhong},
+title = {Compositional Certified Resource Bounds},
+year = {2015},
+issue_date = {June 2015},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {50},
+number = {6},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2813885.2737955},
+doi = {10.1145/2813885.2737955},
+abstract = { This paper presents a new approach for automatically deriving worst-case resource bounds for C programs. The described technique combines ideas from amortized analysis and abstract interpretation in a unified framework to address four challenges for state-of-the-art techniques: compositionality, user interaction, generation of proof certificates, and scalability. Compositionality is achieved by incorporating the potential method of amortized analysis. It enables the derivation of global whole-program bounds with local derivation rules by naturally tracking size changes of variables in sequenced loops and function calls. The resource consumption of functions is described abstractly and a function call can be analyzed without access to the function body. User interaction is supported with a new mechanism that clearly separates qualitative and quantitative verification. A user can guide the analysis to derive complex non-linear bounds by using auxiliary variables and assertions. The assertions are separately proved using established qualitative techniques such as abstract interpretation or Hoare logic. Proof certificates are automatically generated from the local derivation rules. A soundness proof of the derivation system with respect to a formal cost semantics guarantees the validity of the certificates. Scalability is attained by an efficient reduction of bound inference to a linear optimization problem that can be solved by off-the-shelf LP solvers. The analysis framework is implemented in the publicly-available tool C4B. An experimental evaluation demonstrates the advantages of the new technique with a comparison of C4B with existing tools on challenging micro benchmarks and the analysis of more than 2900 lines of C code from the cBench benchmark suite. },
+journal = {SIGPLAN Not.},
+month = jun,
+pages = {467–478},
+numpages = {12},
+keywords = {Program Logic, Resource Bound Analysis, LP Solving, Static Analysis, Quantitative Verification, Amortized Analysis}
+}
+
+
+@article{chargueraud-et-al:jar19,
+	Abstract = {Union-Find is a famous example of a simple data structure whose amortized asymptotic time complexity analysis is nontrivial. We present a Coq formalization of this analysis, following Alstrup et al.'s recent proof. Moreover, we implement Union-Find as an OCaml library and formally endow it with a modular specification that offers a full functional correctness guarantee as well as an amortized complexity bound. In order to reason in Coq about imperative OCaml code, we use the CFML tool, which implements Separation Logic for a subset of OCaml, and which we extend with time credits. Although it was known in principle that amortized analysis can be explained in terms of time credits and that time credits can be viewed as resources in Separation Logic, we believe our work is the first practical demonstration of this approach. Finally, in order to explain the meta-theoretical foundations of our approach, we define a Separation Logic with time credits for an untyped call-by-value {\$}{\$}{$\backslash$}lambda {\$}{\$}-calculus, and formally verify its soundness.},
+	Author = {Chargu{\'e}raud, Arthur and Pottier, Fran{\c c}ois},
+	Da = {2019/03/01},
+	Date-Added = {2021-04-09 03:32:44 +0000},
+	Date-Modified = {2021-04-09 03:32:44 +0000},
+	Doi = {10.1007/s10817-017-9431-7},
+	Id = {Chargu{\'e}raud2019},
+	Isbn = {1573-0670},
+	Journal = {Journal of Automated Reasoning},
+	Number = {3},
+	Pages = {331--365},
+	Title = {Verifying the Correctness and Amortized Complexity of a Union-Find Implementation in Separation Logic with Time Credits},
+	Ty = {JOUR},
+	Url = {https://doi.org/10.1007/s10817-017-9431-7},
+	Volume = {62},
+	Year = {2019},
+	Bdsk-Url-1 = {https://doi.org/10.1007/s10817-017-9431-7},
+	Bdsk-Url-2 = {http://dx.doi.org/10.1007/s10817-017-9431-7}}
+
+
+@misc{li2021reasoning,
+      title={Reasoning about the garden of forking paths}, 
+      author={Yao Li and Li-yao Xia and Stephanie Weirich},
+      year={2021},
+      eprint={2103.07543},
+      archivePrefix={arXiv},
+      primaryClass={cs.PL}
+}
+
+@article{ohearn:popl20,
+author = {O'Hearn, Peter W.},
+title = {Incorrectness Logic},
+year = {2019},
+issue_date = {January 2020},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {4},
+number = {POPL},
+url = {https://doi.org/10.1145/3371078},
+doi = {10.1145/3371078},
+abstract = {Program correctness and incorrectness are two sides of the same coin. As a programmer, even if you would like to have correctness, you might find yourself spending most of your time reasoning about incorrectness. This includes informal reasoning that people do while looking at or thinking about their code, as well as that supported by automated testing and static analysis tools. This paper describes a simple logic for program incorrectness which is, in a sense, the other side of the coin to Hoare's logic of correctness.},
+journal = {Proc. ACM Program. Lang.},
+month = dec,
+articleno = {10},
+numpages = {32},
+keywords = {none}
+}
+
+@inproceedings{atkey:lics18,
+author = {Atkey, Robert},
+title = {Syntax and Semantics of Quantitative Type Theory},
+year = {2018},
+isbn = {9781450355834},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3209108.3209189},
+doi = {10.1145/3209108.3209189},
+abstract = {We present Quantitative Type Theory, a Type Theory that records usage information for each variable in a judgement, based on a previous system by McBride. The usage information is used to give a realizability semantics using a variant of Linear Combinatory Algebras, refining the usual realizability semantics of Type Theory by accurately tracking resource behaviour. We define the semantics in terms of Quantitative Categories with Families, a novel extension of Categories with Families for modelling resource sensitive type theories.},
+booktitle = {Proceedings of the 33rd Annual ACM/IEEE Symposium on Logic in Computer Science},
+pages = {56–65},
+numpages = {10},
+keywords = {Type Theory, Linear Logic},
+location = {Oxford, United Kingdom},
+series = {LICS '18}
+}
+
+@article{choudhury-et-al:popl21,
+author = {Choudhury, Pritam and Eades III, Harley and Eisenberg, Richard A. and Weirich, Stephanie},
+title = {A Graded Dependent Type System with a Usage-Aware Semantics},
+year = {2021},
+issue_date = {January 2021},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {5},
+number = {POPL},
+url = {https://doi.org/10.1145/3434331},
+doi = {10.1145/3434331},
+abstract = {Graded Type Theory provides a mechanism to track and reason about resource usage in type systems. In this paper, we develop GraD, a novel version of such a graded dependent type system that includes functions, tensor products, additive sums, and a unit type. Since standard operational semantics is resource-agnostic, we develop a heap-based operational semantics and prove a soundness theorem that shows correct accounting of resource usage. Several useful properties, including the standard type soundness theorem, non-interference of irrelevant resources in computation and single pointer property for linear resources, can be derived from this theorem. We hope that our work will provide a base for integrating linearity, irrelevance and dependent types in practical programming languages like Haskell.},
+journal = {Proc. ACM Program. Lang.},
+month = jan,
+articleno = {50},
+numpages = {32},
+keywords = {heap semantics, Irrelevance, linearity, quantitative reasoning}
+}

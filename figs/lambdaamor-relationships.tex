@@ -1,0 +1,32 @@
+\tikzset
+{
+		line cap = butt ,
+		line join = bevel ,
+		arrows = -> ,
+		> = angle 60 ,
+		auto = left ,
+		text depth = 0.25ex , % needed for baseline alignment (TiKZ quirk)
+		align = center ,
+}
+
+\begin{tikzpicture}
+	% nodes
+	\node [draw] at (0,0) (lai)  {\lambdaamorimpl};
+	\node [draw] at ($(lai) + (4.5,0)$ ) (bla) {\bilambdaamor};
+	\node [draw] at ($(bla) + (4.5,0)$ ) (dla) {\dlambdaamor};
+	\node [draw] at ($(dla) + (3.8,0)$) (la) {\lambdaamor} ;
+	
+	\draw (dla) to node [auto] {Subset of} (la);
+	\draw (bla) to node [auto] {Algorithmizes} (dla);
+	\draw (lai) to node [auto] {Implements} (bla);
+	%\draw[dotted, loop above] (semantic) to node [auto] {Solve} (semantic);
+	
+	%\node (source) at (0 , 0) {source \\ language} ;
+	%\node (syntactic recurrence) at (3/2 , 0) {recurrence \\ language \\ (syntactic recurrence)} ;
+	%\node (semantic recurrence) at (5/2 , 0) {denotational  cost \\ semantics \\ (semantic recurrence)} ;
+	%\node [draw , dashed] (extraction) at ($ (source) + (4/6 , 0) $) {recurrence \\ extraction} ;
+	%\draw (source) to (extraction) ;
+	%\draw (extraction) to (syntactic recurrence) ;
+	%\draw (syntactic recurrence) to (semantic recurrence) ;
+	%\draw (syntactic recurrence) to node [auto] {$\scott{-}$} (semantic recurrence) ;
+\end{tikzpicture}
