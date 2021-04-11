@@ -7,4 +7,7 @@
 \\
 
 \inferrule{e_1 \downarrow v_1 \\ v_1 \Downarrow^{\kappa_1} v_1' \\ e_2[v_1'/x] \Downarrow v_2 \\ v_2 \Downarrow^{\kappa_2} v}{\texttt{bind} \, x \, = \, e_1 \, \texttt{in} \, e_2 \Downarrow^{\kappa_1 + \kappa_2} v}
+\\
+
+\inferrule{e \Downarrow v_1 \\ e_2[v_1/x] \Downarrow v_2 \\ v_2 \Downarrow^{\kappa} v_3}{\texttt{release} \, x \, = \, e \, \texttt{in} \, e' \Downarrow^{\kappa} v_3}
 \end{mathpar}
