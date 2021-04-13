@@ -1,4 +1,4 @@
-\textbf{SOMETHING IS MESSED UP WITH APPENDIX THEOREM NUMBERING... FIX THIS}
+%\textbf{SOMETHING IS MESSED UP WITH APPENDIX THEOREM NUMBERING... FIX THIS}
 \section{Rules of \dlambdaamor}
 
 \subsection{Wellformedness Judgments}
@@ -95,6 +95,9 @@
 
 \inferrule[K-TForall]{\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau : \star}
 
+\end{mathpar}
+\begin{mathpar}
+
 \inferrule[K-List]{\Theta ; \Delta \vdash I : \N \\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash L^I \tau : \star}
 
 \inferrule[K-Conj]{\Theta ; \Delta \vdash \Phi \texttt{ wf}\\ \Psi ; \Theta ; \Delta \vdash \tau : \star}{\Psi ; \Theta ; \Delta \vdash \Phi \amp \tau : \star}
@@ -131,11 +134,15 @@
 
 \inferrule[S-Bang]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash !\tau_1 \subty !\tau_2 : \star}
 
+
 \inferrule[S-IForall]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau_1 \subty \forall i : S. \tau_2 : \star}
 
 \inferrule[S-IExists]{\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subty \exists i : S. \tau_2 : \star}
 
 \inferrule[S-TForall]{\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star}{\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subty \forall \alpha : K. \tau_2 : \star}
+
+\end{mathpar}
+\begin{mathpar}
 
 \inferrule[S-List]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J}{\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subty L^J \tau_2 : \star}
 
@@ -184,7 +191,9 @@
 
 \inferrule[T-Unit]
 { }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash () : 1}
-\\
+
+\end{mathpar}
+\begin{mathpar}
 
 \inferrule[T-Base]
 { }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash c : b}
@@ -536,7 +545,9 @@
 \texttt{eval}(\Phi \amp \tau) &= \Phi \amp \texttt{eval}(\tau)\\
 \texttt{eval}(\Phi \implies \tau) &= \Phi \implies \texttt{eval}(\tau)\\
 \texttt{eval}(\M(I,\vec{p})\tau) &= \M(I,\vec{p})(\texttt{eval}(\tau))\\
-\texttt{eval}([I|\vec{p}]\tau) &= [I|\vec{p}](\texttt{eval}(\tau))\\
+\texttt{eval}([I|\vec{p}]\tau) &= [I|\vec{p}](\texttt{eval}(\tau))
+\end{align*}
+\begin{align*}
 \texttt{eval}([I]\tau) &= [I](\texttt{eval}(\tau))\\
 \texttt{eval}(\lambda i : S. \tau) &= \lambda i : S. \texttt{eval}(\tau)\\
 \texttt{eval}(\tau \; I) &= \begin{cases}
