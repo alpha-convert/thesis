@@ -61,60 +61,46 @@
       
       \caseText{The result follows by C-Disj on (5) and (6)}
   }
+  
+  \jcase{6}{C-Forall}{
+   \jgivengoal{
+     \caseFact{1} $\Theta, i : S ; \Delta \vdash \forall j : S'. \Phi \, \texttt{wf}$
+     
+     \caseFact{3} $\Theta, i : S, j : S' ; \Delta \vdash \Phi \, \texttt{wf}$
+   }{$\Theta ; \Delta[I/i] \vdash (\forall j : S'.\Phi)[I/i]$}
+   
+   \caseText{By IH on (3)}
+   
+   \caseFact{4} $\Theta, j : S' ; \Delta[I/i] \vdash \Phi[I/i] \, \texttt{wf}$
+   
+   \caseText{By C-Forall on (4)}
+   
+   \caseFact{5} $\Theta ; \Delta[I/i] \vdash \forall j : S'. \Phi[I/i] \, \texttt{wf}$
+   
+   \caseText{The goal follows by (5)}
+  }
+  
+  \jcase{6}{C-Exists}{
+   \jgivengoal{
+     \caseFact{1} $\Theta, i : S ; \Delta \vdash \exists j : S'. \Phi \, \texttt{wf}$
+     
+     \caseFact{3} $\Theta, i : S, j : S' ; \Delta \vdash \Phi \, \texttt{wf}$
+   }{$\Theta ; \Delta[I/i] \vdash (\exists j : S'.\Phi)[I/i]$}
+   
+   \caseText{By IH on (3)}
+   
+   \caseFact{4} $\Theta, j : S' ; \Delta[I/i] \vdash \Phi[I/i] \, \texttt{wf}$
+   
+   \caseText{By C-Exists on (4)}
+   
+   \caseFact{5} $\Theta ; \Delta[I/i] \vdash \exists j : S'. \Phi[I/i] \, \texttt{wf}$
+   
+   \caseText{The goal follows by (5)}
+  }
+  
+  \jcase{7}{C-Eq}{\caseText{Immediate by \autoref{thm:raw-idx-idx-subst}.}}
+  
+  \jcase{8}{C-Leq}{\caseText{Immediate by \autoref{thm:raw-idx-idx-subst}.}}
+  
+  \jcase{9}{C-Lt}{\caseText{Immediate by \autoref{thm:raw-idx-idx-subst}.}}
 }
-\iffalse
-\begin{proof}
-By induction on the derivation of $\Theta, i ; S ; \Delta \vdash \Phi \; \texttt{wf}$.
-\begin{enumerate}
-  \item[(C-Top)] Immediate.
-  \item[(C-Bot)] Immediate.
-  \item[(C-Conj)] Suppose $\Theta, i : S ; \Delta \vdash \Phi_1 \wedge \Phi_2 \; \texttt{wf}$ by way of
-  $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf}$ and
-  $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf}$.
-  By IH twice,
-  $\Theta; \Delta \pvdash \Phi_1[I/i] \; \texttt{wf}$ and
-  $\Theta; \Delta \pvdash \Phi_2[I/i] \; \texttt{wf}$.
-  Then, by C-Conj,
-  $\Theta ; \Delta \pvdash \Phi_1[I/i] \wedge \Phi_2[I/i] \; \texttt{wf}$
-  as required.
-  \item[(C-Disj)] Suppose $\Theta, i : S ; \Delta \vdash \Phi_1 \vee \Phi_2 \; \texttt{wf}$ by way of
-  $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf}$ and
-  $\Theta, i : S ; \Delta \vdash \Phi_2 \; \texttt{wf}$.
-  By IH twice,
-  $\Theta; \Delta \pvdash \Phi_1[I/i] \; \texttt{wf}$ and
-  $\Theta; \Delta \pvdash \Phi_2[I/i] \; \texttt{wf}$.
-  Then, by C-Disj,
-  $\Theta ; \Delta \pvdash \Phi_1[I/i] \vee \Phi_2[I/i] \; \texttt{wf}$
-  as required.
-  
-  \item[(C-Impl)]  Suppose $\Theta, i : S ; \Delta \vdash \Phi_1 \to \Phi_2 \; \texttt{wf}$ by way of
-  $\Theta, i : S ; \Delta \vdash \Phi_1 \; \texttt{wf}$ and
-  $\Theta, i : S ; \Delta, \Phi_1 \vdash \Phi_2 \; \texttt{wf}$.
-  By IH twice,
-  $\Theta; \Delta \pvdash \Phi_1[I/i] \; \texttt{wf}$ and
-  $\Theta; \Delta, \Phi_1 \pvdash \Phi_2[I/i] \; \texttt{wf}$.
-  Then, by C-Impl,
-  $\Theta ; \Delta \pvdash \Phi_1[I/i] \to \Phi_2[I/i] \; \texttt{wf}$
-  as required.
-  
-  \item[(C-Forall)] Suppose $\Theta, i : S ; \Delta \vdash \forall j : S'. \Phi \; \texttt{wf}$ by way of
-  $\Theta, i : S, j : S' ; \Delta \vdash\Phi \; \texttt{wf}$.
-  By IH,
-  $\Theta, j : S' ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
-  By C-Forall,
-  $\Theta;\Delta \pvdash \forall j : S'. \Phi[I/i] \; \texttt{wf}$, as required.
-  
-  \item[(C-Exists)] Suppose $\Theta, i : S ; \Delta \vdash \exists j : S'. \Phi \; \texttt{wf}$ by way of
-  $\Theta, i : S, j : S' ; \Delta \vdash\Phi \; \texttt{wf}$.
-  By IH,
-  $\Theta, j : S' ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
-  By C-Exists,
-  $\Theta;\Delta \pvdash \exists j : S'. \Phi[I/i] \; \texttt{wf}$, as required.
-  
-  \item[(C-Eq)] Immediate by \autoref{thm:idx-idx-subst}.
-  \item[(C-Leq)] Immediate by \autoref{thm:idx-idx-subst}.
-  \item[(C-Lt)] Immediate by \autoref{thm:idx-idx-subst}.
-\end{enumerate}
-\end{proof}
-
-\fi
