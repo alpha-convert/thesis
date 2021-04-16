@@ -243,7 +243,7 @@ $$
 \texttt{enq} \; : \; \forall n,m : \N. \, [3] \, 1 \loli \tau \loli L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \, \langle 0 \rangle \, \left(L^{n+1}([2] \, \tau) \otimes L^m \, \tau\right)
 $$
 
-From a queue and three extra potential, we may enqueue a single element, resulting in queue with one more element on its front list, for no cost. The term implementing \texttt{enc} can be found in \autoref{fig:example-dlambdaamor-enc}. The type of dequeue is somewhat more involved, since the sizes of the output lists are not a simple function of this inputs. In addition, the function has a precondition: the queue cannot be empty. These two numerical restrictions provide a nice illustration of \dlambdaamor's refinement types.
+From a queue and three extra potential, we may enqueue a single element, resulting in queue with one more element on its front list, for no cost. The term implementing \texttt{enc} can be found in \autoref{appendix:a}. The type of dequeue is somewhat more involved, since the sizes of the output lists are not a simple function of this inputs. In addition, the function has a precondition: the queue cannot be empty. These two numerical restrictions provide a nice illustration of \dlambdaamor's refinement types.
 
 $$
 \texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^{n'}([2] \, \tau) \otimes L^{m'} \, \tau\right)\right)
@@ -1231,8 +1231,9 @@ To exhibit the practical use of \dlambdaamor, we present an implementation of \b
 \end{center}
 Functionally, the implementation sports a typechecker and interpreter for \dlambdaamor, as well as a command-line interface for interactive use.
 
-We begin the section by discussing the format of programs in \lambdaamorimpl. To use \lambdaamorimpl as a programming language, we require some language features other than the type-checking and evaluation of single expressions, as modeled by \bilambdaamor. To this end, we introduce four top-level declaration forms which can be composed to form programs in \lambdaamorimpl. Next, we discuss the artifact itself in some depth: giving an overview of the project's structure, elaborating on design decisions, and remarking on a few places where the implementation departs from the theory.
- Next, we show \lambdaamorimpl in action, by typechecking and evaluating the examples from Section~\textbf{??}, as well as exhibiting some of the different modes of use and interaction we envision for languages like this one. We also exhibit some of the ergonomic features available in \lambdaamorimpl which are not present in the core theory. Finally, we present an experimental evaluation of the tool, and compare it with existing resource-aware languages.
+We begin the section by discussing the format of programs in \lambdaamorimpl. To use \lambdaamorimpl as a programming language, we require some language features other than the type-checking and evaluation of single expressions, as modeled by \bilambdaamor. To this end, we introduce four top-level declaration forms which can be composed to form programs in \lambdaamorimpl. Next, we discuss the artifact itself in some depth: giving an overview of the project's structure, elaborating on design decisions, and remarking on a few places where the implementation departs from the theory. Finally, we present an experimental evaluation of the tool, and compare it with existing resource-aware languages.
+ 
+ %Next, we show \lambdaamorimpl in action, by typechecking and evaluating the examples from Section~\textbf{??}, as well as exhibiting some of the different modes of use and interaction we envision for languages like this one. We also exhibit some of the ergonomic features available in \lambdaamorimpl which are not present in the core theory.
  
 
 \subsection{Declarations and Structure of \lambdaamorimpl Programs}
