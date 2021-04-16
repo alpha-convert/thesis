@@ -1,5 +1,4 @@
-
-\jtheorem{Proof of \autoref{thm:idx-idx-subst}}{
+\jtheorem{Proof of \autoref{thm:raw-idx-idx-subst}}{
 By induction on the derivation of $\Theta, j : S_1 ; \Delta \vdash I : S_2$. The case for I-Var is immediate.
 
 \jcase{1}{I-Plus}{
@@ -12,17 +11,17 @@ By induction on the derivation of $\Theta, j : S_1 ; \Delta \vdash I : S_2$. The
     
     \caseFact{4} $\Theta \vdash \Delta \; \texttt{wf}$
   }{
-      $\Theta ; \Delta \pvdash (I + J) [J/j] : bS$
+      $\Theta ; \Delta[J/j] \vdash (I + J) [J/j] : bS$
   }
   \caseText{By IH on (2) and (3)}
   
-  \caseFact{5} $\Theta ; \Delta \pvdash I_1[J/j] : bS$
+  \caseFact{5} $\Theta ; \Delta[J/j] \vdash I_1[J/j] : bS$
   
-  \caseFact{6} $\Theta ; \Delta \pvdash I_2[J/j] : bS$
+  \caseFact{6} $\Theta ; \Delta[J/j] \vdash I_2[J/j] : bS$
   
   \caseText{By I-Plus}
   
-  \caseFact{7} $\Theta ; \Delta \pvdash I_1[J/j] + I_2[J/j]: bS$
+  \caseFact{7} $\Theta ; \Delta[J/j] \vdash I_1[J/j] + I_2[J/j]: bS$
   
   \caseText{Goal follows by (7).}
 }
@@ -39,42 +38,42 @@ By induction on the derivation of $\Theta, j : S_1 ; \Delta \vdash I : S_2$. The
     
     \caseFact{5} $\Theta \vdash \Delta \; \texttt{wf}$
   }{
-      $\Theta ; \Delta \pvdash (I - J) [J/j] : bS$
+      $\Theta ; \Delta[J/j] \vdash (I+1 - I_2) [J/j] : bS$
   }
   \caseText{By IH on (2) and (3)}
   
-  \caseFact{5} $\Theta ; \Delta \pvdash I_1[J/j] : bS$
+  \caseFact{5} $\Theta ; \Delta[J/j] \vdash I_1[J/j] : bS$
   
-  \caseFact{6} $\Theta ; \Delta \pvdash I_2[J/j] : bS$
+  \caseFact{6} $\Theta ; \Delta[J/j] \vdash I_2[J/j] : bS$
   
   \caseText{Instantiating the quantifier in (4) and using (5)}
   
-  \caseFact{7} $\Theta ; \Delta \vDash I_1[J/j] \geq I_2[J/j]$
+  \caseFact{7} $\Theta ; \Delta[J/j] \vDash I_1[J/j] \geq I_2[J/j]$
   
   \caseText{By I-Minus on (5) (6) (7)}
   
-  \caseFact{8} $\Theta ; \Delta \pvdash I_1[J/j] - I_2[J/j]: bS$
+  \caseFact{8} $\Theta ; \Delta[J/j] \vdash I_1[J/j] - I_2[J/j]: bS$
   
   \caseText{Goal follows by (8).}
 }
 
 \jcase{3}{I-Times-$\R^+$}{
  \jgivengoal{
-   \caseFact{1} $\Theta, j : S_1 \pvdash c \cdot I : \R^+$
+   \caseFact{1} $\Theta, j : S_1 ; \Delta \vdash c \cdot I : \R^+$
    
-   \caseFact{2} $\Theta, j : S_1 \pvdash I : \R^+$
+   \caseFact{2} $\Theta, j : S_1 ; \Delta \vdash I : \R^+$
    
    \caseFact{3} $c \in \R^+$
  }{
-   $\Theta ; \Delta \pvdash (c \cdot I)[J/j] : \R^+$
+   $\Theta ; \Delta[I/i] \vdash (c \cdot I)[J/j] : \R^+$
  }
  \caseText{By IH on (2)}
  
- \caseFact{4} $\Theta \pvdash I[J/j] : \R^+$
+ \caseFact{4} $\Theta ; \Delta[J/j] \vdash I[J/j] : \R^+$
  
  \caseText{By I-Times-$\R^+$ on (3) and (4)}
  
- \caseFact{5} $\Theta \pvdash c \cdot I[J/j] : \R^+$
+ \caseFact{5} $\Theta ; \Delta[J/j] \vdash c \cdot I[J/j] : \R^+$
  
  \caseText{Goal follows by (5)}
 }
@@ -89,79 +88,79 @@ By induction on the derivation of $\Theta, j : S_1 ; \Delta \vdash I : S_2$. The
     
     \caseFact{2} $\Theta, j : S ; \Delta \vdash I : \potvec$
   }{
-    $\Theta ; \Delta \pvdash \left(\lhd I\right)[J/j] : \potvec$
+    $\Theta ; \Delta[J/j] \vdash \left(\lhd I\right)[J/j] : \potvec$
   }
   
   \caseText{By IH on (2)}
   
-  \caseFact{3} $\Theta ; \Delta \pvdash I[J/j] : \potvec$
+  \caseFact{3} $\Theta ; \Delta[J/j] \vdash I[J/j] : \potvec$
   
   \caseText{By I-Shift on (3)}
   
-  \caseFact{4} $\Theta ; \Delta \pvdash \lhd I[J/j] : \potvec$
+  \caseFact{4} $\Theta ; \Delta[J/j] \vdash \lhd I[J/j] : \potvec$
   
   \caseText{Goal follows immediately from (4)}
 }
 
 \jcase{7}{I-Lam}{
   \jgivengoal{
-    \caseFact{1} $\Theta, j : S_1 ; \Delta \pvdash \lambda i : S_2. I : S_2 \to S_3$
+    \caseFact{1} $\Theta, j : S_1 ; \Delta \vdash \lambda i : S_2. I : S_2 \to S_3$
     
     \caseFact{2} $\Theta, j : S_1, i : S_2 ; \Delta \vdash I : S_3$
   }{
-    $\Theta ; \Delta \pvdash \lambda i : S_2. I[J/j] : S_2 \to S_3$  
+    $\Theta ; \Delta[J/j] \vdash \lambda i : S_2. I[J/j] : S_2 \to S_3$  
   }
   
   \caseText{By IH on (2)}
   
-  \caseFact{3} $\Theta, i : S_2 ; \Delta \pvdash I[J/j] : S_3$
+  \caseFact{3} $\Theta, i : S_2 ; \Delta[J/j] \pvdash I[J/j] : S_3$
   
   \caseText{By I-Lam on (3)}
   
-  \caseFact{4} $\Theta ; \Delta \pvdash \lambda i : S_2. I[J/j] : S_2 \to S_3$
+  \caseFact{4} $\Theta ; \Delta[J/j] \vdash \lambda i : S_2. I[J/j] : S_2 \to S_3$
   
   \caseText{Goal follows immediately by (4)}
 }
 
 \jcase{8}{I-App}{
   \jgivengoal{
-    \caseFact{1} $\Theta, j : S ; \Delta \pvdash I_1 \; I_2 : S_2$
+    \caseFact{1} $\Theta, j : S ; \Delta \vdash I_1 \; I_2 : S_2$
     
-    \caseFact{2} $\Theta, j : S; \Delta \pvdash I_1 : S_1 \to S_2$
+    \caseFact{2} $\Theta, j : S; \Delta \vdash I_1 : S_1 \to S_2$
     
-    \caseFact{3} $\Theta, j : S; \Delta \pvdash I_2 : S_1$
+    \caseFact{3} $\Theta, j : S; \Delta \vdash I_2 : S_1$
   }{
-    $\Theta ; \Delta \pvdash (I_1 \; I_2)[J/j] : S_2$,
+    $\Theta ; \Delta[J/j] \vdash (I_1 \; I_2)[J/j] : S_2$,
   }
   
   \caseText{By IH on (2) and (3)}
   
-  \caseFact{4} $\Theta ; \Delta \vdash I_1[J/j] : S_1 \to S_2$
+  \caseFact{4} $\Theta ; \Delta[J/j] \vdash I_1[J/j] : S_1 \to S_2$
   
-  \caseFact{5} $\Theta ; \Delta \pvdash I_2[J/j] : S_1$
+  \caseFact{5} $\Theta ; \Delta[J/j] \vdash I_2[J/j] : S_1$
   
   \caseText{By I-App on (4) and (5)}
    
-  \caseFact{6} $\Theta ; \Delta \pvdash I_1[J/j] \; I_2[J/j] : S_2$
+  \caseFact{6} $\Theta ; \Delta[J/j] \vdash I_1[J/j] \; I_2[J/j] : S_2$
   
   \caseText{Goal follows from (6)}
 }
 
 \jcase{9}{I-Const}{
   \jgivengoal{
-     \caseFact{1} $\Theta, j : S ; \Delta \pvdash \texttt{const}(I) : \potvec$
+     \caseFact{1} $\Theta, j : S ; \Delta \vdash \texttt{const}(I) : \potvec$
      
-     \caseFact{2} $\Theta, j : S ; \Delta \pvdash I : \R^+$
+     \caseFact{2} $\Theta, j : S ; \Delta \vdash I : \R^+$
   }{
-    $\Theta ; \Delta \pvdash \texttt{const}(I)[J/j] : \potvec$
+    $\Theta ; \Delta[J/j] \vdash \texttt{const}(I)[J/j] : \potvec$
   }
   \caseText{By IH on (2)}
   
-  \caseFact{3} $\Theta ; \Delta \pvdash I[J/j] : \R^+$
+  \caseFact{3} $\Theta ; \Delta[J/j] \vdash I[J/j] : \R^+$
   
   \caseText{By I-Const on (3)}
   
-  \caseFact{4} $\Theta ; \Delta \pvdash \texttt{const}(I[J/j]) : \potvec$
+  \caseFact{4} $\Theta ; \Delta[J/j] \vdash \texttt{const}(I[J/j]) : \potvec$
   
   \caseText{Goal follows from (4)}
 }

@@ -1,3 +1,68 @@
+\jtheorem{Proof of \autoref{thm:raw-constr-idx-subst}}{
+  \jgivengoal{
+    \caseFact{1} $\Theta, i : S ; \Delta \vdash \Phi \, \texttt{wf}$
+    
+    \caseFact{2} $\Theta ; \Delta \vdash I : S$
+  }{
+     $\Theta ; \Delta[I/i] \pvdash \Phi[I/i] \, \texttt{wf}$
+  }
+  
+  \jcase{1}{C-Top}{Immediate.}
+  \jcase{2}{C-Bot}{Immediate.}
+  \jcase{3}{C-Conj}{
+    \jgivengoal{
+      \caseFact{1} $\Theta, i : S ; \Delta \vdash \Phi_1 \wedge \Phi_2 \, \texttt{wf}$
+      
+      \caseFact{3} $\Theta, i : S ; \Delta \vdash \Phi_1 \, \texttt{wf}$
+      
+      \caseFact{4} $\Theta, i : S ; \Delta \vdash \Phi_2 \, \texttt{wf}$
+    }{$\Theta ; \Delta \pvdash (\Phi_1 \wedge \Phi_2)[I/i] \, \texttt{wf}$}
+      \caseText{By IH on (3) and (4)}
+      
+      \caseFact{5} $\Theta ; \Delta[I/i] \vdash \Phi_1[I/i] \, \texttt{wf}$
+      
+      \caseFact{6} $\Theta ; \Delta[I/i] \vdash \Phi_2[I/i] \, \texttt{wf}$
+      
+      \caseText{The result follows by C-Conj on (5) and (6)}
+  }
+  \jcase{4}{C-Disj}{
+    \jgivengoal{
+      \caseFact{1} $\Theta, i : S ; \Delta \vdash \Phi_1 \vee \Phi_2 \, \texttt{wf}$
+      
+      \caseFact{3} $\Theta, i : S ; \Delta \vdash \Phi_1 \, \texttt{wf}$
+      
+      \caseFact{4} $\Theta, i : S ; \Delta \vdash \Phi_2 \, \texttt{wf}$
+    }{$\Theta ; \Delta \pvdash (\Phi_1 \vee \Phi_2)[I/i] \, \texttt{wf}$}
+      \caseText{By IH on (3) and (4)}
+      
+      \caseFact{5} $\Theta ; \Delta[I/i] \vdash \Phi_1[I/i] \, \texttt{wf}$
+      
+      \caseFact{6} $\Theta ; \Delta[I/i] \vdash \Phi_2[I/i] \, \texttt{wf}$
+      
+      \caseText{The result follows by C-Disj on (5) and (6)}
+  }
+  \jcase{5}{C-Impl}{
+    \jgivengoal{
+      \caseFact{1} $\Theta, i : S ; \Delta \vdash \Phi_1 \to \Phi_2 \, \texttt{wf}$
+      
+      \caseFact{3} $\Theta, i : S ; \Delta \vdash \Phi_1 \, \texttt{wf}$
+      
+      \caseFact{4} $\Theta, i : S ; \Delta, \Phi_1 \vdash \Phi_2 \, \texttt{wf}$
+    }{$\Theta ; \Delta[I/i] \vdash (\Phi_1 \vee \Phi_2)[I/i] \, \texttt{wf}$}
+      \caseText{By IH on (3) and (4)}
+      
+      \caseFact{5} $\Theta ; \Delta[I/i] \vdash \Phi_1[I/i] \, \texttt{wf}$
+      
+      \caseFact{6} $\Theta ; \Delta[I/i], \Phi_1[I/i] \vdash \Phi_2[I/i] \, \texttt{wf}$
+      
+      \caseText{By C-Impl on (5) and (6)}
+      
+      \caseFact{7} $\Theta ; \Delta[I/i] \vdash \Phi_1[I/i] \to \Phi_2[I/i] \, \texttt{wf}$
+      
+      \caseText{The result follows by C-Disj on (5) and (6)}
+  }
+}
+\iffalse
 \begin{proof}
 By induction on the derivation of $\Theta, i ; S ; \Delta \vdash \Phi \; \texttt{wf}$.
 \begin{enumerate}
@@ -51,3 +116,5 @@ By induction on the derivation of $\Theta, i ; S ; \Delta \vdash \Phi \; \texttt
   \item[(C-Lt)] Immediate by \autoref{thm:idx-idx-subst}.
 \end{enumerate}
 \end{proof}
+
+\fi

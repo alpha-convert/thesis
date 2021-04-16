@@ -588,17 +588,34 @@ If $\Theta ; \Delta \pvdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta'
 If $\Theta ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \pvdash \Phi \; \texttt{ wf}$
 \end{theorem}
 
+\begin{theorem}[Raw Index Substitution for Constraint-Well-Formedness]
+If $\Theta, j : S_1 ; \Delta \vdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$, then 
+$\Theta ; \Delta[J/j] \vdash I[J/j] : S_2$
+\label{thm:raw-idx-idx-subst}
+\end{theorem}
+\input{proofs/idx-idx-subst}
+
 \begin{theorem}[Index Substitution for Sort Checking]
 If $\Theta, j : S_1 ; \Delta \pvdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$ then $\Theta ; \Delta \pvdash I[J/j] : S_2$
 \label{thm:idx-idx-subst}
 \end{theorem}
-\input{proofs/idx-idx-subst}
+\begin{proof}
+Immediate by \autoref{thm:raw-idx-idx-subst}, using the fact that $\Theta \vdash \Delta \, \texttt{wf}$.
+\end{proof}
+
+\begin{theorem}[Raw Index Substitution for Constraint Well-formedness]
+If $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \vdash I : S$ then $\Theta ; \Delta[I/i] \vdash \Phi[I/i] \, \texttt{wf}$
+\label{thm:raw-constr-idx-subst}
+\end{theorem}
+\input{proofs/constr-idx-subst}
 
 \begin{theorem}[Index Substitution for Constraint Well-Formedness]
 If $\Theta, i : S ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \pvdash I : S$ then $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}.$
 \label{thm:constr-idx-subst}
 \end{theorem}
-\input{proofs/constr-idx-subst}
+\begin{proof}
+Immediate by \autoref{thm:raw-constr-idx-subst}, using the fact that $\Theta \vdash \Delta \, \texttt{wf}$.
+\end{proof}
 
 
 \begin{theorem}[Admissibility of Weakening for Type Formation]
