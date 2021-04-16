@@ -1,3 +1,4 @@
+
 \def\fileversion{1.0}
 \def\filedate{April 2021}
 
@@ -35,20 +36,35 @@
 \begin{abstract}
 \end{abstract}
 
+
 \begin{dedication}
-To my parents.
+\epigraph{Classical watches display time, but can hardly do anything else. This limitation is artificial: for instance, several people confessed to be often in want of mustard... and what is the point of knowing time if you cannot get mustard?}{Y.J. Ringard \cite{mustard-watches}}
 \end{dedication}
 
 \begin{acknowledgements}
+Firstly and most importantly, I must thank my outstanding research advisor, Dan Licata. Dan took me under his wing when I was only a freshman, and spent countless hours of his valuable time gently teaching me the ways of programming language research. In the years since, he's become an amazing mentor, a wonderful collaborator, and a great friend. For all this, I will be eternally grateful.
 
+I am also incredibly lucky to have been simultaneously mentored by Norman Danner. On top of being the spiritual leader of the Wesleyan PL cost-analysis group and the driving force in shaping my research interests, Norman is an absolutely stellar professor, from whom I had the pleasure of taking multiple courses and seminars.
+
+I would like to express my gratitude to my readers, Dan, Norman, and Robert Rose, for taking the time to read this tome.
+
+A huge amount of thanks also goes out to Deepak Garg, who, over a high-top table at the hotel bar at POPL 2020, offered to host me at MPI-SWS for the internship that became Chapter 2 of this thesis. I also appreciate his generosity in agreeing to work with me virtually when a global pandemic decided to upend my summer-in-Germany plans.
+
+I am very grateful for the joint friend/mentor-ship offered by Joomy Korkut, Alex Kavvos, and Mitchell Riley, all of whom seamlessly and rapidly alternate between being outstanding friends, kind mentors, and non-judgmental shoulders to cry on.
+
+I would be remiss not to mention the rotating cast of characters who have inhabited ESC341 and ESC345, my two ``offices" during my time at Wesleyan: Yulia, Pi, Rocco, Elliott, Vabuk, and Ed, you all made it worth trudging through the CT cold to come to the office each day. Similarly, I would like to thank the many denizens of the 6th floor math lounge for providing yet another comfortable and fun working environment.
+
+Of course, as is true of all such projects, this thesis would not have been possible without the emotional support of my wonderful housemates and friends. Sam, Shea, Rachel, the gang from $(\N \to \N) \to (\N \to \N) \to (\N \to \N)$, and the folks from the PL-twitterverse have all been instrumental in keeping me sane during the madness that has been 2020 and 2021.
+
+Finally, I must acknowledge the tremendous support my family has provided me through college, and during the past year especially. Mom, Dad, and Nathaniel: I got to spent more time with you than I was expecting to this year, and I'm thankful for it every day.
 \end{acknowledgements}
 
 
 \frontmatter
 \maketitle
 %\makeabstract
-%\makededication
-%\makeack
+\makededication
+\makeack
 %\setcounter{tocdepth}{2}
 \tableofcontents
 \mainmatter
@@ -57,7 +73,7 @@ To my parents.
 
 \chapter{Introduction}
 \label{ch:intro}
-\include{intro}
+%\include{intro}
 
 \chapter{Amortized Analysis with Type Systems}
 \label{ch:lambda-amor}
@@ -67,12 +83,6 @@ To my parents.
 \chapter{Amortized Analysis by Recurrence Extraction}
 \label{ch:rec-extr}
 %\include{rec-extr}
-
-%\red{Related work should be included with both}
-%\red{Be sure to explain the delta over other stuff}
-%\chapter{Conclusion and Related Work}
-%\label{conc}
-%\include{conc}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -84,7 +94,7 @@ To my parents.
 
 \chapter{}
 \label{appendix:a}
-%\include{appendix-a}
+\include{appendix-a}
 
 \chapter{}
 \label{appendix:b}
