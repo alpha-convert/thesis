@@ -219,6 +219,51 @@
   \noindent \ignorespaces
 }
 
+\newcommand{\jgivengoalThree}[4]{
+  \vspace{0.5em}
+
+  {
+    \setlength{\parskip}{0em}
+    \noindent $\blacktriangleright$ \textbf{Given:}
+    {
+      %\setlength{\parskip}{0.7em}
+      \begin{adjustwidth}{0.1in}{0in}
+        #1
+      \end{adjustwidth}
+      %\vspace{0.7em}
+    }
+
+    \noindent $\blacktriangleright$ \textbf{Goal 1:}
+
+    %\vspace{0.35em}
+
+    \begin{adjustwidth}{0.1in}{0in}
+      \allrule{#2}
+    \end{adjustwidth}
+
+    %\vspace{0.35em}
+
+    \noindent $\blacktriangleright$ \textbf{Goal 2:}
+
+    %\vspace{0.35em}
+
+    \begin{adjustwidth}{0.1in}{0in}
+      \allrule{#3}
+    \end{adjustwidth}
+    
+    \noindent $\blacktriangleright$ \textbf{Goal 3:}
+
+    %\vspace{0.35em}
+
+    \begin{adjustwidth}{0.1in}{0in}
+      \allrule{#4}
+    \end{adjustwidth}
+
+    %\vspace{0.35em}
+  }
+  \noindent \ignorespaces
+}
+
 \newcommand{\jcase}[3]{
   %\vspace{0.7em}
 
@@ -248,7 +293,7 @@
   \noindent $\blacktriangleright$ \textbf{Subcase #1:} \textit{#2.}
 
   {
-    \setlength{\parskip}{0.7em}
+    %\setlength{\parskip}{0.7em}
     \begin{adjustwidth}{0.2in}{0in}
       #3
     \end{adjustwidth}
