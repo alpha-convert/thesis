@@ -826,6 +826,7 @@ It is not immediately clear that this function in fact computes what we want! Fo
 
 \begin{restatable}[Canonical Forms for $S \to K$]{theorem}{canonforms}
 If $\Psi ; \Theta ; \Delta \vdash \tau : S \to K$ and $\tau \; \texttt{nf}$, then either:
+\label{thm:canon-forms}
 \begin{enumerate}
   \item $\tau = \lambda i : S.\tau'$ with $\tau' \; \texttt{nf}$
   \item $\tau \; \texttt{ne}$
@@ -842,7 +843,6 @@ If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, then:
   \item $\texttt{eval}(\tau) \; \texttt{nf}$
 \end{enumerate}
 \end{restatable}
-
 
 \begin{restatable}{theorem}{idxsubsteval}
 ~$\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$
