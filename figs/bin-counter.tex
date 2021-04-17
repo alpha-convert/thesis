@@ -1,0 +1,14 @@
+\[
+\begin{array}[t]{lcl}
+\codeInc &:& \codebitlist \to \codebitlist \\
+\codeInc\,[\,] &=& [1] \\
+\codeInc\,(0 :: bs) &=& 1 :: bs \\
+\codeInc\,(1 :: bs) &=& 0 :: \codeInc\,bs
+\end{array}
+\qquad
+\begin{array}[t]{lcl}
+\codeSet &:& \codenat \to \codebitlist \\
+\codeSet\,0 &=& [\,] \\
+\codeSet\,(S\,n) &=& \codeInc(\codeSet\,n)
+\end{array}
+\]
