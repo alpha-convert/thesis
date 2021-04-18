@@ -1,17 +1,166 @@
-\begin{proof}
-By induction on $\Theta;\Delta \vdash I : S \gens \Phi$.
-\begin{enumerate}
-  \item[AI-Var] Immediate.
-  \item[AI-Plus] Suppose $\Theta ;\Delta \vdash I + J : bS \gens \Phi_1 \wedge \Phi_2$ and $\Theta ; \Delta \vdash I : bS \gens \Phi_1$, $\Theta ; \Delta \vdash J : bS \gens \Phi_2$. Since $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$, $\Theta ; \Delta \vDash \Phi_i$ for $i=1,2$. Then by IH, $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$, and so by I-Plus, $\Theta ; \Delta \vdash I + J : bS$, as required.
-  \item[AI-Minus] Suppose $\Theta ;\Delta \vdash I - J : bS \gens \Phi_1 \wedge \Phi_2 \wedge (I \geq J)$ and $\Theta ; \Delta \vdash I : bS \gens \Phi_1$, $\Theta ; \Delta \vdash J : bS \gens \Phi_2$. Since $\Theta ; \Delta \vDash \Phi_i$ for $i=1,2$, we have by IH that $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$. Further, $\Theta ; \Delta \vDash I \geq J$, and so by I-Minus, $\Theta ;\Delta \vdash I - J : bS$, as required.
-  \item[AI-Times-*] Immediate by IH.
-  \item[AI-Shift] Immediate by IH.
-  \item[AI-Lam] Suppose $\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S \gens \Phi$ by way of $\Theta , i : bS ; \Delta \vdash i : S \gens \Phi$, and $\Theta ; \Delta \vDash \Phi$. By IH, $\Theta, i : bS ; \Delta \vdash I : S$, and so by I-Lam, $\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S$.
-  \item[AI-App] Suppose $\Theta ;\Delta \vdash I\; J : S \gens \Phi_1 \wedge \Phi_2$ by way of $\Theta ; \Delta \vdash I : bS \to S \gens \Phi_1$, and $\Theta ; \Delta \vDash J ; bS \gens \Phi_i$ with $i=1,2$. By IH, $\Theta ; \Delta \vdash I : bS \to S$, and $\Theta ; \Delta \vdash J : bS$. Then, by I-App, $\Theta ; \Delta \vdash I \; J : S$, as required.
-  \item[AI-Sum] Suppose $\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS \gens \Phi_1 \wedge \Phi_2 \wedge \forall i : \N.(I_0 \leq i \leq I_1 \to \Phi_3)$ by way of $\Theta;\Delta \vdash I_0 : \mathbb{N} \gens \Phi_1$, $\Theta;\Delta \vdash I_1 : \mathbb{N} \gens \Phi_2$, and $\Theta,i : \N;\Delta, I_0 \leq i \leq I_1 \vdash J : bS \gens \Phi_3$, and 
-  $\Theta ; \Delta \vDash \Phi_1$,
-  $\Theta ; \Delta \vDash \Phi_2$, and 
-  $\Theta ; \Delta \vDash \forall i : \N.(I_0 \leq i \leq I_1 \to \Phi_3)$. By using the IH twice, $\Theta ; \Delta \vdash I_i : \N$ for $i=1,2$. We note that   $\Theta ; \Delta \vDash \forall i : \N.(I_0 \leq i \leq I_1 \to \Phi_3)$ is equivalent to $\Theta, i : \N ; \Delta, I_0 \leq i \leq I_1 \vDash \Phi_3$, and so by IH, $\Theta,i : \N;\Delta, I_0 \leq i \leq I_1 \vdash J : bS$. Applying I-Sum, we have $\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS$, as required.
-  \item[AI-*-Lit] Immediate.
-\end{enumerate}
-\end{proof}
+\jtheorem{Proof of \autoref{thm:raw-sort-sound}}{
+
+
+\jgivengoal{
+  \caseFact{1} $\Theta ; \Delta \vdash I : S \gens \Phi$
+  
+  \caseFact{2} $\Theta ; \Delta \vDash \Phi$
+}{
+  $\Theta ; \Delta \vdash I : S$
+}
+
+%\caseText{By induction on $\Theta ; \Delta \vdash I : S \gens \Phi$}
+
+\jcase{1}{AI-Var}{Immediate.}
+
+\jcase{2}{AI-Plus}{
+  \jgivengoal{
+    \caseFact{1} $\Theta ; \Delta \vdash I + J : bS \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+    
+    \caseFact{3} $\Theta ; \Delta \vdash I : bS \gens \Phi_1$
+    
+    \caseFact{4} $\Theta ; \Delta \vdash J : bS \gens \Phi_2$
+  }{
+   $\Theta ; \Delta \vdash I + J : bS$  
+  }
+  
+  \caseText{By IH on (3), since by (2) $\Theta ; \Delta \vDash \Phi_1$}
+  
+  \caseFact{5} $\Theta ; \Delta \vdash I : bS$
+  
+  \caseText{By IH on (4), since by (2) $\Theta ; \Delta \vDash \Phi_2$}
+  
+  \caseFact{6} $\Theta ; \Delta \vdash J : bS$  
+  
+  \caseText{Goal follows by I-Plus}
+}
+
+\jcase{3}{AI-Minus}{
+  \jgivengoal{
+    \caseFact{1} $\Theta ; \Delta \vdash I - J : bS \gens \Phi_1 \wedge \Phi_2 \wedge (I \geq J)$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2 \wedge (I \geq J)$
+    
+    \caseFact{3} $\Theta ; \Delta \vdash I : bS \gens \Phi_1$
+    
+    \caseFact{4} $\Theta ; \Delta \vdash J : bS \gens \Phi_2$
+  }{
+   $\Theta ; \Delta \vdash I - J : bS$    
+  }
+  
+  \caseText{By IH on (3), since by (2) $\Theta ; \Delta \vDash \Phi_1$}
+  
+  \caseFact{5} $\Theta ; \Delta \vdash I : bS$
+  
+  \caseText{By IH on (4), since by (2) $\Theta ; \Delta \vDash \Phi_2$}
+  
+  \caseFact{6} $\Theta ; \Delta \vdash J : bS$  
+  
+  \caseText{Goal follows by I-Plus, using the fact that $\Theta ; \Delta \vDash I \geq J$ from (2)}
+}
+
+\jcase{4}{AI-Times-*}{Immediate by IH.}
+
+\jcase{5}{AI-Shift}{
+  \jgivengoal{
+    \caseFact{1} $\Theta ; \Delta \vdash \lhd I : \potvec \gens \Phi$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \Phi$  
+    
+    \caseFact{3} $\Theta ; \Delta \vdash I : \potvec \gens \Phi$
+  }{
+    $\Theta ; \Delta \vdash \lhd I : \potvec$
+  }
+  
+  \caseText{By IH on (3)}
+  
+  \caseFact{4} $\Theta ; \Delta \vdash I : \potvec$
+  
+  \caseText{Goal follows by I-Shift on (4)}
+}
+
+\jcase{6}{AI-Lam}{
+  \jgivengoal{
+    \caseFact{1} $\Theta ; \Delta \vdash \lambda i : S. I : S \to S' \gens \forall i : S. \Phi$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \forall i : S. \Phi$  
+    
+    \caseFact{3} $\Theta, i : S ; \Delta \vdash I : S' \gens \Phi$
+  }{
+    $\Theta ; \Delta \vdash \lambda i : S. I : S \to S'$
+  }
+  
+  \caseText{Equivalently to (2)}
+  
+  \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi$
+  
+  \caseText{By IH on (3) with (4)}
+  
+  \caseFact{5} $\Theta, i : S; \Delta \vdash I : S'$
+  
+  \caseText{Goal follows by I-Lam on (5)}
+}
+
+\jcase{7}{AI-App}{
+  \jgivengoal{
+   \caseFact{1} $\Theta ; \Delta \vdash I \; J : S' \gens \Phi_1 \wedge \Phi_2$
+   
+   \caseFact{2} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+   
+   \caseFact{3} $\Theta ; \Delta \vdash I : S \to S' \gens \Phi_1$
+   
+   \caseFact{4} $\Theta ; \Delta \vdash J : S \gens \Phi_2$
+  }{
+    $\Theta ; \Delta \vdash I \; J : S'$  
+  }
+  
+  \caseText{By IH on (3)}
+  
+  \caseFact{5} $\Theta ; \Delta \vdash I : S \to S'$
+  
+  \caseText{By IH on (4)}
+  
+  \caseFact{6} $\Theta ; \Delta \vdash J : S$
+  
+  \caseText{Goal follows by I-App on (5) and (6)}
+}
+
+\jcase{8}{AI-Sum}{
+  \jgivengoal{
+    \caseFact{1} $\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS \gens \Phi_1 \wedge \Phi_2 \wedge \forall i : \N.(I_0 \leq i \leq I_1 \to \Phi_3)$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2 \wedge \forall i : \N.(I_0 \leq i \leq I_1 \to \Phi_3)$
+    
+    \caseFact{3} $\Theta;\Delta \vdash I_0 : \mathbb{N} \gens \Phi_1$
+    
+    \caseFact{4}  $\Theta;\Delta \vdash I_1 : \mathbb{N} \gens \Phi_2$
+    
+    \caseFact{5} $\Theta,i : \N;\Delta, I_0 \leq i \leq I_1 \vdash J : bS \gens \Phi_3$
+  }{
+     $\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS$
+  }
+  
+  \caseText{From (2)}
+  
+  \caseFact{6} $\Theta, i : \N ; \Delta, (I_0 \leq i \leq I_1) \vDash \Phi_3$
+  
+  \caseText{By IH on (5) using (6)}
+  
+  \caseFact{7} $\Theta,i : \N;\Delta, I_0 \leq i \leq I_1 \vdash J : bS$
+  
+  \caseText{By IH on (3)}
+  
+  \caseFact{8} $\Theta;\Delta \vdash I_0 : \mathbb{N}$
+  
+  \caseText{By IH on (4)}
+  
+  \caseFact{9} $\Theta;\Delta \vdash I_1 : \mathbb{N}$
+  
+  \caseText{Goal follows by I-Sum on (7), (8), (9)}
+}
+
+\jcase{9}{AI-*-Lit}{Immediate.}
+
+}
