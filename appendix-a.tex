@@ -564,9 +564,9 @@ Immediate from the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf
 \end{proof}
 
 \conwfstreng*
-\begin{proof}
-Immediate by inversion.
-\end{proof}
+%\begin{proof}
+%Immediate by inversion.
+%\end{proof}
 
 \begin{theorem}[Raw Admissibility of Weakening for Sort Checking]
 If $\Theta ; \Delta \vdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \vdash I : S$
@@ -637,9 +637,9 @@ Then, $\Psi' ; \Theta' ; \Delta \pvdash \tau \subty \tau'$.
 \end{theorem}
 
 \subtystreng*
-\begin{proof}
-Routine induction.
-\end{proof}
+%\begin{proof}
+%Routine induction.
+%\end{proof}
 
 
 \begin{theorem}[Context Subsumption Includes Subset]
@@ -691,9 +691,9 @@ By an easy simultaneous induction. This is only true because we don't require in
 \end{proof}
 
 \idxsubsteval*
-\begin{proof}
-Induction on $\tau$.
-\end{proof}
+%\begin{proof}
+%Induction on $\tau$.
+%\end{proof}
 
 %Define $\# \tau$ to be the number of type connectives in $\tau$.
 
@@ -707,9 +707,9 @@ Induction on $\tau$.
 \end{itemize}
 \label{thm:norm-idemp}
 \end{theorem}
-\begin{proof}
-Simultaneous induction.
-\end{proof}
+%\begin{proof}
+%Simultaneous induction.
+%\end{proof}
 
 \section{Rules of \bilambdaamor}
 
@@ -739,6 +739,7 @@ Simultaneous induction.
 
 \inferrule[AI-Times-$\mathbb{N}$]{c \in \mathbb{N} \\ \Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi}{\Theta ; \Delta \vdash c \cdot I : \mathbb{N} \gens \Phi}\\
 
+
 \inferrule[AI-Shift]{\Theta ; \Delta \vdash I : \vec{\mathbb{R}^+} \gens \Phi}{\Theta ; \Delta \vdash \; \lhd I : \vec{\mathbb{R}^+} \gens \Phi}
 
 \inferrule[AI-Lam]{\Theta, i : bS ; \Delta \vdash I : S \gens \Phi}{\Theta ; \Delta \vdash \lambda i : bS. I : bS \to S \gens \forall i : S. \Phi}
@@ -748,6 +749,9 @@ Simultaneous induction.
 \inferrule[AI-Sum]{\Theta;\Delta \vdash I_0 : \mathbb{N} \gens \Phi_1\\ \Theta;\Delta \vdash I_1 : \mathbb{N} \gens \Phi_2\\ 
                  \Theta,i : \N;\Delta, I_0 \leq i < I_1 \vdash J : bS \gens \Phi_3}
                  {\Theta;\Delta \vdash \sum_{i=I_0}^{I_1} J : bS \gens \Phi_1 \wedge \Phi_2 \wedge \forall i : \N.(I_0 \leq i < I_1 \to \Phi_3)}
+                 
+\end{mathpar}
+\begin{mathpar}                 
                  
 \inferrule[AI-ConstVec]{\Theta ; \Delta \vdash I : \mathbb{R}^+ \gens \Phi}{\Theta ; \Delta \vdash \texttt{const}(I) : \vec{\mathbb{R}^+} \gens \Phi}
 
@@ -787,6 +791,9 @@ Simultaneous induction.
 \inferrule[AK-Var]{\alpha : K \in \Psi}{\Psi ; \Theta ; \Delta \vdash \alpha : K \gens \top}
 
 \inferrule[AK-Unit]{ }{\Psi ; \Theta ; \Delta \vdash 1 : \star \gens \top}
+
+\end{mathpar}
+\begin{mathpar}
 
 \inferrule[AK-Arr]{\Psi ; \Theta ; \Delta \vdash \tau_1 : \star \gens \Phi_1\\ \Psi ; \Theta ; \Delta \vdash \tau_2 : \star \gens \Phi_2}{\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 : \star \gens \Phi_1 \wedge \Phi_2}
 
@@ -853,13 +860,12 @@ Simultaneous induction.
 
 \inferrule[AS-List]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subtynf L^J \tau_2 : \star \gens I = J \wedge \Phi}
 
+\end{mathpar}
+\begin{mathpar}
+
 \inferrule[AS-Impl]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)}
 
 \inferrule[AS-Conj]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subtynf \Phi_2 \amp \tau_2 : \star \gens \Phi \wedge (\Phi_1 \to \Phi_2)}
-
-\end{mathpar}
-
-\begin{mathpar}
 
 \inferrule[AS-Monad]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subtynf \M(J,\vec{p}) \tau_2 : \star \gens (I = J) \wedge (\vec{q} \leq \vec{p}) \wedge \Phi}
 
@@ -888,10 +894,13 @@ Simultaneous induction.
 
 \inferrule[AT-Unit]
 { }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash () \infers 1 \gens \top, \Gamma}
-\\
+
+\end{mathpar}
+\begin{mathpar}
 
 \inferrule[AT-Base]
 { }{\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash c \infers b \gens \top, \Gamma}
+
 
 \inferrule[AT-Absurd]
 { }{
@@ -942,9 +951,6 @@ Simultaneous induction.
 }{
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e \checks \tau_1 \loli \tau_2 \gens \Phi, \Gamma' \setminus \{x : \tau_1\}
 }
-\end{mathpar}
-
-\begin{mathpar}
 
 \inferrule[AT-App]
 {
@@ -953,6 +959,9 @@ Simultaneous induction.
 }{
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e_1 \, e_2 \infers  \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2
 }
+
+\end{mathpar}
+\begin{mathpar}
 
 \inferrule[AT-TensorI]
 {
@@ -1200,7 +1209,7 @@ If $\Theta;\Delta \vdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then
 \input{proofs/sort-sound}
 
 \begin{theorem}[Raw Soundness of Constraint Well-Formedness]
-If $\Theta ; \Delta \vdash \Phi \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
+If $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
 \label{thm:raw-constr-sound}
 \end{theorem}
 \input{proofs/constr-sound}
