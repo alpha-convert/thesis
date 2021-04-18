@@ -1201,7 +1201,7 @@ By an easy simultaneous induction. This is only true because we don't require in
 
 
 \section{Soundness and Completeness}
-
+%\counterwithin{theorem}{section}
 \begin{theorem}[Raw Soundness of Sort Checking/Inference]
 If $\Theta;\Delta \vdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then $\Theta;\Delta \vdash I : S$ 
 \label{thm:raw-sort-sound}
@@ -1209,7 +1209,8 @@ If $\Theta;\Delta \vdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then
 \input{proofs/sort-sound}
 
 \begin{theorem}[Raw Soundness of Constraint Well-Formedness]
-If $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
+If $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then
+$\Theta ; \Delta \vdash \Phi \texttt{ wf}$
 \label{thm:raw-constr-sound}
 \end{theorem}
 \input{proofs/constr-sound}
