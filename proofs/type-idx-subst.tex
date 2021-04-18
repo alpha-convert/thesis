@@ -1,156 +1,370 @@
-\begin{proof}
-By induction on the derivation of $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$.
-\begin{enumerate}
-  \item[(K-Var)] Immediate.
-  \item[(K-Unit)] Immediate.
-  \item[(K-Arr)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \loli \tau_2 : \star$ from
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
-  By IH twice, we have that
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
-  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
-  But then by K-Arr, we have
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \loli \tau_2[I/i]: \star$
-  as required.
-  \item[(K-Tensor)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \otimes \tau_2 : \star$ from
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
-  By IH twice, we have that
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
-  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
-  But then by K-Tensor, we have
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \otimes \tau_2[I/i]: \star$
-  as required.
-  \item[(K-With)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \amp \tau_2 : \star$ from
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
-  By IH twice, we have that
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
-  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
-  But then by K-With, we have
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \amp \tau_2[I/i]: \star$
-  as required.
-  \item[(K-Sum)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \oplus \tau_2 : \star$ from
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 : \star$ and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau_2 : \star$.
-  By IH twice, we have that
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$ and
-  $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$.
-  But then by K-Sum, we have
-  $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \oplus \tau_2[I/i]: \star$
-  as required.
-  \item[(K-Bang)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash !\tau : \star$ by way of
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$,
-  and so by K-Bang,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : !\star$.
-  \item[(K-IForall)] Suppose $\Psi ; \Theta, i : S;  \Delta \vdash \forall j : S'. \tau : \star$ by way of
-  $\Psi ; \Theta, i : S, j : S' ; \Delta \vdash \tau : \star$.
-  By IH,
-  $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau[I/i] : \star$.
-  By K-IForall,
-  $\Psi ; \Theta ; \Delta \pvdash \forall j : S', \tau[I/i] : \star$, as required.
-  \item[(K-IExists)] Suppose $\Psi ; \Theta, i : S;  \Delta \vdash \exists j : S'. \tau : \star$ by way of
-  $\Psi ; \Theta, i : S, j : S' ; \Delta \vdash \tau : \star$.
-  By IH,
-  $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau[I/i] : \star$.
-  By K-IExists,
-  $\Psi ; \Theta ; \Delta \pvdash \exists j : S', \tau[I/i] : \star$, as required.
-  \item[(K-List)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash L^J \tau : \star$ by way of
-  $\Theta, i : S ; \Delta \vdash J : \N$ and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By \autoref{thm:idx-idx-subst},
-  $\Theta ; \Delta \pvdash J[I/i] : \N$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By K-List,
-  $\Psi ; \Theta l \Delta \pvdash L^{J[I/i]}\left(\tau[I/i]\right)$,
-  as required.
+\jtheorem{Proof of \autoref{thm:type-idx-subst}:}{
+\caseText{By induction on $\Psi ; \Theta, i : S ; \Delta \vdash \tau : K$}
+
+\jgivengoal{
+  \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$
   
-  \item[(K-Impl)] Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \Phi \implies \tau : \star$ by way of
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$ and
-  $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By \autoref{thm:constr-idx-subst},
-  $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
-  Then, by K-Conj,
-  $\Psi ; \Theta ; \Delta \vdash \Phi[I/i] \amp \tau[I/i] : \star$
-  as required.
-  Suppose $\Psi ; \Theta, i : S ; \Delta \vdash \Phi \amp \tau : \star$ by way of
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$ and
-  $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By \autoref{thm:constr-idx-subst},
-  $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
-  Then, by K-Implies,
-  $\Psi ; \Theta ; \Delta \pvdash \Phi[I/i] \implies \tau[I/i] : \star$
-  as required.
+  \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+}{
+$\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$
+}
+
+  \jcase{1}{K-Var}{Immediate.}
+  \jcase{2}{K-Unit}{Immediate.}
+  \jcase{3}{K-Arr}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \loli \tau_2 : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$    
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 : \star$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \loli \tau_2[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$
+    
+    \caseText{Goal follows by K-Arr on (5) and (6)}
+  }
   
-  \item[(K-Monad)] Suppose
-  $\Psi ; \Theta, i : S ; \Delta \vdash \M(J,\vec{p}) \tau : \star$
-  by way of
-  $\Theta, i : S ; \Delta \vdash J : \mathbb{N}$,
-  $\Theta, i : S ; \Delta \vdash \vec{p} : \potvec$, and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By \autoref{thm:idx-idx-subst}.
-  $\Theta ; \Delta \pvdash J[I/i] : \mathbb{N}$ and
-  $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  Then, by K-Monad,
-  $\Psi ; \Theta  \Delta \pvdash \M(J[I/i],\vec{p}[I/i]) \tau[I/i] : \star$
+  \jcase{4}{K-Tensor}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \otimes \tau_2 : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$    
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 : \star$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \otimes \tau_2[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$
+    
+    \caseText{Goal follows by K-Tensor on (5) and (6)}
+  }
   
-  \item[(K-Pot)] Suppose
-  $\Psi ; \Theta, i : S ; \Delta \vdash [J|\vec{p}] \tau : \star$
-  by way of
-  $\Theta, i : S ; \Delta \vdash J : \mathbb{N}$,
-  $\Theta, i : S ; \Delta \vdash \vec{p} : \potvec$, and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$.
-  By \autoref{thm:idx-idx-subst}.
-  $\Theta ; \Delta \pvdash J[I/i] : \mathbb{N}$ and
-  $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  Then, by K-Pot,
-  $\Psi ; \Theta  \Delta \pvdash \left[J[I/i],\vec{p}[I/i]\right] \tau[I/i] : \star$
+  \jcase{5}{K-With}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \amp \tau_2 : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$    
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 : \star$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \amp \tau_2[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$
+    
+    \caseText{Goal follows by K-With on (5) and (6)}
+  }
   
-  \item[(K-ConstPot)] Suppose
-  $\Psi ; \Theta, i : S ; \Delta \vdash [J] \; \tau : \star$
-  by way of
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : \star$ and
-  $\Theta, i : S ; \Delta \vdash J : \potvec$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$.
-  By \autoref{thm:idx-idx-subst},
-  $\Theta ; \Delta \pvdash J[I/i] : \potvec$.
-  By K-ConstPot,
-  $\Psi ; \Theta ; \Delta \pvdash \left[J[I/i]\right] \; \left(\tau[I/i]\right) : \star$
-  as required.
+  \jcase{6}{K-Sum}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \oplus \tau_2 : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$    
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 : \star$
+      
+      \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_2 : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \oplus \tau_2[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3) and (4)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] : \star$
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2[I/i] : \star$
+    
+    \caseText{Goal follows by K-Sum on (5) and (6)}
+  }
   
-  \item[(K-FamLam)] Suppose
-  $\Psi ; \Theta, i : S ; \Delta \vdash \lambda j : S'. \tau : S' \to K$
-  by way of
-  $\Psi ; \Theta, i : S, j ; S' ; \Delta \vdash \tau : K$.
-  By IH,
-  $\Psi ; \Theta, j ; S' ; \Delta \pvdash \tau[I/i] : K$.
-  By K-FamLam,
-  $\Psi ; \Theta ; \Delta \pvdash \lambda j : S'.\tau[I/i] : S' \to K$
-  as required.
+  \jcase{7}{K-Bang}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash !\tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$    
+      
+      \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : \star$
+    }{
+       $\Psi ; \Theta ; \Delta \pvdash !\tau[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{Goal follows by K-Bang on (5)}
+  }
   
-  \item[(K-FamApp)] Suppose
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau \; J : K$ by way of
-  $\Theta, i : S ; \Delta \vdash J : S$ and
-  $\Psi ; \Theta, i : S ; \Delta \vdash \tau : S \to K$.
-  By \autoref{thm:idx-idx-subst},
-  $\Theta ; \Delta \pvdash J[I/i] : S$.
-  By IH,
-  $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : S \to K$.
-  By K-FamApp,
-  $\Psi ; \Theta ; \Delta \pvdash \left(\tau[I/i]\right) \; \left(J[I/i]\right) : K$
-  as required.
+  \jcase{8}{K-IForall}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \forall j : S'. \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S, j : S'; \Delta \pvdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \forall j : S'. \tau[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{Goal follows by K-IForall on (4)}
+  }
   
-\end{enumerate}
-\end{proof}
+  \jcase{9}{K-IExists}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \exists j : S'. \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S, j : S'; \Delta \pvdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \exists j : S'. \tau[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta, j : S' ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{Goal follows by K-IExists on (4)}
+  }
+  
+  \jcase{10}{K-TForall}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \forall \alpha : K. \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi, \alpha : K ; \Theta, i : S ; \Delta \pvdash \tau : \star$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K. \tau[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi, \alpha : K ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{Goal follows by K-TForall on (4)}
+  }
+  
+  \jcase{11}{K-List}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash L^J \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S; \Delta \pvdash \tau : \star$
+      
+      \caseFact{4} $\Theta, i : S; \Delta \pvdash J : \N$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash L^{J[I/i]} \left(\tau[I/i]\right) : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{By \autoref{thm:idx-idx-subst} on (4)}
+    
+    \caseFact{6} $\Theta ; \Delta \pvdash J[I/i] : \N$
+    
+    \caseText{Goal follows by K-List on (5) and (6)}
+  }
+  
+  \jcase{12}{K-Impl}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \Phi \implies \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S; \Delta \pvdash \tau : \star$
+      
+      \caseFact{4} $\Theta, i : S; \Delta \pvdash \Phi \; \texttt{wf}$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \Phi[I/i] \implies \tau[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{By \autoref{thm:constr-idx-subst} on (4)}
+    
+    \caseFact{6} $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$
+    
+    \caseText{Goal follows by K-Impl on (5) and (6)}
+  }
+  
+  \jcase{13}{K-Conj}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \Phi \amp \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S; \Delta \pvdash \tau : \star$
+      
+      \caseFact{4} $\Theta, i : S; \Delta \pvdash \Phi \; \texttt{wf}$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \Phi[I/i] \amp \tau[I/i] : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{By \autoref{thm:constr-idx-subst} on (4)}
+    
+    \caseFact{6} $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$
+    
+    \caseText{Goal follows by K-Conj on (5) and (6)}
+  }
+  
+  \jcase{14}{K-Monad}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash \M \, (J,\vec{p})\, \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S; \Delta \pvdash \tau : \star$
+      
+      \caseFact{4} $\Theta, i : S; \Delta \pvdash J : \N$
+      
+      \caseFact{5} $\Theta, i : S; \Delta \pvdash \vec{p} : \potvec$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \M \, (J[I/i],\vec{p}[I/i]) \, \left(\tau[I/i]\right) : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{By \autoref{thm:idx-idx-subst} on (4) and (5)}
+    
+    \caseFact{7} $\Theta ; \Delta \pvdash J[I/i] : \N$
+    
+    \caseFact{8} $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$
+    
+    \caseText{Goal follows by K-Monad on (6), (7), and (8)}
+  }
+  
+  \jcase{15}{K-Pot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash [J|\vec{p}] \, \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S; \Delta \pvdash \tau : \star$
+      
+      \caseFact{4} $\Theta, i : S; \Delta \pvdash J : \N$
+      
+      \caseFact{5} $\Theta, i : S; \Delta \pvdash \vec{p} : \potvec$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash [J[I/i]|\vec{p}[I/i]] \, \left(\tau[I/i]\right) : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{By \autoref{thm:idx-idx-subst} on (4) and (5)}
+    
+    \caseFact{7} $\Theta ; \Delta \pvdash J[I/i] : \N$
+    
+    \caseFact{8} $\Theta ; \Delta \pvdash \vec{p}[I/i] : \potvec$
+    
+    \caseText{Goal follows by K-Pot on (6), (7), and (8)}
+  }
+  
+  \jcase{16}{K-ConstPot}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta, i : S ; \Delta \pvdash [J] \, \tau : \star$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta, i : S; \Delta \pvdash \tau : \star$
+      
+      \caseFact{4} $\Theta, i : S; \Delta \pvdash J : \R$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash [J[I/i]]\, \left(\tau[I/i]\right) : \star$    
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : \star$
+    
+    \caseText{By \autoref{thm:idx-idx-subst} on (4)}
+    
+    \caseFact{6} $\Theta ; \Delta \pvdash J[I/i] : \N$
+    
+    \caseText{Goal follows by K-ConstPot on (5) and (6)}
+  }
+  
+  \jcase{17}{K-FamLam}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta, i : S; \Delta \pvdash \lambda j : S'. \tau : S' \to K$    
+     
+     \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+     
+     \caseFact{3} $\Psi ; \Theta, i : S, j : S' \pvdash \tau : K$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \lambda j : S'. \tau[I/i] : S' \to K$
+    }  
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{4} $\Psi ; \Theta, j : S' \pvdash \tau[I/i] : K$
+    
+    \caseText{Goal follows by K-FamLam on (4)}
+  }
+  
+  \jcase{18}{K-FamApp}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta , i :S ; \Delta \pvdash \tau \; J : K$
+      
+      \caseFact{2} $\Theta ; \Delta \pvdash I : S$
+      
+      \caseFact{3} $\Psi ; \Theta , i : S;\Delta\pvdash \tau : S' \to K$
+      
+      \caseFact{4} $\Theta, i : S ;\Delta \pvdash J : S'$
+      
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \left(\tau[I/i]\right) \; \left(J[I/i]\right) : K$
+    }
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : S' \to K$
+    
+    \caseText{By \autoref{thm:idx-idx-subst} on (4)}
+    
+    \caseFact{6} $\Theta ; \Delta \pvdash J[I/i] : S'$
+    
+    \caseText{Goal follows by K-FamApp on (5) and (6)}
+  }
+
+
+}
