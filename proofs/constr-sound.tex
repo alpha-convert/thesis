@@ -1,17 +1,175 @@
+\jtheorem{Proof of \autoref{thm:raw-constr-sound}}{
+  \jgivengoal{
+    \caseFact{1} $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$
+    
+    \caseFact{2} $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$  
+  }
+  
+  \caseText{By induction on $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$}
+  
+  \jcase{1}{AC-Top}{Immediate.}
+  
+  \jcase{2}{AC-Bot}{Immediate.}
+  
+  \jcase{3}{AC-Conj}{
+   \jgivengoal{
+     \caseFact{1} $\Theta ; \Delta \vdash \Phi_1 \wedge \Phi_2 \; \texttt{wf} \gens \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{2} $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{3} $\Theta ; \Delta \vdash \Phi_1 \; \texttt{wf} \gens \Phi_1'$
+     
+     \caseFact{4} $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$
+   }{
+     $\Theta ; \Delta \vdash \Phi_1 \wedge \Phi_2 \; \texttt{wf}$   
+   }
+   
+   \caseText{By IH on (3)}
+   
+   \caseFact{5} $\Theta ; \Delta \vdash \Phi_1 \; \texttt{wf}$
+   
+   \caseText{By IH on (4)}
+   
+   \caseFact{6} $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf}$
+   
+   \caseText{Goal follows by C-Conj on (5) and (6)}
+  }
+  
+  \jcase{4}{AC-Disj}{
+   \jgivengoal{
+     \caseFact{1} $\Theta ; \Delta \vdash \Phi_1 \vee \Phi_2 \; \texttt{wf} \gens \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{2} $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$
+     
+     \caseFact{3} $\Theta ; \Delta \vdash \Phi_1 \; \texttt{wf} \gens \Phi_1'$
+     
+     \caseFact{4} $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$
+   }{
+     $\Theta ; \Delta \vdash \Phi_1 \vee \Phi_2 \; \texttt{wf}$   
+   }
+   
+   \caseText{By IH on (3)}
+   
+   \caseFact{5} $\Theta ; \Delta \vdash \Phi_1 \; \texttt{wf}$
+   
+   \caseText{By IH on (4)}
+   
+   \caseFact{6} $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf}$
+   
+   \caseText{Goal follows by C-Disj on (5) and (6)}
+  }
+  
+  \jcase{5}{AC-Impl}{
+   \jgivengoal{
+     \caseFact{1} $\Theta ; \Delta \vdash \Phi_1 \to \Phi_2 \; \texttt{wf} \gens \Phi_1' \wedge (\Phi_1 \to \Phi_2')$
+     
+     \caseFact{2} $\Theta ; \Delta \vDash \Phi_1' \wedge (\Phi_1 \to \Phi_2')$
+     
+     \caseFact{3} $\Theta ; \Delta \vdash \Phi_1 \; \texttt{wf} \gens \Phi_1'$
+     
+     \caseFact{4} $\Theta ; \Delta, \Phi_1 \vdash \Phi_2 \; \texttt{wf} \gens \Phi_2'$
+   }{
+     $\Theta ; \Delta \vdash \Phi_1 \to \Phi_2 \; \texttt{wf}$   
+   }
+   
+   \caseText{By IH on (3)}
+   
+   \caseFact{5} $\Theta ; \Delta \vdash \Phi_1 \; \texttt{wf}$
+   
+   \caseText{From (2)}
+   
+   \caseFact{6} $\Theta ; \Delta, \Phi_1 \vDash \Phi_2'$
+   
+   \caseText{By IH on (4) with (6)}
+   
+   \caseFact{7} $\Theta ; \Delta, \Phi_1 \vdash \Phi_2 \; \texttt{wf}$
+   
+   \caseText{Goal follows by C-Impl on (5) and (7)}
+  }
+  
+  \jcase{6}{AC-Forall}{
+    \jgivengoal{
+      \caseFact{1} $\Theta ; \Delta \vdash \forall i : S. \Phi \; \texttt{wf} \gens \forall i : S. \Phi'$
+      
+      \caseFact{2} $\Theta ; \Delta \vDash \forall i : S. \Phi'$
+      
+      \caseFact{3} $\Theta, i : S; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$
+    }{
+      $\Theta ; \Delta \vdash \forall i : S. \Phi \; \texttt{wf}$    
+    }
+    
+    \caseText{Equivalently to (2)}
+    
+    \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi'$
+    
+    \caseText{By IH on (3) with (4)}
+    
+    \caseFact{5} $\Theta, i : S; \Delta \vdash \Phi \; \texttt{wf}$
+    
+    \caseText{Goal follows from C-Forall on (5)} 
+  }
+  
+  \jcase{7}{AC-Exists}{
+    \jgivengoal{
+      \caseFact{1} $\Theta ; \Delta \vdash \exists i : S. \Phi \; \texttt{wf} \gens \forall i : S. \Phi'$
+      
+      \caseFact{2} $\Theta ; \Delta \vDash \exists i : S. \Phi'$
+      
+      \caseFact{3} $\Theta, i : S; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$
+    }{
+      $\Theta ; \Delta \vdash \exists i : S. \Phi \; \texttt{wf}$    
+    }
+    
+    \caseText{Equivalently to (2)}
+    
+    \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi'$
+    
+    \caseText{By IH on (3) with (4)}
+    
+    \caseFact{5} $\Theta, i : S; \Delta \vdash \Phi \; \texttt{wf}$
+    
+    \caseText{Goal follows from C-Exists on (5)} 
+  }
+  
+  \jcase{8}{AC-Eq}{
+    \jgivengoal{
+     \caseFact{1} $\Theta ; \Delta \vdash I = J \; \texttt{wf} \gens \Phi_1 \wedge \Phi_2$    
+     
+     \caseFact{2} $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$
+     
+     \caseFact{3} $\Theta ; \Delta \vdash I : bS \gens \Phi_1$
+     
+     \caseFact{4} $\Theta ; \Delta \vdash J : bS \gens \Phi_2$
+    }{
+      $\Theta ; \Delta \vdash I = J \; \texttt{wf}$
+    }
+    \caseText{By \autoref{thm:raw-sort-sound} on (3)}
+      
+    \caseFact{5} $\Theta ; \Delta \vdash I : bS$
+      
+    \caseText{By \autoref{thm:raw-sort-sound} on (4)}
+      
+    \caseFact{6} $\Theta ; \Delta \vdash J : bS$
+      
+    \caseText{Goal follows by C-Eq on (5) and (6)}
+  }
+  
+  \jcase{9}{AC-Leq}{Identical to Case 8}
+  
+  \jcase{10}{AC-Lt}{Identical to Case 8}
+
+}
+
+\iffalse
 \begin{proof}
 By induction on $\Theta ; \Delta \vdash \Phi \gens \Phi'$
 \begin{itemize}
- \item[AC-Top] Immediate.
- \item[AC-Bot] Immediate.
- \item[AC-Conj] Suppose $\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2 \gens \Phi_1' \wedge \Phi_2'$ from $\Theta ; \Delta \vdash \Phi_1 \gens \Phi_1'$ and $ \Theta ; \Delta \vdash \Phi_2 \gens \Phi_2'$ with $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$. By IH, $\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}$ and $\Theta ; \Delta \vdash \Phi_2 \texttt{ wf}$. By C-Conj, $\Theta;\Delta \vdash \Phi_1 \wedge \Phi_2 \texttt{ wf}$
- \item[AC-Disj]Suppose $\Theta;\Delta \vdash \Phi_1 \vee \Phi_2 \gens \Phi_1' \wedge \Phi_2'$ from $\Theta ; \Delta \vdash \Phi_1 \gens \Phi_1'$ and $ \Theta ; \Delta \vdash \Phi_2 \gens \Phi_2'$ with $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$. By IH, $\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}$ and $\Theta ; \Delta \vdash \Phi_2 \texttt{ wf}$. By C-Conj, $\Theta;\Delta \vdash \Phi_1 \vee \Phi_2 \texttt{ wf}$
- \item[AC-Impl] Suppose $\Theta;\Delta \vdash \Phi_1 \to \Phi_2 \gens \Phi_1' \wedge \Phi_2'$ from $\Theta ; \Delta \vdash \Phi_1 \gens \Phi_1'$ and $ \Theta ; \Delta \vdash \Phi_2 \gens \Phi_2'$ with $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$. By IH, $\Theta ; \Delta \vdash \Phi_1 \texttt{ wf}$ and $\Theta ; \Delta \vdash \Phi_2 \texttt{ wf}$. By C-Conj, $\Theta;\Delta \vdash \Phi_1 \to \Phi_2 \texttt{ wf}$
- \item[AC-Forall] Suppose $\Theta ; \Delta \vdash \forall i : S. \Phi \gens \forall i : S. \Phi'$
- from $\Theta, i : S ; \Delta \vdash \Phi \gens \Phi'$ with $\Theta ; \Delta \vDash \forall i : S. \Phi'$. Equivalently, $\Theta , i : S; \Delta \vDash \Phi'$, and so by IH, $\Theta, i : S ; \Delta \vdash \Phi \texttt{ wf}$ and so by C-Forall, $\Theta ; \Delta \vdash \forall i : S. \Phi \texttt{ wf}$
- 
- \item[AC-Exists] Suppose $\Theta ; \Delta \vdash \exists i : S. \Phi \gens \forall i : S. (\Phi \to \Phi')$ from $\Theta, i : S ; \Delta, \Phi \vdash \Phi \gens \Phi'$ with $\Theta ; \Delta \vDash \forall i : S.(\Phi \to \Phi')$. Equivalently, $\Theta , i : S ; \ Theta, \Phi \vDash \Phi'$. By IH, $\Theta, i : S ; \Delta, \Phi \vdash \Phi \texttt{ wf}$, and by C-Exists, $\Theta ; \Delta \vdash \forall i : S. \Phi$ as required.
  \item[AC-Eq] Suppose $\Theta ; \Delta \vdash I = J \gens \Phi_1 \wedge \Phi_2$ from $\Theta ; \Delta \vdash I : bS \gens \Phi_1$ and  $\Theta ; \Delta \vdash J : bS \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. By \textbf{Soundness of Sort Checking}, $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$, and so by C-Eq, $\Theta ; \Delta \vdash I = J$.
  \item[AC-Leq] Suppose $\Theta ; \Delta \vdash I \leq J \gens \Phi_1 \wedge \Phi_2$ from $\Theta ; \Delta \vdash I : bS \gens \Phi_1$ and  $\Theta ; \Delta \vdash J : bS \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. By \textbf{Soundness of Sort Checking}, $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$, and so by C-Leq, $\Theta ; \Delta \vdash I \leq J$.
  \item[AC-Lt] Suppose $\Theta ; \Delta \vdash I < J \gens \Phi_1 \wedge \Phi_2$ from $\Theta ; \Delta \vdash I : bS \gens \Phi_1$ and  $\Theta ; \Delta \vdash J : bS \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. By \textbf{Soundness of Sort Checking}, $\Theta ; \Delta \vdash I : bS$ and $\Theta ; \Delta \vdash J : bS$, and so by C-Lt, $\Theta ; \Delta \vdash I < J$.
 \end{itemize}
 \end{proof}
+
+\fi
