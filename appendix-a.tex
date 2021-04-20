@@ -1,4 +1,82 @@
+%\setlength\parindent{0pt}
 %\textbf{SOMETHING IS MESSED UP WITH APPENDIX THEOREM NUMBERING... FIX THIS}
+\section{Example Terms}
+
+\subsection{Insertion Sort}
+$$
+\begin{array}{l}
+\texttt{insert} \, : \, \forall n : \N. \, !\tau \loli L^n\left(!\tau\right) \loli \M \, (n,\langle 0,1\rangle) \, \left(L^{n+1}\left(!\tau\right)\right)\\
+\texttt{insert} = \texttt{fix}(\texttt{insert}.\\[-2mm]
+\hspace{1em} \Lambda n. \lambda b_x. \texttt{let} \, !x = b_x \, \texttt{in}\\[-2mm]
+\hspace{1em} \lambda xs.\\[-2mm]
+\hspace{1em} \texttt{case}(xs,\texttt{ret}(!(x::\texttt{nil})),by.ys.\\[-2mm]
+\hspace{2em} \texttt{shift}(\\[-2mm]
+\hspace{3em} \texttt{bind} \, b = \texttt{leq} \, (x,y) \, [n-1] \, \texttt{in}\\[-2mm]
+\hspace{3em} \texttt{if} \, b \, \texttt{then} \texttt{ret} \, ((!x)::(!y)::ys)\\[-2mm]
+\hspace{3em} \texttt{else bind} \, zs = \texttt{insert} \, [n-1] \, (!x) \, ys \, \texttt{in}\\[-2mm]
+\hspace{3em} \texttt{ret} \, ((!y)::zs)\\[-2mm]
+\hspace{2em})\\[-2mm]
+\hspace{1em})\\[-2mm]
+)
+\end{array}
+$$
+
+$$
+\begin{array}{l}
+\texttt{ins_sort} \, : \, \forall n : \N. \, L^n\left(!\tau\right) \loli \M \, (n,\langle 0,0,1\rangle) \, \left(L^n\left(!\tau\right)\right)\\
+\texttt{ins_sort} = \texttt{fix}(\texttt{ins_sort}.\\[-2mm]
+\hspace{1em} \Lambda n. \lambda xs.\\[-2mm]
+\hspace{1em} \texttt{case}(xs,\texttt{ret} \, \texttt{nil},y,ys.\\[-2mm]
+\hspace{2em} \texttt{shift}(\\[-2mm]
+\hspace{3em} \texttt{bind}\, ys' = \texttt{ins_sort} \, [n-1]\, ys \, \texttt{in}\\[-2mm]
+\hspace{3em} \texttt{insert} \, [n-1] \, y \, ys\\[-2mm]
+\hspace{2em})\\[-2mm]
+\hspace{1em})\\[-2mm]
+)
+\end{array}
+$$
+
+
+\subsection{Functional Queue}
+
+$$
+\begin{array}{l}
+\texttt{enq} \; : \; \forall n,m : \N. \, [3] \, 1 \loli \tau \loli L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \, \langle 0 \rangle \, \left(L^{n+1}([2] \, \tau) \otimes L^m \, \tau\right)\\
+
+\texttt{enq} = \Lambda n. \Lambda m. \lambda p. \lambda x. \lambda ins.\lambda outs. \Lambda j.\\[-2mm]
+\hspace{1em} \texttt{release} \, _ = p \, \texttt{in}\\[-2mm]
+\hspace{1em} \texttt{bind} \, _ = \texttt{tick}[j|[1.0]] \, \texttt{in}\\[-2mm]
+\hspace{1em} \texttt{bind} \, x' = \texttt{store}[2.0](x) \, \texttt{in}\\[-2mm]
+\hspace{1em} \texttt{ret}(x'::ins,outs)
+\end{array}
+$$
+
+%let move : Tforall a : *. Iforall n : Nat. Iforall m : Nat.
+%           List(n, [2.0] a) -> List(m,a) -> (Iforall j : Nat. M(j|[0.0]) (List(m + n,a)))
+%= TLam a. fix move = ILam n. ILam m. lam xs. lam ys. ILam j.
+%case xs of
+%  nil => ret ys
+%| z::zs => release z' = z in
+%           bind _ = tick[j|[2.0]] in
+%           bind zs' = move [n-1] [m] zs ys [j] in
+%           ret (z' :: zs')
+
+$$
+\texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^{n'}([2] \, \tau) \otimes L^{m'} \, \tau\right)\right)
+$$
+
+\subsection{Map}
+
+$$
+\begin{array}{l}
+\texttt{map} \; : \; \forall \alpha,\beta : \star. \forall C : \N \to \R^+. \forall n : \N. \\
+\hspace{3em} !\left(\forall i : \N. [C \, i] \, 1 \loli \texttt{Nat}(i) \loli \alpha \loli \M \, \langle 0 \rangle\,  \beta\right) \loli\\
+\hspace{3em}  !\texttt{Nat}(n) \loli \\
+\hspace{3em}  L^n \,\alpha \loli\\ 
+\hspace{3em}  \M \, \langle \texttt{const}\left(\sum_{0 \leq i < n} C(i)\right) \rangle\, \left(L^n \, \beta\right)
+\end{array}
+$$
+
 \section{Rules of \dlambdaamor}
 
 \subsection{Wellformedness Judgments}
@@ -1045,15 +1123,14 @@
 
 
 
-\section{Theorems and Proofs}
+\section{Theorems}
 
-\ctxwfstreng*
+\noindent\ctxwfstreng*
 \begin{proof}
 Immediate from the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$ exactly when $\Psi ; \Theta ; \Delta \vdash \tau : \star$ for every $x : \tau \in \Gamma$.
 \end{proof}
 
 \conwfstreng*
-
 \begin{theorem}[Raw Admissibility of Weakening for Sort Checking]
 If $\Theta ; \Delta \vdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \vdash I : S$
 \end{theorem}
@@ -1079,7 +1156,7 @@ If $\Theta, j : S_1 ; \Delta \vdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_
 $\Theta ; \Delta[J/j] \vdash I[J/j] : S_2$
 \label{thm:raw-idx-idx-subst}
 \end{theorem}
-\input{proofs/idx-idx-subst}
+
 
 \begin{theorem}[Index Substitution for Sort Checking]
 If $\Theta, j : S_1 ; \Delta \pvdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$ then $\Theta ; \Delta \pvdash I[J/j] : S_2$
@@ -1093,7 +1170,7 @@ Immediate by \autoref{thm:raw-idx-idx-subst}, using the fact that $\Theta \vdash
 If $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \vdash I : S$ then $\Theta ; \Delta[I/i] \vdash \Phi[I/i] \, \texttt{wf}$
 \label{thm:raw-constr-idx-subst}
 \end{theorem}
-\input{proofs/constr-idx-subst}
+
 
 \begin{theorem}[Index Substitution for Constraint Well-Formedness]
 If $\Theta, i : S ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \pvdash I : S$ then $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}.$
@@ -1115,7 +1192,7 @@ $\Psi' ; \Theta' ; \Delta \vdash \Gamma \; \texttt{wf}$.
 \end{theorem}
 
 \typeidxsubst*
-\input{proofs/type-idx-subst}
+
 
 \begin{theorem}[Admissibility of Weakening for Subtyping]
 Suppose $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$.
@@ -1155,13 +1232,13 @@ If $\Psi' ; \Theta' ; \Delta \pvdash \Gamma \wknto \Gamma'$ with $\Theta' \supse
 \end{theorem}
 \label{thm:ctx-sub-streng}
 \begin{proof}
-Immediate by Theorem~\ref{thm:ctx-sub-subset2} and Theorem~\ref{thm:subty-streng}
+Immediate by Theorem~\ref{thm:ctx-sub-subset-2} and Theorem~\ref{thm:subty-streng}
 \end{proof}
 
 \ctxsubswap*
 \begin{proof}
-By Theorem~\ref{thm:ctx-sub-subset2}, it suffices to show that for every $x : \tau \in \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2'$,
-and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. Suppose $x : \tau \in \Gamma_2'$. Then, $x : \tau \in \Gamma_1'$. Further, since $\Psi' ; \Theta' ;  \Delta' \vdash \Gamma_2 \wknto \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2$. But then, $x : \tau' \in \Gamma_1$, and so since  $\Psi ; \Theta ; \Delta \vdash \Gamma_1 \wknto \Gamma_1'$, we have that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, by Theorem~\ref{thm:ctx-sub-subset2}.
+By Theorem~\ref{thm:ctx-sub-subset-2}, it suffices to show that for every $x : \tau \in \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2'$,
+and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. Suppose $x : \tau \in \Gamma_2'$. Then, $x : \tau \in \Gamma_1'$. Further, since $\Psi' ; \Theta' ;  \Delta' \vdash \Gamma_2 \wknto \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2$. But then, $x : \tau' \in \Gamma_1$, and so since  $\Psi ; \Theta ; \Delta \vdash \Gamma_1 \wknto \Gamma_1'$, we have that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, by Theorem~\ref{thm:ctx-sub-subset-2}.
 \end{proof}
 
 \subsection{Normalization}
@@ -1184,7 +1261,6 @@ By an easy simultaneous induction. This is only true because we don't require in
 %Define $\# \tau$ to be the number of type connectives in $\tau$.
 
 \normthm*
-\input{proofs/norm-thm}
 
 \begin{theorem}
 ~\begin{itemize}
@@ -1206,14 +1282,12 @@ By an easy simultaneous induction. This is only true because we don't require in
 If $\Theta;\Delta \vdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then $\Theta;\Delta \vdash I : S$ 
 \label{thm:raw-sort-sound}
 \end{theorem}
-\input{proofs/sort-sound}
 
 \begin{theorem}[Raw Soundness of Constraint Well-Formedness]
 If $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$ then
 $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
 \label{thm:raw-constr-sound}
 \end{theorem}
-\input{proofs/constr-sound}
 
 \idxctxwfsound*
 \begin{proof}
@@ -1237,7 +1311,6 @@ Immediate by Theorem~\ref{thm:raw-constr-sound} and Theorem~\ref{thm:idx-ctx-wf-
 If $\Psi ; \Theta ; \Delta \vdash \tau : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ then $\Psi ; \Theta ; \Delta \vdash \tau : K$.
 \label{thm:raw-kind-sound}
 \end{theorem}
-\input{proofs/kind-sound}
 
 \kindsound*
 \begin{proof}
@@ -1247,7 +1320,6 @@ Immediate by Theorem~\ref{thm:raw-kind-sound} and Theorem~\ref{thm:idx-ctx-wf-so
 \begin{theorem}[Raw Soundness of Subtyping for Normal Forms]
 If $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ then $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$\label{thm:raw-subtynf-sound}
 \end{theorem}
-\input{proofs/subtynf-sound}
 
 \subtynfsound*
 \begin{proof}
@@ -1296,7 +1368,6 @@ If $\Gamma_1,\Gamma_2 \subseteq \Gamma$ such that $\Psi ; \Theta ; \Delta \vdash
 \end{enumerate}
 \end{theorem}
 %\textbf{Redo in new style}
-\input{proofs/tycheck-sound}
 
 \tychecksound*
 \begin{proof}
@@ -1314,7 +1385,6 @@ If $\Theta;\Delta \vdash I : S$, then $\Theta;\Delta \vdash I : S \gens \Phi$ an
 %\textbf{REDO THIS, FIX Proof file Name}
 \label{thm:raw-sort-compl}
 \end{theorem}
-\input{proofs/sort-compl}
 
 \begin{theorem}[Raw Completeness of Constraint Well-Formedness]
 If $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$, then $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$
@@ -1342,7 +1412,6 @@ Immediate by Theorem~\ref{thm:raw-constr-compl} and Theorem~\ref{thm:idx-ctx-wf-
 If $\Phi;\Theta;\Delta \vdash \tau : K$, then $\Phi;\Theta;\Delta \vdash \tau : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$
 \label{thm:raw-kind-compl}
 \end{theorem}
-\input{proofs/raw-kind-compl}
 
 \kindcompl*
 \begin{proof}
@@ -1350,13 +1419,10 @@ Immediate by Theorem~\ref{thm:raw-kind-compl} and Theorem~\ref{thm:idx-ctx-wf-co
 \end{proof}
 
 \subtynerefl*
-\input{proofs/subtyne-refl}
 
 \subtynfrefl*
-\input{proofs/subtynf-refl}
 
 \subtynftrans*
-\input{proofs/subtynf-trans}
 
 
 \begin{theorem}[Index Substitution for Algorithmic Sort Checking]
@@ -1398,7 +1464,6 @@ Finally, by Theorem~\ref{thm:kind-compl}, $\Psi ; \Theta ; \Delta \pvdash \tau[I
 \end{proof}
 
 \subtynfidxsubst*
-\input{proofs/subtynf-idx-subst}
 
 \evalapplemma*
 \begin{proof}
@@ -1413,10 +1478,44 @@ By inversion on $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \t
 \end{proof}
 
 \subtycompl*
-\input{proofs/subty-compl}
 
 \admitsweaken*
-\input{proofs/admits-weaken}
 
 \tycheckcompl*
+
+\section{Proofs}
+\input{proofs/idx-idx-subst}
+
+\input{proofs/constr-idx-subst}
+
+\input{proofs/type-idx-subst}
+
+\input{proofs/norm-thm}
+
+\input{proofs/sort-sound}
+
+\input{proofs/constr-sound}
+
+\input{proofs/kind-sound}
+
+\input{proofs/subtynf-sound}
+
+\input{proofs/tycheck-sound}
+
+\input{proofs/sort-compl}
+
+\input{proofs/raw-kind-compl}
+
+\input{proofs/subtyne-refl}
+
+\input{proofs/subtynf-refl}
+
+\input{proofs/subtynf-trans}
+
+\input{proofs/subtynf-idx-subst}
+
+\input{proofs/subty-compl}
+
+\input{proofs/admits-weaken}
+
 \input{proofs/tycheck-compl}
