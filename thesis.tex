@@ -1,4 +1,3 @@
-
 \def\fileversion{1.0}
 \def\filedate{April 2021}
 
@@ -8,7 +7,8 @@
 \makeatother
 \input{packages}
 
-\title{Type Systems and Recurrence Extraction Approaches to\\ Formal Amortized Analysis}
+\title{Languages with Potential:\\
+\normalsize{Types \& Recurrences for Formal Amortized Analysis}}
 \author{Joseph W. Cutler}
 \department{Mathematics and Computer Science}
 \submitdate{April 2021}
@@ -16,7 +16,8 @@
 
 
 
-\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{theorem}{Theorem}[section]
+\declaretheorem[name=Theorem,numberwithin=section]{theorem}
 \newtheorem{corollary}{Corollary}[section]
 \newtheorem{lemma}{Lemma}[section]
 \newtheorem{definition}{Definition}[section]
@@ -34,6 +35,11 @@
 \begin{document}
 
 \begin{abstract}
+While decades of research into formal verification have brought provable correctness guarantees closer to being a part of developers' everyday reality, provable guarantees about algorithmic complexity are harder to come by. This is not for lack of effort. Algorithmic complexity and program cost don't play nicely with abstraction, and so they can prove a difficult target for the kinds of compositional analysis that formal tools handle best. However, the classical algorithm analysis technique known as amortized analysis \cite{tarjan:amortized-complexity} is promising in this regard: it allows one to selectively break abstraction barriers to precisely and compositionally calculate program costs. In this thesis, we leverage amortized analysis to make two contributions which make some progress towards our goal of provable cost guarantees for the masses.
+
+We begin by taking a cue from the interactive theorem proving school of software verification. Taking after languages like Liquid Haskell \cite{vazou-et-al:icfp14}, we develop a functional language called \lambdaamorimpl, which provides a rich refinement type system for in-language amortized cost analysis. We begin with a previously-developed core calculus called \lambdaamor \cite{rajani-et-al:popl21}, transform it to an \textit{algorithmic} type system which is amenable to implementation, and subsequently implement the language in OCaml.
+
+Next, we move to considering a more lightweight method of analyzing the cost of programs, namely the extract-and-solve method of recurrences. This technique is already used (explicitly or otherwise) by practitioners of functional languages, and regularly included in introductory CS curricula. However, the technique is informal, error-prone, and not immediately applicable to amortized cost analysis. Following on work by \citet{danner-et-al:icfp15}, we formalize the process of amortized analysis by recurrence extraction as a language-to-language translation, and use this to prove the technique's correctness.
 \end{abstract}
 
 
@@ -42,38 +48,41 @@
 \end{dedication}
 
 \begin{acknowledgements}
-Firstly and most importantly, I must thank my outstanding research advisor, Dan Licata. Dan took me under his wing when I was only a freshman, and spent countless hours of his valuable time gently teaching me the ways of programming language research. In the years since, he's become an amazing mentor, a wonderful collaborator, and a great friend. For all this, I will be eternally grateful.
+Firstly and most importantly, I must thank my outstanding research advisor, Prof. Dan Licata. Dan took me under his wing when I was only a freshman, and spent countless hours of his valuable time gently teaching me the ways of programming language research. In the years since, he's become an amazing mentor, a tremendously skillful collaborator, and a great friend. For all this, I will be eternally grateful.
 
-I am also incredibly lucky to have been simultaneously mentored by Norman Danner. On top of being the spiritual leader of the Wesleyan PL cost-analysis group and the driving force in shaping my research interests, Norman is an absolutely stellar professor, from whom I had the pleasure of taking multiple courses and seminars.
+I am also incredibly lucky to have been simultaneously mentored by the wonderful Prof. Norman Danner. On top of being the spiritual leader of the Wesleyan PL cost-analysis group and the driving force in shaping my research interests, Norman is an absolutely stellar professor from whom I had the pleasure of taking multiple courses and seminars.
 
 I would like to express my gratitude to my readers, Dan, Norman, and Robert Rose, for taking the time to read this tome.
 
-A huge amount of thanks also goes out to Deepak Garg, who, over a high-top table at the hotel bar at POPL 2020, offered to host me at MPI-SWS for the internship that became Chapter 2 of this thesis. I also appreciate his generosity in agreeing to work with me virtually when a global pandemic decided to upend my summer-in-Germany plans.
+A huge amount of thanks also goes out to Prof. Deepak Garg, who, over a high-top table at the hotel bar at POPL 2020, offered to host me at MPI-SWS for the internship that became Chapter 2 of this thesis. I also appreciate his generosity in agreeing to work with me virtually when a global pandemic decided to upend my summer-in-Saarbrucken plans.
 
-I am very grateful for the joint friend/mentor-ship offered by Joomy Korkut, Alex Kavvos, and Mitchell Riley, all of whom seamlessly and rapidly alternate between being outstanding friends, kind mentors, and non-judgmental shoulders to cry on.
+I am very grateful for the joint friend/mentor-ship offered by Joomy Korkut, Prof. Alex Kavvos, and Mitchell Riley, all of whom seamlessly and rapidly alternate between being outstanding friends, kind mentors, and non-judgmental shoulders to cry on.
 
-I would be remiss not to mention the rotating cast of characters who have inhabited ESC341 and ESC345, my two ``offices" during my time at Wesleyan: Yulia, Pi, Rocco, Elliott, Vabuk, and Ed, you all made it worth trudging through the CT cold to come to the office each day. Similarly, I would like to thank the many denizens of the 6th floor math lounge for providing yet another comfortable and fun working environment.
+I would be remiss not to mention the rotating cast of characters with whom I've shared ESC341 and ESC345, my two ``offices" during my time at Wesleyan: Yulia, Pi, Rocco, Elliott, Vabuk, and Ed, you all made it worth trudging through the CT cold to come to work in Exley each day. Similarly, I would like to thank the many denizens of the 6th floor math lounge for providing yet another comfortable and fun working environment.
 
 Of course, as is true of all such projects, this thesis would not have been possible without the emotional support of my wonderful housemates and friends. Sam, Shea, Rachel, the gang from $(\N \to \N) \to (\N \to \N) \to (\N \to \N)$, and the folks from the PL-twitterverse have all been instrumental in keeping me sane during the madness that has been 2020 and 2021.
 
-Finally, I must acknowledge the tremendous support my family has provided me through college, and during the past year especially. Mom, Dad, and Nathaniel: I got to spent more time with you than I was expecting to this year, and I'm thankful for it every day.
+Finally, I must acknowledge the tremendous support my family has provided me through college, and during the past year especially. Mom, Dad, and Nathaniel: I got to spent more time with you than I was expecting to this year, and I'm thankful for it every day. Cristian and Vyana: your astounding hospitality made it possible for me to weather the storm of our rocky COVID summer, and emerge on the other end with a head start on the contents of this thesis.
 \end{acknowledgements}
 
 
 \frontmatter
 \maketitle
-%\makeabstract
+\makeabstract
 \makededication
-\makeack
+\makeack 
 %\setcounter{tocdepth}{2}
 \tableofcontents
+%\listoftheorems[ignoreall,show={thm}]
+
 \mainmatter
+
 
 \hypersetup{allcolors = {blue}}
 
 \chapter{Introduction}
 \label{ch:intro}
-%\include{intro}
+\include{intro}
 
 \chapter{Amortized Analysis with Type Systems}
 \label{ch:lambda-amor}
@@ -82,9 +91,10 @@ Finally, I must acknowledge the tremendous support my family has provided me thr
 
 \chapter{Amortized Analysis by Recurrence Extraction}
 \label{ch:rec-extr}
-%\include{rec-extr}
+\include{rec-extr}
 
 \bibliographystyle{plainnat}
+
 \bibliography{refs}
 
 \appendix
@@ -98,7 +108,7 @@ Finally, I must acknowledge the tremendous support my family has provided me thr
 
 \chapter{}
 \label{appendix:b}
-%\include{appendix-b}
+\include{appendix-b}
 
 
 \end{document}
