@@ -555,162 +555,6 @@
    \texttt{eval}(\tau) \; I & \texttt{eval}(\tau) \; \texttt{ne}
                               \end{cases}
 \end{align*}
-
-\section{\dlambdaamor Theorems and Proofs}
-
-\ctxwfstreng*
-\begin{proof}
-Immediate from the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$ exactly when $\Psi ; \Theta ; \Delta \vdash \tau : \star$ for every $x : \tau \in \Gamma$.
-\end{proof}
-
-\conwfstreng*
-%\begin{proof}
-%Immediate by inversion.
-%\end{proof}
-
-\begin{theorem}[Raw Admissibility of Weakening for Sort Checking]
-If $\Theta ; \Delta \vdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \vdash I : S$
-\end{theorem}
-
-\begin{theorem}[Raw Admissibility of Weakening for Constraint Well-Formedness]
-If $\Theta ; \Delta \vdash \Phi \; \texttt{ wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \vdash \Phi \; \texttt{ wf}$
-\end{theorem}
-
-\begin{theorem}[Admissibility of Weakening for Constraint Context Well-Formedness]
-If $\Theta \vdash \Delta \; \texttt{wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' \vdash \Delta \; \texttt{wf}$
-\end{theorem}
-
-\begin{theorem}[Admissibility of Weakening for Sort Checking]
-If $\Theta ; \Delta \pvdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \pvdash I : S$
-\end{theorem}
-
-\begin{theorem}[Admissibility of Weakening for Constraint Well-Formedness]
-If $\Theta ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \pvdash \Phi \; \texttt{ wf}$
-\end{theorem}
-
-\begin{theorem}[Raw Index Substitution for Constraint-Well-Formedness]
-If $\Theta, j : S_1 ; \Delta \vdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$, then 
-$\Theta ; \Delta[J/j] \vdash I[J/j] : S_2$
-\label{thm:raw-idx-idx-subst}
-\end{theorem}
-\input{proofs/idx-idx-subst}
-
-\begin{theorem}[Index Substitution for Sort Checking]
-If $\Theta, j : S_1 ; \Delta \pvdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$ then $\Theta ; \Delta \pvdash I[J/j] : S_2$
-\label{thm:idx-idx-subst}
-\end{theorem}
-\begin{proof}
-Immediate by \autoref{thm:raw-idx-idx-subst}, using the fact that $\Theta \vdash \Delta \, \texttt{wf}$.
-\end{proof}
-
-\begin{theorem}[Raw Index Substitution for Constraint Well-formedness]
-If $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \vdash I : S$ then $\Theta ; \Delta[I/i] \vdash \Phi[I/i] \, \texttt{wf}$
-\label{thm:raw-constr-idx-subst}
-\end{theorem}
-\input{proofs/constr-idx-subst}
-
-\begin{theorem}[Index Substitution for Constraint Well-Formedness]
-If $\Theta, i : S ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \pvdash I : S$ then $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}.$
-\label{thm:constr-idx-subst}
-\end{theorem}
-\begin{proof}
-Immediate by \autoref{thm:raw-constr-idx-subst}, using the fact that $\Theta \vdash \Delta \, \texttt{wf}$.
-\end{proof}
-
-
-\begin{theorem}[Admissibility of Weakening for Type Formation]
-If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$, then
-$\Psi' ; \Theta' ; \Delta \pvdash \tau : K$.
-\end{theorem}
-
-\begin{theorem}[Admissibility of Weakening for Term Context Wellformedness]
-If $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$, then
-$\Psi' ; \Theta' ; \Delta \vdash \Gamma \; \texttt{wf}$.
-\end{theorem}
-
-\typeidxsubst*
-\input{proofs/type-idx-subst}
-
-\begin{theorem}[Admissibility of Weakening for Subtyping]
-Suppose $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$.
-Then, $\Psi' ; \Theta' ; \Delta \pvdash \tau \subty \tau'$.
-\end{theorem}
-
-\subtystreng*
-%\begin{proof}
-%Routine induction.
-%\end{proof}
-
-
-\begin{theorem}[Context Subsumption Includes Subset]
-If $\Psi ; \Theta ; \Delta \pvdash \Gamma'$ and $\Gamma \subseteq \Gamma'$ as sets, then $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$
-\label{thm:ctx-sub-subset1}
-\end{theorem}
-\begin{proof}
-By induction on $|\Gamma|$.
-If $\Gamma = \emptyset$, this is immediate by CS-Emp.
-Now suppose $\Gamma = \Gamma'', x : \tau$. Then, since $\Gamma \subseteq \Gamma'$, we have $x : \tau \in \Gamma'$, and $\Gamma'' \subseteq \Gamma' \setminus \{x : \tau\}$. Moreover, by S-Refl, $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star$, and so we are done by IH.
-\end{proof}
-
-\ctxsubsubset*
-\begin{proof}
-By an easy induction on $|\Gamma|$.
-\end{proof}
-
-\begin{theorem}[Admissibility of Weakening for Context Subsumption]
-If $\Psi ; \Theta ; \Delta \pvdash \Gamma \wknto \Gamma'$ and $\Psi' \supseteq \Psi$, $\Theta' \supseteq \Theta$, and $\Delta' \supseteq \Delta$, then
-$\Psi' ; \Theta' ; \Delta' \pvdash \Gamma \wknto \Gamma'$
-\label{thm:ctx-sub-wkn}
-\end{theorem}
-
-\begin{theorem}[Strengthening for Context Subsumption]
-Suppose $\Psi ; \Theta ; \Delta \vdash \Gamma,\Gamma' \texttt{ wf}$.
-If $\Psi' ; \Theta' ; \Delta \pvdash \Gamma \wknto \Gamma'$ with $\Theta' \supseteq \Theta$ and $\Psi' \supseteq \Psi$, then $\Psi ; \Theta ; \Delta \pvdash \Gamma \wknto \Gamma'$.
-\end{theorem}
-\label{thm:ctx-sub-streng}
-\begin{proof}
-Immediate by Theorem~\ref{thm:ctx-sub-subset2} and Theorem~\ref{thm:subty-streng}
-\end{proof}
-
-\ctxsubswap*
-\begin{proof}
-By Theorem~\ref{thm:ctx-sub-subset2}, it suffices to show that for every $x : \tau \in \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2'$,
-and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. Suppose $x : \tau \in \Gamma_2'$. Then, $x : \tau \in \Gamma_1'$. Further, since $\Psi' ; \Theta' ;  \Delta' \vdash \Gamma_2 \wknto \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2$. But then, $x : \tau' \in \Gamma_1$, and so since  $\Psi ; \Theta ; \Delta \vdash \Gamma_1 \wknto \Gamma_1'$, we have that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, by Theorem~\ref{thm:ctx-sub-subset2}.
-\end{proof}
-
-\subsection{Normalization}
-
-\canonforms*
-\begin{proof}
-Inversion on $\Psi ;\Theta ; \Delta \vdash \tau : S \to K$  and then $\tau \; \texttt{nf}$.
-\end{proof}
-
-\idxsubstnf*
-\begin{proof}
-By an easy simultaneous induction. This is only true because we don't require index terms inside a type to be in normal form for the type to be in normal form.
-\end{proof}
-
-\idxsubsteval*
-%\begin{proof}
-%Induction on $\tau$.
-%\end{proof}
-
-%Define $\# \tau$ to be the number of type connectives in $\tau$.
-
-\normthm*
-\input{proofs/norm-thm}
-
-\begin{theorem}
-~\begin{itemize}
-  \item If $\tau \; \texttt{nf}$, then $\texttt{eval}(\tau) = \tau$
-  \item If $\tau \; \texttt{ne}$, then $\texttt{eval}(\tau) = \tau$
-\end{itemize}
-\label{thm:norm-idemp}
-\end{theorem}
-%\begin{proof}
-%Simultaneous induction.
-%\end{proof}
-
 \section{Rules of \bilambdaamor}
 
 \subsection{Algorithmic Wellformedness Judgments}
@@ -1200,7 +1044,163 @@ By an easy simultaneous induction. This is only true because we don't require in
 \end{mathpar}
 
 
-\section{Soundness and Completeness}
+
+\section{Theorems and Proofs}
+
+\ctxwfstreng*
+\begin{proof}
+Immediate from the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$ exactly when $\Psi ; \Theta ; \Delta \vdash \tau : \star$ for every $x : \tau \in \Gamma$.
+\end{proof}
+
+\conwfstreng*
+
+\begin{theorem}[Raw Admissibility of Weakening for Sort Checking]
+If $\Theta ; \Delta \vdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \vdash I : S$
+\end{theorem}
+
+\begin{theorem}[Raw Admissibility of Weakening for Constraint Well-Formedness]
+If $\Theta ; \Delta \vdash \Phi \; \texttt{ wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \vdash \Phi \; \texttt{ wf}$
+\end{theorem}
+
+\begin{theorem}[Admissibility of Weakening for Constraint Context Well-Formedness]
+If $\Theta \vdash \Delta \; \texttt{wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' \vdash \Delta \; \texttt{wf}$
+\end{theorem}
+
+\begin{theorem}[Admissibility of Weakening for Sort Checking]
+If $\Theta ; \Delta \pvdash I : S$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \pvdash I : S$
+\end{theorem}
+
+\begin{theorem}[Admissibility of Weakening for Constraint Well-Formedness]
+If $\Theta ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta' \supseteq \Theta$, then $\Theta' ; \Delta \pvdash \Phi \; \texttt{ wf}$
+\end{theorem}
+
+\begin{theorem}[Raw Index Substitution for Constraint-Well-Formedness]
+If $\Theta, j : S_1 ; \Delta \vdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$, then 
+$\Theta ; \Delta[J/j] \vdash I[J/j] : S_2$
+\label{thm:raw-idx-idx-subst}
+\end{theorem}
+\input{proofs/idx-idx-subst}
+
+\begin{theorem}[Index Substitution for Sort Checking]
+If $\Theta, j : S_1 ; \Delta \pvdash I : S_2$ and $\Theta ; \Delta \pvdash J : S_1$ then $\Theta ; \Delta \pvdash I[J/j] : S_2$
+\label{thm:idx-idx-subst}
+\end{theorem}
+\begin{proof}
+Immediate by \autoref{thm:raw-idx-idx-subst}, using the fact that $\Theta \vdash \Delta \, \texttt{wf}$.
+\end{proof}
+
+\begin{theorem}[Raw Index Substitution for Constraint Well-formedness]
+If $\Theta, i : S ; \Delta \vdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \vdash I : S$ then $\Theta ; \Delta[I/i] \vdash \Phi[I/i] \, \texttt{wf}$
+\label{thm:raw-constr-idx-subst}
+\end{theorem}
+\input{proofs/constr-idx-subst}
+
+\begin{theorem}[Index Substitution for Constraint Well-Formedness]
+If $\Theta, i : S ; \Delta \pvdash \Phi \; \texttt{wf}$ and $\Theta ; \Delta \pvdash I : S$ then $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}.$
+\label{thm:constr-idx-subst}
+\end{theorem}
+\begin{proof}
+Immediate by \autoref{thm:raw-constr-idx-subst}, using the fact that $\Theta \vdash \Delta \, \texttt{wf}$.
+\end{proof}
+
+
+\begin{theorem}[Admissibility of Weakening for Type Formation]
+If $\Psi ; \Theta ; \Delta \pvdash \tau : K$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$, then
+$\Psi' ; \Theta' ; \Delta \pvdash \tau : K$.
+\end{theorem}
+
+\begin{theorem}[Admissibility of Weakening for Term Context Wellformedness]
+If $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf}$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$, then
+$\Psi' ; \Theta' ; \Delta \vdash \Gamma \; \texttt{wf}$.
+\end{theorem}
+
+\typeidxsubst*
+\input{proofs/type-idx-subst}
+
+\begin{theorem}[Admissibility of Weakening for Subtyping]
+Suppose $\Psi ; \Theta ; \Delta \pvdash \tau \subty \tau' : K$, $\Psi' \supseteq \Psi$, and $\Theta' \supseteq \Theta$.
+Then, $\Psi' ; \Theta' ; \Delta \pvdash \tau \subty \tau'$.
+\end{theorem}
+
+\subtystreng*
+%\begin{proof}
+%Routine induction.
+%\end{proof}
+
+
+\begin{theorem}[Context Subsumption Includes Subset]
+If $\Psi ; \Theta ; \Delta \pvdash \Gamma'$ and $\Gamma \subseteq \Gamma'$ as sets, then $\Psi ; \Theta ; \Delta \pvdash \Gamma' \wknto \Gamma$
+\label{thm:ctx-sub-subset1}
+\end{theorem}
+\begin{proof}
+By induction on $|\Gamma|$.
+If $\Gamma = \emptyset$, this is immediate by CS-Emp.
+Now suppose $\Gamma = \Gamma'', x : \tau$. Then, since $\Gamma \subseteq \Gamma'$, we have $x : \tau \in \Gamma'$, and $\Gamma'' \subseteq \Gamma' \setminus \{x : \tau\}$. Moreover, by S-Refl, $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star$, and so we are done by IH.
+\end{proof}
+
+\ctxsubsubset*
+\begin{proof}
+By an easy induction on $|\Gamma|$.
+\end{proof}
+
+\begin{theorem}[Admissibility of Weakening for Context Subsumption]
+If $\Psi ; \Theta ; \Delta \pvdash \Gamma \wknto \Gamma'$ and $\Psi' \supseteq \Psi$, $\Theta' \supseteq \Theta$, and $\Delta' \supseteq \Delta$, then
+$\Psi' ; \Theta' ; \Delta' \pvdash \Gamma \wknto \Gamma'$
+\label{thm:ctx-sub-wkn}
+\end{theorem}
+
+\begin{theorem}[Strengthening for Context Subsumption]
+Suppose $\Psi ; \Theta ; \Delta \vdash \Gamma,\Gamma' \texttt{ wf}$.
+If $\Psi' ; \Theta' ; \Delta \pvdash \Gamma \wknto \Gamma'$ with $\Theta' \supseteq \Theta$ and $\Psi' \supseteq \Psi$, then $\Psi ; \Theta ; \Delta \pvdash \Gamma \wknto \Gamma'$.
+\end{theorem}
+\label{thm:ctx-sub-streng}
+\begin{proof}
+Immediate by Theorem~\ref{thm:ctx-sub-subset2} and Theorem~\ref{thm:subty-streng}
+\end{proof}
+
+\ctxsubswap*
+\begin{proof}
+By Theorem~\ref{thm:ctx-sub-subset2}, it suffices to show that for every $x : \tau \in \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2'$,
+and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. Suppose $x : \tau \in \Gamma_2'$. Then, $x : \tau \in \Gamma_1'$. Further, since $\Psi' ; \Theta' ;  \Delta' \vdash \Gamma_2 \wknto \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2$. But then, $x : \tau' \in \Gamma_1$, and so since  $\Psi ; \Theta ; \Delta \vdash \Gamma_1 \wknto \Gamma_1'$, we have that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, by Theorem~\ref{thm:ctx-sub-subset2}.
+\end{proof}
+
+\subsection{Normalization}
+
+\canonforms*
+\begin{proof}
+Inversion on $\Psi ;\Theta ; \Delta \vdash \tau : S \to K$  and then $\tau \; \texttt{nf}$.
+\end{proof}
+
+\idxsubstnf*
+\begin{proof}
+By an easy simultaneous induction. This is only true because we don't require index terms inside a type to be in normal form for the type to be in normal form.
+\end{proof}
+
+\idxsubsteval*
+%\begin{proof}
+%Induction on $\tau$.
+%\end{proof}
+
+%Define $\# \tau$ to be the number of type connectives in $\tau$.
+
+\normthm*
+\input{proofs/norm-thm}
+
+\begin{theorem}
+~\begin{itemize}
+  \item If $\tau \; \texttt{nf}$, then $\texttt{eval}(\tau) = \tau$
+  \item If $\tau \; \texttt{ne}$, then $\texttt{eval}(\tau) = \tau$
+\end{itemize}
+\label{thm:norm-idemp}
+\end{theorem}
+%\begin{proof}
+%Simultaneous induction.
+%\end{proof}
+
+%\section{Rules of \bilambdaamor}
+
+
+%\section{Soundness and Completeness}
 %\counterwithin{theorem}{section}
 \begin{theorem}[Raw Soundness of Sort Checking/Inference]
 If $\Theta;\Delta \vdash I : S \gens \Phi$ and $\Theta;\Delta \vDash \Phi$, then $\Theta;\Delta \vdash I : S$ 
@@ -1263,9 +1263,9 @@ There is only one case: $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty\tau_2 : K \
 For any $\Psi,\Theta,\Delta,\Gamma,e,\Phi$, there is at most one $\Gamma'$ so that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \updownarrow \tau \gens \Phi, \Gamma'$
 \label{thm:ctx-uniquely-determined}
 \end{theorem}
-\begin{proof}
-Inspection of rules.
-\end{proof}
+%\begin{proof}
+%Inspection of rules.
+%T\end{proof}
 
 \lsc*
 \begin{proof}
@@ -1288,14 +1288,14 @@ If $\Gamma_1,\Gamma_2 \subseteq \Gamma$ such that $\Psi ; \Theta ; \Delta \vdash
 \end{enumerate}
 \end{theorem}
 
-\theorem[Raw Soundness of Type Checking/Inference]{
+\begin{theorem}[Raw Soundness of Type Checking/Inference]
+\label{thm:raw-tycheck-sound}
 ~\begin{enumerate}
  \item If $\Psi;\Theta;\Delta;\Omega;\Gamma \vdash e \checks \tau \gens \Phi, \Gamma'$ and $\Theta;\Delta \vDash \Phi$ then $\Psi;\Theta;\Delta;\Omega;\Gamma \setminus \Gamma' \vdash |e| : \tau$
  \item If $\Psi;\Theta;\Delta;\Omega;\Gamma \vdash e \infers \tau \gens \Phi, \Gamma'$ and $\Theta;\Delta \vDash \Phi$ then $\Psi;\Theta;\Delta;\Omega;\Gamma \setminus \Gamma' \vdash |e| : \tau$
 \end{enumerate}
-}
+\end{theorem}
 %\textbf{Redo in new style}
-\label{thm:raw-tycheck-sound}
 \input{proofs/tycheck-sound}
 
 \tychecksound*

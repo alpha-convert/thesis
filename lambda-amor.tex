@@ -652,7 +652,7 @@ If $\Psi' ; \Theta' ; \Delta \pvdash \tau \subty \tau' : K$ with $\Theta' \supse
 The next theorem is a convenient equivalent characterization of the context subsumption judgment, which formalizes our intuition of this judgment as being essentially record subtyping: the inclusion of $\Gamma'$ into $\Gamma$ acts as record width subtyping, while pointwise subtyping on the intersection of the two contexts allows for record depth subtyping.
 
 \begin{restatable}{theorem}{ctxsubsubset}
-\label{thm:ctx-sub-subset2}
+\label{thm:ctx-sub-subset-2}
 $\Psi ; \Theta ; \Delta \vdash \Gamma \wknto \Gamma'$ if and only if for all $x : \tau' \in \Gamma'$, there is some $\tau$ so that $x : \tau \in \Gamma$ and $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau' : \star$.
 \end{restatable}
 
