@@ -37,7 +37,7 @@
 \begin{abstract}
 While decades of research into formal verification have brought provable correctness guarantees closer to being a part of developers' everyday reality, provable guarantees about algorithmic complexity are harder to come by. This is not for lack of effort. Algorithmic complexity and program cost don't play nicely with abstraction, and so they can prove a difficult target for the kinds of compositional analysis that formal tools handle best. However, the classical algorithm analysis technique known as amortized analysis \cite{tarjan:amortized-complexity} is promising in this regard: it allows one to selectively break abstraction barriers to precisely and compositionally calculate program costs. In this thesis, we leverage amortized analysis to make two contributions which make some progress towards our goal of provable cost guarantees for the masses.
 
-We begin by taking a cue from the interactive theorem proving school of software verification. Taking after languages like Liquid Haskell \cite{vazou-et-al:icfp14}, we develop a functional language called \lambdaamorimpl, which provides a rich refinement type system for in-language amortized cost analysis. We begin with a previously-developed core calculus called \lambdaamor \cite{rajani-et-al:popl21}, transform it to an \textit{algorithmic} type system which is amenable to implementation, and subsequently implement the language in OCaml.
+We begin by taking a cue from the interactive theorem proving school of software verification. We develop a functional language called \lambdaamorimpl, which provides a rich refinement type system for in-language amortized cost analysis. We begin with a previously-developed core calculus called \lambdaamor \cite{rajani-et-al:popl21}, transform it to an \textit{algorithmic} type system which is amenable to implementation, and subsequently implement the language in OCaml.
 
 Next, we move to considering a more lightweight method of analyzing the cost of programs, namely the extract-and-solve method of recurrences. This technique is already used (explicitly or otherwise) by practitioners of functional languages, and regularly included in introductory CS curricula. However, the technique is informal, error-prone, and not immediately applicable to amortized cost analysis. Following on work by \citet{danner-et-al:icfp15}, we formalize the process of amortized analysis by recurrence extraction as a language-to-language translation, and use this to prove the technique's correctness.
 \end{abstract}
@@ -79,6 +79,7 @@ Finally, I must acknowledge the tremendous support my family has provided me thr
 
 
 \hypersetup{allcolors = {blue}}
+
 
 \chapter{Introduction}
 \label{ch:intro}
