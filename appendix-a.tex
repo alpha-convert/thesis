@@ -44,38 +44,88 @@ $$
 \texttt{enq} \; : \; \forall n,m : \N. \, [3] \, 1 \loli \tau \loli L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \, \langle 0 \rangle \, \left(L^{n+1}([2] \, \tau) \otimes L^m \, \tau\right)\\
 
 \texttt{enq} = \Lambda n. \Lambda m. \lambda p. \lambda x. \lambda ins.\lambda outs. \Lambda j.\\[-2mm]
-\hspace{1em} \texttt{release} \, _ = p \, \texttt{in}\\[-2mm]
-\hspace{1em} \texttt{bind} \, _ = \texttt{tick}[j|[1.0]] \, \texttt{in}\\[-2mm]
+\hspace{1em} \texttt{release} \, \_ = p \, \texttt{in}\\[-2mm]
+\hspace{1em} \texttt{bind} \, \_ = \texttt{tick}[j|[1.0]] \, \texttt{in}\\[-2mm]
 \hspace{1em} \texttt{bind} \, x' = \texttt{store}[2.0](x) \, \texttt{in}\\[-2mm]
 \hspace{1em} \texttt{ret}(x'::ins,outs)
 \end{array}
 $$
 
-%let move : Tforall a : *. Iforall n : Nat. Iforall m : Nat.
-%           List(n, [2.0] a) -> List(m,a) -> (Iforall j : Nat. M(j|[0.0]) (List(m + n,a)))
-%= TLam a. fix move = ILam n. ILam m. lam xs. lam ys. ILam j.
-%case xs of
-%  nil => ret ys
-%| z::zs => release z' = z in
-%           bind _ = tick[j|[2.0]] in
-%           bind zs' = move [n-1] [m] zs ys [j] in
-%           ret (z' :: zs')
+$$
+\begin{array}{l}
+\texttt{move} \; : \; \forall n : \N. \forall m : \N. L^n([2] \, \tau) \loli L^m\tau \loli \M \langle 0 \rangle L^{m+n}\tau\\
+
+\texttt{move} \, = \, \texttt{fix}(\texttt{move}.\\[-2mm]
+\hspace{1em} \Lambda n. \Lambda m. \lambda xs. \lambda ys. \Lambda j.\\[-2mm]
+\hspace{1em} \texttt{case}(xs,\texttt{ret} \, \texttt{ys},z.zs.\\[-2mm]
+\hspace{2em} \texttt{release} \, z' = z \, \texttt{in}\\[-2mm]
+\hspace{2em} \texttt{bind} \, \_ = \texttt{tick}[j|[2.0]]\, \texttt{in}\\[-2mm]
+\hspace{2em} \texttt{bind} \, zs' = \texttt{move} \, [n-1]\, [m] \, zs \, ys \, [j] \, \texttt{in}\\[-2mm]
+\hspace{2em} \texttt{ret}(z'::zs')\\[-2mm]
+\hspace{1em})\\[-2mm]
+)
+\end{array}
+$$
 
 $$
-\texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^{n'}([2] \, \tau) \otimes L^{m'} \, \tau\right)\right)
+\begin{array}{l}
+\texttt{deq} \; : \; \forall m,n : \N. (m + n > 0) \implies L^n([2] \, \tau) \otimes L^m \, \tau \loli \\\hspace{3em}\M \langle 0 \rangle \left(\exists n',m' : \N. (n' + m' + 1 = n + m) \amp \left(L^{n'}([2] \, \tau) \otimes L^{m'} \, \tau\right)\right)]\\
+
+\texttt{deq} \, = \, \texttt{fix}(\texttt{deq}.\\[-2mm]
+\hspace{1em} \Lambda n. \Lambda m. \Lambda. \lambda l_1. \lambda l_2. \lambda j.\\[-2mm]
+\hspace{1em} \texttt{case}(l2,\\[-2mm]
+\hspace{2em} \texttt{bind} \, l_r = \texttt{move} \, [n] \; [0] \; l_1 \; \texttt{nil} \; [j] \, \texttt{in}\\[-2mm]
+\hspace{2em} \texttt{case}(l_r,\texttt{fix}(x.x),h_r.l_r'\\[-2mm]
+\hspace{3em} \texttt{ret}\left(\texttt{pack}[0]\left(\texttt{pack}[n-1] <((h_r,\texttt{nil}),l_r')>\right)\right)\\[-2mm]
+\hspace{2em}), h_2.l_2'. \texttt{ret}\left(\texttt{pack}[n]\left(\texttt{pack}[m-1] <((h2,l_1),l_2')>\right)\right)\\[-2mm]
+\hspace{1em})\\[-2mm]
+)
+\end{array}
 $$
+
+%fix dq = ILam n. ILam m. CLam. lam l1 . lam l2. ILam j.
+%case l2 of
+%  nil => bind lr = move {a} [n] [0] l1 nil [j] in
+%         case lr of
+%           nil => fix x = x
+%         | hr::lr' => ret(pack[0] (pack[n-1] <((hr,nil),lr')>))
+%| h2::l2' => ret (pack[n] (pack[m-1] <((h2,l1),l2')>))
 
 \subsection{Map}
 
 $$
 \begin{array}{l}
-\texttt{map} \; : \; \forall \alpha,\beta : \star. \forall C : \N \to \R^+. \forall n : \N. \\
-\hspace{3em} !\left(\forall i : \N. [C \, i] \, 1 \loli \texttt{Nat}(i) \loli \alpha \loli \M \, \langle 0 \rangle\,  \beta\right) \loli\\
-\hspace{3em}  !\texttt{Nat}(n) \loli \\
-\hspace{3em}  L^n \,\alpha \loli\\ 
-\hspace{3em}  \M \, \langle \texttt{const}\left(\sum_{0 \leq i < n} C(i)\right) \rangle\, \left(L^n \, \beta\right)
+\texttt{map} \; : \; \forall \alpha,\beta : \star. \forall C : \N \to \R^+. \forall n : \N. \\[-2mm]
+\hspace{3em} !\left(\forall i : \N. [C \, i] \, 1 \loli \texttt{Nat}(i) \loli \alpha \loli \M \, \langle 0 \rangle\,  \beta\right) \loli\\[-2mm]
+\hspace{3em}  !\texttt{Nat}(n) \loli \\[-2mm]
+\hspace{3em}  L^n \,\alpha \loli\\ [-2mm]
+\hspace{3em}  \M \, \langle \texttt{const}\left(\sum_{0 \leq i < n} C(i)\right) \rangle\, \left(L^n \, \beta\right)\\
+
+\texttt{map} \, = \, \Lambda \alpha. \Lambda \beta. \Lambda C. \texttt{fix}(\texttt{map}.\\
+\hspace{1em} \lambda p. \lambda f_b. \lambda xs. \lambda N_b. \Lambda j.\\
+\hspace{2em} \texttt{let}\, !f = f_b \, \texttt{in}\\
+\hspace{2em} \texttt{let}\, !N = N_b \, \texttt{in}\\
+\hspace{2em} \texttt{release} \, \_ = p \, \texttt{in}\\
+\hspace{2em} \texttt{case}(xs,\texttt{ret} \, \texttt{nil},y.ys.\\
+\hspace{3em} \texttt{bind} \, p' = \textbf{store}[C \, (n-1)]() \, \texttt{in}\\
+\hspace{3em} \texttt{bind} \, z = f \; [n-1] \; p' \; (\texttt{pred} \, [n] \, [] \; N)
+\hspace{2em})\\
+)
 \end{array}
 $$
+
+%TLam a. TLam b. ILam C. fix map = ILam n.
+%  lam p. lam bf. lam xs. lam bN. ILam j.
+%    let !f = bf in
+%    let !N = bN in
+%    release _ = p in
+%    case xs of
+%      nil => ret nil
+%    | y::ys => bind p' = (store[C (n-1)]() : M(j|const(C (n-1))) ([C (n-1)] unit)) in
+%               bind z = f[n-1] p' (pred [n] [] N) y [j] in
+%               bind p'' = (store[sum(i.C i,{0,n-1})]() : M(j|const(sum(i.C i,{0,n-1}))) ([sum(i.C i,{0,n-1})] unit)) in
+%               bind zs = map[n-1] p'' (!f) ys (!(pred[n] [] N)) [j] in
+%               ret(z :: zs)
 
 \section{Rules of \dlambdaamor}
 
@@ -1035,16 +1085,16 @@ $$
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret } e \checks \M \, \phi(I,\vec{p}) \, \tau \gens \Phi, \Gamma'
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret } e \checks \M \,(I,\vec{p}) \, \tau \gens \Phi, \Gamma'
 }
 
 \inferrule[AT-Bind]
 {
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers \M \, \phi(J,\vec{p})\, \tau_1 \gens \Phi_1,\Gamma_1\\
-\Psi ; \Theta; \Delta ; \Omega ; \Gamma_1, x:\tau_1 \vdash e_2 \checks \M \, \phi(I,\vec{q} - \vec{p})\, \tau_2 \gens \Phi_2,\Gamma_2\\
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers \M \, (J,\vec{p})\, \tau_1 \gens \Phi_1,\Gamma_1\\
+\Psi ; \Theta; \Delta ; \Omega ; \Gamma_1, x:\tau_1 \vdash e_2 \checks \M \, (I,\vec{q} - \vec{p})\, \tau_2 \gens \Phi_2,\Gamma_2\\
 \Phi = (\vec{q} \geq \vec{p}) \wedge (I =J)  \wedge \Phi_1 \wedge \Phi_2
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens \Phi, \Gamma_2 \setminus \{x : \tau_1\}
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 \checks \M \, (I,\vec{q})\, \tau_2 \gens \Phi, \Gamma_2 \setminus \{x : \tau_1\}
 }
 
 \end{mathpar}
@@ -1056,15 +1106,15 @@ $$
 \Theta ; \Delta \vdash I : \N \gens \Phi_1\\
 \Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_1\\
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] \infers \M \, \phi(I,\vec{p})\, 1 \gens \Phi_1 \wedge \Phi_2,\Gamma
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] \infers \M \, (I,\vec{p})\, 1 \gens \Phi_1 \wedge \Phi_2,\Gamma
 }
 
 \inferrule[AT-Release]
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J | \vec{q}] \tau_1 \gens \Phi_1,\Gamma_1\\
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2, \Gamma_2
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau \vdash e_2 \checks \M \, (I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2, \Gamma_2
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens (I = J \wedge \Phi_1 \wedge \Phi_2), \Gamma_2 \setminus \{x\}
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, (I,\vec{p}) \, \tau_2 \gens (I = J \wedge \Phi_1 \wedge \Phi_2), \Gamma_2 \setminus \{x\}
 }
 
 
@@ -1076,7 +1126,7 @@ $$
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi_3,\Gamma'\\
 \Phi =  \Phi_1 \wedge \Phi_2 \wedge\Phi_3 \wedge  (\vec{p} \leq \vec{w} \leq \vec{q}) \wedge (I = J = K)
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[K|\vec{w}](e) \checks \M \, \phi(I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi, \Gamma'
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[K|\vec{w}](e) \checks \M \, (I,\vec{q}) \, ([J | \vec{p}] \, \tau) \gens \Phi, \Gamma'
 }
 
 \inferrule[AT-StoreConst]
@@ -1085,22 +1135,22 @@ $$
 \Theta ; \Delta \vdash J : \mathbb{R} \gens \Phi_2\\
 \Phi = (\texttt{const}(I) \leq \texttt{const}(J) \leq \vec{p}) \wedge \Phi_1 \wedge \Phi_2
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[J](e) \checks \M \, \phi(K,\vec{p}) \, ([I] \, \tau) \gens \Phi, \Gamma'
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[J](e) \checks \M \, (K,\vec{p}) \, ([I] \, \tau) \gens \Phi, \Gamma'
 }
 
 \inferrule[AT-ReleaseConst]
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 \infers [J] \tau_1 \gens \Phi_1,\Gamma_1\\
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau_1 \vdash e_2 \checks \M \, \phi(I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2, \Gamma_2
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, x : \tau_1 \vdash e_2 \checks \M \, (I,\vec{p} + \texttt{const}(J)) \, \tau_2 \gens \Phi_2, \Gamma_2
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x\}
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{release } x = e_1 \texttt{ in }e_2 \checks \M \, (I,\vec{p}) \, \tau_2 \gens \Phi_1 \wedge \Phi_2, \Gamma_2 \setminus \{x\}
 }
 
 \inferrule[AT-Shift]
 {
-\Psi ; \Theta ; \Delta  ; \Omega ; \Gamma \vdash e \checks \M \, \phi(I - 1,\lhd \vec{q}) \, \tau \gens \Phi, \Gamma'
+\Psi ; \Theta ; \Delta  ; \Omega ; \Gamma \vdash e \checks \M \, (I - 1,\lhd \vec{q}) \, \tau \gens \Phi, \Gamma'
 }{
-\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) \checks \M \, \phi(I,\vec{q}) \, \tau \gens (I \geq 1) \wedge \Phi, \Gamma'
+\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{shift}(e) \checks \M \, (I,\vec{q}) \, \tau \gens (I \geq 1) \wedge \Phi, \Gamma'
 }
 
 
