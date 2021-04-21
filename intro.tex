@@ -34,7 +34,7 @@ Then, in \autoref{ch:rec-extr}, we move to considering a technique that function
 \label{sec:amortized-primer}
 The intuition behind both developments in this thesis is rooted in amortized analysis, the classical algorithm analysis technique first presented by \citet{tarjan:amortized-complexity}. As such, we will provide a brief introduction to the technique here, in addition to presenting a few examples of its utility, one of which we will use as a running example.
 
-Amortized analysis was initially conceived of as a technique for analyzing the worst-case cost of a sequence of operations on a data structure. Without amortization, such cost analyses can be very imprecise Naively, the worst-case cost of a sequence of operations is bounded by the sum of the worst-case cost for each operation. However, this usually fails to take into account internal data structure invariants which make it impossible (or not always true) that each operation in the sequence executes with its worst-case complexity. In short, amortized analysis allows us to peel back some of the abstraction barrier of a datatype in order to more closely analyze the cost of its operations in context. For a concrete example of this phenomenon, consider the (contrived, yet pedagogically useful) example of a binary counter shown in \autoref{fig:bin-counter}.
+Amortized analysis was initially conceived of as a technique for analyzing the worst-case cost of a sequence of operations on a data structure. Without amortization, such cost analyses can be very imprecise. Na\"ively, the worst-case cost of a sequence of operations is bounded by the sum of the worst-case cost for each operation. However, this usually fails to take into account internal data structure invariants which make it impossible (or not always true) that each operation in the sequence executes with its worst-case complexity. In short, amortized analysis allows us to peel back some of the abstraction barrier of a datatype in order to more closely analyze the cost of its operations in context. For a concrete example of this phenomenon, consider the (contrived, yet pedagogically useful) example of a binary counter shown in \autoref{fig:bin-counter}.
 
 \begin{figure}
   \input{figs/bin-counter}
@@ -43,9 +43,9 @@ Amortized analysis was initially conceived of as a technique for analyzing the w
   \label{fig:bin-counter}
 \end{figure}
 
-The type \texttt{bit} is either $0$ or $1$, and \texttt{bit list} represents a binary counter with the least significant bit at the head. The \texttt{inc} operation increments a counter by one, and the  \texttt{set} operation applies to $n$ iterates \texttt{inc} $n$ times, starting from the zero (empty) counter. To illustrate where a standard analysis goes wrong, we will naively analyze the cost of \texttt{set}. For simplicity, the only costly operations are cons (\texttt{::}) operations, which cost one unit of time each.
+The type \texttt{bit} is either $0$ or $1$, and \texttt{bit list} represents a binary counter with the least significant bit at the head. The \texttt{inc} operation increments a counter by one, and the  \texttt{set} operation applies to $n$ iterates \texttt{inc} $n$ times, starting from the zero (empty) counter. To illustrate where a standard analysis overapproximates the cost, we will na\"ively analyze the cost of \texttt{set}. For simplicity, the only costly operations are cons (\texttt{::}) operations, which cost one unit of time each.
 
-Given a counter of length $k$, \texttt{inc} performs at most $k + 1$ cons operations-- at worst, the counter is all ones, and \texttt{inc} must walk down the entire list flipping ones to zeroes, finishing by cons-ing a one onto the end. It's easy to see that after $i$ calls to \texttt{inc}, the counter has length bounded by $\left \lceil{\log_2 i}\right \rceil$, the number of needed for the binary representation of $i$. Thus, the total cost of \texttt{set n} is
+Given a counter of length $k$, \texttt{inc} performs at most $k + 1$ cons operations --- at worst, the counter is all ones, and \texttt{inc} must walk down the entire list flipping ones to zeroes, finishing by cons-ing a one onto the end. It's easy to see that after $i$ calls to \texttt{inc}, the counter has length bounded by $\left \lceil{\log_2 i}\right \rceil$, the number of needed for the binary representation of $i$. Thus, the total cost of \texttt{set n} is
 \begin{align*}
   \sum_{i=1}^n \left\lceil{\log_2 i}\right \rceil + 1
   &\leq \sum_{i=1}^n \log_2 i + 2\\
@@ -54,7 +54,7 @@ Given a counter of length $k$, \texttt{inc} performs at most $k + 1$ cons operat
   &\leq 2n + n\log_2 n
 \end{align*}
 
-While it may be useful for some applications, this bound is not tight. To see why, consider the case where the counter is set to the value of $15_{10}$, or $1111_2$. A  call to increment on this counter costs the full $5$ cons operations, leaving the counter at $10000_2$. However, a subsequent call to \texttt{inc} only costs $1$ to flip the first bit. Indeed, very few calls to \texttt{inc} traverse the whole list-- the vast majority only flip one or two bits. This example illustrates the tension of doing these naive analysis, and provides the primary insight for amortized analysis: while one data structure operation may be expensive, it may also restructure the data structure in such a way which makes \textit{subsequent} operations cheaper than the worst case\footnote{
+While it may be useful for some applications, this bound is not tight. To see why, consider the case where the counter is set to the value of $15_{10}$, or $1111_2$. A  call to increment on this counter costs the full $5$ cons operations, leaving the counter at $10000_2$. However, a subsequent call to \texttt{inc} only costs $1$ to flip the first bit. Indeed, very few calls to \texttt{inc} traverse the whole list --- the vast majority only flip one or two bits. This example illustrates the tension of doing these naive analysis, and provides the primary insight for amortized analysis: while one data structure operation may be expensive, it may also restructure the data structure in such a way which makes \textit{subsequent} operations cheaper than the worst case\footnote{
 This is the genesis of the name \textit{amortized} analysis: expensive function operations effectively pay for subsequent ones to be cheaper, evoking \textit{amortization} from accounting.
 }.
 
@@ -66,6 +66,9 @@ a_i = c_i + \Phi(s_i) - \Phi(s_{i-1})
 $$
 
 \begin{figure}
+\begin{tikzcd}
+\dots \arrow[r] & s_{i-1} \arrow[r, "f_i"] & s_i \arrow[r, "f_{i+1}"] & s_{i+1} \arrow[r] & \dots
+\end{tikzcd}
   \caption{The Generic Amortized Analysis Setup}
   \label{fig:amortized-situation}
 \end{figure}
@@ -110,13 +113,13 @@ An immediate corollary of this fact is that the amortized cost of \texttt{set n}
 Often, amortized analysis is applied to individual functions, rather than a sequence. This may be thought of as the length-one case of amortized analysis.
 Given a function \texttt{f:a->b} and potential functions $\Phi_\texttt{a} : \texttt{a} \to \R$ and $\Phi_\texttt{b} : \texttt{b} \to \R$, we may define
 the amortized cost of \textbf{f} as $A_\texttt{f}(\texttt{x}) = C_\texttt{f}(\texttt{x}) + \Phi_\texttt{b}(\texttt{f x}) - \Phi_\texttt{a}(\texttt{x})$,
-where $C_\texttt{f}(\texttt{x})$ is the cost of \texttt{f}. As long as $\Phi_\texttt{b}(\texttt{f x}) \geq \Phi_\texttt{a}(\texttt{x})$, the amortized cost is an upper bound on the actual cost.
+where $C_\texttt{f}(\texttt{x})$ is the cost of \texttt{f}. %As long as $\Phi_\texttt{b}(\texttt{f x}) \geq \Phi_\texttt{a}(\texttt{x})$, the amortized cost is an upper bound on the actual cost.
 
 A common variation on this concept is to pick the potential functions such that the amortized cost is \textit{zero}. Then, the actual cost $C_\texttt{f}(\texttt{x})$ is exactly $\Phi_\texttt{a}(\texttt{x}) - \Phi_\texttt{b}(\texttt{f x})$. The usual intuition here is to think of the available potential as a sort of ``gas tank" which the function must siphon from to do work. Then, the total gas used, $\Phi_\texttt{a}(\texttt{x}) - \Phi_\texttt{b}(\texttt{f x})$, is an upper bound on the amount of work done by the function.
 
 
 \subsection{Banker's Method}
-While the physicist's method is powerful, some situations call for a more fine-grained analysis. In this case, we employ the so-called banker's method of amortized analysis. The banker's method works by introducing imaginary ``credits" to a data structure, which may be ``attached" to the values in a program. These credits are thought of to interact with the cost model of the language in a special way: credits can always be created from thin air at a cost of one unit of time, and then they can subsequently be discarded or ``spent" to decrease execution cost by one unit. In the setting of the banker's method, this is what we mean when we refer to ``amortized cost"-- the real cost of an operation, plus the cost of creating and spending credits along the way. Crucially, if an operation begins with no credits available, then the amortized cost must be an upper bound on the actual cost since credits must be created (incurring a cost of $1$) before they can be spent (decreasing the cost by $1$). All of this is best illustrated by returning to the binary counter example.
+While the physicist's method is powerful, some situations call for a more fine-grained analysis. In this case, we employ the so-called banker's method of amortized analysis. The banker's method works by introducing imaginary ``credits" to a data structure, which may be ``attached" to the values in a program. These credits are thought of to interact with the cost model of the language in a special way: credits can always be created from thin air at a cost of one unit of time, and then they can subsequently be discarded or ``spent" to decrease execution cost by one unit. In the setting of the banker's method, this is what we mean when we refer to ``amortized cost" --- the real cost of an operation, plus the cost of creating and spending credits along the way. Crucially, if an operation begins with no credits available, then the amortized cost must be an upper bound on the actual cost since credits must be created (incurring a cost of $1$) before they can be spent (decreasing the cost by $1$). All of this is best illustrated by returning to the binary counter example.
 
 We begin by enforcing a credit invariant on values of type \texttt{counter}: every \texttt{1} bit must have a credit attached. It's worth confirming that the increment function is able to maintain this invariant: if the counter is empty, we spawn a credit, attach it to a \texttt{1} bit, and cons it to the front of the list.
 If the least significant bit is \texttt{0}, we again spawn a credit, flip the bit to \texttt{1}, and attach the credit. Finally, if the least significant bit is \texttt{1}, then we detatch its credit, spend it, recurse down the tail, and finish by cons-ing a \texttt{0} onto the front. Of course, none of this is manifest in the code
@@ -162,12 +165,12 @@ $$
 \inferrule{\Gamma_1 \vdash e_1 : A \\ \Gamma_2 \vdash e_2 : B}{\Gamma_1,\Gamma_2 \vdash (e_1,e_2) : A \otimes B}
 $$
 The context must be divided into two disjoint parts $\Gamma_1$ and $\Gamma_2$ to be given to the two premises\footnote{
-The name of the connective changes also-- in a fully structural type system, positive and negative products are isomorphic, and thus written $\times$. Passing to a substructural type system disentangles the two notions.
+The name of the connective changes also --- in a fully structural type system, positive and negative products are isomorphic, and thus written $\times$. Passing to a substructural type system disentangles the two notions.
 }.
 
 Affine types are a natural object of study in the resource-usage literature, since they naturally enforce a resource-usage restriction: using a variable ``consumes" it, which corresponds to the consumption of the resources the variable holds. In the type systems we will study for the remainder of this thesis, the notion of resource which our affine type systems will track will be the credits and potentials of amortized analysis. Indeed, non-duplication of variables in an affine type system can be leveraged to enforce the non-duplication requirement of credits and potential in the banker's and physicist's method of amortized analysis.
 
-Of course, this restriction on the usage of variables is very strong from a programming perspective. Even incredibly simple programs often require the re-use of a single variable. The traditional solution to this is the introduction of a new type $!A$, which represents values of type $A$ that can be used arbitrarily many times. This $!$, usually referred to as the \textit{exponential modality} is our first example of a modality, or a unary operator on types. To ``implement" this modality in the type system, one usually adds a second context to the typing judgment of so-called exponential variables, which can be used multiple times. This context is fully structural-- it is not split in multi-premise rules. For instance, the product introduction rule becomes something like:
+Of course, this restriction on the usage of variables is very strong from a programming perspective. Even incredibly simple programs often require the re-use of a single variable. The traditional solution to this is the introduction of a new type $!A$, which represents values of type $A$ that can be used arbitrarily many times. This $!$, usually referred to as the \textit{exponential modality} is our first example of a modality, or a unary operator on types. To ``implement" this modality in the type system, one usually adds a second context to the typing judgment of so-called exponential variables, which can be used multiple times. This context is fully structural --- it is not split in multi-premise rules. For instance, the product introduction rule becomes something like:
 $$
 \inferrule{\Omega;\Gamma_1 \vdash e_1 : A \\ \Omega; \Gamma_2 \vdash e_2 : B}{\Omega; \Gamma_1,\Gamma_2 \vdash (e_1,e_2) : A \otimes B}
 $$
