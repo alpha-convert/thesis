@@ -1,73 +1,571 @@
-\begin{proof}
-By induction on $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$.
- \begin{itemize}
-   \item[(S-Refl)] Immediate by \autoref{thm:subty-refl}.
-   \item[(S-Trans)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K$ by way of $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_3 : K \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. But by \autoref{thm:subty-trans}, we have
-   $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_3 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$, as required.
-   \item[(S-Arr)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 \subty \tau_1' \loli \tau_2' : \star$
-   from $\Psi ; \Theta ; \Delta \vdash \tau_1' \subty \tau_1 : \star$ and
-   $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star$.
-   By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1' \subty \tau_1 : \star \gens \Phi_1$,
-   and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$.
-   By inversion, we have $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1') \subtynf \texttt{eval}(\tau_1) : \star \gens \Phi_1$
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_2') : \star \gens \Phi_2$.
-   By AS-Arr,
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') \loli \texttt{eval}(\tau_2') : \star \gens \Phi_1 \wedge \Phi_2$. But $\texttt{eval}(\tau_1 \loli \tau_2) = \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2)$, and so by AS-Normalize, we have
-   $\Psi ; \Theta ; \Delta \vdash \tau_1 \loli \tau_2 \subty \tau_1' \loli \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$, as required.
+\jtheorem{Proof of \autoref{thm:subty-compl}}{
+  \caseFact{1} By induction on $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : K$.
+  
+  \jcase{1}{S-Refl}{
+    Immediate by \autoref{thm:subty-refl}.
+  }
+  
+  \jcase{2}{S-Trans}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_3 : K$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$
+      
+      \caseFact{3} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_3 : K$
+    }{
+      $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_3 : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)}
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_3 : K \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{Goal follows by \autoref{subty-trans} on (4), (5), (6), (7)}
+  }
+  
+  \jcase{3}{S-Arr}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_2 \subty \tau_1' \loli \tau_2' : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1' \subty \tau_1 : \star$
+     
+     \caseFact{3} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_2' : \star$
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \tau_1 \loli \tau_2 \subty \tau_1' \loli \tau_2' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1' \subty \tau_1 : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{Inverting (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1') \subtynf \texttt{eval}(\tau_1) : \star \gens \Phi_1$
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_2') : \star \gens \Phi_2$
+    
+    \caseText{By AS-Arr on (8) and (9)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \loli \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') \loli \texttt{eval}(\tau_2') : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal follows by AS-Normalize on (10), taking $\Phi = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{4}{S-Tensor}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_2 \subty \tau_1' \otimes \tau_2' : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_1' : \star$
+     
+     \caseFact{3} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_2' : \star$
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \tau_1 \otimes \tau_2 \subty \tau_1' \otimes \tau_2' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_1' : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{Inverting (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_1$
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_2') : \star \gens \Phi_2$
+    
+    \caseText{By AS-Tensor on (8) and (9)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \otimes \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') \otimes \texttt{eval}(\tau_2') : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal follows by AS-Normalize on (10), taking $\Phi = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{5}{S-With}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_2 \subty \tau_1' \amp \tau_2' : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_1' : \star$
+     
+     \caseFact{3} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_2' : \star$
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \tau_1 \amp \tau_2 \subty \tau_1' \amp \tau_2' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_1' : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{Inverting (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_1$
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_2') : \star \gens \Phi_2$
+    
+    \caseText{By AS-With on (8) and (9)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \amp \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') \amp \texttt{eval}(\tau_2') : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal follows by AS-Normalize on (10), taking $\Phi = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{6}{S-Sum}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_2 \subty \tau_1' \oplus \tau_2' : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_1' : \star$
+     
+     \caseFact{3} $\Psi ; \Theta ; \Delta \pvdash \tau_2 \subty \tau_2' : \star$
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \tau_1 \oplus \tau_2 \subty \tau_1' \oplus \tau_2' : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_1' : \star \gens \Phi_1$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+    
+    \caseText{By IH on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$
+    
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+    
+    \caseText{Inverting (4) and (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_1$
+    
+    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_2') : \star \gens \Phi_2$
+    
+    \caseText{By AS-Sum on (8) and (9)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \oplus \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') \oplus \texttt{eval}(\tau_2') : \star \gens \Phi_1 \wedge \Phi_2$
+    
+    \caseText{Goal follows by AS-Normalize on (10), taking $\Phi = \Phi_1 \wedge \Phi_2$}
+  }
+  
+  \jcase{7}{S-Bang}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash !\tau_1\subty!\tau_2 : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash !\tau_1\subty!\tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{Inverting (5)}
+    
+    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+ 
+    \caseText{By AS-Bang on (6)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash !\texttt{eval}(\tau_1) \subtynf !\texttt{eval}(\tau_2) : \star \gens \Phi$
+    
+    \caseText{Goal follows by AS-Normalize on (7)}
+  }
+  
+  \jcase{8}{S-IForall}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \forall i : S.\tau_1\subty\forall i : S.\tau_2 : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \forall i : S.\tau_1\subty\forall i : S.\tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta, i : S ; \Delta \vDash \Phi$
+    
+    \caseText{Inverting (5)}
+    
+    \caseFact{6} $\Psi ; \Theta, i : S ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+ 
+    \caseText{By AS-IForall on (6)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \forall i : S. \texttt{eval}(\tau_1) \subtynf \forall i : S. \texttt{eval}(\tau_2) : \star \gens \forall i : S.\Phi$
+    
+    \caseText{Goal follows by AS-Normalize on (7)}
+  }
+  
+  \jcase{9}{S-IExists}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \exists i : S.\tau_1\subty\exists i : S.\tau_2 : \star$    
+     
+     \caseFact{2} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \exists i : S.\tau_1\subty\exists i : S.\tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta, i : S ; \Delta \vDash \Phi$
+    
+    \caseText{Inverting (5)}
+    
+    \caseFact{6} $\Psi ; \Theta, i : S ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+ 
+    \caseText{By AS-IExists on (6)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \exists i : S. \texttt{eval}(\tau_1) \subtynf \exists i : S. \texttt{eval}(\tau_2) : \star \gens \forall i : S.\Phi$
+    
+    \caseText{Goal follows by AS-Normalize on (7)}
+  }
+  
+  \jcase{10}{S-TForall}{
+    \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K.\tau_1\subty\forall \alpha : K.\tau_2 : \star$    
+     
+     \caseFact{2} $\Psi,\alpha : K ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K.\tau_1\subty\forall \alpha : K.\tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+    }
+    
+    \caseText{By IH on (2)} 
+    
+    \caseFact{4} $\Psi, \alpha : K ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{Inverting (5)}
+    
+    \caseFact{6} $\Psi , \alpha : K ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+ 
+    \caseText{By AS-IForall on (6)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \forall \alpha : K. \texttt{eval}(\tau_1) \subtynf \forall \alpha : K. \texttt{eval}(\tau_2) : \star \gens \Phi$
+    
+    \caseText{Goal follows by AS-Normalize on (7)}
+  }
+  
+  \jcase{11}{S-List}{
+   \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash L^I \tau_1 \subty L^J \tau_2 : \star$
+    
+    \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    \caseFact{3} $\Theta ; \Delta \vDash I = J$
+   }{
+   $\Psi ; \Theta ; \Delta \pvdash L^I \tau_1 \subty L^J \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$  
+   }
+     \caseText{By IH on (2)}
+     
+     \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+     
+     \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+     
+     \caseText{By (3) and (6)}
+     
+     \caseFact{7} $\Theta ; \Delta \vDash \Phi \wedge (I = J)$
+     
+     \caseText{By inversion on (5)}
+     
+     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+     
+     \caseText{By AS-List on (8)}
+     
+     \caseFact{9} $\Psi ; \Theta ; \Delta \vdash L^I\texttt{eval}(\tau_1) \subtynf L^J\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I = J)$
+     
+     \caseText{Goal follows by AS-Normalize on (9)}
+  }
+  
+  \jcase{12}{S-Impl}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+      
+      \caseFact{3} $\Theta;\Delta \vDash \Phi_2 \to \Phi_1$
+    }{
+     $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star \gens \Phi$ and $\Theta  ; \Delta \vDash \Phi$    
+    }
+     \caseText{By IH on (2)}    
+     
+     \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+     
+     \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+     
+     \caseText{By (3) and (5)}
+     
+     \caseFact{6} $\Theta ; \Delta \vDash \Phi \wedge (\Phi_2 \to \Phi_1)$
+     
+     \caseText{Inverting (4)}
+     
+     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+     
+     \caseText{By AS-Impl on (7)}
+     
+     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \texttt{eval}(\tau_1) \subtynf \Phi_2 \implies \texttt{eval}(\tau_2) : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)$
+     
+     \caseFact{Goal follows by AS-Normalize on (8)}
+  }
+  
+  \jcase{13}{S-Conj}{
+    \jgivengoal{
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \amp \tau_1 \subty \Phi_2 \amp \tau_2 : \star$
+      
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+      
+      \caseFact{3} $\Theta;\Delta \vDash \Phi_1 \to \Phi_2$
+    }{
+    $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \amp \tau_1 \subty \Phi_2 \amp \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$    
+    }
+     \caseText{By IH on (2)}    
+     
+     \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+     
+     \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+     
+     \caseText{By (3) and (5)}
+     
+     \caseFact{6} $\Theta ; \Delta \vDash \Phi \wedge (\Phi_1 \to \Phi_2)$
+     
+     \caseText{Inverting (4)}
+     
+     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+     
+     \caseText{By AS-Conj on (7)}
+     
+     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \texttt{eval}(\tau_1) \subtynf \Phi_2 \amp \texttt{eval}(\tau_2) : \star \gens \Phi \wedge (\Phi_1 \to \Phi_2)$
+     
+     \caseFact{Goal follows by AS-Normalize on (8)}
+  }
+  
+  \jcase{14}{S-Monad}{
+   \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{q}) \tau_1 \subty \M(J,\vec{p}) \tau_2 : \star$
+    
+    \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    \caseFact{3} $\Theta ; \Delta \vDash (I = J) \wedge (\vec{q} \leq \vec{p})$
+   }{
+    $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{q}) \tau_1 \subty \M(J,\vec{p}) \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$   
+   }
+    \caseText{By IH on (2)}  
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$ 
+    
+    \caseText{From (3) and (5)}   
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi \wedge (I = J) \wedge (\vec{q} \leq \vec{p})$
+    
+    \caseText{By inversion on (4)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+    
+    \caseText{By AS-Monad on (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \M(I,\vec{q})\texttt{eval}(\tau_1) \subtynf \M(J,\vec{p})\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I = J) \wedge (\vec{q} \leq \vec{p})$
+    
+    \caseText{Goal follows by AS-Normalize on (8)}
+  }
+  
+  \jcase{15}{S-Pot}{
+   \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash [I|\vec{q}] \, \tau_1 \subty [J|\vec{p}] \, \tau_2 : \star$
+    
+    \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    \caseFact{3} $\Theta ; \Delta \vDash (I = J) \wedge (\vec{q} \geq \vec{p})$
+   }{
+    $\Psi ; \Theta ; \Delta \pvdash [I|\vec{q}]\, \tau_1 \subty [J|\vec{p}] \, \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$   
+   }
+    \caseText{By IH on (2)}  
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$ 
+    
+    \caseText{From (3) and (5)}   
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi \wedge (I = J) \wedge (\vec{q} \geq \vec{p})$
+    
+    \caseText{By inversion on (4)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+    
+    \caseText{By AS-Pot on (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash [I|\vec{q}]\texttt{eval}(\tau_1) \subtynf [J|\vec{p}]\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I = J) \wedge (\vec{q} \geq \vec{p})$
+    
+    \caseText{Goal follows by AS-Normalize on (8)}
+  }
+  
+  \jcase{16}{S-ConstPot}{
+   \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash [I] \, \tau_1 \subty [J] \, \tau_2 : \star$
+    
+    \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+    
+    \caseFact{3} $\Theta ; \Delta \vDash (I \geq J)$
+   }{
+    $\Psi ; \Theta ; \Delta \pvdash [I]\, \tau_1 \subty [J] \, \tau_2 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$   
+   }
+    \caseText{By IH on (2)}  
+    
+    \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+    
+    \caseFact{5} $\Theta ; \Delta \vDash \Phi$ 
+    
+    \caseText{From (3) and (5)}   
+    
+    \caseFact{6} $\Theta ; \Delta \vDash \Phi \wedge (I \geq J)$
+    
+    \caseText{By inversion on (4)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+    
+    \caseText{By AS-ConstPot on (7)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash [I]\texttt{eval}(\tau_1) \subtynf [J]\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I \geq J)$
+    
+    \caseText{Goal follows by AS-Normalize on (8)}
+  }
+  
+  \jcase{17}{S-FamLam}{
+   \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K$ 
+    
+    \caseFact{2} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+   }{
+     $\Psi ; \Theta ; \Delta \pvdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$ 
+   }
+    \caseText{By IH on (2)}
+    
+    \caseFact{3} $\Psi ; \Theta, i : S ; \Delta \pvdash \tau_1 \subty \tau_2 : K \gens \Phi$
+    
+    \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi$
+    
+    \caseText{Equivalently to (4)}
+    
+    \caseFact{5} $Theta ; Delta \vDash \forall i : S. \Phi$
+    
+    \caseText{By inversion on (3)}
+    
+    \caseFact{6} $\Psi ; \Theta, i : S ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$
+    
+    \caseText{By AS-FamLam on (6)}
+    
+    \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \lambda i : S . \texttt{eval}(\tau_1) \subtynf \lambda i : S.\texttt{eval}(\tau_2) : S \to K \gens \forall i : S. \Phi$
+    
+    \caseText{Goal follows by AS-Noramlize on (7)}
+  }
+  
+  \jcase{18}{S-FamApp}{
+   \jgivengoal{
+    \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \; I \subty \tau_2 \; J : K$
+    
+    \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : S \to K$
+    
+    \caseFact{3} $\Theta ; \Delta \vDash I = J$
+   }{
+    $\Psi  ;\Theta ; \Delta \pvdash \tau_1 \; I \subty \tau_2 \; J : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+   }
    
-   \item[(S-Tensor)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 \subty \tau_1' \otimes \tau_2' : \star$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. Inverting both these, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_2$. By AS-Tensor, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \otimes \texttt{eval}(\tau_1') \subtynf \texttt{eval}(\tau_2) \otimes \texttt{eval}(\tau_2') \star \gens \Phi_1 \wedge \Phi_2$. But $\texttt{eval}(\tau \otimes \sigma) = \texttt{eval}(\tau)\otimes\texttt{eval}(\sigma)$ by definition, and so we have by AS-Normalize $\Psi ; \Theta ; \Delta \vdash \tau_1 \otimes \tau_2 \subty \tau_1' \otimes \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$, as required.
-   \item[(S-With)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 \subty \tau_1' \amp \tau_2' : \star$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. Inverting both these, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_2$. By AS-With, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \amp \texttt{eval}(\tau_1') \subtynf \texttt{eval}(\tau_2) \amp \texttt{eval}(\tau_2') \star \gens \Phi_1 \wedge \Phi_2$. But $\texttt{eval}(\tau \amp \sigma) = \texttt{eval}(\tau)\amp\texttt{eval}(\sigma)$ by definition, and so we have by AS-Normalize $\Psi ; \Theta ; \Delta \vdash \tau_1 \amp \tau_2 \subty \tau_1' \amp \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$, as required.
-   \item[(S-Sum)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 \subty \tau_1' \oplus \tau_2' : \star$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1' : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2' : \star \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$. Inverting both these, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_1$ and $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_2) \subtynf \texttt{eval}(\tau_1') : \star \gens \Phi_2$. By AS-Sum, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \oplus \texttt{eval}(\tau_1') \subtynf \texttt{eval}(\tau_2) \oplus \texttt{eval}(\tau_2') \star \gens \Phi_1 \wedge \Phi_2$. But $\texttt{eval}(\tau \oplus \sigma) = \texttt{eval}(\tau)\oplus\texttt{eval}(\sigma)$ by definition, and so we have by AS-Normalize $\Psi ; \Theta ; \Delta \vdash \tau_1 \oplus \tau_2 \subty \tau_1' \oplus \tau_2' : \star \gens \Phi_1 \wedge \Phi_2$, as required.
-   \item[(S-Bang)] Suppose $\Psi ; \Theta ; \Delta \vdash !\tau_1 \subty !\tau_2 : \star$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$.
-   By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By inversion, 
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-Bang, 
-   $\Psi ; \Theta ; \Delta \vdash !\texttt{eval}(\tau_1) \subtynf !\texttt{eval}(\tau_2) : \star \gens \Phi$. But $\texttt{eval}(!\tau) = !\texttt{eval}(\tau)$, and so
-    $\Psi ; \Theta ; \Delta \vdash !\tau_1 \subty !\tau_2 : \star \gens \Phi$, as required.
-   \item[(S-IForall)] Suppose $\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau_1 \subty \forall i : S. \tau_2 : \star$ from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star$. By IH, $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta, i : S ; \Delta \vDash \Phi$. Equivalently, $\Theta ; \Delta \vDash \forall i : S. \Phi$. By inversion, $\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. by AS-IForall, $\Psi ; \Theta ; \Delta \vdash \forall i : S. \texttt{eval}(\tau_1) \subtynf \forall i : S. \texttt{eval}(\tau_2) : \star \gens \forall i : S. \Phi$. But, $\texttt{eval}(\forall i : S. \tau) = \forall i : S.\texttt{eval}(\tau)$, and so by AS-Normalize, $\Psi ; \Theta ; \Delta \vdash \forall i : S. \tau_1 \subty \forall i : S. \tau_2 : \star \gens \forall i : S. \Phi$, as required.
-   \item[(S-IExists)] Suppose $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subty \exists i : S. \tau_2 : \star$ from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star$. By IH, $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta, i : S ; \Delta \vDash \Phi$. Equivalently, $\Theta ; \Delta \vDash \forall i : S. \Phi$. By inversion, $\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. by AS-IExists, $\Psi ; \Theta ; \Delta \vdash \exists i : S. \texttt{eval}(\tau_1) \subtynf \exists i : S. \texttt{eval}(\tau_2) : \star \gens \forall i : S. \Phi$. But, $\texttt{eval}(\exists i : S. \tau) = \exists i : S.\texttt{eval}(\tau)$, and so by AS-Normalize, $\Psi ; \Theta ; \Delta \vdash \exists i : S. \tau_1 \subty \exists i : S. \tau_2 : \star \gens \forall i : S. \Phi$, as required.
-   \item[(S-TForall)] Suppose $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subty \forall \alpha : K. \tau_2 : \star$ from 
-   $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$. By IH,
-   $\Psi, \alpha : K ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$, with $\Theta ; \Delta \vDash \Phi$. By inversion,
-   $\Psi, \alpha : K ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-TForall,
-   $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \texttt{eval}(\tau_1) \subtynf \forall \alpha : K. \texttt{eval}(\tau_2) : \star \gens \Phi$.
-   But, $\texttt{eval}(\forall \alpha : K.\tau) = \forall \alpha : K. \texttt{eval}(\tau)$, and so
-   $\Psi ; \Theta ; \Delta \vdash \forall \alpha : K. \tau_1 \subty \forall \alpha : K. \tau_2 : \star \gens \Phi$ by AS-Normalize, as required.
-   \item[(S-List)] Suppose $\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subty L^J \tau_2 : \star$ from
-   $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$ and $\Theta ; \Delta \vDash I = J$.
-   By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Consequently, $\Theta l \Delta \vDash \Phi \wedge (I = J)$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-List,
-   $\Psi ; \Theta ; \Delta \vdash L^I\texttt{eval}(\tau_1) \subtynf L^J\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I = J)$. But, $\texttt{eval}(L^I \tau) = L^I \texttt{eval}(\tau)$, and so by AS-Normalize $\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subty L^J \tau_2 : \star \gens \Phi \wedge (I = J)$, as required.
-   \item[(S-Impl)] Suppose $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star$
-   from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$ and $\Theta;\Delta \vDash \Phi_2 \to \Phi_1$. By IH,
-   $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Consequently, $\Theta ; \Delta \vDash \phi \wedge (\Phi_2 \to \Phi_1)$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-Impl,
-   $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \texttt{eval}(\tau_1) \subtynf \Phi_2 \implies \texttt{eval}(\tau_2) : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)$. But, $\texttt{eval}(\Phi \implies \tau) = \Phi \implies \texttt{eval}(\tau)$, and so by AS-Normalize,
-   $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)$, as required.
-   \item[(S-Conj)]  Suppose $\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subty \Phi_2 \amp \tau_2 : \star$
-   from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$ and $\Theta;\Delta \vDash \Phi_1 \to \Phi_2$. By IH,
-   $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Consequently, $\Theta ; \Delta \vDash \phi \wedge (\Phi_1 \to \Phi_2)$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-Conj,
-   $\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \texttt{eval}(\tau_1) \subtynf \Phi_2 \amp \texttt{eval}(\tau_2) : \star \gens \Phi \wedge (\Phi_1 \to \Phi_2)$. But, $\texttt{eval}(\Phi \implies \tau) = \Phi \implies \texttt{eval}(\tau)$, and so by AS-Normalize,
-   $\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subty \Phi_2 \amp \tau_2 : \star \gens \Phi \wedge (\Phi_1 \to \Phi_2)$, as required.
-   \item[(S-Monad)] Suppose $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subty \M(J,\vec{p}) \tau_2 : \star$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$ and $\Theta ; \Delta \vDash (I = J) \wedge (\vec{q} \leq \vec{p})$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Consequently, $\Theta ; \Delta \vDash \Phi \wedge (I = J) \wedge (\vec{q} \leq \vec{p})$. By inversion,
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-Monad,
-   $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q})\texttt{eval}(\tau_1) \subtynf \M(J,\vec{p})\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I = J) \wedge (\vec{q} \leq \vec{p})$. But, $\texttt{eval}(M(I,\vec{q})\tau)=\M(I,\vec{q})\texttt{eval}(\tau)$, and so by AS-Normalize.
-   $\Psi ; \Theta ; \Delta \vdash \M(I,\vec{q}) \tau_1 \subty \M(J,\vec{p}) \tau_2 : \star \gens \Phi \wedge (I = J) \wedge (\vec{q} \leq \vec{p})$, as required.
-   \item[(S-Pot)] Suppose $\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subty [J|\vec{p}] \tau_2 : \star$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$ and $\Theta ; \Delta \vDash (I = J) \wedge (\vec{q} \geq \vec{p})$. By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. Consequently, $\Theta ; \Delta \vDash \Phi \wedge (I = J) \wedge (\vec{q} \geq \vec{p})$. By inversion,
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-Pot,
-   $\Psi ; \Theta ; \Delta \vdash [I|\vec{q}]\texttt{eval}(\tau_1) \subtynf [J|\vec{p}]\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (I = J) \wedge (\vec{q} \geq \vec{p})$. But, $\texttt{eval}([I|\vec{q}]\tau)=[I,\vec{q}]\texttt{eval}(\tau)$, and so by AS-Normalize.
-   $\Psi ; \Theta ; \Delta \vdash [I|\vec{q}] \tau_1 \subty [J|\vec{p}] \tau_2 : \star \gens \Phi \wedge (I = J) \wedge (\vec{q} \geq \vec{p})$, as required.
-   \item[(S-ConstPot)] Suppose $\Psi ; \Theta ; \Delta \vdash [I] \tau_1 \subty [J] \tau_2 : \star$
-   from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star$ and $\Theta;\Delta \vDash J \leq I$.
-   By IH, $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$ with $\Theta ; \Delta \vDash I \leq J$. Consequently, $\Theta ; \Delta \vDash \Phi \wedge (I \leq J)$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$. By AS-ConstPot,
-   $\Psi ; \Theta ; \Delta \vdash [I]\texttt{eval}(\tau_1) \subtynf [J]\texttt{eval}(\tau_2) : \star \gens \Phi \wedge (J \leq I)$. But, $\texttt{eval}([I] \tau) = [I]\texttt{eval}(\tau)$, and so by AS-Normalize, $\Psi ; \Theta ; \Delta \vdash [I] \tau_1 \subty [J] \tau_2 : \star \gens \Phi \wedge (J \leq I)$, as required.
-   \item[(S-FamLam)] Suppose $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K$
-   from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : K$. By IH, $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subty \tau_2 : K \gens \Phi$ with $\Theta, i : S; \Delta \vDash \Phi$, or $\Theta ; \Delta \vDash \forall i : S. \Phi$. By inversion, $\Psi ; \Theta, i : S ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$. By AS-FamLam, $\Psi ; \Theta ; \Delta \vdash \lambda i : S . \texttt{eval}(\tau_1) \subtynf \lambda i : S.\texttt{eval}(\tau_2) : S \to K \gens \forall i : S. \Phi$. But, $\texttt{eval}(\lambda i : S. \tau) = \lambda i : S. \texttt{eval}(\tau)$, and so by AS-Normalize,
-   $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1 \subty \lambda i : S. \tau_2 : S \to K \gens \forall i : S. \Phi$, as required.
-   \item[(S-FamApp)] Suppose $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K$ from $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K$ and$\Theta ; \Delta \vDash I = J$. By IH,  $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : S \to K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By inversion, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$. By \autoref{thm:eval-app-lemma},
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1 \; I) \subtynf \texttt{eval}(\tau_2 \; J) : K \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$.
-   By AS-Normalize, $\Psi ; \Theta ; \Delta \vdash \tau_1 \; I \subty \tau_2 \; J : K \gens \Phi'$, as required.
+   \caseText{By IH on (2)}
    
-   \item[(S-Fam-Beta1)] Suppose $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$. By AS-Normalize, it suffices to show that
-   $\Psi ; \Theta ; \Delta \vdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$.
-   But, $\texttt{eval}((\lambda i : S. \tau) \; J) = \texttt{eval}(\tau)[J/i]$ by definition, and $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$ by \autoref{thm:idx-subst-eval}. By \autoref{thm:norm-thm},  $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] : K$, and so by \autoref{thm:subtynf-refl}, we have that $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau)[J/i] \subtynf \texttt{eval}(\tau)[J/i] : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$ as required.
-   \item[(S-Fam-Beta2)] Identical to S-FamBeta1.
- \end{itemize}
-\end{proof}
+   \caseFact{4} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : S \to K \gens \Phi$
+   
+   \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+   
+   \caseText{Inverting (4)}
+   
+   \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$
+   
+   \caseText{By \autoref{thm:eval-app-lemma} on (3) and (6)}
+   
+   \caseFact{7} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau_1 \; I) \subtynf \texttt{eval}(\tau_2 \; J) : K \gens \Phi'$
+   
+   \caseFact{8} $\Theta ; \Delta \vDash \Phi'$
+   
+   \caseText{Goal follows from AS-Normalize on (7)}
+  }
+  
+  \jcase{19}{S-Fam-Beta1}{
+   \jgivengoal{
+     \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K$
+   }{
+    $\Psi ; \Theta ; \Delta \vdash (\lambda i : S. \tau) \; J \subty \tau[J/i] : K \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
+   }
+   
+   \caseText{By the presupposition for (1)}
+   
+   \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau[J/i] : K$
+   
+   \caseText{By \autoref{thm:norm-thm} on (2)}
+   
+   \caseFact{3} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau[J/i]) : K$
+   
+   \caseFact{4} $\texttt{eval}(\tau[J/i]) \; \texttt{nf}$
+   
+   \caseText{By \autoref{thm:subtynf-refl} on (3) and (4)}
+   
+   \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}(\tau[J/i]) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$
+   
+   \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+   
+   \caseText{By \autoref{thm:idx-subst-eval}}
+   
+   \caseFact{7} $\texttt{eval}(\tau[J/i]) = \texttt{eval}(\tau)[J/i]$
+   
+   \caseText{By definition of \texttt{eval}}
+   
+   \caseFact{8} $\texttt{eval}(\tau)[J/i] = \texttt{eval}((\lambda i : S. \tau) \; J)$
+   
+   \caseText{Combining (7) and (8) in (5)}
+   
+   \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \texttt{eval}((\lambda i : S. \tau) \; J) \subtynf \texttt{eval}(\tau[J/i]) : K \gens \Phi$
+   
+   \caseText{Goal follows by AS-Normalize on  (9)}
+  }
+  
+  \jcase{20}{S-Fam-Beta2}{Identical to case 19}
+  
+}
