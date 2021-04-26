@@ -1,400 +1,901 @@
-\begin{proof}
-By induction on the derivation of $\Psi;\Theta;\Delta;\Omega;\Gamma \vdash e : \tau$, we prove both claims simultaneously.
-In all cases, the erasure property is immediate from the inductive hypotheses-- we will elide this bit of the proof.
-\begin{itemize}
-  \item[(T-Var-1)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x : \tau$ from $x : \tau \in \Gamma$. By AT-Var-1, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x \infers \tau \gens \top,\Gamma \setminus \{x : \tau\}$. Of course, $\Theta ; \Delta \vDash \top$, and $|x| = x$, so (1) is complete. By \autoref{thm:subty-refl}, $\Psi ; \Theta ; \Delta \vdash \tau \subty \tau : \star \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By AT-Sub,  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x \checks \tau \gens \top,\Gamma \setminus \{x : \tau\}$, as required for (2).
+\jtheorem{Proof of \autoref{thm:tycheck-compl}}{
+By induction on the derivation of $\Psi;\Theta;\Delta;\Omega;\Gamma \vdash e : \tau$, we prove both claims simultaneously. In each case, we will only prove one of the two conclusions, based on the direction of the corresponding algorithmic rule. In cases where the rule is checking claim (2) follows immediately by AT-Anno. In cases where the rule is inferring, (1) follows by \autoref{thm:subty-refl} and then AT-Sub. In all cases, the erasure property is immediate from the inductive hypotheses-- we will elide this bit of the proof.
+
+ \jcase{1}{T-Var-1}{
+  \jgivengoalThreeExists{
+   \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash x : \tau$
+   
+   \caseFact{2} $x : \tau \in \Gamma$
+  }{
+   $e'$, $\Phi'$, $\Gamma'$
+  }{
+   $|e'| = x$
+  }{
+   $\Psi ; \Theta ; \Delta \vDash \Phi'$   
+  }{
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \infers \tau \gens \Phi,\Gamma'$  
+  }
+   Immediate
+ }
+ 
+ \jcase{2}{T-Var-2}{Immediate}
+ 
+ \jcase{3}{T-Unit}{Immediate}
+ 
+ \jcase{4}{T-Base}{Immediate}
+ 
+ \jcase{5}{T-Absurd}{Immediate}
+ 
+ \jcase{6}{T-Nil}{
+  \jgivengoalThreeExists{
+   \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\pvdash \texttt{nil} : L^I \tau$
+   
+   \caseFact{2} $\Theta ; \Delta \vdash I : \mathbb{N}$
+   
+   \caseFact{3} $\Theta;\Delta \vDash I = 0$
+  }{
+   $e'$, $\Phi'$,$\Gamma'$  
+  }{
+   $|e'| = \texttt{nil}$  
+  }{
+   $\Theta ; \Delta \vDash \Phi'$  
+  }{
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks L^I \tau \gens \Phi',\Gamma'$  
+  }
   
-  \item[(T-Var-2)] Immediate.
-  \item[(T-Unit)] Immediate.
-  \item[(T-Base)] Immediate.
-  \item[(T-Absurd)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{absurd} : \tau$ from $\Theta ; \Delta \vDash \bot$. By AT-Absurd,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{absurd} \checks \tau \gens \bot,\Gamma$. Since $\Theta ; \Delta \vDash \bot$, this completes (1). For (2),
-  use AT-Anno to get $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (\texttt{absurd} : \tau) \infers \tau \gens \bot,\Gamma$
+  \caseText{By \autoref{thm:sort-compl}, there is a $\Phi$ such that}
   
-  \item[(T-Nil)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{nil} : L^I \tau$ by way of
-  $\Theta ; \Delta \vdash I : \mathbb{N}$ and
-  $\Theta;\Delta \vDash I = 0$.
-  By \autoref{thm:sort-compl}, there is a $\Phi$ such that
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi$.
-  By AT-Nil, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{nil} \checks L^I \tau \gens \Phi \wedge (I = 0),\Gamma$.
-  Of course, $\Theta ; \Delta \vDash \Phi \wedge (I = 0)$,
-  completing (1). (2) follows by AT-Anno.
+  \caseFact{4} $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi$
   
-  \item[(T-Cons)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1, \Gamma_2\vdash e_1 :: e_2 : L^I \tau$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau$,
-  $\Psi ; \Theta ; \Omega ; \Gamma_2\vdash e_2 : L^{I-1} \tau$, and
-  $\Theta ; \Delta \vDash I \geq 1$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  by \autoref{thm:admits-weaken} we have $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \tau \gens \Phi_1',\Gamma_1''$.
-  Since $(\Gamma_1,\Gamma_2) \setminus \Gamma_1 = \Gamma_2$,
-  we have that
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$.
-  By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2,\Gamma_2'$.
-  But again by \autoref{thm:admits-weaken}, we have $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2',\Gamma_2''$.
-  By AT-Cons, we have that
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1 :: e_2 \checks L^I \tau \gens \Phi_1' \wedge \Phi_2' \wedge (I \geq 1), \Gamma_2''$.
-  But, $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2' \wedge (I \geq 1)$ and so this completes (1). (2) follows immediately by AT-Anno.
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi$
   
+  \caseText{Goals follow by AT-Nil, letting $e' = \texttt{nil}$, $\Phi' = \Phi \wedge (I = 0)$, and $\Gamma' = \Gamma$}
+ }
+ 
+ \jcase{7}{T-Cons}{
+  \jgivengoalThreeExists{
+   \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\pvdash e_1 :: e_2 : L^I \tau$
+   
+   \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\pvdash e_1 : \tau$
+   
+   \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\pvdash e_2 : L^{I-1} \tau$
+   
+   \caseFact{4} $\Theta ; \Delta \vDash I \geq 1$
+  }{
+   $e'$, $\Phi'$,$\Gamma'$  
+  }{
+   $|e'| = e_1 :: e_2$
+  }{
+   $\Theta ; \Delta \vDash \Phi'$  
+  }{
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks L^I \tau \gens \Phi',\Gamma'$  
+  }
   
-  \item[(T-Match)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{match}(e,e_1,h.t.e_2) : \tau'$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e : L^I \tau$,
-  $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2\vdash e_1 : \tau'$, and
-  $\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2 : \tau'$.
-  By IH, there are $e'$, $\Phi$, $\Gamma_1'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e' \infers L^I \tau \gens \Phi, \Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by \autoref{thm:admits-weaken} that there are $e''$, $\Phi'$, $\Gamma_1''$ such that
-  $|e''| = |e'|$,
-  $\Theta ; \Delta \vDash \Phi'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e'' \infers L^I \tau \gens \Phi', \Gamma_1''$.
-  Again by IH, there are $e_1'$, $\Phi_1$, $\Gamma_2'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta, I = 0 \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2 \vdash e_1' \checks \tau' \gens \Phi_1,\Gamma_2'$.
-  By \autoref{thm:ctx-sub-wkn},
-  $\Psi ; \Theta ; \Delta, I = 0 \vdash \Gamma_1'' \wknto \Gamma_2$.
-  Then, by \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta, I = 0 \vDash \Phi_1'$, and
-  $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_1'' \vdash e_2'' \checks \tau' \gens \Phi_1',\Gamma_2''$.
-  Invoking the IH once more, we have $e_2'$, $\Phi_2$, $\Gamma_3'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta, I \geq 1 \vdash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta, I \geq 1 ; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_3'$.
-  By \autoref{thm:ctx-sub-wkn} and \autoref{thm:ctx-sub-subset2},
-  $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_1'', h : \tau, t : L^I \tau \wknto \Gamma_2, h : \tau, t : L^I \tau$.
-  Then, by \autoref{admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta, I \geq 1 \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_1'', h : \tau, t : L^I \tau \vdash e_2' \checks \tau' \gens \Phi_2',\Gamma_3''$.
-  By AT-Match,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{match}(e,e_1,h.t.e_2) \checks \tau' \gens \Phi' \wedge (I = 0 \to \Phi_1') \wedge (I \geq 1 \to \Phi_2'), \Gamma_2'' \cap (\Gamma_3'' \setminus \{x,y\})$.
-  Since $\Theta ; \Delta \vDash \Phi'$,  $\Theta ; \Delta, I = 0 \vDash \Phi_1'$, and $\Theta ; \Delta, I \geq 1 \vDash \Phi_2'$, we have equivalently that
-  $\Theta ; \Delta \vDash \Phi' \wedge (I = 0 \to \Phi_1') \wedge (I \geq 1 \to \Phi_2')$. This completes (1), and (2) follows by AT-Anno.
+  \caseText{By IH, on (2) there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
   
-  \item[(T-ExistI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{pack}[I](e) : \exists i:S.\tau$ from
-  $\Theta ; \Delta \vdash I : S$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e : \tau[I/i]$.
-  By \autoref{thm:idx-compl}, there is some $\Phi_1$ such that
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Theta ; \Delta \vdash I : S \gens \Phi_1$.
-  By IH, there are $e'$, $\Phi_2$, $\Gamma'$ such that
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau[I/i] \gens \Phi_2,\Gamma'$.
-  By AT-ExistI,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{pack}[I](e') : \exists i:S.\tau \gens \Phi_1 \wedge \Phi_2,\Gamma'$.
-  Clearly, $|\texttt{pack}[I](e')| = \texttt{pack}[I](|e'|) = \texttt{pack}[I](e)$, and $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$.
-  This completes (1), and (2) follows immediately by AT-Anno.
+  \caseFact{5} $|e_1'| = e_1$
   
-  \item[(T-ExistE)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{unpack } (i,x) = e_1 \texttt{ in } e_2 : \tau'$ from
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \exists i : S.\tau$ and
-  $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \tau'$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \exists i : S. \tau \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \infers \exists i : S. \tau \gens \Phi_1',\Gamma_1''$.
-  By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that
-  $|e_2'| = e_2$,
-  $\Theta, i : S ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_2,x : \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1'',x : \tau \wknto \Gamma_2, x : \tau$,
-  we have by \autoref{thm:admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta, i : S ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_1'', x: \tau \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_2''$.
-  By AT-ExistE,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{unpack } (i,x) = e_1' \texttt{ in } e_2' : \tau' \gens \Phi_1' \wedge (\forall i : S. \Phi_2'),\Gamma_2'' \setminus \{x\}$,
-  which completes (1). For (2), a single use of AT-Anno suffices.
+  \caseFact{6} $\Theta ; \Delta \vDash \Phi_1'$
   
-  \item[(T-Lam)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e : \tau_1 \loli \tau_2$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e : \tau_2$. By IH, there are $e'$, $\Phi$, $\Gamma'$ so that $|e'| = e$, $\Theta ; \Delta \vDash \Phi$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e' \checks \tau_2 \gens \Phi,\Gamma'$. By AT-Lam, $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \lambda x. e' \checks \tau_1 \loli \tau_2 \tau_2 \gens \Phi,\Gamma' \setminus \{x : \tau_1\}$. But, $|\lambda x. e'| = \lambda x. |e'| = \lambda x.e$, which completes the proof of (1). For (2), AT-Anno gives that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (\lambda x. e' : \tau_1 \loli \tau_2) \infers \tau_1 \loli \tau_2 \gens \Phi,\Gamma' \setminus \{x : \tau_1\}$, as required.
+  \caseFact{7} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau \gens \Phi_1,\Gamma_1'$
   
-  \item[(T-App)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash e_1 \, e_2 :  \tau_2$ from
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1 \loli \tau_2$ and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\vdash e_2 : \tau_1$.
-  By IH, there are $e_1'$, $\Gamma_1'$, $\Phi_1$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \tau_1 \loli \tau_2 \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_1 \vdash e_1'' \infers \tau_1 \loli \tau_2 \gens \Phi_1',\Gamma_1''$.
-  Then, by IH, there are $e_2'$, $\Gamma_2'$, and $\Phi_2$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_1 \gens \Phi_2,\Gamma_2'$.
-  But then by \autoref{thm:admits-weaken}, there are $e_2''$, $\Gamma_2''$, and $\Phi_2'$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma_1'' \vdash e_2'' \checks \tau_1 \gens \Phi_2',\Gamma_2''$.
-  Then, by AT-App, we have that
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \, e_2'' \infers \tau_2 \gens \Phi_1' \wedge \Phi_2',\Gamma_2''$.
-  This completes (2). For (1), 
-  we apply \autoref{thm:subty-refl} to find that there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$, and
-  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi_3$.
-  Then, by AT-Sub, we have
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \, e_2'' \checks \tau_2 \gens \Phi_1' \wedge \Phi_2' \wedge \Phi_3,\Gamma_2''$
-  as required for (2).
+  \caseText{By \autoref{thm:admits-weaken} on (7), there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}
   
-  \item[(T-TensorI)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \angles{e_1,e_2} ; \tau_1 \otimes \tau_2$ from $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1$ and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\vdash e_2 : \tau_2$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that $|e_1'| = e_1$, $\Theta ; \Delta \vDash \Phi_1$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau_1 \gens \Phi_1,\Gamma_1'$. By \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that $|e_1''| = |e_1'|$, $\Theta ; \Delta \vDash \Phi_1'$, $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$ and $\Psi ; \Theta ; \Delta ;\Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \tau_2 \gens \Phi_1',\Gamma_1''$. But, $(\Gamma_1,\Gamma_2) \setminus \Gamma_1 = \Gamma_2$, since $\Gamma_1$ and $\Gamma_2$ are disjoint, and so we have that $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$.
-  By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that $|e_2'| = e_2$, $\Theta ; \Delta \vDash \Phi_2$,  and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_2 \gens \Phi_2,\Gamma_2'$. But by \autoref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that $|e_2''| = |e_2'|$, $\Theta ; \Delta \vDash \Phi_2'$, and $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2'' \checks \tau_2 \gens \Phi_2', \Gamma_2''$. By AT-TensorI,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \angles{e_1'',e_2''} \checks \tau_1 \otimes \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2''$.
-  We then verify the conditions: $|\angles{e_1'',e_2''}| = \angles{|e_1''|,|e_2''|} = \angles{|e_1'|,|e_2'|} = \angles{e_1,e_2}$, and also $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2'$, completing (1). For (2), AT-Anno gives that $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash (\angles{e_1'',e_2''} : \tau_1 \otimes \tau_2) \infers \tau_1 \otimes \tau_2 \gens \Phi_1' \wedge \Phi_2', \Gamma_2''$, as required.
+  \caseFact{8} $|e_1''| = |e_1'|$
   
-  \item[(T-TensorE)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2 : \tau'$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1 \otimes \tau_2$ and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2,x : \tau_1, y : \tau_2\vdash e_2 : \tau'$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \tau_1 \otimes \tau_2 \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2 \setminus \Gamma_1)$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \infers \tau_1 \otimes \tau_2 \gens \Phi_1',\Gamma_1''$.
-  Again by IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2,x : \tau_1, y : \tau_2 \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
-  Again by \autoref{admits-weaken}, since
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'',x : \tau_1, y : \tau_2 \wknto \Gamma_2,x : \tau_1, y : \tau_2$,
-  there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta, \Gamma_1'', x : \tau_1, y : \tau_2 \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_2''$.
-  By AT-TensorE,
-  $\Psi ; \Theta ; \Delta ; \Omega;  \Gamma_1,\Gamma_2 \vdash \texttt{let } \angles{x,y} = e_1'' \texttt{ in } e_2'' \checks \tau' \gens \Phi_1' \wedge \Phi_2',\Gamma_2''$.
-  This completes (1), and (2) follows by AT-Anno.
+  \caseFact{9} $\Theta ; \Delta \vDash \Phi_1'$
   
-  \item[(T-WithI)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1,e_2) : \tau_1 \amp \tau_2$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 : \tau_1$ and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_2 : \tau_2$.
-  By IH, we have for $i = 1,2$ that $e_i'$, $\Phi_i$, $\Gamma_i$ such that
-  $|e_i'| = e_i$,
-  $\Theta ; \Delta \vDash \Phi_i$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_i' : \tau_i \gens \Phi_i,\Gamma_i$.
-  By AT-WithI,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1',e_2') \checks \tau_1 \amp \tau_2 \gens \Phi_1 \wedge \Phi_2,\Gamma_1 \cap \Gamma_2$.
-  This completes (1), and (2) follows by AT-Anno.
+  \caseFact{10} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$
   
-  \item[(T-Fst)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e) : \tau_1$ from
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_1 \amp \tau_2$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \tau_1 \amp \tau_2 \gens \Phi,\Gamma'$.
-  By AT-Fst,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e') \infers \tau_1 \gens \Phi,\Gamma'$.
-  This completes (2). For (1), we invoke \autoref{thm:subty-refl} to get some $\Phi'$ such that
-  $\Theta ; \Delta \vDash \Phi'$ and $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_1 : \star \gens \Phi'$.
-  Then, by AT-Sub,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fst}(e') \checks \tau_1 \gens \Phi \wedge \Phi',\Gamma'$,
-  which completes (1).
+  \caseFact{11} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \tau \gens \Phi_1',\Gamma_1''$
   
+  \caseText{By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
   
-  \item[(T-Snd)] Identical to T-Fst.
-  \item[(T-Inl)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inl}(e) : \tau_1 \oplus \tau_2$ from
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_1$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau_1 \gens \Phi,\Gamma'$.
-  By AT-Inl,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{inl}(e') \checks \tau_1 \oplus \tau_2 \gens \Phi,\Gamma'$.
-  This completes (1), and (2) follows by AT-Anno.
+  \caseFact{12} $|e_2'| = e_2$
   
+  \caseFact{13} $\Theta ; \Delta \vDash \Phi_2$
   
-  \item[(T-Inr)] Identical to T-Inl.
-  \item[(T-Case)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{case}(e,x.e_1,y.e_2) : \tau$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e : \tau_1 \oplus \tau_2$,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x: \tau_1 \vdash e_1 : \tau$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, y: \tau_2 \vdash e_2 : \tau$.
-  By IH, there are $e'$, $\Phi$, $\Gamma_1'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e' \infers \tau_1 \oplus \tau_2 \gens \Phi,\Gamma_1'$.
-  But since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by \autoref{thm:admits-weaken}
-  that there are $e''$, $\Phi'$, $\Gamma_1''$ such that
-  $|e''| = |e'|$,
-  $\Theta ; \Delta \vDash \Phi'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e'' \infers \tau_1 \oplus \tau_2 \gens \Phi',\Gamma_1''$.
-  Then, again by IH, there are $e_1'$, $\Phi_1$, $\Gamma_2'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau_1 \vdash e_1' \checks \tau \gens \Phi_1,\Gamma_2'$.
-  But since
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'', x : \tau_1 \wknto \Gamma_2, x : \tau_1$,
-  we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_1'' \checks \tau \gens \Phi_1',\Gamma_2''$.
-  Applying IH one last time, we have $e_2'$, $\Phi_2$, $\Gamma_3'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, y : \tau_2 \vdash e_2' \checks \tau \gens \Phi_2,\Gamma_3'$.
-  But, once more by \autoref{thm:admits-weaken}, there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', y : \tau_2 \vdash e_2'' \checks \tau \gens \Phi_2',\Gamma_3''$.
-  Finally, by AT-Case, we have that
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{case}(e'',x.e_1'',y.e_2'') \checks \tau \gens \Phi' \wedge \Phi_1' \wedge \Phi_2',(\Gamma_2'' \setminus \{x\}) \cap (\Gamma_3'' \setminus \{y\})$.
-  This completes (1), and (2) follows immediately by AT-Anno.
+  \caseFact{14} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks L^{I-1} \tau \gens \Phi_2,\Gamma_2'$
   
-  \item[(T-ExpI)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash !e : !\tau$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \cdot \vdash e : \tau$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$,and
-  $\Psi ; \Theta ; \Delta ; \Omega; \cdot \vdash e' \checks \tau \gens \Phi,\Gamma'$.
-  By AT-ExpI,
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash !e' \checks !\tau \gens \Phi,\Gamma$,
-  which completes (1), and (2) follows by AT-Anno.        
+  \caseText{Again by \autoref{thm:admits-weaken} on (14), we have $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that}
   
-  \item[(T-ExpE)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{let } !x = e_1 \texttt{ in } e_2 : \tau'$ from
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1  : !\tau$ and
-  $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_2 \vdash e_2 : \tau'$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers !\tau \gens \Phi_1,\Gamma_1'$.
-  By \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma_1,\Gamma_2 \vdash e_1'' \infers !\tau \gens \Phi_1',\Gamma_1''$.
-  Again by IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega, x: \tau ; \Gamma_2 \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
-  Then, since
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$,
-  we have by \autoref{admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
-  $|e_2''| = |e_2|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_1'' \vdash e_2'' \checks \tau' \gens \Phi_2', \Gamma_2''$.
-  Finally, by AT-ExpE, we have
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{let } !x = e_1 \texttt{ in } e_2 \checks \tau' \gens \Phi_1' \wedge \Phi_2', \Gamma_2''$,
-  as required for (1). (2) follows by AT-Anno.
+  \caseFact{15} $|e_2''| = |e_2'|$
   
-  \item[(T-TAbs)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda \alpha. e : \forall \alpha : K.\tau$ by way of
-  $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By IH, there are $e'$,$\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau \gens \Phi,\Gamma'$.
-  By AT-TAbs
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \forall \alpha : K. \tau \gens \Phi,\Gamma'$.
-  This completes (1), and for (2), one use of AT-Anno suffices.
-    
-  \item[(T-TApp)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [\tau'] : \tau[\tau'/\alpha]$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \forall \alpha : K.\tau$ and
-  $\Psi ; \Theta ; \Delta \vdash \tau' : K$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \forall \alpha : K.\tau \gens \Phi,\Gamma'$.
-  By \autoref{thm:kind-compl}, there is some $\Phi'$ such that
-  $\Theta ; \Delta \vDash \Phi'$, and
-  $\Psi ; \Theta ; \Delta \vdash \tau' : K \gens \Phi'$.
-  Then, by AT-TApp,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' [\tau'] \infers \tau[\tau'/\alpha] \gens \Phi \wedge \Phi',\Gamma'$.
-  This completes (2). For (1), we have
-  by \autoref{thm:subty-refl}, there is some $\Phi''$ with
-  $\Theta ; \Delta \vDash \Phi''$ and
-  $\Psi ; \Theta ; \Delta \vdash \tau[\tau'/\alpha] \subty \tau[\tau'/\alpha] : \star \gens \Phi''$.
-  Then, by AT-Sub,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' [\tau'] \infers \tau[\tau'/\alpha] \gens \Phi \wedge \Phi' \wedge \Phi'',\Gamma'$
-  which completes (2).
-  \item[(T-IAbs)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda i. e : \forall i : S. \tau$ by way of
-  $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta, i : S ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta, i : S ; \Delta ; \Omega; \Gamma \vdash e' \checks \tau \gens \Phi,\Gamma'$.
-  By AT-IAbs,
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash \Lambda i. e' \checks \forall i : S.\tau \gens \forall i : S.\Phi,\Gamma'$.
-  Since $\Theta, i : S ; \Delta \vDash \Phi$, we also have $\Theta ; \Delta \vDash \forall i : S. \Phi$, which proves (1).
-  (2) follows immediately by AT-Anno, as always.
+  \caseFact{16} $\Theta ; \Delta \vDash \Phi_2'$
   
+  \caseFact{17} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2'' \checks L^{I-1} \tau \gens \Phi_2',\Gamma_2''$
   
-  \item[(T-IApp)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [I] : \tau[I/i]$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \forall i : S.\tau$ and
-  $\Theta ; \Delta \vdash I : S$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash e \infers \forall i : S. \tau \gens \Phi,\Gamma'$.
-  By \autoref{thm:sort-compl}, there is some $\Phi'$ with
-  $\Theta ; \Delta \vDash \Phi'$ and
-  $\Theta ; \Delta \vdash I : S \gens \Phi'$.
-  By AT-IApp,
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash e [I] \infers \tau[I/i] \gens \Phi \wedge \Phi',\Gamma'$.
-  This completes (1), and (2) follows by AT-Anno.
+  \caseText{By AT-Cons on (11) and (17)}
   
+  \caseFact{18} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' :: e_2'' \checks L^I \tau \gens \Phi_1' \wedge \Phi_2' \wedge (I \geq 1), \Gamma_2''$
   
-  \item[(T-Fix)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fix } x.e : \tau$ from
-  $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e : \tau$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e' \checks \tau \gens \Phi,\Gamma'$.
-  By AT-Fix,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fix } x.e' : \tau \gens \Phi,\Gamma$,
-  as required. Since $|\texttt{fix }x.e'| = \texttt{fix }x.|e'| = \texttt{fix }x.e$, this completes (1). For (2),
-  one use of AT-Anno suffices.
+  \caseText{Goals follow by $e' =  e_1'' :: e_2''$, $\Phi' = \Phi_1' \wedge \Phi_2' \wedge (I \geq 1)$, and $\Gamma' = \Gamma_2''$}
+ }
+ 
+ \jcase{8}{T-Match}{
+  \jgivengoalThreeExists{
+   \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{match}(e,e_1,h.t.e_2) : \tau'$
+   
+   \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e : L^I \tau$
+   
+   \caseFact{3} $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2\vdash e_1 : \tau'$
+   
+   \caseFact{4} $\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2 : \tau'$
+  }{
+   $e'$, $\Phi'$,$\Gamma'$  
+  }{
+   $|e'| = \texttt{match}(e,e_1,h.t.e_2)$
+  }{
+   $\Theta ; \Delta \vDash \Phi'$  
+  }{
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \tau' \gens \Phi',\Gamma'$  
+  }
   
-  \item[(T-Ret)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret}\; e : \M \, \phi(I,\vec{p}) \, \tau$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By IH, there are $e'$, $\Phi$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'$.
-  By AT-Ret,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret}\; e \checks \M \, \phi(I,\vec{p}) \, tau \gens \Phi,\Gamma'$.
-  This completes (1), and (2) follows by a single use of AT-Anno.
+  \caseText{By IH on (2)}
   
+  \caseFact{5} $|e'| = e$
+  
+  \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+  
+  \caseFact{7} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e' \infers L^I \tau \gens \Phi, \Gamma_1'$
+  
+  \caseText{By \autoref{thm:admits-weaken} on (7), there are $e''$, $\Phi'$, $\Gamma_1''$ such that}
+  
+  \caseFact{8} $|e''| = |e'|$
+  
+  \caseFact{9} $\Theta ; \Delta \vDash \Phi'$
+  
+  \caseFact{10} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$
+  
+  \caseFact{11} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e'' \infers L^I \tau \gens \Phi', \Gamma_1''$
+  
+  \caseText{By IH on (3) there are $e_1'$, $\Phi_1$, $\Gamma_2'$ such that}
+  
+  \caseFact{12} $|e_1'| = e_1$
+
+  \caseFact{13} $\Theta ; \Delta, I = 0 \vDash \Phi_1$
+
+  \caseFact{14} $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2 \vdash e_1' \checks \tau' \gens \Phi_1,\Gamma_2'$
+
+  \caseText{By \autoref{thm:ctx-sub-wkn} on (10)}
+  
+  \caseFact{15} $\Psi ; \Theta ; \Delta, I = 0 \vdash \Gamma_1'' \wknto \Gamma_2$.
+
+  \caseText{Then, by \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that}
+
+  \caseFact{16} $|e_1''| = |e_1'|$,
+  
+  \caseFact{17} $\Theta ; \Delta, I = 0 \vDash \Phi_1'$
+
+  \caseFact{18} $\Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_1'' \vdash e_1'' \checks \tau' \gens \Phi_1',\Gamma_2''$
+
+  \caseText{By IH again on (3) we have $e_2'$, $\Phi_2$, $\Gamma_3'$ such that}
+
+  \caseFact{19}  $|e_2'| = e_2$
+
+  \caseFact{20} $\Theta ; \Delta, I \geq 1 \vdash \Phi_2$
+
+  \caseFact{21} $\Psi ; \Theta ; \Delta, I \geq 1 ; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_3'$
+
+  \caseText{By \autoref{thm:ctx-sub-wn} and \autoref{thm:ctx-sub-subset-2}}
+
+  \caseFact{22} $\Psi ; \Theta ; \Delta, I \geq 1 \vdash \Gamma_1'', h : \tau, t : L^I \tau \wknto \Gamma_2, h : \tau, t : L^I \tau$
+
+  \caseText{By \autoref{thm:admits-weaken} on (21) and (22), there are are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that}
+
+  \caseFact{23} $|e_2''| = |e_2'|$
+
+  \caseFact{24} $\Theta ; \Delta, I \geq 1 \vDash \Phi_2'$
+
+  \caseFact{25} $\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_1'', h : \tau, t : L^I \tau \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_3''$
+
+  \caseText{Goals follow by AT-Match on (11), (18), (25)}
+  
+ }
+
+\jcase{9}{T-ExistI}{
+  \jgivengoalThreeExists{
+   \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\pvdash \texttt{pack}[I](e) : \exists i : S. \tau$
+   
+   \caseFact{2} $\Theta ; \Delta \vdash I : S$
+   
+   \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e : \tau[I/i]$
+  }{
+   $e'$, $\Phi'$,$\Gamma'$  
+  }{
+   $|e'| = \texttt{pack}[I](e) $  
+  }{
+   $\Theta ; \Delta \vDash \Phi'$  
+  }{
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \exists i : S. \tau \gens \Phi',\Gamma'$  
+  }
+  
+  \caseText{By \autoref{thm:sort-compl} on (2) , there is a $\Phi_1$ such that}
+  
+  \caseFact{4} $\Theta ; \Delta \vdash I : S \gens \Phi_1$
+  
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+  
+  \caseText{By IH on (3), there are $e'$, $\Phi_2$, $\Gamma'$ such that}
+
+  \caseFact{6} $|e'| = e$
+
+  \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{8} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau[I/i] \gens \Phi_2,\Gamma'$
+
+  \caseText{Goals follow by AT-ExistI on (4) and (8)}
+ }
+
+ \jcase{10}{T-ExistE}{
+  \jgivengoalThreeExists{
+   \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{unpack } (i,x) = e_1 \texttt{ in } e_2 : \tau'$ 
+   
+   \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \exists i : S.\tau$
+   
+   \caseFact{3} $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \tau'$
+  }{
+   $e'$, $\Phi'$,$\Gamma'$  
+  }{
+   $|e'| = \texttt{unpack } (i,x) = e_1 \texttt{ in } e_2$  
+  }{
+   $\Theta ; \Delta \vDash \Phi'$  
+  }{
+   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \tau' \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
+
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \exists i : S. \tau \gens \Phi_1,\Gamma_1'$
+
+  \caseText{By \autoref{thm:admits-weaken} there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}
+
+  \caseFact{7} $|e_1''| = |e_1'|$
+  
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \infers \exists i : S. \tau \gens \Phi_1',\Gamma_1''$
+
+  \caseText{By IH on (3), there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
+
+  \caseFact{11} $|e_2'| = e_2$
+
+  \caseFact{12} $\Theta, i : S ; \Delta \vDash \Phi_2$
+
+  \caseFact{13} $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_2,x : \tau \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$.
+
+  \caseText{By \autoref{thm:ctx-sub-subset-2} and \autoref{thm:admits-weaken} on (9) and (13) there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that}
+
+  \caseFact{14} $|e_2''| = |e_2'|$
+
+  \caseFact{15} $\Theta, i : S ; \Delta \vDash \Phi_2'$
+
+  \caseFact{16} $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma_1'', x: \tau \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_2''$
+
+  \caseText{Goals follow by AT-ExistE on (10) and (16)}
+ }
+
+ \jcase{11}{T-Lam}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \lambda x.e : \tau_1 \loli \tau_2$ 
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e : \tau_2$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \lambda x.e$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \tau' \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2) there are $e'$, $\Phi$, $\Gamma'$ so that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma, x : \tau_1 \vdash e' \checks \tau_2 \gens \Phi,\Gamma'$
+
+  \caseText{Goals are immediate by AT-Lam}
+ }
+
+ \jcase{12}{T-App}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash e_1 \; e_2 : \tau_2$ 
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \tau_1 \loli \tau_2$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2 : \tau_1$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = e_1 \; e_2$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \infers \tau' \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2) there are $e_1'$, $\Gamma_1'$, $\Phi_1$ such that} 
+
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \tau_1 \loli \tau_2 \gens \Phi_1,\Gamma_1'$
+
+  \caseText{By \autoref{thm:admits-weaken} on (6), there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}
+
+  \caseFact{7} $|e_1''| = |e_1'|$
+
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_1 \vdash e_1'' \infers \tau_1 \loli \tau_2 \gens \Phi_1',\Gamma_1''$
+
+  \caseText{By IH on (3), there are $e_2'$, $\Gamma_2'$, and $\Phi_2$ such that} 
+
+  \caseFact{11} $|e_2'| = e_2$
+
+  \caseFact{12} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{13} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_1 \gens \Phi_2,\Gamma_2'$
+
+  \caseText{By \autoref{thm:admits-weaken} on (9) and (13), there are $e_2''$, $\Gamma_2''$, and $\Phi_2'$ such that} 
+
+  \caseFact{14} $|e_2''| = |e_2'|$
+
+  \caseFact{15} $\Theta ; \Delta \vDash \Phi_2'$
+
+  \caseFact{16} $\Psi ; \Theta ; \Delta ; \Omega; \Gamma_1'' \vdash e_2'' \checks \tau_1 \gens \Phi_2',\Gamma_2''$
+
+  \caseText{Goals follow by AT-App on (10) and (16)}
+ }
+
+ \jcase{13}{T-TensorI}{
+  \jgivengoalThreeExists{
+    \caseFact{1}  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \angles{e_1,e_2} ; \tau_1 \otimes \tau_2$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1$ 
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2\vdash e_2 : \tau_2$
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \angles{e_1,e_2}$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \tau' \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
+
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \tau_1 \gens \Phi_1,\Gamma_1'$
+
+  \caseText{By \autoref{thm:admits-weaken} on (6), there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}
+
+  \caseFact{7} $|e_1''| = |e_1'|$
+
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta ;\Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \tau_2 \gens \Phi_1',\Gamma_1''$. 
+
+  \caseText{By IH on (3), there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
+
+  \caseFact{11} $|e_2'| = e_2$
+
+  \caseFact{12} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{13} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2 \vdash e_2' \checks \tau_2 \gens \Phi_2,\Gamma_2'$
+
+  \caseText{But by \autoref{thm:admits-weaken} on (13) and (9), there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that }
+
+  \caseFact{14} $|e_2''| = |e_2'|$
+
+  \caseFact{15} $\Theta ; \Delta \vDash \Phi_2'$
+
+  \caseFact{16} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'' \vdash e_2'' \checks \tau_2 \gens \Phi_2', \Gamma_2''$
+
+  \caseText{Goals follow by AT-TensorI on (16)}
+ }
+
+ \jcase{14}{T-TensorE}{
+  \jgivengoalThreeExists{
+    \caseFact{1}  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2 : \tau'$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e_1 : \tau_1 \otimes \tau_2$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2,x : \tau_1, y : \tau_2\vdash e_2 : \tau'$
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{let } \angles{x,y} = e_1 \texttt{ in } e_2$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \tau' \gens \Phi',\Gamma'$  
+  }
+
+ \caseText{By IH on (2), there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
+
+ \caseFact{4} $|e_1'| = e_1$
+
+ \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+ \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers \tau_1 \otimes \tau_2 \gens \Phi_1,\Gamma_1'$
+
+ \caseText{By \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}
+
+ \caseFact{7} $|e_1''| = |e_1'|$
+
+ \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+ \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2 \setminus \Gamma_1)$
+
+ \caseFact{10} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \infers \tau_1 \otimes \tau_2 \gens \Phi_1',\Gamma_1''$.
+
+ \caseText{By IH on (3), there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
+
+ \caseFact{11} $|e_2'| = e_2$
+
+ \caseFact{12} $\Theta ; \Delta \vDash \Phi_2$
+
+ \caseFact{13} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2,x : \tau_1, y : \tau_2 \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$
+
+ \caseText{By \autoref{thm:ctx-sub-subset-2} on (9) \autoref{thm:admits-weaken} on (13), there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that}
+
+ \caseFact{14} $|e_2''| = |e_2'|$
+
+ \caseFact{15} $\Theta ; \Delta \vDash \Phi_2'$
+
+ \caseFact{16} $\Psi ; \Theta ; \Delta, \Gamma_1'', x : \tau_1, y : \tau_2 \vdash e_2'' \checks \tau' \gens \Phi_2',\Gamma_2''$
+
+ \caseText{Goals follow by AT-TensorE on (10) and (16)}
+ }
+
+ \jcase{15}{T-WithI}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash (e_1,e_2) : \tau_1 \amp \tau_2$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1 : \tau_1$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_2 : \tau_2$.
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = (e_1,e_2)$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \tau_1 \amp \tau_2 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), we have $e_1'$, $\Phi_1$, $\Gamma_1$ such that}
+
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_1' : \tau_1 \gens \Phi_1,\Gamma_1$.
+
+  \caseText{By IH on (3), we have $e_2'$, $\Phi_2$, $\Gamma_2$ such that}
+
+  \caseFact{4} $|e_2'| = e_2$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e_2' : \tau_2 \gens \Phi_2,\Gamma_2$.
+
+  \caseText{Goals follow by AT-WithI}
+ }
+
+ \jcase{16}{T-Fst}{
+  \jgivengoalThreeExists{
+    \caseFact{1}  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash \texttt{fst}(e) : \tau_1$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau_1 \amp \tau_2$ 
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{fst}(e)$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \infers \tau_1 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \tau_1 \amp \tau_2 \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-Fst}
+ }
+
+ \jcase{17}{T-Snd}{Identical to case (16)}
+
+ \jcase{18}{T-Inl}{
+  \jgivengoalThreeExists{
+    \caseFact{1}  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma vdash \texttt{inl}(e) : \tau_1 \oplus \tau_2$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash e : \tau_1$ 
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{inl}(e)$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \tau_1 \oplus \tau_2 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau_1 \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-Inl}
+ }
+
+ \jcase{19}{T-Snd}{Identical to case (18)}
+
+ \jcase{20}{T-Case}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{case}(e,x.e_1,y.e_2) : \tau$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e : \tau_1 \oplus \tau_2$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x: \tau_1 \vdash e_1 : \tau$
+
+    \caseFact{4} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, y: \tau_2 \vdash e_2 : \tau$
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{case}(e,x.e_1,y.e_2)$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \tau \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma_1'$}
+
+  \caseFact{5} $|e'| = e$
+
+  \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{7} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e' \infers \tau_1 \oplus \tau_2 \gens \Phi,\Gamma_1'$
+
+  \caseText{By \autoref{thm:admits-weaken} there are $e''$, $\Phi'$, $\Gamma_1''$ such that}
+
+  \caseFact{8} $|e''| = |e'|$
+
+  \caseFact{9} $\Theta ; \Delta \vDash \Phi'$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$
+
+  \caseFact{11} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e'' \infers \tau_1 \oplus \tau_2 \gens \Phi',\Gamma_1''$.
+
+  \caseText{By IH on (3), there are $e_1'$, $\Phi_1$, $\Gamma_2'$ such that}
+
+  \caseFact{12} $|e_1'| = e_1$
+
+  \caseFact{13} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{14} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau_1 \vdash e_1' \checks \tau \gens \Phi_1,\Gamma_2'$
+
+  \caseText{By \autoref{thm:ctx-sub-subset-2} and \autoref{thm:admits-weaken} on (10) and (14), there are $e_1''$, $\Phi_1'$, $\Gamma_2''$ such that}
+
+  \caseFact{15} $|e_1''| = |e_1'|$
+
+  \caseFact{16} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{17} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_1'' \checks \tau \gens \Phi_1',\Gamma_2''$
+
+  \caseText{By IH on (4), we have $e_2'$, $\Phi_2$, $\Gamma_3'$ such that}
+  
+  \caseFact{18} $|e_2'| = e_2$
+  
+  \caseFact{19} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{20} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, y : \tau_2 \vdash e_2' \checks \tau \gens \Phi_2,\Gamma_3'$
+
+  \caseText{By \autoref{thm:ctx-sub-subset-2} and \autoref{thm:admits-weaken} on (10) and (20), there are $e_2''$, $\Phi_2'$, $\Gamma_3''$ such that}
+
+  \caseFact{21} $|e_2''| = |e_2'|$
+
+  \caseFact{22} $\Theta ; \Delta \vDash \Phi_2'$
+
+  \caseFact{23} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', y : \tau_2 \vdash e_2'' \checks \tau \gens \Phi_2',\Gamma_3''$
+
+  \caseText{Goals follow by AT-Case on (11), (17), and (23)}
+ }
+
+ \jcase{21}{T-ExpI}{
+  \jgivengoalThreeExists{
+    \caseFact{1}  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\vdash !e : !\tau$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \cdot \vdash e : \tau$ 
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = !e$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \tau_1 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega; \cdot \vdash e' \checks \tau \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-ExpI on (5)}
+ }
+
+ \jcase{22}{T-ExpE}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{let } !x = e_1 \texttt{ in } e_2 : \tau'$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1  : !\tau$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_2 \vdash e_2 : \tau'$.
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{let } !x = e_1 \texttt{ in } e_2$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \tau' \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
+  
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers !\tau \gens \Phi_1,\Gamma_1'$.
+
+  \caseText{By \autoref{thm:admits-weaken}, there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}o
+   
+  \caseFact{7} $|e_1''| = |e_1'|$
+
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta ; \Omega; \Gamma_1,\Gamma_2 \vdash e_1'' \infers !\tau \gens \Phi_1',\Gamma_1''$
+
+  \caseText{By IH on (3), there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
+
+  \caseFact{11} $|e_2'| = e_2$
+
+  \caseFact{12} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{13} $\Psi ; \Theta ; \Delta ; \Omega, x: \tau ; \Gamma_2 \vdash e_2' \checks \tau' \gens \Phi_2,\Gamma_2'$
+
+  \caseText{By \autoref{admits-weaken} on (9) and (13), there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that}
+
+  \caseFact{14} $|e_2''| = |e_2|$
+
+  \caseFact{15} $\Theta ; \Delta \vDash \Phi_2'$
+
+  \caseFact{16} $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \Gamma_1'' \vdash e_2'' \checks \tau' \gens \Phi_2', \Gamma_2''$
+
+  \caseText{Goals follow by AT-ExpE on (10) and (16)}
+ }
+
+ \jcase{23}{T-TAbs}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda \alpha. e : \forall \alpha : K.\tau$
+
+    \caseFact{2} $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \Lambda \alpha . e$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \forall \alpha : K. \tau \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$,$\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi, \alpha : K ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks \tau \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-TAbs}
+ }
+
+ \jcase{24}{T-TApp}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [\tau'] : \tau[\tau'/\alpha]$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \forall \alpha : K.\tau$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau' : K$.
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = e \, [\tau]$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \infers \tau[\tau'/\alpha] \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{4} $|e'| = e$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \infers \forall \alpha : K.\tau \gens \Phi,\Gamma'$
+
+  \caseText{By \autoref{thm:kind-compl} on (3), there is some $\Phi'$ such that}
+
+  \caseFact{7} $\Theta ; \Delta \vDash \Phi'$
+
+  \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \tau' : K \gens \Phi'$
+
+  \caseText{Goals follow by AT-TApp on (6) and (8)}
+ }
+
+\jcase{25}{T-IAbs}{
+  \jgivengoalThreeExists{
+    \caseFact{1}  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \Lambda i. e : \forall i : S. \tau$
+
+    \caseFact{2} $\Psi ; \Theta, i : S ; \Delta ; \Omega ; \Gamma \vdash e : \tau$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \Lambda \i . e$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \forall \alpha : K. \tau \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta, i : S ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta, i : S ; \Delta ; \Omega; \Gamma \vdash e' \checks \tau \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-IAbs on (5)}
+ }
+
+\jcase{26}{T-IApp}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e [I] : \tau[I/i]$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \forall i : S.\tau$
+
+    \caseFact{3} $\Theta ; \Delta \vdash I : S$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = e \, [I]$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \infers \tau[I/i] \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{4} $|e'| = e$
+  
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash e \infers \forall i : S. \tau \gens \Phi,\Gamma'$
+
+  \caseText{By \autoref{thm:sort-compl} on (3), there is some $\Phi'$ such that}
+
+  \caseFact{7} $\Theta ; \Delta \vDash \Phi'$
+
+  \caseFact{8} $\Theta ; \Delta \vdash I : S \gens \Phi'$
+
+  \caseText{Goals follow by AT-IApp on (6) and (8)}
+ }
+
+ \jcase{27}{T-Fix}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{fix}\; x.e : \tau$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e : \tau$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{fix}\; x.e$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \tau \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega, x : \tau ; \cdot \vdash e' \checks \tau \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-Fix on (5)}
+
+ }
+
+\jcase{28}{T-Ret}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{ret}\; e : \M \, (I,\vec{p}) \, \tau$ by way of
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{ret}\; e $
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks \tau \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e'$, $\Phi$, $\Gamma'$ such that}
+
+  \caseFact{3} $|e'| = e$
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi$
+
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'$
+
+  \caseText{Goals follow by AT-Ret on (5)}
+ }
+}
+
+\iffalse
   \item[(T-Bind)] 
   Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 : \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2$ by way of
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \M \, \phi(I,\vec{p})\, \tau_1$, and
@@ -625,3 +1126,4 @@ In all cases, the erasure property is immediate from the inductive hypotheses-- 
 \end{itemize}
 
 \end{proof}
+\fi
