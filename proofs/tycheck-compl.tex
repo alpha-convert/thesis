@@ -889,125 +889,249 @@ By induction on the derivation of $\Psi;\Theta;\Delta;\Omega;\Gamma \vdash e : \
 
   \caseFact{4} $\Theta ; \Delta \vDash \Phi$
 
-  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \checks \tau \gens \Phi,\Gamma'$
+  \caseFact{5} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e' \checks M \, (I,\vec{p}) \, \tau \gens \Phi,\Gamma'$
 
   \caseText{Goals follow by AT-Ret on (5)}
  }
+
+ \jcase{29}{T-Bind}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 : \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \M \, \phi(I,\vec{p})\, \tau_1$
+
+    \caseFact{3} $\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2 : \M \, \phi(I,\vec{q})\, \tau_2$
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{bind } x = e_1 \texttt{ in } e_2$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
+
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi  ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \M \, \phi(I,\vec{p}) \, \tau_1 \gens \Phi_1,\Gamma_1'$
+
+  \caseText{By \autoref{thm:admits-weaken} on (6), there are $e_1''$, $\Gamma_1''$, $\Phi_1'$ such that}
+
+  \caseFact{7} $|e_1''| = |e_1'|$
+
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \M \, \phi(I,\vec{p}) \, \tau_1 \gens \Phi_1',\Gamma_1''$
+
+  \caseText{By IH on (3), there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
+  
+  \caseFact{11} $|e_2'| = e_2$
+
+  \caseFact{12} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{13} $\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2' \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens \Phi_2,\Gamma_2'$
+  
+  \caseText{By \autoref{thm:admits-weaken} on (9) and (11), there are $e_2''$, $\Gamma_2''$, $\Phi_2'$ such that}
+
+  \caseFact{14} $|e_2''| = |e_2'|$
+
+  \caseFact{15} $\Theta ; \Delta \vDash \Phi_2'$
+
+  \caseFact{16} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_2'' \infers \M \, \phi(I,\vec{q}) \, \tau_2 \gens \Phi_2',\Gamma_2''$
+
+  \caseText{By \autoref{thm:subty-refl}, there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$ and}
+
+  \caseFact{17} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi_3$.
+
+  \caseText{By AS-Monad on (17)}
+
+  \caseFact{18} $\Psi ; \Theta ; \Delta \vdash \M \, \phi(I,\vec{q}) \, \tau_2 \subty \M \, \phi(I,(\vec{p} + \vec{q}) - \vec{p}) \, \tau_2 : \star \gens \Phi_3 \wedge (I = I) \wedge (\vec{q} \leq (\vec{p} + \vec{q}) - \vec{p})$
+
+  \caseText{By AT-Sub on (16) and (18)}
+
+  \caseFact{19} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_2'' \checks \M \, \phi(I,(\vec{p} + \vec{q}) - \vec{p}) \, \tau_2 \gens \Phi_2' \wedge  \Phi_3 \wedge (I = I) \wedge (\vec{q} \leq (\vec{p} + \vec{q}) - \vec{p}),\Gamma_2''$.
+
+  \caseText{Goals follow by AT-Bind on (10) and (19)}
+ }
+
+ \jcase{30}{T-Tick}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] : \M \, \phi(I,\vec{p})\, 1$
+
+    \caseFact{2} $\Theta ; \Delta \vdash I : \N$
+
+    \caseFact{3} $\Theta ; \Delta \vdash \vec{p} : \potvec$
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{tick}[I|\vec{p}]$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma\pvdash e' \infers \M \, \phi(I,\vec{p})\, 1 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By \autoref{thm:sort-compl} on (2), there is some $\Phi_1$ such that}
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{5} $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$
+
+  \caseText{By \autoref{thm:sort-compl} on (3), there is some $\Phi_2$ such that}
+
+  \caseFact{6} $\Theta ; \Delta \vDash \Phi_2$, and
+
+  \caseFact{7} $\Theta ; \Delta \vdash \vec{p} : \potvec$.
+
+  \caseText{Goals follow by AT-Tick on (5) and (7)}
+ }
+
+ \jcase{31}{T-Release}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, (I,\vec{p}) \, \tau_2$
+
+    \caseFact{2} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [I | \vec{q}] \tau_1$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2$
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{release } x = e_1 \texttt{ in }e_2$
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \pvdash e' \checks \M \, (I,\vec{p}) \, \tau_2 \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By IH on (2), there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that}
+
+  \caseFact{4} $|e_1'| = e_1$
+
+  \caseFact{5} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseFact{6} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers [I|\vec{q}] \tau_1 \gens \Phi_1,\Gamma_1'$
+
+  \caseText{By \autoref{thm:admits-weaken} on (6) there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that}
+
+  \caseFact{7} $|e_1''| = |e_1'|$
+
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_1'$
+
+  \caseFact{9} $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$
+
+  \caseFact{10} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \infers [I|\vec{q}] \tau_1 \gens \Phi_1',\Gamma_1''$
+
+  \caseText{By IH on (3), there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that}
+
+  \caseFact{11} $|e_2'| = e_2$
+
+  \caseFact{12} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{13} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2,\Gamma_2'$
+
+  \caseText{By \autoref{thm:admits-weaken} on (9) and (13), there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that}
+
+  \caseFact{14} $|e_2''| = |e_2'|$
+
+  \caseFact{15} $\Theta ; \Delta \vDash \Phi_2'$
+
+  \caseFact{16} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau \vdash e_2'' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau \gens \Phi_2',\Gamma_2''$
+
+  \caseText{Goals follow by AT-Release on (10) and (16)}
+
+ }
+
+ \jcase{32}{T-Store}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I|\vec{p}](e) : \M \, \phi(I,\vec{p}) \, ([I| \vec{p}] \, \tau)$
+
+    \caseFact{2} $\Theta ; \Delta \vdash I : \mathbb{N}$
+
+    \caseFact{3} $\Theta ; \Delta \vdash \vec{p} : \potvec$
+
+    \caseFact{4} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{store}[I|\vec{p}](e) $
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks  \M \, \phi(I,\vec{p}) \, ([I| \vec{p}] \, \tau) \gens \Phi',\Gamma'$  
+  }
+
+  \caseText{By \autoref{thm:sort-compl} on (2), there is $\Phi_1$ such that}
+
+  \caseFact{5} $\Theta ; \Delta \vdash I : \N \gens \Phi_1$
+
+  \caseFact{6} $\Theta ; \Delta \vDash \Phi_1$
+
+  \caseText{By \autoref{thm:sort-compl} on (3), there is $\Phi_2$ such that}
+
+  \caseFact{7} $\Theta ; \Delta \vdash \vec{p} : \potvec \gens \Phi_2$
+
+  \caseFact{8} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseText{By IH on (4), there are $e'$, $\Phi_3$, $\Gamma'$ such that}
+
+  \caseFact{9} $|e'| = e$
+
+  \caseFact{10} $\Theta ; \Delta \vDash \Phi_3$
+
+  \caseFact{11} $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash e' \checks \tau \gens \Phi_3,\Gamma'$
+
+  \caseText{Goals follow by AT-Store on (6), (8), and (11)}
+ }
+
+ \jcase{33}{T-StoreConst}{
+  \jgivengoalThreeExists{
+    \caseFact{1} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e) : \M \, (K,\texttt{const}(I)) \, ([I] \, \tau)$
+
+    \caseFact{2} $\Theta ; \Delta \vdash I : \N$
+
+    \caseFact{3} $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
+
+  }{
+    $e'$, $\Phi'$,$\Gamma'$  
+  }{
+    $|e'| = \texttt{store}[I](e) $
+  }{
+    $\Theta ; \Delta \vDash \Phi'$  
+  }{
+    $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e' \checks  \M \, (K,\texttt{const}(I)) \, ([I] \, \tau)\Phi',\Gamma'$  
+  }
+
+  \caseText{By \autoref{thm:sort-compl}, there is some $\Phi_1$ such that}
+
+  \caseFact{4} $\Theta ; \Delta \vDash \Phi_1$
+  
+  \caseFact{5} $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$
+
+  \caseText{By IH on (3), there are $e'$, $\Phi_2$, and $\Gamma'$ such that}
+
+  \caseFact{6} $|e'| = e$
+
+  \caseFact{7} $\Theta ; \Delta \vDash \Phi_2$
+
+  \caseFact{8} $\Psi ; \Theta ; \Delta \vdash e' \checks \tau \gens \Phi_2,\Gamma'$
+
+  \caseText{Goals follow immediately from AT-StoreConst on (5) and (8)}
+
+ }
+
+
 }
 
 \iffalse
-  \item[(T-Bind)] 
-  Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1 \texttt{ in } e_2 : \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : \M \, \phi(I,\vec{p})\, \tau_1$, and
-  $\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2 : \M \, \phi(I,\vec{q})\, \tau_2$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi  ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \checks \M \, \phi(I,\vec{p}) \, \tau_1 \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$,
-  we have by \autoref{thm:admits-weaken} $e_1''$, $\Gamma_1''$, $\Phi_1'$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \checks \M \, \phi(I,\vec{p}) \, \tau_1 \gens \Phi_1',\Gamma_1''$.
-  Noting that $(\Gamma_1,\Gamma_2) \setminus \Gamma_1 = \Gamma_2$, we have that
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$.
-  By IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta; \Delta ; \Omega ; \Gamma_2, x:\tau_1 \vdash e_2' \checks \M \, \phi(I,\vec{q})\, \tau_2 \gens \Phi_2,\Gamma_2'$.
-  But then by \autoref{thm:admits-weaken}, there are $e_2''$, $\Gamma_2''$, $\Phi_2'$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_2'' \infers \M \, \phi(I,\vec{q}) \, \tau_2 \gens \Phi_2',\Gamma_2''$.
-  By \autoref{thm:subty-refl}, there is some $\Phi_3$ such that $\Theta ; \Delta \vDash \Phi_3$, and
-  $\Psi ; \Theta ; \Delta \vdash \tau_2 \subty \tau_2 : \star \gens \Phi_3$.
-  Then, by AS-Monad, $\Psi ; \Theta ; \Delta \vdash \M \, \phi(I,\vec{q}) \, \tau_2 \subty \M \, \phi(I,(\vec{p} + \vec{q}) - \vec{p}) \, \tau_2 : \star \gens \Phi_3 \wedge (I = I) \wedge (\vec{q} \leq (\vec{p} + \vec{q}) - \vec{p})$.
-  Then, by AT-Sub,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau_1 \vdash e_2'' \checks \M \, \phi(I,(\vec{p} + \vec{q}) - \vec{p}) \, \tau_2 \gens \Phi_2' \wedge  \Phi_3 \wedge (I = I) \wedge (\vec{q} \leq (\vec{p} + \vec{q}) - \vec{p}),\Gamma_2''$.
-  Finally, by AT-Bind,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{bind } x = e_1'' \texttt{ in } e_2'' \checks \M \, \phi(I,\vec{p} + \vec{q})\, \tau_2 \gens \Phi_1' \wedge \Phi_2' \wedge \Phi_3 \wedge (I = I) \wedge (\vec{q} \leq (\vec{p} + \vec{q}) - \vec{p}), \Gamma_2''$, which completes (1). (2) follows immediately by AT-Anno.
-  
-  
-  \item[(T-Tick)] Suppose $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] : \M \, \phi(I,\vec{p})\, 1$ by way of
-  $\Theta ; \Delta \vdash I : \mathbb{N}$ and
-  $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$.
-  By \autoref{thm:sort-compl}, there is some $\Phi_1$ such that
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$.
-  Again by \autoref{thm:sort-compl}, there is a $\Phi_2$ such that
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$.
-  By AT-Tick,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] \infers \M \, \phi(I,\vec{p})\, 1 \gens \Phi_1 \wedge \Phi_2$,
-  which completes (2).
-  For (1), it is easy to see that $\Psi ; \Theta ; \Delta \vdash \M \, \phi(I,\vec{p})\, 1 \subty \M \, \phi(I,\vec{p})\, 1 : \star \gens I = I \wedge \vec{p} \leq \vec{p}$, and of course $\Theta ; \Delta \vDash I = I \wedge \vec{p} \leq \vec{p}$.
-  By AT-Sub,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{tick}[I|\vec{p}] \checks \M \, \phi(I,\vec{p})\, 1 \gens \Phi_1 \wedge \Phi_2 \wedge  I = I \wedge \vec{p} \leq \vec{p}$, completing (1).
-  
-  \item[(T-Release)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, \phi(I,\vec{p}) \, \tau_2$ by way of
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [I | \vec{q}] \tau_1$ and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2 : \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2$.
-  By IH, there are $e_1'$, $\Phi_1$, $\Gamma_1'$ such that
-  $|e_1'| = e_1$,
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1' \infers [I|\vec{q}] \tau_1 \gens \Phi_1,\Gamma_1'$.
-  Since $\Psi ; \Theta ;\Delta \vdash \Gamma_1,\Gamma_2 \wknto \Gamma_1$, we have by \autoref{thm:admits-weaken} that there are $e_1''$, $\Phi_1'$, $\Gamma_1''$ such that
-  $|e_1''| = |e_1'|$,
-  $\Theta ; \Delta \vDash \Phi_1'$,
-  $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto (\Gamma_1,\Gamma_2) \setminus \Gamma_1$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash e_1'' \infers [I|\vec{q}] \tau_1 \gens \Phi_1',\Gamma_1''$.
-  Then, by IH, there are $e_2'$, $\Phi_2$, $\Gamma_2'$ such that
-  $|e_2'| = e_2$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_2, x : \tau \vdash e_2' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau_2 \gens \Phi_2,\Gamma_2'$.
-  Since $\Psi ; \Theta ; \Delta \vdash \Gamma_1'' \wknto \Gamma_2$,
-  we have by \autoref{thm:admits-weaken} that there are $e_2''$, $\Phi_2'$, $\Gamma_2''$ such that
-  $|e_2''| = |e_2'|$,
-  $\Theta ; \Delta \vDash \Phi_2'$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1'', x : \tau \vdash e_2'' \checks \M \, \phi(I,\vec{p} + \vec{q}) \, \tau \gens \Phi_2',\Gamma_2''$.
-  Then, by AT-Relase,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1'' \texttt{ in }e_2'' \checks \M \, \phi(I,\vec{p}) \, \tau_2 \gens (I = I) \wedge \Phi_1' \wedge \Phi_2',\Gamma_2'' \setminus \{x\}$.
-  This completes (1), and (2) follows by AT-Anno.
-  
-  
-  
-  \item[(T-Store)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I|\vec{p}](e) : \M \, \phi(I,\vec{p}) \, ([I| \vec{p}] \, \tau)$ by way of
-  $\Theta ; \Delta \vdash I : \mathbb{N}$,
-  $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+}$, and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By \autoref{thm:sort-compl}, there are $\Phi_1$, $\Phi_2$ such that
-  $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$ and
-  $\Theta ; \Delta \vdash \vec{p} : \vec{\mathbb{R}^+} \gens \Phi_2$
-  with $\Theta ; \Delta \vDash \Phi_1 \wedge \Phi_2$.
-  By IH, there are $e'$, $\Phi_3$, $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi_3$, and
-  $\Psi ; \Theta ; \Delta ; \Omega; \Gamma \vdash e' \checks \tau \gens \Phi_3,\Gamma'$.
-  By AT-Store,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \gamma \vdash \texttt{store}[I|\vec{p}](e') \checks \M \, \phi(I,\vec{p}) \, ([I| \vec{p}] \, \tau) \gens \Phi_1 \wedge \Phi_2 \wedge \Phi_3 \wedge (I \leq I \leq I) \wedge (\vec{p} \leq \vec{p} \leq \vec{p}),\Gamma'$.
-  Of course, $\Theta ; \Delta \vDash (I \leq I \leq I) \wedge (\vec{p} \leq \vec{p} \leq \vec{p})$, and so
-  we are done with (1). For (2), a single use of AT-Anno suffices.
-  
-    
-  \item[(T-StoreConst)] Suppose
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e) : \M \, \phi(K,\texttt{const}(I)) \, ([I] \, \tau)$ by way of
-  $\Theta ; \Delta \vdash I : \mathbb{N}$ and
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e : \tau$.
-  By \autoref{thm:sort-compl}, there is some $\Phi_1$ such that
-  $\Theta ; \Delta \vDash \Phi_1$, and
-  $\Theta ; \Delta \vdash I : \mathbb{N} \gens \Phi_1$.
-  By IH, there are $e'$, $\Phi_2$, and $\Gamma'$ such that
-  $|e'| = e$,
-  $\Theta ; \Delta \vDash \Phi_2$, and
-  $\Psi ; \Theta ; \Delta \vdash e' \checks \tau \gens \Phi_2,\Gamma'$.
-  Then, by AT-StoreConst,
-  $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash \texttt{store}[I](e') \checks \M \, \phi(K,\texttt{const}(I)) \, ([I] \, \tau) \gens \Phi_1 \wedge \Phi_2 \wedge (\texttt{const}(I) \leq \texttt{const}(I) \leq \texttt{const}(I)),\Gamma'$.
-  Of course, $\Theta ; \Delta \vDash (\texttt{const}(I) \leq \texttt{const}(I) \leq \texttt{const}(I))$,
-  which completes (1). For (2), one use of AT-Anno suffices.
-
   \item[(T-ReleaseConst)] Suppose
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2 \vdash \texttt{release } x = e_1 \texttt{ in }e_2 : \M \, \phi(I,\vec{p}) \, \tau_2$ from
   $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1 \vdash e_1 : [J] \tau_1$ and
