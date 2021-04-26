@@ -1282,13 +1282,13 @@ If $\Psi' ; \Theta' ; \Delta \pvdash \Gamma \wknto \Gamma'$ with $\Theta' \supse
 \end{theorem}
 \label{thm:ctx-sub-streng}
 \begin{proof}
-Immediate by Theorem~\ref{thm:ctx-sub-subset-2} and Theorem~\ref{thm:subty-streng}
+Immediate by \autoref{thm:ctx-sub-subset-2} and \autoref{thm:subty-streng}
 \end{proof}
 
 \ctxsubswap*
 \begin{proof}
-By Theorem~\ref{thm:ctx-sub-subset-2}, it suffices to show that for every $x : \tau \in \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2'$,
-and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. Suppose $x : \tau \in \Gamma_2'$. Then, $x : \tau \in \Gamma_1'$. Further, since $\Psi' ; \Theta' ;  \Delta' \vdash \Gamma_2 \wknto \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2$. But then, $x : \tau' \in \Gamma_1$, and so since  $\Psi ; \Theta ; \Delta \vdash \Gamma_1 \wknto \Gamma_1'$, we have that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, by Theorem~\ref{thm:ctx-sub-subset-2}.
+By \autoref{thm:ctx-sub-subset-2}, it suffices to show that for every $x : \tau \in \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2'$,
+and $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$. Suppose $x : \tau \in \Gamma_2'$. Then, $x : \tau \in \Gamma_1'$. Further, since $\Psi' ; \Theta' ;  \Delta' \vdash \Gamma_2 \wknto \Gamma_2'$, there is some $\tau'$ such that $x : \tau' \in \Gamma_2$. But then, $x : \tau' \in \Gamma_1$, and so since  $\Psi ; \Theta ; \Delta \vdash \Gamma_1 \wknto \Gamma_1'$, we have that $\Psi ; \Theta ; \Delta \vdash \tau' \subty \tau : \star$, by \autoref{thm:ctx-sub-subset-2}.
 \end{proof}
 
 \subsection{Normalization}
@@ -1343,18 +1343,18 @@ $\Theta ; \Delta \vdash \Phi \texttt{ wf}$
 \begin{proof}
 By induction on $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi$. The base case is immediate. Suppose $\Theta \vdash \Delta, \Phi \; \texttt{wf} \gens \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$ with $\Theta ; \cdot \vDash \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$, by way of
 $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ and $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_2$.
-Since $\Theta ; \cdot \vDash \Phi_1$, we have by IH that $\Theta \vdash \Delta \; \texttt{wf}$. By Theorem~\ref{thm:raw-sort-sound}, since $\Theta ; \Delta \vDash \Phi_2$, we have that $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf}$, and so $\Theta \vdash \Delta, \Phi \; \texttt{wf}$, as required.
+Since $\Theta ; \cdot \vDash \Phi_1$, we have by IH that $\Theta \vdash \Delta \; \texttt{wf}$. By \autoref{thm:raw-sort-sound}, since $\Theta ; \Delta \vDash \Phi_2$, we have that $\Theta ; \Delta \vdash \Phi_2 \; \texttt{wf}$, and so $\Theta \vdash \Delta, \Phi \; \texttt{wf}$, as required.
 \end{proof}
 
 \sortsound*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-sort-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+Immediate by \autoref{thm:raw-sort-sound} and \autoref{thm:idx-ctx-wf-sound}
 \end{proof}
 
 
 \constrsound*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-constr-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+Immediate by \autoref{thm:raw-constr-sound} and \autoref{thm:idx-ctx-wf-sound}
 \end{proof}
 
 \begin{theorem}[Raw Soundness of Kind Checking/Inference]
@@ -1364,7 +1364,7 @@ If $\Psi ; \Theta ; \Delta \vdash \tau : K \gens \Phi$ and $\Theta ; \Delta \vDa
 
 \kindsound*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-kind-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+Immediate by \autoref{thm:raw-kind-sound} and \autoref{thm:idx-ctx-wf-sound}
 \end{proof}
 
 \begin{theorem}[Raw Soundness of Subtyping for Normal Forms]
@@ -1373,12 +1373,12 @@ If $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : K \gens \Phi$ and $\T
 
 \subtynfsound*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-subtynf-sound} and Theorem~\ref{thm:idx-ctx-wf-sound}
+Immediate by \autoref{thm:raw-subtynf-sound} and \autoref{thm:idx-ctx-wf-sound}
 \end{proof}
 
 \subtysound*
 \begin{proof}
-There is only one case: $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By Theorem~\ref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By Theorem~\ref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
+There is only one case: $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty\tau_2 : K \gens \Phi$ by way of $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : K \gens \Phi$ with $\Theta ; \Delta \vDash \Phi$. By \autoref{thm:subtynf-sound}, $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subty \texttt{eval}(\tau_2) : K$. By \autoref{thm:norm-thm} and two uses of S-Trans, $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : K$, as required.
 \end{proof}
 
 \begin{theorem}[Output Context is Uniquely Determined]
@@ -1398,7 +1398,7 @@ Induction on $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \vdash e \updownarrow \ta
 If $\Psi ; \Theta ; \Delta ; \Omega ; \Gamma \pvdash e \updownarrow \tau \gens \Phi,\Gamma'$ then $\Psi ; \Theta ; \Delta \vdash \Gamma' \; \texttt{wf} \gens \Phi'$ with $\Theta ; \Delta \vDash \Phi'$.
 \end{theorem}
 \begin{proof}
-An easy induction on $\Gamma'$, using the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$, and Theorem~\ref{thm:lsc}
+An easy induction on $\Gamma'$, using the fact that $\Psi ; \Theta ; \Delta \vdash \Gamma \; \texttt{wf} \gens \Phi''$ with $\Theta ; \Delta \vDash \Phi''$, and \autoref{thm:lsc}
 \end{proof}
 
 \begin{theorem}[Algorithmic Well-Formedness of Context Operations]
@@ -1445,17 +1445,17 @@ If $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$, then $\Theta ; \Delta \vdash \P
 \begin{proof}
 By induction on $\Theta \vdash \Delta \; \texttt{wf}$. The base case is immediate.
 Suppose $\Theta \vdash \Delta,\Phi \; \texttt{wf}$ by way of $\Theta \vdash \Delta \; \texttt{wf}$ and $\Theta ; \Delta \vdash \Phi \; \texttt{wf}$.
-By IH, there is some $\Phi_1$ such that $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ with $\Theta ; \cdot \vDash \Phi_1$. By Theorem~\ref{thm:raw-constr-compl}, there is $\Phi_2$ such that $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_2$. Equivalently, $\Theta ; \cdot \vDash \bigwedge \Delta \to \Phi_2$, and so $\Theta ; \cdot \vDash \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$. Then, by AWF-CCtx-Ne, $\Theta \vdash \Delta,\Phi \; \texttt{wf} \gens \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$, as required.
+By IH, there is some $\Phi_1$ such that $\Theta \vdash \Delta \; \texttt{wf} \gens \Phi_1$ with $\Theta ; \cdot \vDash \Phi_1$. By \autoref{thm:raw-constr-compl}, there is $\Phi_2$ such that $\Theta ; \Delta \vdash \Phi \; \texttt{wf} \gens \Phi_2$ with $\Theta ; \Delta \vDash \Phi_2$. Equivalently, $\Theta ; \cdot \vDash \bigwedge \Delta \to \Phi_2$, and so $\Theta ; \cdot \vDash \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$. Then, by AWF-CCtx-Ne, $\Theta \vdash \Delta,\Phi \; \texttt{wf} \gens \Phi_1 \wedge (\bigwedge \Delta \to \Phi_2)$, as required.
 \end{proof}
 
 \sortcompl*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-sort-compl} and Theorem~\ref{thm:idx-ctx-wf-compl}
+Immediate by \autoref{thm:raw-sort-compl} and \autoref{thm:idx-ctx-wf-compl}
 \end{proof}
 
 \constrcompl*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-constr-compl} and Theorem~\ref{thm:idx-ctx-wf-compl}
+Immediate by \autoref{thm:raw-constr-compl} and \autoref{thm:idx-ctx-wf-compl}
 \end{proof}
 
 \begin{theorem}[Raw Completeness of Kind Checking/Inference]
@@ -1465,7 +1465,7 @@ If $\Phi;\Theta;\Delta \vdash \tau : K$, then $\Phi;\Theta;\Delta \vdash \tau : 
 
 \kindcompl*
 \begin{proof}
-Immediate by Theorem~\ref{thm:raw-kind-compl} and Theorem~\ref{thm:idx-ctx-wf-compl}.
+Immediate by \autoref{thm:raw-kind-compl} and \autoref{thm:idx-ctx-wf-compl}.
 \end{proof}
 
 \subtynerefl*
@@ -1482,9 +1482,9 @@ $\Theta ; \Delta \pvdash J[I/i] : S' \gens \Phi$ for some $\Theta ; \Delta \vDas
 \label{idx-idx-algo-subst}
 \end{theorem}
 \begin{proof}
-By Theorem~\ref{thm:sort-sound}, $\Theta, i :S ; \Delta \pvdash J : S'$ and $\Theta ; \Delta \pvdash I : S$.
-By Theorem~\ref{thm:idx-idx-subst}, $\Theta ; \Delta \pvdash J[I/i] : S'$.
-By Theorem~\ref{thm:sort-compl}, $\Theta ; \Delta \pvdash J[I/i] : S' \gens \Phi'$ for some $\Phi'$ such that $\Theta ; \Delta \vDash \Phi'$.
+By \autoref{thm:sort-sound}, $\Theta, i :S ; \Delta \pvdash J : S'$ and $\Theta ; \Delta \pvdash I : S$.
+By \autoref{thm:idx-idx-subst}, $\Theta ; \Delta \pvdash J[I/i] : S'$.
+By \autoref{thm:sort-compl}, $\Theta ; \Delta \pvdash J[I/i] : S' \gens \Phi'$ for some $\Phi'$ such that $\Theta ; \Delta \vDash \Phi'$.
 \end{proof}
 
 \begin{theorem}[Index Substitution for Algorithmic Constraint Well-Formedness]
@@ -1494,10 +1494,10 @@ $\Theta ; \Delta \pvdash  \Phi[I/i] \; \texttt{wf} \gens \Phi'$ for some $\Theta
 \label{thm:constr-idx-algo-subst}
 \end{theorem}
 \begin{proof}
-By Theorem~\ref{thm:constr-sound}, $\Theta, i : S ; \Delta \pvdash \Phi \; \texttt{wf}$.
-By Theorem~\ref{thm:sort-sound}, $\Theta ; \Delta \pvdash I : S$.
-By Theorem~\ref{thm:constr-idx-subst}, $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
-By Theorem~\ref{thm:constr-compl}, $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf} \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
+By \autoref{thm:constr-sound}, $\Theta, i : S ; \Delta \pvdash \Phi \; \texttt{wf}$.
+By \autoref{thm:sort-sound}, $\Theta ; \Delta \pvdash I : S$.
+By \autoref{thm:constr-idx-subst}, $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf}$.
+By \autoref{thm:constr-compl}, $\Theta ; \Delta \pvdash \Phi[I/i] \; \texttt{wf} \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
 \end{proof}
 
 \begin{theorem}[Index Substitution for Algorithmic Type Formation]
@@ -1507,10 +1507,10 @@ $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K \gens \Phi$ for some $\Theta ; \De
 \label{thm:type-idx-algo-subst}
 \end{theorem}
 \begin{proof}
-By Theorem~\ref{thm:kind-sound}, $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$.
-By Theorem~\ref{thm:sort-sound}, $\Theta ; \Delta \pvdash I : S$.
-By Theorem~\ref{thm:type-idx-subst}, $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$.
-Finally, by Theorem~\ref{thm:kind-compl}, $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K \gens \Phi$ for some $\Theta ; \Delta \vDash \Phi$
+By \autoref{thm:kind-sound}, $\Psi ; \Theta, i : S ; \Delta \pvdash \tau : K$.
+By \autoref{thm:sort-sound}, $\Theta ; \Delta \pvdash I : S$.
+By \autoref{thm:type-idx-subst}, $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K$.
+Finally, by \autoref{thm:kind-compl}, $\Psi ; \Theta ; \Delta \pvdash \tau[I/i] : K \gens \Phi$ for some $\Theta ; \Delta \vDash \Phi$
 \end{proof}
 
 \subtynfidxsubst*
@@ -1520,7 +1520,7 @@ Finally, by Theorem~\ref{thm:kind-compl}, $\Psi ; \Theta ; \Delta \pvdash \tau[I
 By inversion on $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : S \to K \gens \Phi$.
 \begin{itemize}
   \item For the first case, suppose the derivation was $\Psi ; \Theta ; \Delta \vdash \lambda i : S. \tau_1' \subtynf \tau_2' : S \to K \gens \Phi$
-  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1' \subtynf \tau_2' : K \gens \Phi'$. By Theorem~\ref{thm:subtynf-idx-subst},
+  from $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1' \subtynf \tau_2' : K \gens \Phi'$. By \autoref{thm:subtynf-idx-subst},
   $\Psi ; \Theta ; \Delta \pvdash \tau_1'[I/i] \subtynf \tau_2'[J/i] : K \gens \Phi'$, for some $\Theta ; \Delta \vDash \Phi'$. But $\texttt{eval}(\tau_1 \; I) = \tau_1'[I/i]$ and $\texttt{eval}(\tau_2 \; J) = \tau_2'[J/i]$.
   \item Now, suppose the derivation was $\Psi ; \Theta ; \Delta \vdash \tau_1' \; L_1 \subtynf \tau_2' \; L_2 : S \to K \gens \Phi \wedge (L_1 = L_2)$, where $\texttt{eval}(\tau_1) = \tau_1' \; L_1$ and $\texttt{eval}(\tau_2) = \tau_2 \; L_2$. These must both be $\texttt{ne}$, since they are both applications, and therefore
   $\texttt{eval}(\tau_1) \; I = \texttt{eval}(\tau_1 \; I)$ and $\texttt{eval}(\tau_2) \; J = \texttt{eval}(\tau_2 \; J)$, as required.
