@@ -273,7 +273,7 @@ $$
 
 \inferrule[S-List]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta ; \Delta \vDash I = J}{\Psi ; \Theta ; \Delta \vdash L^I \tau_1 \subty L^J \tau_2 : \star}
 
-\inferrule[S-Impl]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star\\ \Theta;\Delta \vDash \Phi_2 \to \Phi_1}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star}
+\inferrule[S-Impl]{\Psi ; \Theta ; \Delta,\Phi_2 \vdash \tau_1 \subty \tau_2 : \star\\ \Theta;\Delta \vDash \Phi_2 \to \Phi_1}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star}
 
 \inferrule[S-Conj]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens\\ \Theta;\Delta \vDash \Phi_1 \to \Phi_2}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subty \Phi_2 \amp \tau_2 : \star}
 
@@ -345,7 +345,7 @@ $$
 {
 \Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1\vdash e : L^I \tau\\
 \Psi ; \Theta ; \Delta, I = 0 ; \Omega ; \Gamma_2\vdash e_1 : \tau'\\
-\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_2, h : \tau, t : L^I \tau \vdash e_2 : \tau'\\
+\Psi ; \Theta ; \Delta, I \geq 1; \Omega ; \Gamma_2, h : \tau, t : L^{I-1} \tau \vdash e_2 : \tau'\\
 }
 {\Psi ; \Theta ; \Delta ; \Omega ; \Gamma_1,\Gamma_2\vdash \texttt{match}(e,e_1,h.t.e_2) : \tau'}
 
@@ -835,7 +835,7 @@ $$
 \end{mathpar}
 \begin{mathpar}
 
-\inferrule[AS-Impl]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)}
+\inferrule[AS-Impl]{\Psi ; \Theta ; \Delta,\Phi_2 \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens (\Phi_2 \to \Phi) \wedge (\Phi_2 \to \Phi_1)}
 
 \inferrule[AS-Conj]{\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi}{\Psi ; \Theta ; \Delta \vdash \Phi_1 \amp \tau_1 \subtynf \Phi_2 \amp \tau_2 : \star \gens \Phi \wedge (\Phi_1 \to \Phi_2)}
 
@@ -1468,6 +1468,32 @@ If $\Phi;\Theta;\Delta \vdash \tau : K$, then $\Phi;\Theta;\Delta \vdash \tau : 
 Immediate by \autoref{thm:raw-kind-compl} and \autoref{thm:idx-ctx-wf-compl}.
 \end{proof}
 
+%This will need to be looped
+\begin{theorem}[Assumption Precomposition for Sort Assignment]
+If $\Theta ; \Delta, \Phi_1 \pvdash I : S \gens \Phi$ and $\Theta ; \Delta \vDash (\Phi_2 \to \Phi_1) \wedge \Phi$ then there exists $\Phi'$ such that
+$\Psi ; \Theta ; \Delta, \Phi_2 \pvdash I : S \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$.
+\label{thm:kind-assump-precomp}
+\end{theorem}
+
+\begin{theorem}[Assumption Precomposition for Constraint Well-Formedness]
+If $\Theta ; \Delta, \Phi_1 \pvdash \Phi'' \; \texttt{wf} \gens \Phi$ and $\Theta ; \Delta \vDash (\Phi_2 \to \Phi_1) \wedge \Phi$ then there exists $\Phi'$ such that
+$\Psi ; \Theta ; \Delta, \Phi_2 \pvdash \Phi'' \; \texttt{wf} \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$.
+\label{thm:kind-assump-precomp}
+\end{theorem}
+
+\begin{theorem}[Assumption Precomposition for Kind Assignment]
+If $\Psi ; \Theta ; \Delta, \Phi_1 \pvdash \tau : K \gens \Phi$ and $\Theta ; \Delta \vDash (\Phi_2 \to \Phi_1) \wedge \Phi$ then there exists $\Phi'$ such that
+$\Psi ; \Theta ; \Delta, \Phi_2 \pvdash \tau : K \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$.
+\label{thm:kind-assump-precomp}
+\end{theorem}
+
+\begin{theorem}[Assumption Precomposition for Subtyping]
+If $\Psi ; \Theta ; \Delta, \Phi_1 \pvdash \tau \subtynf \tau' : K \gens \Phi$ and $\Theta ; \Delta \vDash (\Phi_2 \to \Phi_1) \wedge \Phi$ then there exists $\Phi'$ such that
+$\Psi ; \Theta ; \Delta, \Phi_2 \pvdash \tau \subtynf \tau' : K \gens \Phi'$ and $\Theta ; \Delta \vDash \Phi'$.
+\label{thm:subty-assump-precomp}
+\end{theorem}
+
+
 \subtynerefl*
 
 \subtynfrefl*
@@ -1534,9 +1560,9 @@ By inversion on $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \t
 \tycheckcompl*
 
 \section{Proofs}
-\input{proofs/idx-idx-subst}
+\input{proofs/raw-idx-idx-subst}
 
-\input{proofs/constr-idx-subst}
+\input{proofs/raw-constr-idx-subst}
 
 \input{proofs/type-idx-subst}
 

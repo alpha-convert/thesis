@@ -331,17 +331,17 @@
   
   \jcase{12}{AS-Impl}{
     \jgivengoal{
-      \caseFact{7} $\Psi ; \Theta, i : S; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (Phi_2 \to \Phi_1)$
+      \caseFact{7} $\Psi ; \Theta, i : S; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens (\Phi_2 \to \Phi) \wedge (Phi_2 \to \Phi_1)$
       
-      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+      \caseFact{8} $\Psi ; \Theta, i : S ; \Delta, \Phi_2 \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
     }{
       $\Psi ; \Theta ; \Delta \vdash (\Phi_1 \implies \tau_1)[I/i] \subtynf (\Phi_2 \amp \tau_2)[J/i] : \star \gens \Phi'$ for some $\Theta ; \Delta \vDash \Phi'$
     }
     \caseText{By IH on (8)}
     
-    \caseFact{9} $\Psi ; \Theta ; \Delta \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
+    \caseFact{9} $\Psi ; \Theta ; \Delta, \Phi_2 \pvdash \tau_1[I/i] \subtynf \tau_2[J/i] : \star \gens \Phi'$
     
-    \caseFact{10} $\Theta ; \Delta \vDash \Phi'$
+    \caseFact{10} $\Theta ; \Delta, \Phi_2 \vDash \Phi'$
     
     \caseText{Inverting the presupposition that $\Phi_1 \amp \tau_1 $ and $\Phi_2 \amp \tau_2$ are well-formed types from (1), we have}
     
@@ -355,13 +355,13 @@
     
     \caseFact{14} $\Theta ; \Delta \vDash \Phi_2[J/i] \; \texttt{wf} \gens \Phi_2''$ with $\Theta ; \Delta \vDash \Phi_2''$
     
-    \caseText{By AS-Implies on (9)}
+    \caseText{By AS-Impl on (9)}
     
-    \caseFact{15} $\Psi ; \Theta ; \Delta \vdash \Phi_1[I/i] \implies \tau_1[I/i] \subtynf \Phi_2[J/i] \implies \tau_2[I/i] \gens \Phi' \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$
+    \caseFact{15} $\Psi ; \Theta ; \Delta \vdash \Phi_1[I/i] \implies \tau_1[I/i] \subtynf \Phi_2[J/i] \implies \tau_2[I/i] \gens (\Phi_2[J/i] \to \Phi') \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$
     
     \caseText{By (11) and (12), the presuppositions for (15) hold}
     
-    \caseFact{16} $\Psi ; \Theta ; \Delta \pvdash \Phi_1[I/i] \implies \tau_1[I/i] \subtynf \Phi_2[J/i] \implies \tau_2[I/i] \gens \Phi' \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$
+    \caseFact{16} $\Psi ; \Theta ; \Delta \pvdash \Phi_1[I/i] \implies \tau_1[I/i] \subtynf \Phi_2[J/i] \implies \tau_2[I/i] \gens (\Phi_2[J/i] \to \Phi') \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$
     
     \caseText{By (2)}
     
@@ -371,7 +371,7 @@
     
     \caseFact{18} $\Theta ; \Delta \vDash \Phi_2[J/i] \to \Phi_1[I/i]$
     
-    \caseText{The result follows by (16) and (18), with $\Phi' = \Phi' \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$}    
+    \caseText{The result follows by (16) and (18), with $\Phi' = (\Phi_2[J/i] \to \Phi') \wedge (\Phi_2[J/i] \to \Phi_1[I/i])$}    
   
   }
   

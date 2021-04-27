@@ -236,22 +236,22 @@
   
   \jcase{13}{AS-Impl}{
    \jgivengoal{
-     \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)$
+     \caseFact{1} $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens (\Phi_2 \to \Phi) \wedge (\Phi_2 \to \Phi_1)$
      
-     \caseFact{2} $\Theta ; \Delta \vDash \Phi \wedge (\Phi_2 \to \Phi_1)$
+     \caseFact{2} $\Theta ; \Delta \vDash (\Phi_2 \to \Phi) \wedge (\Phi_2 \to \Phi_1)$
      
-     \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
+     \caseFact{3} $\Psi ; \Theta ; \Delta,\Phi_2 \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi$
    }{
      $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star$
    }
    
    \caseText{By IH on (3)}
    
-   \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+   \caseFact{4} $\Psi ; \Theta ; \Delta, \Phi_2 \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
    
    \caseText{From (2)}
    
-   \caseFact{5} $\Theta ; \Delta \vDash \Phi_2 \to \Phi_1$
+   \caseFact{5} $\Theta ; \Delta \vDash (\Phi_2 \to \Phi) \wedge (\Phi_2 \to \Phi_1)$
    
    \caseText{Goal follows by S-Impl on (4) and (5)}
   }

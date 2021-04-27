@@ -318,7 +318,7 @@
     \jgivengoal{
       \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subty \Phi_2 \implies \tau_2 : \star$
       
-      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subty \tau_2 : \star$
+      \caseFact{2} $\Psi ; \Theta ; \Delta,\Phi_2 \pvdash \tau_1 \subty \tau_2 : \star$
       
       \caseFact{3} $\Theta;\Delta \vDash \Phi_2 \to \Phi_1$
     }{
@@ -326,21 +326,21 @@
     }
      \caseText{By IH on (2)}    
      
-     \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
+     \caseFact{4} $\Psi ; \Theta ; \Delta, \Phi_2 \vdash \tau_1 \subty \tau_2 : \star \gens \Phi$
      
-     \caseFact{5} $\Theta ; \Delta \vDash \Phi$
+     \caseFact{5} $\Theta ; \Delta, \Phi_2 \vDash \Phi$
      
      \caseText{By (3) and (5)}
      
-     \caseFact{6} $\Theta ; \Delta \vDash \Phi \wedge (\Phi_2 \to \Phi_1)$
+     \caseFact{6} $\Theta ; \Delta \vDash (\Phi_2 \to \Phi) \wedge (\Phi_2 \to \Phi_1)$
      
      \caseText{Inverting (4)}
      
-     \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
+     \caseFact{7} $\Psi ; \Theta ; \Delta,\Phi_2 \vdash \texttt{eval}(\tau_1) \subtynf \texttt{eval}(\tau_2) : \star \gens \Phi$
      
      \caseText{By AS-Impl on (7)}
      
-     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \texttt{eval}(\tau_1) \subtynf \Phi_2 \implies \texttt{eval}(\tau_2) : \star \gens \Phi \wedge (\Phi_2 \to \Phi_1)$
+     \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \texttt{eval}(\tau_1) \subtynf \Phi_2 \implies \texttt{eval}(\tau_2) : \star \gens (\Phi_2 \to \Phi) \wedge (\Phi_2 \to \Phi_1)$
      
      \caseFact{Goal follows by AS-Normalize on (8)}
   }

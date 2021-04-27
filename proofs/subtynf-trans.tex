@@ -318,32 +318,40 @@
   \jcase{12}{AS-Impl}{
   
     \jgivengoal{
-      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens \Phi_1' \wedge (\Phi_2 \to \Phi_1)$
+      \caseFact{1} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_2 \implies \tau_2 : \star \gens (\Phi_2 \to \Phi_1') \wedge (\Phi_2 \to \Phi_1)$
       
-      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \Phi_2 \implies \tau_2 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi_2' \wedge (\Phi_3 \to \Phi_2)$
+      \caseFact{2} $\Psi ; \Theta ; \Delta \pvdash \Phi_2 \implies \tau_2 \subtynf \Phi_3 \implies \tau_3 : \star \gens (\Phi_3 \to \Phi_2') \wedge (\Phi_3 \to \Phi_2)$
       
       \caseFact{3} $\Theta ; \Delta \vDash \Phi_1' \wedge \Phi_2' \wedge (Phi_3 \to \Phi_2) \wedge (Phi_2 \to \Phi_1)$
       
-      \caseFact{4} $\Psi ; \Theta ; \Delta \vdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1'$
+      \caseFact{4} $\Psi ; \Theta ; \Delta, \Phi_2 \pvdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1'$
       
-      \caseFact{5} $\Psi ; \Theta ; \Delta \vdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2'$
+      \caseFact{5} $\Psi ; \Theta ; \Delta, \Phi_3 \pvdash \tau_2 \subtynf \tau_3 : \star \gens \Phi_2'$
     }{
       $\Psi ; \Theta ; \Delta \vdash \Phi_1 \implies \tau_1 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi$ and $\Theta ; \Delta \vDash \Phi$
     }
     
-    \caseText{By IH on (4), (5)}
+    \textbf{FIXME FIXME}
     
-    \caseFact{6} $\Psi ; \Theta ; \Delta \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    \caseText{By \autoref{thm:subty-assump-precomp} on (4)}
     
-    \caseFact{7} $\Theta ; \Delta \vDash \Phi$
+    \caseFact{6} $\Psi ; \Theta ; \Delta, \Phi_3 \pvdash \tau_1 \subtynf \tau_2 : \star \gens \Phi_1''$
     
-    \caseText{By AS-Impl on (6)}
+    \caseFact{7} $\Theta ; \Delta \vDash \Phi_1''$
     
-    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi \wedge (\Phi_3 \to \Phi_1)$
+    \caseText{By IH on (5), (6)}
+    
+    \caseFact{8} $\Psi ; \Theta ; \Delta, \Phi_3 \pvdash \tau_1 \subtynf \tau_3 : \star \gens \Phi$
+    
+    \caseFact{9} $\Theta ; \Delta \vDash \Phi$
+    
+    \caseText{By AS-Impl on (8)}
+    
+    \caseFact{10} $\Psi ; \Theta ; \Delta \pvdash \Phi_1 \implies \tau_1 \subtynf \Phi_3 \implies \tau_3 : \star \gens \Phi \wedge (\Phi_3 \to \Phi_1)$
     
     \caseText{By (3)}
     
-    \caseFact{9} $\Theta ; \Delta \vDash \Phi_3 \to \Phi_1$
+    \caseFact{11} $\Theta ; \Delta \vDash \Phi_3 \to \Phi_1$
     
     \caseText{The goal follows by (7), (8), (9)}
   }

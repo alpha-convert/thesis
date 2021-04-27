@@ -288,7 +288,7 @@
       
       \caseFact{2} $\tau \; \texttt{nf}$
       
-      \caseFact{3} $\Psi ; \Theta ; \Delta \vdash \tau : \star$
+      \caseFact{3} $\Psi ; \Theta ; \Delta, \Phi' \vdash \tau : \star$
       
       \caseFact{4} $\Theta ; \Delta \vdash \Phi' \texttt{ wf}$
     }{
@@ -297,17 +297,17 @@
     
     \caseText{By IH on (3)}
     
-    \caseFact{5} $\Psi ; \Theta ; \Delta \pvdash \tau \subtynf \tau : \star \gens \Phi$
+    \caseFact{5} $\Psi ; \Theta ; \Delta, \Phi' \pvdash \tau \subtynf \tau : \star \gens \Phi$
     
-    \caseFact{6} $\Theta ; \Delta \vDash \Phi$
+    \caseFact{6} $\Theta ; \Delta, \Phi' \vDash \Phi$
     
     \caseText{By AS-Impl on (5)}
     
-    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
+    \caseFact{7} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens (\Phi' \to \Phi) \wedge (\Phi' \to \Phi')$
     
     \caseText{By \autoref{thm:constr-compl} on (4), we may re-establish the presupposition for (7)}
     
-    \caseFact{8} $\Psi ; \Theta ; \Delta \vdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens \Phi \wedge (\Phi' \to \Phi')$
+    \caseFact{8} $\Psi ; \Theta ; \Delta \pvdash \Phi' \implies \tau \subtynf \Phi' \implies \tau : \star \gens (\Phi' \to \Phi) \wedge (\Phi' \to \Phi')$
     
     \caseText{The goal follows from (6), (8), and $\Theta ; \Delta \vDash \Phi' \to \Phi'$}
   }
